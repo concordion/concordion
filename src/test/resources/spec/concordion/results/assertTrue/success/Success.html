@@ -1,0 +1,33 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<head>
+<link href="../../../../../concordion.css" rel="stylesheet" type="text/css" />
+<title>Success</title>
+</head>
+<body>
+
+    <h1>Success</h1>
+    
+    <p>
+        Successes are indicated by adding a <code>class="success"</code> attribute to the element.
+    </p>
+    
+    <div class="example">        
+    
+        <h3>Example</h3>
+        
+        <p>
+            The output of running this:
+        </p>
+        
+        <pre concordion:set="#snippet">&lt;p concordion:assertTrue="isPalindrome(#TEXT)"&gt;ABBA&lt;/p&gt;</pre>
+
+        <p>Looks like this:</p>
+
+<pre class="html" concordion:assertEquals="render(#snippet)">
+&lt;p concordion:assertTrue="isPalindrome(#TEXT)" class="success"&gt;ABBA&lt;/p&gt;
+</pre>
+        
+    </div>
+
+</body>
+</html>

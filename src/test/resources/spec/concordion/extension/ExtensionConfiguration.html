@@ -1,0 +1,206 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Extension Configuration</h1>
+
+    <p>
+       Extensions can be added to Concordion using an annotation in the fixture class and/or using a system property.
+    </p>
+       
+    <h2>Annotations</h2>
+
+    <h3>@Extension</h3>
+    <p>Within a fixture class, fields that are annotated with <code>@org.concordion.api.extension.Extension</code> will be
+    added to Concordion as extensions.</p>
+    
+    <p>Fields with this annotation must be public and must implement <code>org.concordion.api.extension.ConcordionExtension</code>.</p>
+    
+    <div class="example">
+    <h4>Example - Extensions fields</h4>
+    <p>Executing the following fixture:</p>
+    <pre class="java" concordion:set="#javaFragment">
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
+import org.concordion.api.extension.Extension;
+import org.concordion.api.extension.ConcordionExtension;
+import test.concordion.extension.fake.*;
+ 
+@RunWith(ConcordionRunner.class)
+public class ExampleFixture {
+    
+    <b>@Extension
+    public ConcordionExtension extension = new FakeExtension1();
+ 
+    @Extension
+    public FakeExtension2 extension2 = new FakeExtension2();</b>
+}    
+    </pre>
+    <p concordion:execute="#result1 = process(#javaFragment)">will install both extensions <span concordion:assertEquals="#result1">FakeExtension1, FakeExtension2</span>.</p>
+    </div> 
+
+    <p>Extensions will be loaded from the fixture class and any of its superclasses in parent-first order.  A common pattern is to have the extensions defined in a "base fixture".</p>
+    
+<!-- ==================================================== -->
+    <div class="example">
+    <h4>Example - Extension fields in superclass</h4>
+    <p>Executing the following fixture:</p>
+    <pre class="java" concordion:set="#javaFragment2">
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
+import org.concordion.api.extension.Extension;
+import org.concordion.api.extension.ConcordionExtension;
+import test.concordion.extension.fake.*;
+ 
+@RunWith(ConcordionRunner.class)
+public class ExampleFixture extends BaseFixture {
+    <b>@Extension
+    public ConcordionExtension extension = new FakeExtension1("ExampleExtension");</b>
+ 
+}    
+    </pre>
+    <p> which has superclass </p>
+    <pre class="java" concordion:set="#javaFragment1">
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
+import org.concordion.api.extension.Extension;
+import org.concordion.api.extension.ConcordionExtension;
+import test.concordion.extension.fake.*;
+ 
+@RunWith(ConcordionRunner.class)
+public class BaseFixture {
+    
+    <b>@Extension
+    public FakeExtension2 extension2 = new FakeExtension2("SuperExtension");</b>
+}    
+    </pre>
+    <p concordion:execute="#result2 = process(#javaFragment1, #javaFragment2)">will install both the extensions initialised with parameters <span concordion:assertEquals="#result2">SuperExtension, ExampleExtension</span>.</p>
+    </div> 
+       
+    <h3>@Extensions</h3>
+    <p>As an alternative, extensions that require no state from the fixture can be defined statically on the fixture class with the <code>@org.concordion.api.extension.Extensions</code>
+    annotation.  This annotation is parameterised with a list of the extension, or extension factory, classes to be installed.</p>
+
+    <p>
+        Extensions must implement <code>org.concordion.api.extension.ConcordionExtension</code>.
+        Extension factories must implement <code>org.concordion.api.extension.ConcordionExtensionFactory</code>.
+    </p>
+
+<!-- ==================================================== -->
+    <div class="example">
+    <h4>Example - Extensions</h4>
+    <p>Executing the following fixture:</p>
+    <pre class="java" concordion:set="#javaFragment">
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
+import org.concordion.api.extension.Extensions;
+import org.concordion.api.extension.ConcordionExtension;
+import test.concordion.extension.fake.*;
+ 
+@RunWith(ConcordionRunner.class)
+<b>@Extensions({FakeExtension1.class, FakeExtension2Factory.class})</b>
+public class ExampleFixture {
+    
+}
+    </pre>
+    <p concordion:execute="#result3 = process(#javaFragment)">will install both extensions <span concordion:assertEquals="#result3">FakeExtension1, FakeExtension2FromFactory</span>.</p>
+    </div>
+     
+    <p>Extensions will be loaded from the fixture class and any of its superclasses in parent-first order.  A common pattern is to have the extensions defined in a "base fixture".</p>
+    
+<!-- ==================================================== -->
+    <div class="example">
+    <h4>Example - Extensions from superclass are loaded</h4>
+    <p>Executing the following fixture:</p>
+    <pre class="java" concordion:set="#javaFragment2">
+import org.junit.runner.RunWith;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.concordion.api.extension.Extensions;
+import org.concordion.api.extension.ConcordionExtension;
+import test.concordion.extension.fake.*;
+ 
+@RunWith(ConcordionRunner.class)
+public class ExampleFixture extends BaseFixture {
+
+}    
+    </pre>
+    
+    <p> which has superclass </p>
+    <pre class="java" concordion:set="#javaFragment1">
+import org.junit.runner.RunWith;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.concordion.api.extension.Extensions;
+import org.concordion.api.extension.ConcordionExtension;
+import test.concordion.extension.fake.*;
+ 
+@RunWith(ConcordionRunner.class) 
+<b>@Extensions({FakeExtension1.class, FakeExtension2.class})</b>
+public class BaseFixture {
+    
+}    
+    </pre>
+    <p concordion:execute="#result4 = process(#javaFragment1, #javaFragment2)">will install both extensions <span concordion:assertEquals="#result4">FakeExtension1, FakeExtension2</span>.</p>
+    </div> 
+
+
+<!-- ==================================================== -->
+    <div class="example">
+    <h4>Example - All Extensions from class hierarchy are loaded</h4>
+    <p>Executing the following fixture:</p>
+    <pre class="java" concordion:set="#javaFragment2">
+import org.junit.runner.RunWith;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.concordion.api.extension.Extensions;
+import org.concordion.api.extension.ConcordionExtension;
+import test.concordion.extension.fake.*;
+ 
+@RunWith(ConcordionRunner.class)
+<b>@Extensions({FakeExtension2.class})</b>
+public class ExampleFixture extends BaseFixture {
+
+}    
+    </pre>
+    
+    <p> which has superclass </p>
+    <pre class="java" concordion:set="#javaFragment1">
+import org.junit.runner.RunWith;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.concordion.api.extension.Extensions;
+import org.concordion.api.extension.ConcordionExtension;
+import test.concordion.extension.fake.*;
+ 
+@RunWith(ConcordionRunner.class) 
+<b>@Extensions({FakeExtension1.class})</b>
+public class BaseFixture {
+    
+}    
+    </pre>
+    <p concordion:execute="#result4 = process(#javaFragment1, #javaFragment2)">will install both extensions <span concordion:assertEquals="#result4">FakeExtension1, FakeExtension2</span>.</p>
+    </div> 
+
+<!-- ==================================================== -->
+       
+    <h2>System Property</h2>
+    <p>Alternatively, extensions can be specified by setting a system property.  This can be useful if the extensions need to be configured independently from the fixtures.</p> 
+    <p>Set the system property <code>concordion.extensions</code> to a comma-separated list containing:</p>
+    <ul>
+        <li>the fully-qualified class name of extensions to be installed, and/or</li>
+        <li>the fully-qualified class name of extension factories that will create an extension.</li>
+    </ul>
+    <p>
+        All extensions and/or extension factories must be present on the classpath. 
+        Extensions must implement <code>org.concordion.api.extension.ConcordionExtension</code>.
+        Extension factories must implement <code>org.concordion.api.extension.ConcordionExtensionFactory</code>.
+    </p>
+
+<h4>Examples</h4>
+
+<!-- ==================================================== -->
+    <div class="example">
+    <h4>Example - System Property</h4>
+    <p concordion:execute="setSystemProperty(#key, #value)">Given the system property <code concordion:set="#key">concordion.extensions</code> is set to "<code concordion:set="#value">test.concordion.extension.fake.FakeExtension1, test.concordion.extension.fake.FakeExtension2Factory</code>",</p>
+    <p>Concordion fixtures will be <span concordion:execute="#result5 = process()">run</span> with both extensions <span concordion:assertEquals="#result5">FakeExtension1, FakeExtension2FromFactory</span>.</p>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,106 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Breadcrumb Wording</h1>
+
+    <p>
+        The words used in the breadcrumb are taken from the contents
+        of the <code>&lt;title&gt;</code> if one is present.
+        If it is not present, or is empty (does not contain any 
+        alphanumeric characters) then the first <code>&lt;h1&gt;</code> is
+        used. If the <code>&lt;h1&gt;</code> is missing 
+        or empty, the name of the resource is used and converted from
+        camel-case into properly spaced words.
+    </p>
+    
+    <p>
+        The reason for preferring the <code>&lt;title&gt;</code> is that 
+        it is usually written in a more concise way - more suitable for breadcrumbs -
+        than the first level heading.
+    </p>
+
+    
+    <div class="example">        
+    
+        <h3>Examples</h3>
+
+<table concordion:execute="#text = getBreadcrumbWordingFor(#resourceName, #content)">
+    <tr>
+        <th concordion:set="#resourceName">Resource Name</th>
+        <th concordion:set="#content">Content</th>
+        <th concordion:assertEquals="#text">Expected Breadcrumb Text</th>
+    </tr>        
+    <tr>
+        <td>MyResource.html</td>
+        <td><pre>
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Concise Name&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;A Slightly Longer Name&lt;/h1&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre></td>
+        <td>Concise Name</td>
+    </tr>
+    <tr>
+        <td>MyResource.html</td>
+        <td><pre>
+&lt;html&gt;
+    &lt;body&gt;
+        &lt;h1&gt;A Slightly Longer Name&lt;/h1&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre></td>
+        <td>A Slightly Longer Name</td>
+    </tr>
+    <tr>
+        <td>MyResource.html</td>
+        <td><pre>
+&lt;html&gt;
+    &lt;body&gt;
+        &lt;h1&gt;A Slightly Longer Name&lt;/h1&gt;
+        &lt;h1&gt;Another Long Name&lt;/h1&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre></td>
+        <td>A Slightly Longer Name</td>
+    </tr>
+    <tr>
+        <td>MyResource.html</td>
+        <td><pre>
+&lt;html&gt;
+    &lt;body&gt;
+        &lt;h1&gt;  &lt;/h1&gt;
+        &lt;h1&gt;Another Long Name&lt;/h1&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre></td>
+        <td>Another Long Name</td>
+    </tr>
+    <tr>
+        <td>MyResource.html</td>
+        <td><pre>
+&lt;html&gt;
+    &lt;body&gt;
+        &lt;h1&gt;  &lt;/h1&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre></td>
+        <td>My Resource</td>
+    </tr>
+    <tr>
+        <td>MyCamelCaseResource.html</td>
+        <td><pre>
+&lt;html /&gt;
+</pre></td>
+        <td>My Camel Case Resource</td>
+    </tr>
+</table>            
+            
+    </div>
+
+</body>
+</html>

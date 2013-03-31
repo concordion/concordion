@@ -1,0 +1,47 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<head>
+<link href="../../../../../concordion.css" rel="stylesheet" type="text/css" />
+<title>Failures</title>
+</head>
+<body>
+
+    <h1>Failures</h1>
+    
+    <p>
+        Failures are indicated by adding a <code>class="failure"</code> attribute to the element,
+        and replacing the contents with a <code>&lt;del&gt;</code> and <code>&lt;ins&gt;</code> 
+        elements containing the expected value and the actual value respectively.
+    </p>
+    
+    <div class="example">        
+    
+        <h3>Example</h3>
+        
+        <pre concordion:set="#snippet">&lt;p concordion:assertEquals="acronym"&gt;ABC&lt;/p&gt;</pre>
+
+        <p>When marked as a failure, with <code>acroynm</code>
+         returning <code concordion:set="#actualValue">XYZ</code>, it becomes:</p>
+
+<pre class="html" concordion:assertEquals="renderAsFailure(#snippet, #actualValue)">
+&lt;p concordion:assertEquals="acronym" class="failure"&gt; _
+&lt;del class="expected"&gt;ABC&lt;/del&gt;
+&lt;ins class="actual"&gt;XYZ&lt;/ins&gt; _
+&lt;/p&gt;
+</pre>
+        <p>Note: The underscores indicate line continuations for readability only. They are not output. In reality, it is all in one long line.</p>
+        
+    </div>
+
+    <h2>Further Details</h2>
+    
+    <ul>
+        <li><a href="Empty.html">What if the item is empty or contains only whitespace?</a></li>
+        <li><a href="NestedElements.html">What happens to nested elements?</a></li>
+        <li><a href="Anchors.html">How are &lt;a&gt; elements handled?</a></li>
+        <li>How are elements like &lt;table&gt;, &lt;tr&gt; and &lt;ul&gt; handled?
+           (These cannot legally have &lt;span&gt; elements as children).
+           <br /> OUT OF SCOPE. Rationale: The assertEquals command isn't intended for these elements.</li>
+    </ul>        
+
+</body>
+</html>

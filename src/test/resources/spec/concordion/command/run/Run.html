@@ -1,0 +1,48 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<head>
+    <link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+    <title>"run"</title>
+</head>    
+<body>
+
+    <h1>run</h1>
+
+    <p>
+        The <code>run</code> command lets you run another test from this
+        test, in a similar way to JUnit test-suites. This can be a useful
+        way to view progress on a set of acceptance tests for a story.
+    </p>        
+
+	<p>
+		The format is:
+	</p>		
+<pre>
+&lt;a concordion:run="<i>runner-name</i>" href="<i>relative-link</i>"&gt;some link text&lt;/a&gt;</pre>
+
+	<p>
+		The <i>runner-name</i> should normally be <code>"concordion"</code>. However, it 
+		is possible to implement your own runners to run tests implemented in another tool.
+	</p>
+
+	<div class="example">        
+
+        <h3>Example</h3>
+
+        <p>Here we run the test for the 
+           <a concordion:run="concordion" href="../set/Set.html">set command</a>
+		   using this HTML:</p>        
+<pre>
+&lt;a concordion:run="concordion" href="../set/Set.html"&gt;set command&lt;/a&gt;</pre>
+        
+    </div>        
+
+    <h2>Further Details</h2>
+
+    <ul>
+        <li><a href="CustomRunner.html">How do you create custom runners?</a></li>
+        <li><a href="SyntaxForRelativePaths.html">What relative path syntax is supported?</a></li>
+	</ul>        
+
+
+</body>
+</html>

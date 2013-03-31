@@ -1,0 +1,51 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Displaying Results</h1>
+
+    <p>
+        After processing a document, Concordion outputs HTML based on the
+        input document with the results marked up.
+    </p>
+
+    <h3>Commands</h3>
+
+    <p>
+        The <code>assertEquals</code> command reports
+        <a href="assertEquals/success/Success.html">successes</a> and
+        <a href="assertEquals/failure/Failure.html">failures</a>.
+    </p>
+
+    <p>
+        The <code>assertTrue</code> command reports
+        <a href="assertTrue/success/Success.html">successes</a> and
+        <a href="assertTrue/failure/Failure.html">failures</a>.
+    </p>
+
+    <p>
+        The <code>verifyRows</code> command reports
+        <a href="../command/verifyRows/results/MissingRows.html">missing</a> and
+        <a href="../command/verifyRows/results/SurplusRows.html">surplus</a> rows.
+    </p>
+
+    <h3>Other</h3>
+
+    <ul>
+        <li>
+            <a href="exception/Exception.html">Exceptions</a> can be thrown by any command. They are displayed in the document along with a toggleable stack trace.
+        </li>
+        <li>
+            <a href="breadcrumbs/Breadcrumbs.html">Breadcrumbs</a> are automatically added to documents based on the package hierarchy.
+        </li>
+        <li>
+            <a href="../command/results/stylesheet/Stylesheet.html">Styles</a> are embedded in the document so that successes and failures are displayed correctly.
+        </li>
+        <li>
+            <a href="../command/results/contentType/ContentType.html">Content Type</a> metadata is added to the document.
+        </li>
+    </ul>
+
+
+</body>
+</html>

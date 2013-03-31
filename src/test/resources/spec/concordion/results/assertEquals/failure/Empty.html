@@ -1,0 +1,48 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Empty Elements</h1>
+    
+    <p>
+        If the element is empty, then a non-breaking space (&amp;#160) 
+        is inserted (so that the failure shows up when displayed in a browser).
+    </p>        
+
+    <div class="example">        
+    
+        <h3>Example: Empty Expected</h3>
+        
+        <pre concordion:set="#snippet">&lt;div concordion:assertEquals="acronym" /&gt;</pre>
+
+        <p>
+            When marked as a failure, with actual value
+            <code concordion:set="#actualValue">XYZ</code>, it becomes:
+        </p>
+
+<pre class="html" concordion:assertEquals="renderAsFailure(#snippet, #actualValue)">
+&lt;div concordion:assertEquals="acronym" class="failure"&gt; _
+&lt;del class="expected"&gt;&amp;#160;&lt;/del&gt;
+&lt;ins class="actual"&gt;XYZ&lt;/ins&gt; _
+&lt;/div&gt;
+</pre>
+    </div>
+
+    <div class="example">        
+    
+        <h3>Example: Empty Actual</h3>
+        
+        <pre concordion:set="#snippet">&lt;div concordion:assertEquals="acronym"&gt;ABC&lt;/div&gt;</pre>
+
+        <p>When marked as a failure, with a <span concordion:set="#actualValue" /> blank actual value, it becomes:</p>
+
+<pre class="html" concordion:assertEquals="renderAsFailure(#snippet, #actualValue)">
+&lt;div concordion:assertEquals="acronym" class="failure"&gt; _
+&lt;del class="expected"&gt;ABC&lt;/del&gt;
+&lt;ins class="actual"&gt;&amp;#160;&lt;/ins&gt; _
+&lt;/div&gt;
+</pre>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Nested Elements</h1>
+    
+    <p>
+       Nested HTML elements are supported. The content of those elements is included in
+       the expected string, but the tags themselves are not.
+    </p>
+    
+    <div class="example">        
+    
+        <h3>Example</h3>
+        
+        
+<pre class="html" concordion:set="#snippet">
+&lt;span concordion:assertEquals="#fullName"&gt;Fred &lt;strong&gt;Bloggs&lt;/strong&gt;&lt;/span&gt; 
+</pre>
+
+        <p concordion:execute="#matchOrNotMatch = matchOrNotMatch(#snippet, #evaluationResult)">
+            Will <span concordion:assertEquals="#matchOrNotMatch">match</span>
+            the evaluation result "<code concordion:set="#evaluationResult">Fred Bloggs</code>".
+        </p>
+    </div>
+    
+    <p>No extra whitespace is added around the nested elements.</p>
+    
+    <div class="example">
+
+        <h3>Example</h3>
+        
+<pre class="html" concordion:set="#snippet">
+&lt;span concordion:assertEquals="#fullName"&gt;Fred&lt;em&gt;Bloggs&lt;/em&gt;&lt;/span&gt; 
+</pre>
+
+        <p>
+            <span concordion:execute="#outcome = matchOrNotMatch(#snippet, #evaluationResult)">
+                Will <span concordion:assertEquals="#outcome">match</span> the string
+                 "<code concordion:set="#evaluationResult">FredBloggs</code>", but will
+            </span>
+          
+            <span concordion:execute="#outcome = matchOrNotMatch(#snippet, #evaluationResult)">
+                <span concordion:assertEquals="#outcome"><em>not</em> match</span>
+                 "<code concordion:set="#evaluationResult">Fred Bloggs</code>".
+            </span>           
+        </p>
+        
+    </div>
+
+    <h2>Further Details</h2>
+    
+    <ul>
+        <li><a href="NestedActions.html">Can other commands be nested inside an assertEquals?</a></li>        
+    </ul>        
+    
+
+</body>
+</html>

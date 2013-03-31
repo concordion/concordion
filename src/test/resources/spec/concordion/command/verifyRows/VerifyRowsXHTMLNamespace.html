@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:concordion="http://www.concordion.org/2007/concordion">
+<head>
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+    <h1>verifyRows with XHTML namespace</h1>
+
+    <p>
+        This is the same as the <a href="VerifyRows.html">verifyRows</a> test case, 
+        but with the XHTML namespace declared explicitly in the document.
+    </p>
+
+    <p>
+        When used on a &lt;table&gt;, the <code>verifyRows</code>
+        command compares the contents of the table with the contents of a collection,
+        and reports similarities, differences and missing or surplus rows.
+    </p>
+
+    <p>
+        The expression must return something Iterable (e.g. a Collection)
+        and the contents of the table must be in the same order as the collection.
+    </p>
+
+    <div class="example">
+
+        <h3>Example</h3>
+
+<pre class="html" concordion:set="#fragment">
+&lt;table concordion:verifyRows="#username : usernames"&gt; 
+    &lt;tr&gt;
+        &lt;th concordion:assertEquals="#username"&gt;Username&lt;/th&gt; 
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;bpeep&lt;/td&gt; 
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;jspratt&lt;/td&gt; 
+    &lt;/tr&gt;
+&lt;/table&gt;
+</pre>
+
+        <table concordion:execute="#result = processFragment(#fragment, #collectionContent)">
+            <tr>
+                <th concordion:set="#collectionContent">usernames Collection</th>
+                <th concordion:assertEquals="#result">Results in Rows Marked As</th>
+            </tr>
+            <tr>
+                <td><code>bpeep, jspratt</code></td>
+                <td>SUCCESS, SUCCESS</td>
+            </tr>
+            <tr>
+                <td><code>jspratt, bpeep</code></td>
+                <td>FAILURE, FAILURE</td>
+            </tr>
+            <tr>            
+                <td><code>hdumpty, jspratt</code></td>
+                <td>FAILURE, SUCCESS</td>
+            </tr>
+            <tr>            
+                <td><code>bpeep</code></td>
+                <td>SUCCESS, MISSING</td>
+            </tr>
+            <tr>            
+                <td><code>bpeep, jspratt, ppan</code></td>
+                <td>SUCCESS, SUCCESS, SURPLUS</td>
+            </tr>
+            <tr>            
+                <td><code>rhood, jspratt, ppan, mdaw</code></td>
+                <td>FAILURE, SUCCESS, SURPLUS, SURPLUS</td>
+            </tr>
+        </table>
+
+    </div>
+
+</body>
+</html>

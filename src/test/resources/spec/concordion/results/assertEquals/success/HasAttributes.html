@@ -1,0 +1,30 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Element Already Has Attributes</h1>
+    
+    <p>
+        If an element already has attributes then these attributes will be
+        retained.
+    </p>
+    
+    <div class="example">        
+    
+        <h3>Example</h3>
+        
+        <pre concordion:set="#snippet">&lt;span id="example" concordion:assertEquals="username"&gt;fred&lt;/span&gt;</pre>
+
+        <p>When marked as a success becomes:</p>
+        
+        <pre concordion:assertEquals="renderAsSuccess(#snippet)">&lt;span id="example" concordion:assertEquals="username" class="success"&gt;fred&lt;/span&gt;</pre>
+    </div>
+
+    <h2>Further Details</h2>
+    
+    <ul>
+        <li><a href="HasClassAttribute.html">What if the element already has a 'class' attribute?</a></li>
+    </ul>        
+
+</body>
+</html>

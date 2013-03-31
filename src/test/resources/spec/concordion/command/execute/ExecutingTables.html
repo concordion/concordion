@@ -1,0 +1,64 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Executing Tables</h1>
+
+    <p>
+       The <code>execute</code> command has special behaviour when placed on
+       a <code>&lt;table&gt;</code> element. Instead of executing once, it
+       executes every detail row in the table and transfers the commands
+       from the header row to each detail row.
+    </p>
+
+    <div class="example">
+
+        <h3>Example</h3>
+
+<pre concordion:set="#result = process(#TEXT)">
+&lt;table concordion:execute="#username = generateUsername(#fullName)"&gt;
+    &lt;tr&gt;
+        &lt;th concordion:set="#fullName"&gt;Full Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#username"&gt;Username&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Fred Bloggs&lt;/td&gt;
+        &lt;td&gt;fredbloggs&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;John Doe&lt;/td&gt;
+        &lt;td&gt;johndoe&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Winston Churchill&lt;/td&gt;
+        &lt;td&gt;winston&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+</pre>
+
+        <p>
+            If the method <code>generateUsername()</code> returns the
+            full name in lowercase with spaces removed, when we run
+            the test we expect:
+            <span concordion:assertEquals="#result.successCount">2</span> successes and
+            <span concordion:assertEquals="#result.failureCount">1</span> failure and
+            <span concordion:assertEquals="#result.exceptionCount">0</span> exceptions 
+            to be reported.
+
+            The failure will have an expected value of
+             "<code concordion:assertEquals="#result.lastExpectedValue">winston</code>"
+            and an actual value of
+             "<code concordion:assertEquals="#result.lastActualValue">winstonchurchill</code>".
+        </p>
+
+    </div>
+
+    <h2>Further Details</h2>
+
+    <ul>
+        <li><a href="TODO.html">TODO: Are <code>&lt;thead&gt;</code> and <code>&lt;tbody&gt;</code> supported?</a></li>
+    </ul>
+
+
+</body>
+</html>

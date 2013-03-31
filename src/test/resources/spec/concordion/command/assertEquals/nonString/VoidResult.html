@@ -1,0 +1,53 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Void Result</h1>
+
+    <p>
+       If an expression returns a method that returns <code>void</code> then
+       the result is treated as <code>null</code>.
+    </p>
+
+    <div class="example">
+
+        <h3>Example</h3>
+
+<p>Given we have the following method in our fixture code:</p>
+
+<pre class="java">
+public void myVoidMethod() {
+    ...
+}
+</pre>
+
+<div concordion:execute="#outcome = process(#snippet)">
+<p>
+    Then the following markup will cause a <span concordion:assertEquals="#outcome">SUCCESS</span>
+    to be reported, since no return value can be obtained from <code>myVoidMethod()</code> 
+    the result is taken to be <code>null</code>:
+</p>
+
+<pre class="html" concordion:set="#snippet">
+&lt;span concordion:assertEquals="myVoidMethod()"&gt;(null)&lt;/span&gt;
+</pre>
+
+</div>
+
+<div concordion:execute="#outcome = process(#snippet)">
+<p>
+    And, to demonstrate a counter-example, the following markup will report 
+    a <span concordion:assertEquals="#outcome">FAILURE</span>:
+</p>
+
+<pre class="html" concordion:set="#snippet">
+&lt;span concordion:assertEquals="myVoidMethod()"&gt;xyz&lt;/span&gt;
+</pre>
+</div>
+
+    </div>
+
+
+
+</body>
+</html>

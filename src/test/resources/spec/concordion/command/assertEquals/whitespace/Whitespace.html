@@ -1,0 +1,59 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Whitespace</h1>
+    
+    <p>
+       Whitespace for an <code>assertEquals</code> is treated in roughly the 
+       same way that web browsers treat it.
+    </p>
+           
+    <p>       
+       Whitespace at the start and end of the string is removed before comparison
+       and whitespace in the middle of a string is compressed so that multiple
+       whitespace characters become a single space character. The same "normalization"
+       is performed on both the text read from the document and the string result
+       of the evaluation.
+    </p>
+    
+    <div class="example">        
+    
+        <h3>Example</h3>
+
+        <pre concordion:set="#snippet1">&lt;span concordion:assertEquals="#firstName"&gt;Fred Flintstone&lt;/span&gt;</pre>
+
+        <pre concordion:set="#snippet2">&lt;span concordion:assertEquals="#firstName"&gt;  Fred 
+        Flintstone
+&lt;/span&gt;</pre>
+
+        <p>
+            If <code>#firstName</code> returns "<code concordion:set="#returnValue">Fred Flintstone</code>",
+            <span concordion:assertEquals="whichSnippetsSucceed(#snippet1, #snippet2, #returnValue)">both</span>
+            the above statements will report a success.
+        </p>
+
+        <p>
+            If <code>#firstName</code> returns "<code concordion:set="#returnValue">   Fred Flintstone      </code>",
+            <span concordion:assertEquals="whichSnippetsSucceed(#snippet1, #snippet2, #returnValue)">both</span>
+            the above statements will report a success.
+        </p>
+
+        <p>
+            If <code>#firstName</code> returns "<code concordion:set="#returnValue">Wilma Flintstone</code>",
+            <span concordion:assertEquals="whichSnippetsFail(#snippet1, #snippet2, #returnValue)">both</span>
+            the above statements will report a <em>failure</em>.
+        </p>
+        
+    </div>
+    
+    <h2>Further Details</h2>
+    
+    <ul>
+        <li><a href="Normalization.html">More examples of normalization</a></li>        
+        <li><a href="LineContinuations.html">Line continuations</a></li>        
+    </ul>        
+        
+
+</body>
+</html>

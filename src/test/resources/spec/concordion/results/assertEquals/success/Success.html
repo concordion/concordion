@@ -1,0 +1,35 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Success</h1>
+    
+    <p>
+        Successes are indicated by adding a <code>class="success"</code> attribute to the element.
+        Typically this will result in the element being displayed in green (depending on the CSS stylesheet). 
+    </p>
+    
+    <div class="example">        
+    
+        <h3>Example</h3>
+        
+<pre concordion:set="#fragment">
+&lt;span concordion:assertEquals="username"&gt;fred&lt;/span&gt;
+</pre>
+
+        <p>When marked as a success becomes:</p>
+        
+        <pre concordion:assertEquals="renderAsSuccess(#fragment)">
+&lt;span concordion:assertEquals="username" class="success"&gt;fred&lt;/span&gt;
+</pre>
+    </div>
+
+    <h2>Further Details</h2>
+    
+    <ul>
+        <li><a href="Empty.html">What if the item is empty or contains only whitespace?</a></li>
+        <li><a href="HasAttributes.html">What if the element already has attributes?</a></li>
+    </ul>        
+
+</body>
+</html>

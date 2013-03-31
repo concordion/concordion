@@ -1,0 +1,66 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<head>
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+    <h1>Support for 'thead' and 'tbody'</h1>
+
+    <p>
+        Although web browsers (and even the XHTML 1.0 Strict DTD) accept HTML tables without
+        explicit <code>&lt;thead&gt;</code> and<code>&lt;tbody&gt;</code> sections,
+        some people prefer to put them in. The <code>verifyRows</code>
+        command supports tables containing these sections.
+    </p>
+
+    <div class="example">
+
+        <h3>Example</h3>
+
+        <p>Given the method <code>getNames()</code> returns a Collection containing the names:
+           <code concordion:execute="setUpNames(#TEXT)">John, Paul</code>
+        </p>
+
+        <p>The following instrumentation:</p>
+
+<pre class="html" concordion:set="#fragment">
+&lt;table concordion:verifyRows="#name : getNames()"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th concordion:assertEquals="#name"&gt;Name&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td&gt;John&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;
+</pre>
+
+        <p>Results in this output:</p>
+
+<pre class="html" concordion:assertEquals="process(#fragment)">
+&lt;table concordion:verifyRows="#name : getNames()"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th concordion:assertEquals="#name"&gt;Name&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td class="success"&gt;John&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;tr class="surplus"&gt; _
+&lt;td class="failure"&gt;&lt;del class="expected"&gt;&amp;#160;&lt;/del&gt;
+&lt;ins class="actual"&gt;Paul&lt;/ins&gt;&lt;/td&gt; _
+&lt;/tr&gt; _
+&lt;/tbody&gt;
+&lt;/table&gt;
+</pre>
+
+        <p>Notice how the surplus row is added into the <code>tbody</code> section.</p>
+    </div>
+
+</body>
+</html>

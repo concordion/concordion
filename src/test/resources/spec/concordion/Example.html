@@ -1,0 +1,75 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Example</h1>
+
+    <p>
+        Here's a very simple example that demonstrates the basic behaviour of Concordion.
+        Note that the HTML specifications, below, have a Concordion namespace declaration at the top
+        and we use the &lt;span&gt; tag around the variable that we're interested in checking.
+    </p>
+
+    <div class="example">
+
+<p>
+    Assuming we have Java fixture code containing a method:
+</p>
+    
+<pre>
+public String getGreeting() {
+    return "Hello World!";
+}
+</pre>
+
+    </div>
+
+    <div class="example" concordion:execute="#result = process(#document)">
+        <p>
+            When we run the following active specification it should report a
+            <b concordion:assertEquals="#result">success</b>, since the
+            expectation in the specification (<code>Hello&#160;World!</code>)
+            matches the actual result of the method.
+        </p>    
+
+<pre concordion:set="#document">
+&lt;html xmlns:concordion="http://www.concordion.org/2007/concordion"&gt;
+&lt;body&gt;
+    &lt;p&gt;
+        The greeting should be:
+        &lt;span concordion:assertEquals="greeting"&gt;Hello World!&lt;/span&gt;
+    &lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+
+    </div>
+
+    <div class="example" concordion:execute="#result = process(#document)">
+
+<p>
+    On the other hand, this specfication should report a 
+    <b concordion:assertEquals="#result">failure</b>, since the
+    expectation in the specification (<code>Hello&#160;Bob!</code>) does not match
+    the result of the method (<code>Hello&#160;World!</code>).
+</p>
+
+<pre concordion:set="#document">
+&lt;html xmlns:concordion="http://www.concordion.org/2007/concordion"&gt;
+&lt;body&gt;
+    &lt;p&gt;
+        The greeting should be:
+        &lt;span concordion:assertEquals="greeting"&gt;Hello Bob!&lt;/span&gt;
+    &lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+    </div>
+
+
+
+
+</body>
+</html>

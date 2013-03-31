@@ -1,0 +1,81 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Annotations</h1>
+
+    <p>
+    	To allow you to include Concordion specifications in the build before they have
+    	been fully implemented, you can annotate a fixture class with one of the 
+    	following annotations in <code>org.concordion.api</code>:
+    </p>
+    
+    <style>
+    .annotationSummary td, .annotationSummary th {
+      padding: 8px;
+      line-height: 135%;
+    }
+    .annotationName {
+      font-family: Courier New, Courier;
+  	  font-size: 10pt;
+  	  vertical-align: top;
+    }
+    </style>
+    
+    <table class="annotationSummary">
+    	<tr>
+    		<th>&#160;</th>
+    		<th style="text-align: left">SUCCESS is <u>only</u> reported if...</th>
+    	</tr>
+	    <tr>
+	    	<th class="annotationName">@ExpectedToPass</th>
+	    	<td>The specification contains zero or more successes, no failures, and no exceptions.</td>
+		</tr>    	
+	    <tr>
+	    	<th class="annotationName">@ExpectedToFail</th>
+	    	<td>The specification contains one or more failures or exceptions.
+	    	
+	<p style="width: 500px; background-color: #f7f7f0; padding: 8px">
+		<b>Note:</b> When you use the <code>@ExpectedToFail</code> annotation, the specification 
+		<i>must</i> contain failures or exceptions. The final result will be reported as 
+		a FAILURE if the specification only has successes. This means you can't
+		forget to change the annotation to <code>@ExpectedToPass</code> when
+		the test begins to pass for the first time, and prevents you unwittingly introducing
+		regression bugs.
+	</p>		    	
+	    	</td>
+		</tr>
+	    <tr>
+	    	<th class="annotationName">@Unimplemented</th>
+	    	<td style="width: 600px">The specification contains no successes, no failures, and no exceptions.</td>
+		</tr>
+	</table>		    	
+    
+    <p>Also note:</p>
+
+		<ul>    
+		<li>If no explicit annotation is specified, Concordion assumes <code>@ExpectedToPass</code>.</li>
+	    <li>Do not use more than one annotation at a time.</li>
+	    </ul>
+    
+    <div class="example">        
+    
+        <h3>Example Usage</h3>
+
+<pre>
+<b>import</b> org.concordion.api.ExpectedToFail;
+<b>import</b> org.concordion.integration.junit3.ConcordionTestCase;
+
+@ExpectedToFail
+<b>public class</b> GreetingTest <b>extends</b> ConcordionTestCase {
+
+   <b>public</b> String greetingFor(String firstName) {
+        ...
+   }
+</pre>
+
+	</div>
+
+
+</body>
+</html>

@@ -1,0 +1,70 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Non-String Results</h1>
+    
+    <p>
+       Before comparison, the evaluation result is turned into a string by
+       calling the object's <code>toString()</code> method.
+    </p>
+    
+    <div class="example">        
+    
+        <h3>Example</h3>
+        
+<pre concordion:set="#snippet">
+&lt;span concordion:assertEquals="myMethod()"&gt;<b><em>(some expectation)</em></b>&lt;/span&gt;
+</pre>
+
+        <table concordion:execute="#outcome = outcomeOfPerformingAssertEquals(#snippet, #expectedString, #result, #resultType)">
+            <tr>
+                <th concordion:set="#result">myMethod()<br />Returns</th>
+                <th concordion:set="#resultType">Type</th>
+                <th concordion:set="#expectedString">The Expectation</th>
+                <th concordion:assertEquals="#outcome">Outcome</th>
+            </tr>
+            <tr>
+                <td>1234</td>
+                <td>String</td>
+                <td>1234</td>
+                <td>SUCCESS</td>
+            </tr>
+            <tr>
+                <td>1234</td>
+                <td>Integer</td>
+                <td>1234</td>
+                <td>SUCCESS</td>
+            </tr>
+            <tr>
+                <td>99</td>
+                <td>Integer</td>
+                <td>1234</td>
+                <td>FAILURE</td>
+            </tr>
+            <tr>
+                <td>1234</td>
+                <td>Double</td>
+                <td>1234</td>
+                <td>FAILURE</td>
+            </tr>
+            <tr>
+                <td>1234</td>
+                <td>Double</td>
+                <td>1234.0</td>
+                <td>SUCCESS</td>
+            </tr>
+        </table>
+    </div>
+
+
+    <h2>Further Details</h2>
+    
+    <ul>
+        <li><a href="NullResult.html">What if the evaluation returns null?</a></li>
+        <li><a href="VoidResult.html">What if the method called by an expression has a "void" return value?</a></li>
+    </ul>
+    
+
+</body>
+</html>

@@ -1,0 +1,118 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.2'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'java-library-distribution'
+apply plugin: 'eclipse'
+apply plugin: 'nexus'
+
+group = 'org.concordion'
+version = '1.4.4-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'junit:junit:4.11',
+                'ognl:ognl:2.6.9'
+
+    compile ('xom:xom:1.2.5') {
+        exclude group: 'xalan', module: 'xalan'
+        exclude group: 'xerces', module: 'xercesImpl'
+        exclude group: 'xml-apis', module: 'xml-apis'
+    }
+}
+
+compileJava {
+    sourceCompatibility = 1.5
+    targetCompatibility = 1.5
+
+    def java5BootClassPath = System.env.JAVA5_BOOTCLASSPATH
+    if (!(java5BootClassPath)) {
+        throw new TaskInstantiationException('''ERROR:
+The environment variable JAVA5_BOOTCLASSPATH must be set to a Java 5 rt.jar.  
+While the test classes require Java 6 or later, this variable must be set to 
+ensure compatibility with Java 5 libraries for the main classes.''')
+    }
+    options.bootClasspath = java5BootClassPath
+}
+
+test {
+    systemProperties['concordion.output.dir'] = "${reporting.baseDir}"
+}
+
+distributions {
+    main {
+        contents {
+            from ('.') { include '*.txt','build.gradle','src/**' } 
+            into ('lib') {
+                from 'licenses'
+            }
+        }
+    }
+}
+
+modifyPom {
+    project {
+        name 'Concordion'
+        description 'Concordion is an open source framework for Java that lets you turn a plain English description of a requirement into an automated test.'
+        url 'http://www.concordion.org'
+        packaging 'jar'
+        inceptionYear '2008'
+
+        scm {
+            url 'http://code.google.com/p/concordion/source/browse'
+            connection 'scm:svn:http://concordion.googlecode.com/svn/trunk/concordion/'
+            developerConnection 'scm:svn:https://concordion.googlecode.com/svn/trunk/concordion/'
+        }
+
+        licenses {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.html'
+                distribution 'repo'
+            }
+        }
+
+        issueManagement{ 
+            system 'GoogleCode'
+            url 'http://code.google.com/p/concordion/issues/list'
+        }
+
+        developers {
+            developer {
+                id 'peterson3'
+                name 'David Peterson'
+                roles 'Project Owner'
+            }
+            developer {
+                id 'jose.m.beas'
+                roles 'Developer'
+            }
+            developer {
+                id 'nigel.charman.nz'
+                roles 'Developer'
+            }
+            developer {
+                id 'habuma'
+                roles 'Developer'
+            }
+            developer {
+                id 'pinfieldharm'
+                roles 'Developer'
+            }
+            developer {
+                id 'wangyizhuo'
+                roles 'Developer'
+            }
+        }
+    }
+}

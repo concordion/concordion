@@ -1,0 +1,35 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Custom Commands</h1>
+
+    <p>
+       Users can add their own commands to Concordion as <a href="Extension.html">extensions</a>. User-contributed commands must use their own namespace that must not contain <code>concordion.org</code>.
+       Custom commands are automatically wrapped with a class that will notify <code>ThrowableCaughtListeners</code> of any <code>Throwables</code> that are thrown by the command.
+    </p>
+
+    <div class="example">
+
+        <h3>Example</h3>
+        
+        <p>An <span concordion:execute="addCommandExtension()">extension is installed</span> that adds the <code>log</code> command in the <code>http://myorg.org/my/extension</code> namespace.  This command simply logs the element text.</p>
+        <p>Running a specification containing: </p> 
+<pre concordion:set="#result = process(#TEXT)">
+&lt;div xmlns:myext="http://myorg.org/my/extension"&gt;
+&lt;p myext:log=""&gt;The answer is 42&lt;/p&gt;
+&lt;/div&gt;
+
+</pre>
+
+        <p>logs:
+        </p>
+        <table concordion:verifyRows="#line : getOutput()">
+        <tr><th concordion:assertEquals="#line">Output</th></tr>
+        <tr><td>The answer is 42</td></tr>
+        </table>
+
+    </div>
+
+</body>
+</html>

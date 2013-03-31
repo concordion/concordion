@@ -1,0 +1,67 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<head>
+<link href="../../../../../concordion.css" rel="stylesheet" type="text/css" />
+<style>
+</style>
+</head>
+<body>
+
+    <h1>Embedded Stylesheet</h1>
+
+    <p>
+        The output documents need some CSS to render 
+        successes, failures, stack traces etc. correctly.
+    </p>
+    
+    <p>    
+        The essential styles will be embedded at the top of the 
+        &lt;head&gt; section of the document. This allows
+        user-supplied stylesheets to override the settings,
+        if desired, and allows the document to perform
+        its function without any external dependencies
+        (this makes it easier to e-mail the output documents). 
+    </p>        
+
+    <div class="example">
+
+        <h3>Example</h3>
+
+        <p>If we process this document:</p>
+<pre concordion:execute="processDocument(#TEXT)">
+&lt;html xmlns:concordion="http://www.concordion.org/2007/concordion"&gt;
+&lt;head&gt;
+    &lt;title&gt;Example&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;p&gt;Body content goes here.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+        <p concordion:execute="#relativePos = getRelativePosition(#outer, #target, #sibling)">
+            We expect the output document to have a
+            &lt;<b concordion:set="#target">style</b>&gt;
+            element inserted into the
+            &lt;<b concordion:set="#outer">head</b>&gt; section 
+            <b concordion:assertEquals="#relativePos">before</b>
+            the &lt;<b concordion:set="#sibling">title</b>&gt; element.
+        </p>            
+
+        <p concordion:execute="#result = elementTextContains(#element, #s1, #s2)">
+            The &lt;<b concordion:set="#element">style</b>&gt; element
+            <b concordion:assertEquals="#result ? 'should' : 'should not'">should</b>
+            contain styles for CSS classes like
+            "<b concordion:set="#s1">.success</b>" and
+            "<b concordion:set="#s2">.failure</b>".
+        </p>
+    </div>
+        
+    <h2>Further Details</h2>
+
+    <ul>
+        <li><a href="MissingHeadElement.html">What if there is no &lt;head&gt; section?</a></li>
+    </ul>
+
+
+</body>
+</html>

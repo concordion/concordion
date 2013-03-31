@@ -1,0 +1,29 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>JUnit 3.8</h1>
+
+    <p>
+        An active specification with JUnit consists of two parts: an
+        HTML file and a Java test that extends <code>ConcordionTestCase</code>.
+    </p>
+    
+    <p>
+        When you run the test class using JUnit, it will automatically locate
+        the HTML file. It does this by looking in the same package for a ".html"
+        file named the same as the test, but without the "Test" suffix.
+    </p>
+
+    <div class="example">
+        <h3>Example</h3>
+
+        <p>
+            If your test is called <b>com.example.BreadcrumbTest</b> then the corresponding
+            HTML file must be in the same package (<b>com.example</b>) and called
+            <b>Breadcrumb.html</b>.
+        </p>                    
+    </div>
+
+</body>
+</html>

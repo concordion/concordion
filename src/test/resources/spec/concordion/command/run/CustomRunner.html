@@ -1,0 +1,140 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<head>
+    <link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+    <title>Custom Runners</title>
+</head>    
+<body>
+
+    <h1>Custom Runners</h1>
+
+    <p>
+    	If you want to run tests that are not part of Concordion, you can
+    	write your own runner by implementing the <code>org.concordion.api.Runner</code>
+    	interface.
+	</p>
+
+<h4>Using Full Class Name</h4>	
+	
+	<p>
+		You tell Concordion to use your alternative runner by specifying the
+		full name of your runner class:
+	</p>		
+	<div class="example">        
+
+        <h3>Example</h3>
+<pre>
+&lt;a concordion:run="<b>com.example.MyRunner</b>" href="<i>link</i>"&gt;link text&lt;/a&gt;</pre>
+</div>
+
+<h4>Using Aliases (Recommended)</h4>
+
+	<p>
+		Using a full class name in the instrumentation can be less future-proof, so,
+		instead, you can use an alias specified as a System parameter
+		(<code>concordion.runner.<i>alias</i> = <i>full-class-name</i></code>).
+	</p>		
+
+
+	<div class="example">        
+
+        <h3>Example</h3>
+
+<p>Include the following command-line parameter for the JVM:</p>
+<pre>-Dconcordion.runner.myRunner = com.example.MyRunner</pre>
+
+<p>Then use the alias "myRunner":</p>
+<pre>&lt;a concordion:run="<b>myRunner</b>" href="<i>link</i>"&gt;link text&lt;/a&gt;</pre>
+        
+    </div>        
+
+
+<h2>Worked Example</h2>
+
+    <div class="example">
+
+	<p>
+		Given we have a custom runner (<code>com.example.ExampleRunner</code>)
+		that returns the following results for different hrefs:
+	</p>		
+
+	<table concordion:execute="setUpResult(#regex, #result)">
+		<tr>
+			<th concordion:set="#regex">Href Matches</th>
+			<th concordion:set="#result">Result to Return</th>
+		</tr>
+		<tr>
+			<td>Pass.*</td>
+			<td>SUCCESS</td>
+		</tr>
+		<tr>
+			<td>Fail.*</td>
+			<td>FAILURE</td>
+		</tr>
+		<tr>
+			<td>Except.*</td>
+			<td>EXCEPTION</td>
+		</tr>
+		<tr>
+			<td>Ignore.*</td>
+			<td>IGNORED</td>
+		</tr>
+		<tr>
+			<td>.*</td>
+			<td>(No result. Throw an exception instead.)</td>
+		</tr>
+	</table>		
+
+	<p>
+		And we've included an alias to it, on the JVM command-line:
+	</p> 
+
+<pre>
+-Dconcordion.runner.exampleRunner = com.example.ExampleRunner 
+</pre>    
+    
+
+        <p>When we run the following instrumentation for different values of href:</p>
+<pre concordion:set="#snippet">
+&lt;p&gt;
+   &lt;a concordion:run="exampleRunner" href="<i>href</i>"&gt;My spec&lt;/a&gt;
+&lt;/p&gt; 
+</pre>
+
+        <p>We get the following outcomes:</p>
+
+        <table concordion:execute="#outcome = getResult(#snippet, #href)">
+            <tr>
+				<th concordion:set="#href">Href</th>
+                <th concordion:assertEquals="#outcome">Result Reported</th>
+            </tr>
+			<tr>
+				<td>PassingSpec.html</td>
+				<td>SUCCESS</td>
+			</tr>
+			<tr>
+				<td>FailingSpec.html</td>
+				<td>FAILURE</td>
+			</tr>
+			<tr>
+				<td>ExceptionSpec.html</td>
+				<td>FAILURE</td>
+			</tr>
+			<tr>
+				<td>IgnoredSpec.html</td>
+				<td>IGNORED</td>
+			</tr>
+			<tr>
+				<td>XXX.html</td>
+				<td>EXCEPTION</td>
+			</tr>
+        </table>
+        
+        <p>Note that if the test runner returns a RunnerResult containing an exception
+           this is reported as a failure, not as an exception. An exception is only 
+           reported if the runner itself throws an exception. 
+        </p> 
+    </div>        
+
+
+</body>
+</html>

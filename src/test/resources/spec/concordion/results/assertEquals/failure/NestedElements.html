@@ -1,0 +1,28 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Nested Elements</h1>
+    
+    <p>
+        Nested elements are moved into the 'expected' span.
+    </p>        
+
+    <div class="example">        
+    
+        <h3>Example</h3>
+        
+        <pre concordion:set="#snippet">&lt;div concordion:assertEquals="acronym"&gt;My &lt;em&gt;simple&lt;/em&gt; example&lt;/div&gt;</pre>
+
+        <p>When marked as a failure, with actual value <code concordion:set="#actualValue">XYZ</code>, it becomes:</p>
+
+<pre class="html" concordion:assertEquals="renderAsFailure(#snippet, #actualValue)">
+&lt;div concordion:assertEquals="acronym" class="failure"&gt; _
+&lt;del class="expected"&gt;My &lt;em&gt;simple&lt;/em&gt; example&lt;/del&gt;
+&lt;ins class="actual"&gt;XYZ&lt;/ins&gt; _
+&lt;/div&gt;
+</pre>
+    </div>
+
+</body>
+</html>

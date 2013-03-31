@@ -1,0 +1,79 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Listeners</h1>
+
+    <p>
+       The execution of Concordion commands can be observed using <code>listeners</code>. Listeners have access to the HTML element with which the command is associated,
+       and can modify the output HTML. 
+    </p>
+
+    <div class="example">
+
+        <h3>Example</h3>
+        
+        <p>An <span concordion:execute="addLoggingExtension()">extension is installed</span> that listens to assertEquals, assertTrue, assertFalse and execute commands. When the following instrumentation:</p> 
+<pre concordion:set="#result = process(#TEXT)">
+&lt;p concordion:execute="#result=sqrt(#num)"&gt;The square root of &lt;span concordion:set="#num"&gt;4.0&lt;/span&gt; is &lt;span concordion:assertEquals="#result"&gt;2.0&lt;/span&gt;&lt;/p&gt;
+
+&lt;p concordion:execute="#result=sqrt(#num)"&gt;The square root of &lt;span concordion:set="#num"&gt;16.0&lt;/span&gt; is &lt;span concordion:assertEquals="#result"&gt;3.0&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;span concordion:set="#num"&gt;3&lt;/span&gt;
+is &lt;span concordion:assertTrue="isPositive(#num)"&gt;is positive&lt;/span&gt;
+&lt;/p&gt;
+
+&lt;p&gt;&lt;span concordion:set=&quot;#num&quot;&gt;-4&lt;/span&gt;
+is &lt;span concordion:assertTrue=&quot;isPositive(#num)&quot;&gt;is positive&lt;/span&gt;
+&lt;/p&gt;
+
+&lt;p&gt;&lt;span concordion:set="#num"&gt;-5&lt;/span&gt;
+is &lt;span concordion:assertFalse="isPositive(#num)"&gt;is not positive&lt;/span&gt;
+&lt;/p&gt;
+
+&lt;p&gt;&lt;span concordion:set="#num"&gt;6&lt;/span&gt;
+is &lt;span concordion:assertFalse="isPositive(#num)"&gt;is not positive&lt;/span&gt;
+&lt;/p&gt;
+
+</pre>
+
+        <p>is run with a fixture that performs the arithmetical operations, the logged events are:
+        </p>
+        <table concordion:verifyRows="#event : getEventLog()">
+        <tr><th concordion:assertEquals="#event">Event</th></tr>
+        <tr><td>Execute 'The square root of 4.0 is 2.0'</td></tr>
+        <tr><td>Success '2.0'</td></tr>
+        <tr><td>Execute 'The square root of 16.0 is 3.0'</td></tr>
+        <tr><td>Failure expected:'3.0' actual:'4.0'</td></tr>
+        <tr><td>Success 'is positive'</td></tr>
+        <tr><td>Failure expected:'is positive' actual:'== false'</td></tr>
+        <tr><td>Success 'is not positive'</td></tr>
+        <tr><td>Failure expected:'is not positive' actual:'== true'</td></tr>
+        </table>
+
+    </div>
+
+    <h2>Other listeners</h2>
+
+    <h3>Command Listeners</h3>
+    <ul>
+        <li><a href="ExecuteTableListener.html">Execute table listeners</a> are notified on each row when <a href="../../command/execute/ExecutingTables.html">executing tables</a></li>
+        <li><a href="VerifyRowsListener.html">Verify row listeners</a> observe <a href="../../command/verifyRows/VerifyRows.html">verifyRows</a> commands</li>
+        <li><code>Run listeners</code> are notified of the outcome of <a href="../../command/run/Run.html">run</a> commands (success, failure or ignored)</li>
+        <li><code>Throwable caught listeners</code> are notified of any <code>throwables</code> that occur while processing a command, including <a href="../CustomCommand.html">custom commands</a>.</li> 
+    </ul>
+
+    <h3>Processing Listeners</h3>
+    <ul>
+        <li><code>Concordion build listeners</code> provide access to the <code>target</code> to allow resources to be written</li>
+        <li><code>Document parsing listeners</code> provide access to the <code>document</code> prior to parsing</li>
+        <li><code>Specification processing listeners</code> provide access to the <code>specification</code> before and after processing</li>
+    </ul>
+
+    <h2>Further Details</h2>
+
+    <ul>
+        <li>How are listeners <a href="../Extension.html">added to Concordion?</a></li>
+    </ul>
+</body>
+</html>

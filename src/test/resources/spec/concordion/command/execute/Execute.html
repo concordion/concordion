@@ -1,0 +1,40 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<head>
+    <link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+    <title>"execute"</title>
+</head>    
+<body>
+
+    <h1>execute</h1>
+
+    <p>
+        An <code>execute</code> command lets you run a method in the
+        Java fixture code.
+    </p>        
+    
+    <div class="example">
+
+        <h3>Example</h3>
+        
+        <p>The following instrumentation:</p>
+<pre class="html" concordion:set="#fragment">
+&lt;p concordion:execute="myMethod()"&gt;Some text goes here.&lt;/p&gt;
+</pre>
+        <p>
+            <span concordion:assertEquals="myMethodWasCalledProcessing(#fragment) ? 'Will' : 'Will not'">Will</span>
+            call <code>myMethod()</code> in the Java fixture code.
+        </p> 
+        
+    </div>            
+
+    <h2>Further Details</h2>
+
+    <ul>
+        <li><a href="ExecutingTables.html">Special handling of "execute" on a &lt;table&gt; element</a></li>
+        <li><a href="AccessToLinkHref.html">Is it possible to access to linked test data (e.g. a CSV file)?</a></li>
+    </ul>
+
+
+
+</body>
+</html>

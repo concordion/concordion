@@ -1,0 +1,55 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Listeners for Executing Tables</h1>
+
+    <p>
+       When <a href="../../command/execute/ExecutingTables.html">executing tables</a>, Concordion notifies <a href="Listener.html">listeners</a> of execute events for each row of the table.  
+       Execute listeners are notified that execution is complete prior to the assertions being evaluated.  
+    </p>
+
+
+    <div class="example">
+
+        <h3>Example</h3>
+    
+        <p>An <span concordion:execute="addLoggingExtension()">extension is installed</span> that logs <code>assertEquals</code> and <code>execute</code> commands. When the following instrumentation:</p> 
+<pre concordion:set="#result = process(#TEXT)">
+&lt;table concordion:execute="#username = generateUsername(#fullName)"&gt;
+    &lt;tr&gt;
+        &lt;th concordion:set="#fullName"&gt;Full Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#username"&gt;Username&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Fred Bloggs&lt;/td&gt;
+        &lt;td&gt;fredbloggs&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;John Doe&lt;/td&gt;
+        &lt;td&gt;johndoe&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Winston Churchill&lt;/td&gt;
+        &lt;td&gt;winston&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+</pre>
+
+        <p>is run with a method <code>generateUsername()</code> that returns the
+            full name in lowercase with spaces removed, the logged events are:
+        </p>
+        <table concordion:verifyRows="#event : getEventLog()">
+        <tr><th concordion:assertEquals="#event">Event</th></tr>
+        <tr><td>Execute 'Fred Bloggs, fredbloggs'</td></tr>
+        <tr><td>Success 'fredbloggs'</td></tr>
+        <tr><td>Execute 'John Doe, johndoe'</td></tr>
+        <tr><td>Success 'johndoe'</td></tr>
+        <tr><td>Execute 'Winston Churchill, winston'</td></tr>
+        <tr><td>Failure expected:'winston' actual:'winstonchurchill'</td></tr>
+        </table>
+
+    </div>
+
+</body>
+</html>

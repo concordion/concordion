@@ -1,0 +1,59 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Escaping HTML Characters</h1>
+
+    <p>
+        Special characters &lt;, &gt; and &amp; are escaped in the output.
+    </p>
+    
+    <div class="example">
+
+        <h3>Examples</h3>
+
+<p>
+    Given this instrumentation:
+</p>    
+<pre concordion:set="#fragment"><b>&lt;span concordion:echo="username" /&gt;</b></pre>
+
+<p>
+    We expect the following outputs, depending on the evaluation result of username:
+</p>    
+
+<p class="commentary">
+    We have stripped out the concordion:echo attributes from the 
+    "expected output" for legibility. They may be present.
+</p>
+
+<table concordion:execute="#output = render(#fragment, #evalResult)">
+<tr>
+<th concordion:set="#evalResult">username</th>
+<th concordion:assertEquals="#output">Expected output</th>
+</tr>
+<tr>
+<td>abc</td>
+<td><pre><b>&lt;span&gt;abc&lt;/span&gt;</b></pre></td>
+</tr>
+<tr>
+<td>a&amp;b</td>
+<td><pre><b>&lt;span&gt;a&amp;amp;b&lt;/span&gt;</b></pre></td>
+</tr>
+<tr>
+<td>a&lt;bc</td>
+<td><pre><b>&lt;span&gt;a&amp;lt;bc&lt;/span&gt;</b></pre></td>
+</tr>
+<tr>
+<td>&lt;&amp;&gt;abc</td>
+<td><pre><b>&lt;span&gt;&amp;lt;&amp;amp;&amp;gt;abc&lt;/span&gt;</b></pre></td>
+</tr>
+</table>
+
+
+        
+    </div>
+
+
+
+</body>
+</html>

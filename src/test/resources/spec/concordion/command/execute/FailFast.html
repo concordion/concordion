@@ -1,0 +1,47 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<head>
+    <link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+    <title>"Fail-fast" option</title>
+</head>
+<body>
+
+    <h1>"Fail-fast" option</h1>
+
+    <p>
+        By default, exceptions are reported but Concordion continues
+        processing the rest of the test. (<a href="ContinueAfterExceptions.html">More details</a>)
+    </p>
+
+    <p> However, fixtures can be annotated with <code>@FailFast</code> to stop further
+        processing if an exception is encountered. This can be useful if further processing
+        after an exception is undesirable (e.g. because it's slow, could cause corruption or
+        would make the results hard to explain to others).
+    </p>
+
+    <div class="example">
+
+        <h3>Example</h3>
+
+        <p>When the fixture is annotated with <code>@FailFast</code> and processes the following:</p>
+
+<pre class="html" concordion:set="#fragment">
+&lt;p concordion:execute="myExceptionThrower()"&gt;
+This method throws an exception.
+&lt;/p&gt;
+
+&lt;p concordion:execute="myMethod()"&gt;
+This method executes quietly.
+&lt;/p&gt;
+</pre>
+
+        <p>
+            It <span concordion:assertEquals="myMethodWasCalledProcessing(#fragment) ? 'calls' : 'does not call'">does not call</span>
+            <code>myMethod()</code> in the Java fixture code because the exception thrown by the
+            first method call stops further processing of the test.
+        </p>
+
+    </div>
+
+
+</body>
+</html>

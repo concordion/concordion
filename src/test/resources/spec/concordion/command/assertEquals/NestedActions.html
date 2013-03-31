@@ -1,0 +1,28 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Nested Actions</h1>
+    
+    <p>
+       Though nested elements are supported, these
+       elements may not contain commands. An "illegal markup" exception will be reported if
+       any nested commands are detected.
+    </p>
+    
+    <div class="example">        
+    
+        <h3>Example</h3>
+        
+        <p>The following will result in an "<span>illegal markup</span>" exception being raised:</p>         
+        
+<pre class="html">
+&lt;span concordion:assertEquals="#fullName"&gt;Fred 
+    &lt;span concordion:set="#surname"&gt;Bloggs&lt;/span&gt;
+&lt;/span&gt; 
+</pre>
+        
+    </div>
+
+</body>
+</html>

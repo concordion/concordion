@@ -1,0 +1,33 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>JavaScript Extension</h1>
+
+    <p>
+       JavaScript resources can be added to the Concordion output using an <a href="Extension.html">extension</a>.
+       The JavaScript can either be:
+       <ol>
+       <li>embedded in the Concordion output HTML, or</li>
+       <li>linked, in which case the JavaScript file will be copied to the specified location in the Concordion output folder and a JavaScript declaration added to the output HTML.</li>
+       </ol> 
+    </p>
+
+    <div class="example">
+        <h3>Example - embedded JavaScript</h3>
+        
+        <p>An <span concordion:execute="addEmbeddedJavaScriptExtension()"> extension  with embedded JavaScript is installed</span>.</p> 
+        <p>When <span concordion:execute="#result = processAnything()">Concordion is run</span>, 
+        the JavaScript <span concordion:assertTrue="hasEmbeddedTestJavaScript()">is embedded in the &lt;head&gt; section</span> of the output HTML.</p>
+    </div>
+    
+    <div class="example">
+        <h3>Example - linked JavaScript</h3>
+        
+        <p>An <span concordion:execute="addLinkedJavaScriptExtension()"> extension with linked JavaScript is installed</span> for the JavaScript file <code>my.js</code> with the target location <code>/js/my.js</code>.</p> 
+        <p>When <span concordion:execute="#result = processAnything()">Concordion is run</span>, 
+        the resource <code concordion:set="#resourcePath">/js/my.js</code> <span concordion:assertTrue="isAvailable(#resourcePath)">is available</span> in the Concordion output directory,
+        and a link to the external stylesheet <code concordion:set="#jsFilename">js/my.js</code> <span concordion:assertTrue="hasJavaScriptDeclaration(#jsFilename)">is declared in the output HTML</span>.</p>
+    </div>
+</body>
+</html>

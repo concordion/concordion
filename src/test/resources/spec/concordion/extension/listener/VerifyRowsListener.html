@@ -1,0 +1,38 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Listeners for Verify Rows</h1>
+
+    <p>
+       When <a href="../../command/verifyRows/VerifyRows.html">verifying rows</a>, Concordion notifies <a href="Listener.html">listeners</a> when the expression has been evaluated and also of each missing row or surplus row in the collection returned by the expression.  
+    </p>
+
+
+    <div class="example">
+
+        <h3>Example</h3>
+    
+        <p>An <span concordion:execute="addLoggingExtension()">extension is installed</span> that logs <code>assertEquals</code> and <code>verifyRows</code> commands. When the following instrumentation:</p> 
+<pre concordion:set="#result = process(#TEXT)">
+    &lt;table concordion:verifyRows="#beatle : getGeorgeAndRingo()"&gt;
+        &lt;tr&gt;&lt;th concordion:assertEquals="#beatle"&gt;Matching Beatle&lt;/th&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td&gt;George Harrison&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td&gt;Dingo Starr&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td&gt;George Michael&lt;/td&gt;&lt;/tr&gt;
+    &lt;/table&gt;        
+</pre>
+
+        <p>is run with a method <code>getGeorgeAndRingo()</code> that returns <code>George Harrison</code> and <code>Ringo Starr</code>, the logged events are: </p>
+        <table concordion:verifyRows="#event : getEventLog()">
+        <tr><th concordion:assertEquals="#event">Event</th></tr>
+        <tr><td>Evaluated '#beatle : getGeorgeAndRingo()'</td></tr>
+        <tr><td>Success 'George Harrison'</td></tr>
+        <tr><td>Failure expected:'Dingo Starr' actual:'Ringo Starr'</td></tr>
+        <tr><td>Missing Row 'George Michael'</td></tr>
+        </table>
+
+    </div>
+
+</body>
+</html>

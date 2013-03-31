@@ -1,0 +1,48 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>echo</h1>
+
+    <p>
+        The <code>concordion:echo</code> tag evaluates an expression and inserts
+        the result into the output HTML.
+    </p>
+
+    <div class="example">
+
+        <h3>Example</h3>
+
+        <p concordion:execute="setNextResult(#result)">
+            If the expression "<b>username</b>"
+            evaluates to "<b concordion:set="#result">jbloggs</b>" and we 
+            have the following instrumentation in our specification:
+        </p>
+
+<pre concordion:set="#fragment">
+&lt;p&gt;
+    Username: <b>&lt;span concordion:echo="username" /&gt;</b>
+&lt;/p&gt;    
+</pre>
+
+        <p>Then we expect the following output:</p>
+
+<pre concordion:assertEquals="render(#fragment)">
+&lt;p&gt;
+    Username: <b>&lt;span concordion:echo="username"&gt;jbloggs&lt;/span&gt;</b>
+&lt;/p&gt;    
+</pre>
+        
+    </div>
+
+    <h2>Further Details</h2>
+    
+    <ul>
+        <li><a href="DisplayingNulls.html">How are nulls displayed?</a></li>
+        <li><a href="EscapingHtmlCharacters.html">Are HTML-sensitive characters escaped?</a></li>
+    </ul>
+
+
+
+</body>
+</html>
