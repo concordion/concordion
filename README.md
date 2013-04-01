@@ -10,7 +10,7 @@ Compiling and Running the Tests
 -------------------------------------------------
 After installing Gradle, run the following from the command line:
 
-    `gradle clean test`
+> gradle clean test
     
 This will download the required dependencies, clean the existing project, recompile all source code and run all the tests. Concordion output is written to the `./build/reports/spec` folder.
 
@@ -18,7 +18,7 @@ Creating an Eclipse project
 ----------------------------------------
 After installing Gradle, run the following from the command line:
 
-    `gradle cleanEclipse eclipse`
+> gradle cleanEclipse eclipse
 
 This will download the required dependencies and create an Eclipse project. From Eclipse, the project can be imported from the `File` > `Import...` menu by selecting the import source `General` > `Existing Projects into Workspace`.
 
