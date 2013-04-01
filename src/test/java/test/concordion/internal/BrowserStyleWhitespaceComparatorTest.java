@@ -1,11 +1,11 @@
 package test.concordion.internal;
 
-import junit.framework.Assert;
 import org.concordion.internal.BrowserStyleWhitespaceComparator;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class BrowserStyleWhitespaceComparatorTest {
-    private BrowserStyleWhitespaceComparator comparator = new BrowserStyleWhitespaceComparator();
+    private final BrowserStyleWhitespaceComparator comparator = new BrowserStyleWhitespaceComparator();
 
     @Test
     public void normalizesItemsBeforeComparing() {
