@@ -52,7 +52,7 @@ public interface ConcordionExtender {
 
     /**
      * Adds a listener to <code>concordion:execute</code> commands.
-     * @param listener 
+     * @param executeListener 
      * @return this
      */
     ConcordionExtender withExecuteListener(ExecuteListener executeListener);
@@ -150,7 +150,7 @@ public interface ConcordionExtender {
 
     /**
      * Overrides the target that the Concordion specifications are written to.
-     * @param source the new target 
+     * @param target the new target 
      * @return this
      */
     ConcordionExtender withTarget(Target target);
