@@ -21,7 +21,7 @@ Development Rules
 
 Building
 --------
-This has been tested using Gradle 1.5.
+This requires Gradle 1.5 or later.
 
 Useful tasks include:
 
