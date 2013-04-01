@@ -12,9 +12,7 @@ apply plugin: 'java'
 apply plugin: 'java-library-distribution'
 apply plugin: 'eclipse'
 apply plugin: 'nexus'
-
-group = 'org.concordion'
-version = '1.4.4-SNAPSHOT'
+apply from: 'http://tellurianring.com/projects/gradle-plugins/gradle-release/apply.groovy'
 
 repositories {
     mavenCentral()
@@ -60,6 +58,9 @@ distributions {
     }
 }
 
+// 'gradle release' will also upload release to Nexus
+createReleaseTag.dependsOn uploadArchives
+
 modifyPom {
     project {
         name 'Concordion'
@@ -91,27 +92,27 @@ modifyPom {
             developer {
                 id 'peterson3'
                 name 'David Peterson'
-                roles 'Project Owner'
+                roles { role 'Project Owner' }
             }
             developer {
                 id 'jose.m.beas'
-                roles 'Developer'
+                roles  { role 'Developer' }
             }
             developer {
                 id 'nigel.charman.nz'
-                roles 'Developer'
+                roles  { role 'Developer' }
             }
             developer {
                 id 'habuma'
-                roles 'Developer'
+                roles  { role 'Developer' }
             }
             developer {
                 id 'pinfieldharm'
-                roles 'Developer'
+                roles  { role 'Developer' }
             }
             developer {
                 id 'wangyizhuo'
-                roles 'Developer'
+                roles  { role 'Developer' }
             }
         }
     }
