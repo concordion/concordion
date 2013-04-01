@@ -1,6 +1,6 @@
 [Concordion](http://www.concordion.org) is an open source framework for Java that lets you turn a plain English description of a requirement into an automated test.
 
-Concordion uses [Gradle](http://www.gradle.org/) as a build tool. It has been tested with Gradle 1.5.
+Concordion uses [Gradle](http://www.gradle.org/) as a build tool. To build the source code, run the tests or create an Eclipse project, you will need to [download](http://www.gradle.org/downloads.html) and [install](http://www.gradle.org/installation.html) Gradle. It has been tested with Gradle 1.5.
 
 Build Tasks
 =======
