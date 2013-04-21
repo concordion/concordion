@@ -342,7 +342,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     public ConcordionBuilder withFixture(Object fixture) {
         if (fixture.getClass().isAnnotationPresent(FailFast.class)) {
             FailFast failFastAnnotation = fixture.getClass().getAnnotation(FailFast.class);
-            Class<? extends Throwable>[] failFastExceptions = failFastAnnotation.value();
+            Class<? extends Throwable>[] failFastExceptions = failFastAnnotation.onExceptionType();
             withFailFast(failFastExceptions);
         }
         if (fixture.getClass().isAnnotationPresent(FullOGNL.class)) {

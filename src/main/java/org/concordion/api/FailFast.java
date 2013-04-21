@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface FailFast {
 
-    Class<? extends Throwable>[] value() default Throwable.class;
+    Class<? extends Throwable>[] onExceptionType() default Throwable.class;
 
 }

@@ -21,7 +21,7 @@
 
         <h3>Example - non matching exception</h3>
 
-        <p>When the fixture is annotated with <code>@FailFast({RuntimeException.class, IOException.class})</code> and processes the following:</p>
+        <p>When the fixture is annotated with <code>@FailFast(onExceptionType={RuntimeException.class, IOException.class})</code> and processes the following:</p>
 
 <pre class="html" concordion:set="#fragment">
 &lt;p concordion:execute="myTimeoutExceptionThrower()"&gt;
@@ -45,7 +45,7 @@ This method executes quietly.
 
         <h3>Example - matching exception</h3>
 
-        <p>When the fixture is annotated with <code>@FailFast({RuntimeException.class, IOException.class})</code> and processes the following:</p>
+        <p>When the fixture is annotated with <code>@FailFast(onExceptionType={RuntimeException.class, IOException.class})</code> and processes the following:</p>
 
 <pre class="html" concordion:set="#fragment">
 &lt;p concordion:execute="myFileNotFoundExceptionThrower()"&gt;

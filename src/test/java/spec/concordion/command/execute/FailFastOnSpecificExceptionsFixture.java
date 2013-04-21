@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 import test.concordion.TestRig;
 
 @RunWith(ConcordionRunner.class)
-@FailFast({RuntimeException.class, IOException.class})
+@FailFast(onExceptionType={RuntimeException.class, IOException.class})
 public class FailFastOnSpecificExceptionsFixture {
 
     private boolean myMethodWasCalled;
