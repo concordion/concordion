@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd"><svg xmlns="http://www.w3.org/2000/svg" width="1978" height="838" xmlns:xlink="http://www.w3.org/1999/xlink"><source><![CDATA[Title: Fail Fast on Concordion command
+<svg xmlns="http://www.w3.org/2000/svg" width="1978" height="838" xmlns:xlink="http://www.w3.org/1999/xlink"><source><![CDATA[Title: Fail Fast on Concordion command
 ConcordionRunner->ConcordionRunner:runLeaf()
 ConcordionRunner->FixtureRunner:run()
 FixtureRunner->Concordion: process(fixture)
