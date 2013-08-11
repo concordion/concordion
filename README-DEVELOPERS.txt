@@ -33,3 +33,8 @@ gradle clean distZip
 
 gradle cleanEclipse eclipse
     - to build an Eclipse project for concordion
+    
+Docs
+----
+See the wiki (https://code.google.com/p/concordion/w/list) for docs on makeing a release.
+There are some sequence diagrams in the devdocs folder.

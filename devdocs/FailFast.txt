@@ -1,0 +1,22 @@
+Source file for FailFast.svg sequence diagram
+
+Paste into http://bramp.github.io/js-sequence-diagrams/
+
+Title: Fail Fast on Concordion command
+ConcordionRunner->ConcordionRunner:runLeaf()
+ConcordionRunner->FixtureRunner:run()
+FixtureRunner->Concordion: process(fixture)
+Concordion->Specification:process()
+Specification->SpecificationCommand:execute()
+SpecificationCommand->CommandCall: getChildren().\nprocessSequentially()
+CommandCall->ThrowableCatchingDecorator: execute()
+ThrowableCatchingDecorator->Command: execute()
+Note over Command: Assuming\ncommand throws\nexception
+Command-->ThrowableCatchingDecorator: throw Exception
+
+ThrowableCatchingDecorator->ResultRecorder: record(EXCEPTION)
+ThrowableCatchingDecorator->ResultRecorder: recordFailFastException
+ThrowableCatchingDecorator-->SpecificationCommand: throw FailFastException
+FixtureRunner->ResultSummary: assertIsSatisfied(fixture)
+ResultSummary->FixtureState:assertIsSatisfied()
+FixtureState-->ConcordionRunner: throw new AssertionError
