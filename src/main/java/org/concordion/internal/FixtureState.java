@@ -16,7 +16,7 @@ public enum FixtureState {
         }
         
         @Override
-        public void assertIsSatisfied(long successCount, long failureCount, long exceptionCount) {
+        public void assertIsSatisfied(long successCount, long failureCount, long exceptionCount, FailFastException ffe) {
             List<String> list = new ArrayList<String>();
             addToList(list, successCount, "a success", "some successes");
             addToList(list, failureCount, "a failure", "some failures");
@@ -41,7 +41,7 @@ public enum FixtureState {
     EXPECTED_TO_FAIL {
 
         @Override
-        public void assertIsSatisfied(long successCount, long failureCount, long exceptionCount) {
+        public void assertIsSatisfied(long successCount, long failureCount, long exceptionCount, FailFastException ffe) {
             if (failureCount + exceptionCount == 0) {
                 throw new AssertionError("Specification is expected to fail but has neither failures nor exceptions.");
             }
@@ -55,7 +55,10 @@ public enum FixtureState {
     EXPECTED_TO_PASS {
 
         @Override
-        public void assertIsSatisfied(long successCount, long failureCount, long exceptionCount) {
+        public void assertIsSatisfied(long successCount, long failureCount, long exceptionCount, FailFastException ffe) {
+            if (ffe != null) {
+                throw new AssertionError(ffe);
+            }
             if (failureCount > 0) {
                 throw new AssertionError("Specification has failure(s). See output HTML for details.");
             }
@@ -69,7 +72,7 @@ public enum FixtureState {
         }
     };
     
-    public abstract void assertIsSatisfied(long successCount, long failureCount, long exceptionCount);
+    public abstract void assertIsSatisfied(long successCount, long failureCount, long exceptionCount, FailFastException ffe);
 
     public abstract void printNote(PrintStream out);
 }

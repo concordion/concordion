@@ -14,6 +14,7 @@ import org.concordion.api.listener.RunIgnoreEvent;
 import org.concordion.api.listener.RunListener;
 import org.concordion.api.listener.RunSuccessEvent;
 import org.concordion.api.listener.ThrowableCaughtEvent;
+import org.concordion.internal.FailFastException;
 import org.concordion.internal.runner.DefaultConcordionRunner;
 import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
@@ -99,10 +100,14 @@ public class RunCommand extends AbstractCommand {
                     announceFailure(element);
                 }
                 resultRecorder.record(result);
+            } catch (FailFastException e) { 
+                throw e;
             } catch (Throwable e) {
                 announceFailure(e, element, runnerType);
                 resultRecorder.record(Result.FAILURE);
             }
+        } catch (FailFastException e) { 
+            throw e; // propagate FailFastExceptions
         } catch (Exception e) {
             announceFailure(e, element, runnerType);
             resultRecorder.record(Result.FAILURE);

@@ -9,6 +9,7 @@ import org.concordion.api.Result;
 import org.concordion.api.Runner;
 import org.concordion.api.RunnerResult;
 import org.concordion.api.Unimplemented;
+import org.concordion.internal.FailFastException;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.notification.Failure;
 
@@ -86,6 +87,9 @@ public class DefaultConcordionRunner implements Runner {
 
     private void rethrowExceptionIfWarranted(Class<?> concordionClass, Throwable exception) throws AssertionError, Exception {
         if (exception instanceof AssertionError) {
+            if (exception.getCause() instanceof FailFastException) {
+                throw (FailFastException)(exception.getCause());
+            }
             if (fullyImplemented(concordionClass)) {
                 return; // do not throw exception, failing specs are treated as test failures.
             } else {

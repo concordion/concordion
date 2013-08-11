@@ -45,7 +45,9 @@ public class ThrowableCatchingDecorator extends AbstractCommandDecorator {
             announceThrowableCaught(commandCall.getElement(), t, commandCall.getExpression());
             for (Class<? extends Throwable> exceptionType : failFastExceptions) {
                 if (exceptionType.isAssignableFrom(t.getCause().getClass())) {
-                    throw new FailFastException("An exception was thrown", t);
+                    FailFastException failFastException = new FailFastException("An exception was thrown", t);
+                    resultRecorder.recordFailFastException(failFastException);
+                    throw failFastException;
                 }
             }
         }        

@@ -8,6 +8,7 @@ import ognl.OgnlException;
 import org.concordion.api.Element;
 import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
+import org.concordion.internal.FailFastException;
 import org.concordion.internal.util.Check;
 import org.concordion.internal.util.IOUtil;
 
@@ -18,22 +19,26 @@ public class ThrowableRenderer implements ThrowableCaughtListener {
     private Set<Element> rootElementsWithScript = new HashSet<Element>();
     
     public void throwableCaught(ThrowableCaughtEvent event) {
-        buttonId++;
-        
         Element element = event.getElement();
-        element.appendChild(expectedSpan(element));
-        
-        // Special handling for <a> tags to avoid the stack-trace being inside the link text
-        if (element.getLocalName().equals("a")) {
-            Element div = new Element("div"); 
-            element.appendSister(div);
-            element = div;
+        if (!(event.getThrowable() instanceof FailFastException)) {
+            buttonId++;
+            
+            element.appendChild(expectedSpan(element));
+            
+            // Special handling for <a> tags to avoid the stack-trace being inside the link text
+            if (element.getLocalName().equals("a")) {
+                Element div = new Element("div"); 
+                element.appendSister(div);
+                element = div;
+            }
+            element.appendChild(exceptionMessage(event.getThrowable().getMessage()));
+            element.appendChild(stackTraceTogglingButton());
+            element.appendChild(stackTrace(event.getThrowable(), event.getExpression()));
+            
+            ensureDocumentHasTogglingScript(element);
+        } else {
+            element.addStyleClass("failure");
         }
-        element.appendChild(exceptionMessage(event.getThrowable().getMessage()));
-        element.appendChild(stackTraceTogglingButton());
-        element.appendChild(stackTrace(event.getThrowable(), event.getExpression()));
-        
-        ensureDocumentHasTogglingScript(element);
     }
 
     private void ensureDocumentHasTogglingScript(Element element) {
