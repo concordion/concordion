@@ -121,6 +121,11 @@ public class ConcordionBuilder implements ConcordionExtender {
         return this;
     }
 
+    public ConcordionBuilder withSpecificationLocator(SpecificationLocator specificationLocator) {
+        this.specificationLocator = specificationLocator;
+        return this;
+    }
+
     public ConcordionBuilder withEvaluatorFactory(EvaluatorFactory evaluatorFactory) {
         this.evaluatorFactory = evaluatorFactory;
         return this;

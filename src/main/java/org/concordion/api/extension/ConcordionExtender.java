@@ -3,6 +3,7 @@ package org.concordion.api.extension;
 import org.concordion.api.Command;
 import org.concordion.api.Resource;
 import org.concordion.api.Source;
+import org.concordion.api.SpecificationLocator;
 import org.concordion.api.Target;
 import org.concordion.api.listener.AssertEqualsListener;
 import org.concordion.api.listener.AssertFalseListener;
@@ -154,4 +155,11 @@ public interface ConcordionExtender {
      * @return this
      */
     ConcordionExtender withTarget(Target target);
+
+    /**
+     * Overrides the locator for Concordion specifications.
+     * @param locator the new specification locator
+     * @return this
+     */
+    ConcordionExtender withSpecificationLocator(SpecificationLocator locator);
 }

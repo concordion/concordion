@@ -19,8 +19,9 @@ public class SpecificationExporter implements SpecificationProcessingListener {
     public void afterProcessingSpecification(SpecificationProcessingEvent event) {
         try {
             target.write(event.getResource(), XML_DECLARATION + event.getRootElement().toXML());
-            if (target instanceof FileTarget) {
-                System.out.println(((FileTarget) target).getFile(event.getResource()).getAbsolutePath());
+            String description = target.toString(event.getResource());
+            if (description != null) {
+                System.out.println(description);
             }
         } catch (IOException e) {
             throw new RuntimeException("Failed to write results to '" + event.getResource().getPath() + "'.", e);
