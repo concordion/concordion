@@ -83,7 +83,7 @@ public class FileTarget implements Target {
         return getFile(resource).exists();        
     }
     
-    public String toString(Resource resource) {
+    public String resolvedPathFor(Resource resource) {
         return getFile(resource).getAbsolutePath();
     }
 }

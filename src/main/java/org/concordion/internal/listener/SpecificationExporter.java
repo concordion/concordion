@@ -19,7 +19,7 @@ public class SpecificationExporter implements SpecificationProcessingListener {
     public void afterProcessingSpecification(SpecificationProcessingEvent event) {
         try {
             target.write(event.getResource(), XML_DECLARATION + event.getRootElement().toXML());
-            String description = target.toString(event.getResource());
+            String description = target.resolvedPathFor(event.getResource());
             if (description != null) {
                 System.out.println(description);
             }

@@ -54,8 +54,8 @@ public class FileTargetWithSuffix implements Target {
     }
     
     @Override
-    public String toString(Resource resource) {
-        return target.toString(rename(resource));
+    public String resolvedPathFor(Resource resource) {
+        return target.resolvedPathFor(rename(resource));
     }
 
     private Resource rename(Resource resource) {

@@ -45,7 +45,7 @@ public class StubTarget implements Target {
     }
 
     @Override
-    public String toString(Resource resource) {
+    public String resolvedPathFor(Resource resource) {
         return null;
     }
 }

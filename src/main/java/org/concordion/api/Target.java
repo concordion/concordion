@@ -16,5 +16,5 @@ public interface Target {
 
     boolean exists(Resource resource);
     
-    String toString(Resource resource);
+    String resolvedPathFor(Resource resource);
 }
