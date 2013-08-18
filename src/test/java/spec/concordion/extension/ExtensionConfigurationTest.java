@@ -5,7 +5,6 @@ import java.util.regex.Pattern;
 
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.runner.RunWith;
 
 import test.concordion.JavaSourceCompiler;
@@ -18,18 +17,10 @@ public class ExtensionConfigurationTest {
 
     private JavaSourceCompiler compiler;
     private static final Pattern CLASS_NAME_PATTERN = Pattern.compile("class\\s*(.*?)\\s*(\\{|extends)");
-    private String savedProperty;
 
-    @Before
-    public void saveConcordionExtensionsSystemProperty() {
-        savedProperty = System.getProperty("concordion.extensions");
-    }
-    
     @After
     public void clearConcordionExtensionsSystemProperty() {
-        if (savedProperty != null) {
-            System.setProperty("concordion.extensions", savedProperty);
-        }
+        System.clearProperty("concordion.extensions");
     }
     
     public String process() throws Exception {
