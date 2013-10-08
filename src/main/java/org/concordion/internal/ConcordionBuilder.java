@@ -37,6 +37,7 @@ import org.concordion.internal.command.AssertTrueCommand;
 import org.concordion.internal.command.EchoCommand;
 import org.concordion.internal.command.ExecuteCommand;
 import org.concordion.internal.command.LocalTextDecorator;
+import org.concordion.internal.command.ParallelRunCommand;
 import org.concordion.internal.command.RunCommand;
 import org.concordion.internal.command.SetCommand;
 import org.concordion.internal.command.SpecificationCommand;
@@ -82,6 +83,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private AssertFalseCommand assertFalseCommand = new AssertFalseCommand();
     private ExecuteCommand executeCommand = new ExecuteCommand();
     private RunCommand runCommand = new RunCommand();
+    private ParallelRunCommand parallelRunCommand = new ParallelRunCommand();
     private VerifyRowsCommand verifyRowsCommand = new VerifyRowsCommand();
     private EchoCommand echoCommand = new EchoCommand();
     private File baseOutputDir;
@@ -102,6 +104,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         withAssertFalseListener(assertRenderer);
         withVerifyRowsListener(new VerifyRowsResultRenderer());
         withRunListener(new RunResultRenderer());
+        withSpecificationProcessingListener(new ParallelTestCompletionBlocker(parallelRunCommand));
         withDocumentParsingListener(new DocumentStructureImprover());
         withDocumentParsingListener(new MetadataCreator());
         String stylesheetContent = IOUtil.readResourceAsString(EMBEDDED_STYLESHEET_RESOURCE);
@@ -150,6 +153,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     
     public ConcordionBuilder withRunListener(RunListener listener) {
         runCommand.addRunListener(listener);
+        parallelRunCommand.addRunListener(listener);
         return this;
     }
 
@@ -229,6 +233,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         builtAlready = true;
         
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "run", runCommand);
+        withApprovedCommand(NAMESPACE_CONCORDION_2007, "prun", parallelRunCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "execute", executeCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "set", new SetCommand());
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "assertEquals", assertEqualsCommand);

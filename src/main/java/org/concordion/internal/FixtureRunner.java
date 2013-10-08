@@ -11,8 +11,10 @@ public class FixtureRunner {
         ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture);
         fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
         ResultSummary resultSummary = concordionBuilder.build().process(fixture);
-        resultSummary.print(System.out, fixture);
-        resultSummary.assertIsSatisfied(fixture);
+        synchronized (resultSummary) {
+            resultSummary.print(System.out, fixture);
+            resultSummary.assertIsSatisfied(fixture);            
+        }
         return resultSummary;
     }
 }
