@@ -15,4 +15,6 @@ public interface Target {
     void delete(Resource resource) throws IOException;
 
     boolean exists(Resource resource);
+    
+    String resolvedPathFor(Resource resource);
 }

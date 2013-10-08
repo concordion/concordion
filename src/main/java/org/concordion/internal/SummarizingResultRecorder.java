@@ -13,6 +13,7 @@ import org.concordion.api.Unimplemented;
 public class SummarizingResultRecorder implements ResultRecorder, ResultSummary {
 
     private List<Result> recordedResults = new ArrayList<Result>();
+    private FailFastException failFastException;
 
     public void record(Result result) {
         recordedResults.add(result);
@@ -24,7 +25,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
 
     public void assertIsSatisfied(Object fixture) {
         FixtureState state = getFixtureState(fixture);
-        state.assertIsSatisfied(getSuccessCount(), getFailureCount(), getExceptionCount());
+        state.assertIsSatisfied(getSuccessCount(), getFailureCount(), getExceptionCount(), failFastException);
     }
 
     private FixtureState getFixtureState(Object fixture) {
@@ -83,5 +84,18 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         }
         getFixtureState(fixture).printNote(out);
         out.println("\n");
+    }
+
+    @Override
+    public void recordFailFastException(FailFastException exception) {
+        this.setFailFastException(exception);
+    }
+
+    public Throwable getFailFastException() {
+        return failFastException;
+    }
+
+    public void setFailFastException(FailFastException exception) {
+        this.failFastException = exception;
     }
 }

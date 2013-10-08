@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
+
 import org.concordion.Concordion;
 import org.concordion.api.Command;
 import org.concordion.api.EvaluatorFactory;
@@ -90,7 +93,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private ThrowableCaughtPublisher throwableListenerPublisher = new ThrowableCaughtPublisher();
     private LinkedHashMap<String, Resource> resourceToCopyMap = new LinkedHashMap<String, Resource>();
     private List<SpecificationProcessingListener> specificationProcessingListeners = new ArrayList<SpecificationProcessingListener>();
-    private boolean failFast;
+    private List<Class<? extends Throwable>> failFastExceptions = Collections.<Class<? extends Throwable>>emptyList();
     private boolean builtAlready;
     
     {
@@ -118,6 +121,11 @@ public class ConcordionBuilder implements ConcordionExtender {
 
     public ConcordionBuilder withTarget(Target target) {
         this.target = target;
+        return this;
+    }
+
+    public ConcordionBuilder withSpecificationLocator(SpecificationLocator specificationLocator) {
+        this.specificationLocator = specificationLocator;
         return this;
     }
 
@@ -178,7 +186,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     }
     
     private ConcordionBuilder withApprovedCommand(String namespaceURI, String commandName, Command command) {
-        ThrowableCatchingDecorator throwableCatchingDecorator = new ThrowableCatchingDecorator(new LocalTextDecorator(command), failFast);
+        ThrowableCatchingDecorator throwableCatchingDecorator = new ThrowableCatchingDecorator(new LocalTextDecorator(command), failFastExceptions);
         throwableCatchingDecorator.addThrowableListener(throwableListenerPublisher);
         Command decoratedCommand = throwableCatchingDecorator;
         commandRegistry.register(namespaceURI, commandName, decoratedCommand);
@@ -336,14 +344,16 @@ public class ConcordionBuilder implements ConcordionExtender {
         return new File(outputPath);
     }
 
-    public ConcordionBuilder withFailFast(boolean failFast) {
-        this.failFast = failFast;
+    public ConcordionBuilder withFailFast(Class<? extends Throwable>[] failFastExceptions) {
+        this.failFastExceptions = Arrays.asList(failFastExceptions);
         return this;
     }
 
     public ConcordionBuilder withFixture(Object fixture) {
         if (fixture.getClass().isAnnotationPresent(FailFast.class)) {
-            withFailFast(true);
+            FailFast failFastAnnotation = fixture.getClass().getAnnotation(FailFast.class);
+            Class<? extends Throwable>[] failFastExceptions = failFastAnnotation.onExceptionType();
+            withFailFast(failFastExceptions);
         }
         if (fixture.getClass().isAnnotationPresent(FullOGNL.class)) {
             withEvaluatorFactory(new OgnlEvaluatorFactory());

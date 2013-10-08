@@ -1,0 +1,27 @@
+Source file for FailFast.svg sequence diagram
+
+Paste into http://bramp.github.io/js-sequence-diagrams/
+
+Title: Fail Fast on Concordion Run Command
+ConcordionRunner->ConcordionRunner:runLeaf()
+ConcordionRunner->FixtureRunner:run()
+FixtureRunner->Concordion: process(fixture)
+Concordion->Specification:process()
+Specification->SpecificationCommand:execute()
+SpecificationCommand->CommandCall: getChildren().\nprocessSequentially()
+CommandCall->ThrowableCatchingDecorator: execute()
+ThrowableCatchingDecorator->RunCommand: execute()
+RunCommand->DefaultConcordionRunner: result = execute\n(resource, href)
+Note right of DefaultConcordionRunner: Finds JUnit class
+DefaultConcordionRunner-->DefaultConcordionRunner: junitResult =\nrunTestClass(concordionClass)
+Note over DefaultConcordionRunner: Assuming test\nclass fails with\nFailFastException
+DefaultConcordionRunner-->DefaultConcordionRunner: decodeJUnitResult\n(concordionClass, jUnitResult)
+Note right of DefaultConcordionRunner: If test failed due to\nFailFastException, throw it
+DefaultConcordionRunner-->RunCommand: throw FailFastException
+RunCommand-->ThrowableCatchingDecorator: throw FailFastException
+ThrowableCatchingDecorator->ResultRecorder: record(EXCEPTION)
+ThrowableCatchingDecorator->ResultRecorder: recordFailFastException
+ThrowableCatchingDecorator-->SpecificationCommand: throw FailFastException
+FixtureRunner->ResultSummary: assertIsSatisfied(fixture)
+ResultSummary->FixtureState:assertIsSatisfied()
+FixtureState-->ConcordionRunner: throw new AssertionError

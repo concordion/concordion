@@ -82,4 +82,8 @@ public class FileTarget implements Target {
     public boolean exists(Resource resource) {
         return getFile(resource).exists();        
     }
+    
+    public String resolvedPathFor(Resource resource) {
+        return getFile(resource).getAbsolutePath();
+    }
 }

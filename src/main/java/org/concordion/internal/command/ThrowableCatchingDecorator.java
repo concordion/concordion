@@ -1,5 +1,7 @@
 package org.concordion.internal.command;
 
+import java.util.List;
+
 import org.concordion.api.AbstractCommandDecorator;
 import org.concordion.api.Command;
 import org.concordion.api.CommandCall;
@@ -15,7 +17,7 @@ import org.concordion.internal.util.Announcer;
 public class ThrowableCatchingDecorator extends AbstractCommandDecorator {
 
     private final Announcer<ThrowableCaughtListener> listeners = Announcer.to(ThrowableCaughtListener.class);
-    private final boolean failFast;
+    private final List<Class<? extends Throwable>> failFastExceptions;
     
     public void addThrowableListener(ThrowableCaughtListener listener) {
         listeners.addListener(listener);
@@ -25,9 +27,9 @@ public class ThrowableCatchingDecorator extends AbstractCommandDecorator {
         listeners.removeListener(listener);
     }
     
-    public ThrowableCatchingDecorator(Command command, boolean failFast) {
+    public ThrowableCatchingDecorator(Command command, List<Class<? extends Throwable>> failFastExceptions) {
         super(command);
-        this.failFast = failFast;
+        this.failFastExceptions = failFastExceptions;
     }
 
     private void announceThrowableCaught(Element element, Throwable t, String expression) {
@@ -41,8 +43,12 @@ public class ThrowableCatchingDecorator extends AbstractCommandDecorator {
         } catch (Throwable t) {
             resultRecorder.record(Result.EXCEPTION);
             announceThrowableCaught(commandCall.getElement(), t, commandCall.getExpression());
-            if (failFast) {
-                throw new FailFastException("An exception was thrown", t);
+            for (Class<? extends Throwable> exceptionType : failFastExceptions) {
+                if (exceptionType.isAssignableFrom(t.getCause().getClass())) {
+                    FailFastException failFastException = new FailFastException("An exception was thrown", t);
+                    resultRecorder.recordFailFastException(failFastException);
+                    throw failFastException;
+                }
             }
         }        
     }

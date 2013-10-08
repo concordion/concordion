@@ -43,4 +43,9 @@ public class StubTarget implements Target {
     public OutputStream getOutputStream(Resource resource) {
         throw new UnsupportedOperationException("not implemented on StubTarget");
     }
+
+    @Override
+    public String resolvedPathFor(Resource resource) {
+        return null;
+    }
 }
