@@ -240,8 +240,9 @@ public class ConcordionBuilder implements ConcordionExtender {
         Check.isFalse(builtAlready, "ConcordionBuilder currently does not support calling build() twice");
         builtAlready = true;
         
-        withApprovedCommand(NAMESPACE_CONCORDION_2007, "run", runCommand);
-        withApprovedCommand(NAMESPACE_CONCORDION_2007, "prun", parallelRunCommand);
+//        withApprovedCommand(NAMESPACE_CONCORDION_2007, "run", runCommand);
+//        withApprovedCommand(NAMESPACE_CONCORDION_2007, "prun", parallelRunCommand);
+        withApprovedCommand(NAMESPACE_CONCORDION_2007, "run", parallelRunCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "execute", executeCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "set", new SetCommand());
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "assertEquals", assertEqualsCommand);
