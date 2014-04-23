@@ -40,7 +40,10 @@ import org.concordion.internal.command.AssertTrueCommand;
 import org.concordion.internal.command.EchoCommand;
 import org.concordion.internal.command.ExecuteCommand;
 import org.concordion.internal.command.LocalTextDecorator;
+import org.concordion.internal.command.ParallelRunStrategy;
 import org.concordion.internal.command.RunCommand;
+import org.concordion.internal.command.RunStrategy;
+import org.concordion.internal.command.SerialRunStrategy;
 import org.concordion.internal.command.SetCommand;
 import org.concordion.internal.command.SpecificationCommand;
 import org.concordion.internal.command.ThrowableCatchingDecorator;
@@ -84,9 +87,9 @@ public class ConcordionBuilder implements ConcordionExtender {
     private AssertTrueCommand assertTrueCommand = new AssertTrueCommand();
     private AssertFalseCommand assertFalseCommand = new AssertFalseCommand();
     private ExecuteCommand executeCommand = new ExecuteCommand();
-    private RunCommand runCommand = new RunCommand();
     private VerifyRowsCommand verifyRowsCommand = new VerifyRowsCommand();
     private EchoCommand echoCommand = new EchoCommand();
+    private RunCommand runCommand;
     private File baseOutputDir;
     private ThrowableCaughtPublisher throwableListenerPublisher = new ThrowableCaughtPublisher();
     private LinkedHashMap<String, Resource> resourceToCopyMap = new LinkedHashMap<String, Resource>();
@@ -95,6 +98,13 @@ public class ConcordionBuilder implements ConcordionExtender {
     private boolean builtAlready;
     
     {
+//        RunStrategy runStrategy = new SerialRunStrategy();
+//        runCommand = new RunCommand(runStrategy);
+        ParallelRunStrategy runStrategy = new ParallelRunStrategy();
+        runCommand = new RunCommand(runStrategy);
+        ParallelTestCompletionBlocker parallelTestCompletionBlocker = new ParallelTestCompletionBlocker(runStrategy);
+        specificationCommand.addSpecificationListener(parallelTestCompletionBlocker);
+        
         withThrowableListener(new ThrowableRenderer());
         
         commandRegistry.register("", "specification", specificationCommand);
@@ -260,7 +270,9 @@ public class ConcordionBuilder implements ConcordionExtender {
 
         addSpecificationListeners();
 
-        specificationCommand.addSpecificationListener(new SpecificationExporter(target));
+        SpecificationExporter exporter = new SpecificationExporter(target);
+        specificationCommand.addSpecificationListener(exporter);
+        specificationCommand.setSpecificationDescriber(exporter);
         
         listeners.announce().concordionBuilt(new ConcordionBuildEvent(target));
         

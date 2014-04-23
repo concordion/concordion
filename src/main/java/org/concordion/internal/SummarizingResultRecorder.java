@@ -14,6 +14,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
 
     private List<Result> recordedResults = new ArrayList<Result>();
     private FailFastException failFastException;
+    private String specificationDescription;
 
     public void record(Result result) {
         recordedResults.add(result);
@@ -74,6 +75,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     }
 
     public void print(PrintStream out, Object fixture) {
+        out.println(specificationDescription);
         out.print("Successes: " + getSuccessCount());
         out.print(", Failures: " + getFailureCount());
         if (getIgnoredCount() > 0) {
@@ -97,5 +99,10 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
 
     public void setFailFastException(FailFastException exception) {
         this.failFastException = exception;
+    }
+
+    @Override
+    public void setSpecificationDescription(String specificationDescription) {
+        this.specificationDescription = specificationDescription;
     }
 }
