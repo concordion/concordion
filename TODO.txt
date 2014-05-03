@@ -1,4 +1,3 @@
-Refactor new code
 Does copyResources need to be synchronized?  Also check all methods in FileTarget.
 Implement as extension or integrate into core?
-Try to print resource name with results
+Modify Concordion specification to use concordion:run

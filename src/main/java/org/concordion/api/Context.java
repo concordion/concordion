@@ -1,5 +1,6 @@
 package org.concordion.api;
 
+//TODO remove - unused
 public interface Context extends ResultRecorder, Evaluator {
 
     Resource getResource();
