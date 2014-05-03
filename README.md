@@ -1,3 +1,11 @@
+This is an experimental fork of the [Concordion project](https://github.com/concordion/concordion) with a parallel Concordion runner. This may or may not make it into Concordion core at some stage. For now, it's not recommended for production usage and is not supported.
+
+The TODO.txt file contains some notes on actions needed to make it more production-worthy. Let me know if you want to be involved in moving this forward.
+
+
+#Original Concordion README
+===================
+
 [Concordion](http://www.concordion.org) is an open source framework for Java that lets you turn a plain English description of a requirement into an automated test.
 
 Concordion uses [Gradle](http://www.gradle.org/) as a build tool. To build the source code, run the tests or create an Eclipse project, you will need to [download](http://www.gradle.org/downloads.html) and [install](http://www.gradle.org/installation.html) Gradle. It has been tested with Gradle 1.5.

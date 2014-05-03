@@ -1,0 +1,3 @@
+Does copyResources need to be synchronized?  Also check all methods in FileTarget.
+Implement as extension or integrate into core?
+Modify Concordion specification to use concordion:run
