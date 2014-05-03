@@ -9,6 +9,7 @@ import org.concordion.api.ResultRecorder;
 import org.concordion.api.listener.SpecificationProcessingEvent;
 import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.internal.FailFastException;
+import org.concordion.internal.SpecificationDescriber;
 import org.concordion.internal.util.Announcer;
 
 public class SpecificationCommand extends AbstractCommand {
@@ -20,6 +21,11 @@ public class SpecificationCommand extends AbstractCommand {
     
     @Override
     public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+        
+        if (specificationDescriber != null) {
+            resultRecorder.setSpecificationDescription(specificationDescriber.getDescription(commandCall.getResource()));
+        }
+        
         announceBeforeProcessingEvent(commandCall.getResource(), commandCall.getElement());
         try {
             commandCall.getChildren().processSequentially(evaluator, resultRecorder);
@@ -35,6 +41,7 @@ public class SpecificationCommand extends AbstractCommand {
     }
 
     private Announcer<SpecificationProcessingListener> listeners = Announcer.to(SpecificationProcessingListener.class);
+    private SpecificationDescriber specificationDescriber;
     
     public void addSpecificationListener(SpecificationProcessingListener listener) {
         listeners.addListener(listener);
@@ -42,6 +49,10 @@ public class SpecificationCommand extends AbstractCommand {
 
     public void removeSpecificationListener(SpecificationProcessingListener listener) {
         listeners.removeListener(listener);
+    }
+
+    public void setSpecificationDescriber(SpecificationDescriber specificationDescriber) {
+        this.specificationDescriber = specificationDescriber;
     }
 
     private void announceAfterProcessingEvent(Resource resource, Element element) {
