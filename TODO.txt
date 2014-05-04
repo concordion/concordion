@@ -1,8 +1,0 @@
-Does copyResources need to be synchronized?  Also check all methods in FileTarget.
-Implement as extension or integrate into core?
-Modify Concordion specification to use concordion:run
-Create WebDriver example
-Document API changes
-Logging
-Write design document. Specify which classes are thread-safe and which are instantiated per spec.
-Provide for multiple thread pools, eg. one for web tests and a separate one for service tests. Possibly allocate using @Tags.
