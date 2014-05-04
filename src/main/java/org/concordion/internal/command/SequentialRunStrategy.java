@@ -6,7 +6,7 @@ import org.concordion.api.ResultRecorder;
 import org.concordion.api.Runner;
 import org.concordion.internal.FailFastException;
 
-public class SerialRunStrategy implements RunStrategy {
+public class SequentialRunStrategy implements RunStrategy {
 
     public void call(final Runner runner, final Resource resource, final String href, ResultAnnouncer announcer, ResultRecorder resultRecorder) {
         try {    
