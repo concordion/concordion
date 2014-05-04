@@ -44,17 +44,8 @@ public class ParallelRunStrategy implements RunStrategy, SpecificationProcessing
     public void call(final Runner runner, final Resource resource, final String href, ResultAnnouncer announcer, ResultRecorder resultRecorder) {
         try {
             logger.debug("Submit: {} -> {}", resource, href);
-            taskCounter.incrementTaskCount();
-            ListenableFuture<RunnerResult> future = submitTask(new Callable<RunnerResult>() {
-                public RunnerResult call() throws Exception {
-                    logger.debug("Start: {} -> {}", resource, href);
-                    try {
-                        return runner.execute(resource, href);
-                    } finally {
-                        logger.debug("Finish: {} -> {}", resource, href);
-                    }
-                }
-            });
+            taskCounter.newTask();
+            ListenableFuture<RunnerResult> future = submitTask(createTask(runner, resource, href));
             addCallback(future, resource, announcer, resultRecorder);
 
         } catch (Throwable e) {
@@ -86,6 +77,48 @@ public class ParallelRunStrategy implements RunStrategy, SpecificationProcessing
         }
     }
     
+    private Callable<RunnerResult> createTask(final Runner runner, final Resource resource, final String href) {
+        return new Callable<RunnerResult>() {
+            public RunnerResult call() throws Exception {
+                logger.debug("Start: {} -> {}", resource, href);
+                try {
+                    return runner.execute(resource, href);
+                } finally {
+                    logger.debug("Finish: {} -> {}", resource, href);
+                }
+            }
+        };
+    }
+    
+    private ListenableFuture<RunnerResult> submitTask(Callable<RunnerResult> task) {
+        return service.submit(task);
+    }
+    
+    private void addCallback(ListenableFuture<RunnerResult> future, final Resource resource, final ResultAnnouncer announcer, final ResultRecorder resultRecorder) {
+        Futures.addCallback(future, new FutureCallback<RunnerResult>() {
+            
+            @Override
+            public void onSuccess(RunnerResult runnerResult) {
+                Result result = runnerResult.getResult();
+                announcer.announce(result);
+                resultRecorder.record(result);
+                taskCounter.completedTask();
+            }
+            
+            @Override
+            public void onFailure(Throwable t) {
+                if (t.getCause() instanceof FailFastException) {
+                    announcer.announce(Result.FAILURE);
+                    resultRecorder.record(Result.FAILURE);
+                } else {
+                    announcer.announceException(t);
+                    resultRecorder.record(Result.EXCEPTION);
+                }
+                taskCounter.completedTask();
+            }
+        });
+    }
+    
     private void waitForCompletion(Resource resource) {
         if (taskCounter.hasTasksToComplete()) {
             // to avoid thread starvation when this thread blocks waiting for its tasks to complete, allocate an extra thread 
@@ -104,7 +137,6 @@ public class ParallelRunStrategy implements RunStrategy, SpecificationProcessing
             }
         }
         logger.debug("Wait: {}. Total threads: {}", resource, executor.getCorePoolSize());
-
     }
 
     private void deallocateWaitThread(Resource resource) {
@@ -118,40 +150,11 @@ public class ParallelRunStrategy implements RunStrategy, SpecificationProcessing
         logger.debug("Complete: {}. Total threads: {}", resource, executor.getCorePoolSize());
     }
     
-    private ListenableFuture<RunnerResult> submitTask(Callable<RunnerResult> task) {
-        return service.submit(task);
-    }
-    
-    private void addCallback(ListenableFuture<RunnerResult> future, final Resource resource, final ResultAnnouncer announcer, final ResultRecorder resultRecorder) {
-        Futures.addCallback(future, new FutureCallback<RunnerResult>() {
-
-            @Override
-            public void onSuccess(RunnerResult runnerResult) {
-                Result result = runnerResult.getResult();
-                announcer.announce(result);
-                resultRecorder.record(result);
-                taskCounter.completedTask();
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                if (t.getCause() instanceof FailFastException) {
-                    announcer.announce(Result.FAILURE);
-                    resultRecorder.record(Result.FAILURE);
-                } else {
-                    announcer.announceException(t);
-                    resultRecorder.record(Result.EXCEPTION);
-                }
-                taskCounter.completedTask();
-            }
-        });
-    }
-    
     private class TaskCounter {
         private AtomicInteger taskCounter = new AtomicInteger();
         private Semaphore semaphore = new Semaphore(0);
         
-        void incrementTaskCount() {
+        void newTask() {
             taskCounter.incrementAndGet();
         }
         
@@ -164,12 +167,15 @@ public class ParallelRunStrategy implements RunStrategy, SpecificationProcessing
         }
         
         void waitForAllTasksToComplete() {
-            try {
-                int taskCount = taskCounter.get();
-                semaphore.acquire(taskCount);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            boolean complete = false;
+            while (!complete) {
+                try {
+                    int taskCount = taskCounter.get();
+                    semaphore.acquire(taskCount);
+                    complete = true;
+                } catch (InterruptedException e) {
+                    logger.debug("Interrupted while waiting for tasks to complete");
+                }
             }
         }
     }
