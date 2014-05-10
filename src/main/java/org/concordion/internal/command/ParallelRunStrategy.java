@@ -5,6 +5,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.concordion.api.Resource;
@@ -29,10 +30,11 @@ public class ParallelRunStrategy implements RunStrategy, SpecificationProcessing
 
     private static ThreadPoolExecutor executor;
     private static ListeningExecutorService service;
-    private static Resource mainSpecification;
+    private static Object poolSizeLock = new Object();
+    private static volatile Resource mainSpecification;
     private static Logger logger = LoggerFactory.getLogger("org.concordion.run.parallel");
     
-    private TaskCounter taskCounter = new TaskCounter();
+    private TaskLatch taskLatch = new TaskLatch();
     
     public static void initialise(String runThreadCount) {
         int threadPoolSize = parseThreadCount(runThreadCount);
@@ -44,7 +46,7 @@ public class ParallelRunStrategy implements RunStrategy, SpecificationProcessing
     public void call(final Runner runner, final Resource resource, final String href, ResultAnnouncer announcer, ResultRecorder resultRecorder) {
         try {
             logger.debug("Submit: {} -> {}", resource, href);
-            taskCounter.newTask();
+            taskLatch.registerTask();
             ListenableFuture<RunnerResult> future = submitTask(createTask(runner, resource, href));
             addCallback(future, resource, announcer, resultRecorder);
 
@@ -69,7 +71,7 @@ public class ParallelRunStrategy implements RunStrategy, SpecificationProcessing
             if (threadCount.endsWith("C")) {
                 return new BigDecimal(threadCount.substring(0, threadCount.length() - 1)).multiply(new BigDecimal(Runtime.getRuntime().availableProcessors())).intValue();
             } 
-            return Integer.valueOf(threadCount);
+            return Integer.parseInt(threadCount);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("The system property '" + ConcordionBuilder.PROPERTY_RUN_THREAD_COUNT 
                     + "' must set to either an integer value, or a numeric value suffixed with C."
@@ -102,7 +104,7 @@ public class ParallelRunStrategy implements RunStrategy, SpecificationProcessing
                 Result result = runnerResult.getResult();
                 announcer.announce(result);
                 resultRecorder.record(result);
-                taskCounter.completedTask();
+                taskLatch.markTaskComplete();
             }
             
             @Override
@@ -114,22 +116,22 @@ public class ParallelRunStrategy implements RunStrategy, SpecificationProcessing
                     announcer.announceException(t);
                     resultRecorder.record(Result.EXCEPTION);
                 }
-                taskCounter.completedTask();
+                taskLatch.markTaskComplete();
             }
         });
     }
     
     private void waitForCompletion(Resource resource) {
-        if (taskCounter.hasTasksToComplete()) {
+        if (taskLatch.hasRegisteredTasks()) {
             // to avoid thread starvation when this thread blocks waiting for its tasks to complete, allocate an extra thread 
             allocateWaitThread(resource);
-            taskCounter.waitForAllTasksToComplete();
+            taskLatch.waitForAllTasksToComplete();
             deallocateWaitThread(resource);
         }
     }
 
     private void allocateWaitThread(Resource resource) {
-        synchronized (executor) {
+        synchronized (poolSizeLock) {
             if (!resource.equals(mainSpecification)) { 
                 int newPoolSize = executor.getCorePoolSize() + 1;
                 executor.setMaximumPoolSize(newPoolSize);
@@ -140,7 +142,7 @@ public class ParallelRunStrategy implements RunStrategy, SpecificationProcessing
     }
 
     private void deallocateWaitThread(Resource resource) {
-        synchronized (executor) {
+        synchronized (poolSizeLock) {
             if (!resource.equals(mainSpecification)) { 
                 int newPoolSize = executor.getCorePoolSize() - 1;
                 executor.setCorePoolSize(newPoolSize);
@@ -150,27 +152,41 @@ public class ParallelRunStrategy implements RunStrategy, SpecificationProcessing
         logger.debug("Complete: {}. Total threads: {}", resource, executor.getCorePoolSize());
     }
     
-    private class TaskCounter {
-        private AtomicInteger taskCounter = new AtomicInteger();
+    /**
+     * A latch to wait for tasks to complete.
+     * This proceeds in 2 distinct phases:
+     * 1. New tasks are registered, using registerTask()
+     * 2. We await completion of the tasks
+     * Tasks may complete at any time after being registered.
+     * In Java 7, the Phaser class would be a replacement for this (see http://stackoverflow.com/a/1637030). 
+     */
+    private static class TaskLatch {
+        private AtomicInteger taskCounter = new AtomicInteger(0);
+        private AtomicBoolean waiting = new AtomicBoolean(false);
         private Semaphore semaphore = new Semaphore(0);
         
-        void newTask() {
+        void registerTask() {
+            if (waiting.get()) {
+                throw new IllegalStateException("New tasks not expected when waiting.");
+            }
             taskCounter.incrementAndGet();
         }
         
-        boolean hasTasksToComplete() {
+        boolean hasRegisteredTasks() {
+            waiting.set(true);
             return taskCounter.get() > 0;
         }
         
-        void completedTask() {
+        void markTaskComplete() {
             semaphore.release(1);
         }
         
         void waitForAllTasksToComplete() {
+            waiting.set(true);
             boolean complete = false;
+            int taskCount = taskCounter.get();
             while (!complete) {
                 try {
-                    int taskCount = taskCounter.get();
                     semaphore.acquire(taskCount);
                     complete = true;
                 } catch (InterruptedException e) {
