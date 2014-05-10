@@ -26,6 +26,20 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 
+/**
+ * Runs specifications in parallel. Each specification fixture has its own instance of ParallelRunStrategy. 
+ * The {@link #call(Runner, Resource, String, ResultAnnouncer, ResultRecorder)} method is invoked 
+ * for each child specification that the fixture executes. 
+ * (this is called from the RunCommand when a concordion:run command is executed).
+ * 
+ * After processing a specification, this class waits for all of the executed child specifications to complete.
+ * To avoid thread starvation, it allocates an additional thread while waiting. 
+ * 
+ * The thread pool is shared across all instances.
+ * 
+ * Before usage, the {@link #initialise(String)} method must be called to initialise the thread pool to the
+ * appropriate size. 
+ */
 public class ParallelRunStrategy implements RunStrategy, SpecificationProcessingListener {
 
     private static ThreadPoolExecutor executor;
@@ -36,6 +50,12 @@ public class ParallelRunStrategy implements RunStrategy, SpecificationProcessing
     
     private TaskLatch taskLatch = new TaskLatch();
     
+    /**
+     * Initialises the thread pool.
+     * @param runThreadCount the number of threads in the thread pool. If this ends with C, the runThreadCount is
+     * multiplied by the number of cores. For example, a runThreadCount of <code>2.5C</code> will allocate 10 
+     * threads when there are 4 processors available to the JVM.
+     */
     public static void initialise(String runThreadCount) {
         int threadPoolSize = parseThreadCount(runThreadCount);
         logger.info("Running concordion:run commands in parallel with {} threads\n", threadPoolSize);
@@ -43,6 +63,14 @@ public class ParallelRunStrategy implements RunStrategy, SpecificationProcessing
         service = MoreExecutors.listeningDecorator(executor);
     }
 
+    /**
+     * Runs a "child" specification.
+     * @param runner  the Concordion runner to use
+     * @param resource the current specification resource
+     * @param href the URL of the child specification to run. This is normally relative to the current specification resource
+     * @param announcer announces the results to all listeners (eg. listeners that update the results in the output specification)
+     * @param resultRecorder records the results (eg. for console output)
+     */
     public void call(final Runner runner, final Resource resource, final String href, ResultAnnouncer announcer, ResultRecorder resultRecorder) {
         try {
             logger.debug("Submit: {} -> {}", resource, href);
@@ -155,9 +183,16 @@ public class ParallelRunStrategy implements RunStrategy, SpecificationProcessing
     /**
      * A latch to wait for tasks to complete.
      * This proceeds in 2 distinct phases:
-     * 1. New tasks are registered, using registerTask()
-     * 2. We await completion of the tasks
-     * Tasks may complete at any time after being registered.
+     * 1. New tasks are registered, using {@link #registerTask()}
+     * 2. After all tasks are registered, task completion is awaited using {@link #waitForAllTasksToComplete()}
+     * {@link #markTaskComplete()} may be called at any time to mark a task as complete.
+     * 
+     * {@link #waitForAllTasksToComplete()} for wait until {@link #markTaskComplete()} has been called the same
+     * number of times as {@link #registerTask()}. Before waiting, {@link #hasRegisteredTasks()} may be called
+     * to check whether any tasks were registered. 
+     * 
+     * This class is thread-safe.
+     * 
      * In Java 7, the Phaser class would be a replacement for this (see http://stackoverflow.com/a/1637030). 
      */
     private static class TaskLatch {
