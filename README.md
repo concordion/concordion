@@ -71,4 +71,4 @@ This will download the required dependencies and create an Eclipse project. From
 
 Project History
 =========
-History prior to April 2013 is in the [Subversion repository](http://concordion.googlecode.com/svn/).
+History prior to April 2013 is in the [Subversion repository](http://concordion.googlecode.com/svn/tags/final-revision-before-github-migration/).
