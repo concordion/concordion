@@ -25,6 +25,31 @@ This runner introduces 2 new dependencies that will need to be on your classpath
 
 Additionally, to see the logging output, you will need a [runtime binding](http://www.slf4j.org/manual.html#swapping) to a slf4j implementation.
 
+### Installation
+This has been published to the Sonatype snapshot repository (https://oss.sonatype.org/content/repositories/snapshots/), as version `1.5.0-SNAPSHOT`. To use this from Maven/Gradle/Ivy, you will need to add this snapshot repository to your list of repositories. An example Gradle build script is:
+
+    repositories {
+        mavenCentral()
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+    }
+
+    dependencies {
+        testCompile 'org.concordion:concordion:1.5.0-SNAPSHOT'
+        runtime 'ch.qos.logback:logback-classic:1.1.2'
+    }
+
+    test {
+        include '**/TestSuite.*'
+        systemProperties['concordion.output.dir'] = "$reporting.baseDir/spec"
+        systemProperties['concordion.run.threadCount'] = "2.5C"                    // 2.5 * number of cores
+    }
+
+    test.dependsOn cleanTest
+
+Alternatively you can build from source.
+
 Notes
 -----
 * This runner runs the tests within the same JVM process. To run your tests safely in parallel, your code must be thread-safe. In particular be wary of any shared state (including tests using the same data in a database) or shared resources (eg. static references to browser instances).
