@@ -8,7 +8,7 @@ Overview
 There are 2 ways to run Concordion in parallel:
 
 1. Run all of the JUnit tests in parallel, for example using JUnit's ParallelComputer, features in your build tool (eg. Ant, Maven, Gradle), or by running multiple suites in your CI server. Should you wish to create Concordion index pages to collate the results, you will need to create these yourself (there is no support in Concordion currently to collate these into a summary page - though contributions are welcome!)
-2. Use this runner, which will submit a task to the thread pool to run each specification launched using [concordion:run](http://concordion.org/Tutorial.html#concordion:run) and update the index pages with annotated (green/red/grey) results once the tasks have completed.
+2. Use this runner, which will submit a task to a configurable thread pool to run each specification launched using [concordion:run](http://concordion.org/Tutorial.html#concordion:run) and update the index pages with annotated (green/red/grey) results once the tasks have completed.
 
 Usage
 -----
@@ -55,6 +55,7 @@ Notes
 * Do not rely on the same threads being used across multiple tests. This runner needs to expand and shrink the thread pool dynamically so that specifications can wait for all the specifications they have launched (using concordion:run) to be complete. Tests will be allocated to the dynamically created threads.
 * This runner will run your tests in a random order. Your tests must be able to run in any order.
 * The "results generated" timings shown on the specifications will show the duration from which the task was parsed until it completed execution. This will include time that any specifications that it launches spent queued.
+* When this runner is launched, a message will be printed to standard output to let you know how many threads have been configured in the thread pool. If you do not see this message, then your runner is not configured properly and will fall back to the standard sequential runner.
 
 API changes
 -----------
