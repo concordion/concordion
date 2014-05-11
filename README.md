@@ -1,8 +1,7 @@
 Parallel Runner
 ===============
 
-This is an experimental fork of the [Concordion project](https://github.com/concordion/concordion) with a parallel Concordion runner. This may or may not make it into Concordion core, or it may be implemented as a Concordion extension. For now, it's not recommended for production usage.
-The [issues](https://github.com/nigelcharman/concordion-parallel-experimental/issues) contain some actions needed to make it production-worthy. Please post a comment if you want to be involved in moving this forward, or raise an issue if you find any issues with it.
+This is an experimental fork of the [Concordion project](https://github.com/concordion/concordion) with a parallel Concordion runner. This may or may not make it into Concordion core, or it may be implemented as a Concordion extension. 
 
 Overview
 --------
