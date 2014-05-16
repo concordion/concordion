@@ -13,11 +13,18 @@ import org.concordion.api.Result;
 import org.concordion.api.ResultRecorder;
 import org.concordion.api.ResultSummary;
 import org.concordion.api.Runner;
-import org.concordion.api.RunnerResult;
 import org.concordion.api.listener.SpecificationProcessingEvent;
 import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.internal.ConcordionBuilder;
 import org.concordion.internal.FailFastException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 
 /**
  * Runs specifications in parallel. Each specification fixture has its own instance of ParallelRunStrategy.
@@ -69,7 +76,7 @@ public class ParallelRunStrategy implements RunStrategy, SpecificationProcessing
         try {
             logger.debug("Submit: {} -> {}", resource, href);
             taskLatch.registerTask();
-            final ListenableFuture<RunnerResult> future = submitTask(createTask(runner, resource, href));
+            final ListenableFuture<ResultSummary> future = submitTask(createTask(runner, resource, href));
             addCallback(future, resource, announcer, resultRecorder);
 
         } catch (final Throwable e) {
@@ -117,18 +124,17 @@ public class ParallelRunStrategy implements RunStrategy, SpecificationProcessing
         };
     }
 
-    private ListenableFuture<RunnerResult> submitTask(final Callable<RunnerResult> task) {
+    private ListenableFuture<ResultSummary> submitTask(final Callable<ResultSummary> task) {
         return service.submit(task);
     }
 
-    private void addCallback(final ListenableFuture<RunnerResult> future, final Resource resource, final ResultAnnouncer announcer, final ResultRecorder resultRecorder) {
-        Futures.addCallback(future, new FutureCallback<RunnerResult>() {
+    private void addCallback(final ListenableFuture<ResultSummary> future, final Resource resource, final ResultAnnouncer announcer, final ResultRecorder resultRecorder) {
+        Futures.addCallback(future, new FutureCallback<ResultSummary>() {
 
             @Override
-            public void onSuccess(final RunnerResult runnerResult) {
-                final Result result = runnerResult.getResult();
-                announcer.announce(new SingleResultSummary(result));
-                resultRecorder.record(result);
+            public void onSuccess(final ResultSummary runnerResult) {
+                announcer.announce(runnerResult);
+                resultRecorder.record(runnerResult);
                 taskLatch.markTaskComplete();
             }
 

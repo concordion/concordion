@@ -61,7 +61,8 @@ public class ParallelRunStrategyTest {
         final long actualRunMillis = System.currentTimeMillis() - startTimeMillis;
 
         assertEquals(iterations + 1, results.size());
-        assertEquals("For " + "myChild", Result.SUCCESS, results.get("myChild"));
+        SingleResultSummary summary = (SingleResultSummary) results.get("myChild");
+        assertEquals("For " + "myChild", Result.SUCCESS, summary.getResult());
 
         for (final Entry<String, Object> expectedResult : expectedResults.entrySet()) {
             final String childHref = expectedResult.getKey();
@@ -88,15 +89,15 @@ public class ParallelRunStrategyTest {
             Object result = null;
             switch (i % 5) {
             case 0:
-                result = Result.SUCCESS;
+                result = new SingleResultSummary(Result.SUCCESS);
                 break;
 
             case 1:
-                result = Result.FAILURE;
+                result = new SingleResultSummary(Result.FAILURE);
                 break;
 
             case 2:
-                result = Result.IGNORED;
+                result = new SingleResultSummary(Result.IGNORED);
                 break;
 
             case 3:
