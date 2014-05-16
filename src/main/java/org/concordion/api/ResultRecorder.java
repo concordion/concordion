@@ -7,4 +7,6 @@ public interface ResultRecorder {
     void record(Result result);
 
     void recordFailFastException(FailFastException exception);
+
+	void record(ResultSummary result);
 }

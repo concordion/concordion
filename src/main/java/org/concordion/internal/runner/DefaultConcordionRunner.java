@@ -3,21 +3,28 @@ package org.concordion.internal.runner;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.concordion.api.ExpectedToFail;
 import org.concordion.api.Resource;
 import org.concordion.api.Result;
+import org.concordion.api.ResultSummary;
 import org.concordion.api.Runner;
-import org.concordion.api.RunnerResult;
 import org.concordion.api.Unimplemented;
+import org.concordion.integration.junit3.ConcordionTestCase;
+import org.concordion.integration.junit4.ConcordionRunner;
 import org.concordion.internal.FailFastException;
+import org.concordion.internal.FixtureRunner;
+import org.concordion.internal.SummarizingResultRecorder;
 import org.junit.runner.JUnitCore;
+import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
 
 public class DefaultConcordionRunner implements Runner {
 
     private static Logger logger = Logger.getLogger(DefaultConcordionRunner.class.getName());
     
-    public RunnerResult execute(Resource resource, String href) throws Exception {
+    @Override
+	public ResultSummary execute(Resource resource, String href) throws Exception {
         Class<?> concordionClass = findTestClass(resource, href);
         return runTestClass(concordionClass);            
     }
@@ -48,17 +55,37 @@ public class DefaultConcordionRunner implements Runner {
         return concordionClass;
     }
 
-    protected RunnerResult runTestClass(Class<?> concordionClass) throws Exception {
-        org.junit.runner.Result jUnitResult = runJUnitClass(concordionClass);
+    protected ResultSummary runTestClass(Class<?> concordionClass) throws Exception {
+    	// check for a jUnit 3 style test extension
+       	if (ConcordionTestCase.class.isAssignableFrom(concordionClass)) {
+    		return runConcordionTest(concordionClass);
+    	}
+       	
+       	// check for a jUnit 4 style annotation
+       	if (concordionClass.isAnnotationPresent(RunWith.class)) {
+       		RunWith s = concordionClass.getAnnotation(RunWith.class);
+       		if (s.value().isAssignableFrom(ConcordionRunner.class)) {
+       			return runConcordionTest(concordionClass);
+       		}
+       	}
+ 
+    	
+    	org.junit.runner.Result jUnitResult = runJUnitClass(concordionClass);
         return decodeJUnitResult(concordionClass, jUnitResult);
     }
 
-    protected org.junit.runner.Result runJUnitClass(Class<?> concordionClass) {
+    private ResultSummary runConcordionTest(Class<?> concordionClass) throws Exception {
+    	Object o = concordionClass.getConstructor((Class<?>[])null).newInstance((Object[])null);
+    	return new FixtureRunner().run(o);
+ 	}
+
+	protected org.junit.runner.Result runJUnitClass(Class<?> concordionClass) {
+    	
         org.junit.runner.Result jUnitResult = JUnitCore.runClasses(concordionClass);
         return jUnitResult;
     }
 
-    protected RunnerResult decodeJUnitResult(Class<?> concordionClass, org.junit.runner.Result jUnitResult) throws Exception {
+    protected ResultSummary decodeJUnitResult(Class<?> concordionClass, org.junit.runner.Result jUnitResult) throws Exception {
         Result result = Result.FAILURE;
         if (jUnitResult.wasSuccessful()) {
             result = Result.SUCCESS;
@@ -76,7 +103,11 @@ public class DefaultConcordionRunner implements Runner {
                 rethrowExceptionIfWarranted(concordionClass, exception);
             }
         }
-        return new RunnerResult(result);
+        
+        SummarizingResultRecorder recorder = new SummarizingResultRecorder();
+        recorder.record(result);
+        
+        return recorder;
     }
 
     private void logExceptionIfNotAssertionError(Throwable exception) {

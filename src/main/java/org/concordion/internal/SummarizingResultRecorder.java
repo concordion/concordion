@@ -12,23 +12,40 @@ import org.concordion.api.Unimplemented;
 
 public class SummarizingResultRecorder implements ResultRecorder, ResultSummary {
 
-    private List<Result> recordedResults = new ArrayList<Result>();
+    private final List<Result> recordedResults = new ArrayList<Result>();
     private FailFastException failFastException;
 
-    public void record(Result result) {
+    @Override
+	public void record(final Result result) {
         recordedResults.add(result);
     }
-    
-    public void assertIsSatisfied() {
+
+    private void recordMultipleResults(final long number, final Result type) {
+		for (long i=0; i<number; i++) {
+			record(type);
+		}
+    }
+
+	@Override
+	public void record(final ResultSummary result) {
+		recordMultipleResults(result.getSuccessCount(), Result.SUCCESS);
+		recordMultipleResults(result.getFailureCount(), Result.FAILURE);
+		recordMultipleResults(result.getIgnoredCount(), Result.IGNORED);
+		recordMultipleResults(result.getExceptionCount(), Result.EXCEPTION);
+	}
+
+    @Override
+	public void assertIsSatisfied() {
         assertIsSatisfied(this);
     }
 
-    public void assertIsSatisfied(Object fixture) {
-        FixtureState state = getFixtureState(fixture);
+    @Override
+	public void assertIsSatisfied(final Object fixture) {
+        final FixtureState state = getFixtureState(fixture);
         state.assertIsSatisfied(getSuccessCount(), getFailureCount(), getExceptionCount(), failFastException);
     }
 
-    private FixtureState getFixtureState(Object fixture) {
+    private FixtureState getFixtureState(final Object fixture) {
         FixtureState state = FixtureState.EXPECTED_TO_PASS;
         if (fixture.getClass().getAnnotation(ExpectedToFail.class) != null) {
             state = FixtureState.EXPECTED_TO_FAIL;
@@ -38,14 +55,15 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         }
         return state;
     }
-    
-    public boolean hasExceptions() {
+
+    @Override
+	public boolean hasExceptions() {
         return getExceptionCount() > 0;
     }
 
-    public long getCount(Result result) {
+    public long getCount(final Result result) {
         int count = 0;
-        for (Result candidate : recordedResults) {
+        for (final Result candidate : recordedResults) {
             if (candidate == result) {
                 count++;
             }
@@ -53,27 +71,33 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         return count;
     }
 
-    public long getExceptionCount() {
+    @Override
+	public long getExceptionCount() {
         return getCount(Result.EXCEPTION);
     }
 
-    public long getFailureCount() {
+    @Override
+	public long getFailureCount() {
         return getCount(Result.FAILURE);
     }
 
-    public long getSuccessCount() {
+    @Override
+	public long getSuccessCount() {
         return getCount(Result.SUCCESS);
     }
 
-    public long getIgnoredCount() {
+    @Override
+	public long getIgnoredCount() {
         return getCount(Result.IGNORED);
     }
 
-    public void print(PrintStream out) {
+    @Override
+	public void print(final PrintStream out) {
         print(out, this);
     }
 
-    public void print(PrintStream out, Object fixture) {
+    @Override
+	public void print(final PrintStream out, final Object fixture) {
         out.print("Successes: " + getSuccessCount());
         out.print(", Failures: " + getFailureCount());
         if (getIgnoredCount() > 0) {
@@ -87,7 +111,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     }
 
     @Override
-    public void recordFailFastException(FailFastException exception) {
+    public void recordFailFastException(final FailFastException exception) {
         this.setFailFastException(exception);
     }
 
@@ -95,7 +119,9 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         return failFastException;
     }
 
-    public void setFailFastException(FailFastException exception) {
+    public void setFailFastException(final FailFastException exception) {
         this.failFastException = exception;
     }
+
+
 }
