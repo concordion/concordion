@@ -29,7 +29,7 @@ public enum FixtureState {
                     }
                     s += ", and " + list.get(list.size() - 1);
                 }
-                throw new AssertionError("Specification is supposed to be unimplemented, but is reporting " + s + ".");
+                throw new ConcordionAssertionError("Specification is supposed to be unimplemented, but is reporting " + s + ".", successCount, failureCount, exceptionCount);
             }
         }
 
@@ -43,7 +43,7 @@ public enum FixtureState {
         @Override
         public void assertIsSatisfied(long successCount, long failureCount, long exceptionCount, FailFastException ffe) {
             if (failureCount + exceptionCount == 0) {
-                throw new AssertionError("Specification is expected to fail but has neither failures nor exceptions.");
+                throw new ConcordionAssertionError("Specification is expected to fail but has neither failures nor exceptions.", successCount, failureCount, exceptionCount);
             }
         }
 
@@ -60,10 +60,10 @@ public enum FixtureState {
                 throw new AssertionError(ffe);
             }
             if (failureCount > 0) {
-                throw new AssertionError("Specification has failure(s). See output HTML for details.");
+                throw new ConcordionAssertionError("Specification has failure(s). See output HTML for details.", successCount, failureCount, exceptionCount);
             }
             if (exceptionCount > 0) {
-                throw new AssertionError("Specification has exception(s). See output HTML for details.");
+                throw new ConcordionAssertionError("Specification has exception(s). See output HTML for details.", successCount, failureCount, exceptionCount);
             }
         }
 
