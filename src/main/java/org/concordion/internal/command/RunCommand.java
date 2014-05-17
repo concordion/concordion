@@ -141,20 +141,5 @@ public class RunCommand extends AbstractCommand {
                 listeners.announce().throwableCaught(new ThrowableCaughtEvent(throwable, element, expression));
             }
         };
-
-//    private void announceIgnored(final Element element) {
-//        listeners.announce().ignoredReported(new RunIgnoreEvent(element));
-//    }
-//
-//    private void announceSuccess(final Element element) {
-//        listeners.announce().successReported(new RunSuccessEvent(element));
-//    }
-//
-//    private void announceFailure(final Element element) {
-//        listeners.announce().failureReported(new RunFailureEvent(element));
-//    }
-//
-//    private void announceFailure(final Throwable throwable, final Element element, final String expression) {
-//        listeners.announce().throwableCaught(new ThrowableCaughtEvent(throwable, element, expression));
     }
 }

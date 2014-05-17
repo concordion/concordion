@@ -1,6 +1,5 @@
-package org.concordion.internal.command;
+package org.concordion.api;
 
-import org.concordion.api.Result;
 import org.concordion.internal.SummarizingResultRecorder;
 
 public class SingleResultSummary extends SummarizingResultRecorder {
