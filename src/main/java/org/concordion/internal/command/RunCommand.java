@@ -146,4 +146,4 @@ public class RunCommand extends AbstractCommand {
     private void announceFailure(final Throwable throwable, final Element element, final String expression) {
         listeners.announce().throwableCaught(new ThrowableCaughtEvent(throwable, element, expression));
     }
-}
+};

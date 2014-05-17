@@ -35,6 +35,7 @@ public class Concordion {
             specification.process(evaluatorFactory.createEvaluator(fixture), resultRecorder);
             return resultRecorder;
         } catch (final ParsingException e) {
+        	e.printStackTrace();
             final SummarizingResultRecorder resultRecorder = new SummarizingResultRecorder();
             resultRecorder.record(Result.EXCEPTION);
             return resultRecorder;
