@@ -17,6 +17,7 @@ import org.concordion.api.SingleResultSummary;
 import org.concordion.api.Unimplemented;
 import org.concordion.integration.junit3.ConcordionTestCase;
 import org.concordion.integration.junit4.ConcordionRunner;
+import org.concordion.internal.ConcordionAssertionError;
 import org.concordion.internal.FailFastException;
 import org.concordion.internal.FixtureRunner;
 import org.concordion.internal.SummarizingResultRecorder;
@@ -103,7 +104,7 @@ public class DefaultConcordionRunner implements Runner {
     		// do nothing - method doesn't exist
     	}
 
-    	ResultSummary rs = new FixtureRunner().run(o);
+    	 ResultSummary rs = invokeTestMethod(o);
 
        	// invoke the tearDown method if it exists
     	try {
@@ -115,6 +116,16 @@ public class DefaultConcordionRunner implements Runner {
 
     	return rs;
  	}
+
+	private ResultSummary invokeTestMethod(Object o) throws Exception {
+		ResultSummary rs;
+		try {
+    		rs = new FixtureRunner().run(o);
+    	} catch (ConcordionAssertionError e) {
+    		rs = e.getResultSummary();
+    	}
+		return rs;
+	}
 
 	private void safeInvokeMethod(Class<?> concordionClass, Object o, Method m)
 			throws AssertionError, Exception {
@@ -167,7 +178,7 @@ public class DefaultConcordionRunner implements Runner {
        		safeInvokeMethod(concordionClass, o, m);
        	}
 
-    	ResultSummary rs = new FixtureRunner().run(o);
+      	ResultSummary rs = invokeTestMethod(o);
 
     	List<Method> afterMethods = getMethodsWithAnnotation(concordionClass, After.class);
     	for (Method m: afterMethods) {

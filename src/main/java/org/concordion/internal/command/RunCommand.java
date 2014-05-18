@@ -108,7 +108,7 @@ public class RunCommand extends AbstractCommand {
             	// let this one pass through
             	throw e;
             } catch (final ConcordionAssertionError e) {
-            	announceFailure(e, element, runnerType);
+            	announceException(e, element, runnerType);
             	for (int i=0; i<e.getNumSuccesses(); i++) {
             		resultRecorder.record(Result.SUCCESS);
             	}
@@ -119,13 +119,16 @@ public class RunCommand extends AbstractCommand {
             		resultRecorder.record(Result.EXCEPTION);
             	}
             } catch (final Throwable e) {
-                announceFailure(e, element, runnerType);
+                announceException(e, element, runnerType);
                 resultRecorder.record(Result.FAILURE);
             }
         } catch (final FailFastException e) {
             throw e; // propagate FailFastExceptions
+        } catch (final ConcordionAssertionError e) {
+            announceException(e, element, runnerType);
+            resultRecorder.record(e.getResultSummary());
         } catch (final Exception e) {
-            announceFailure(e, element, runnerType);
+            announceException(e, element, runnerType);
             resultRecorder.record(Result.FAILURE);
         }
 
@@ -143,7 +146,7 @@ public class RunCommand extends AbstractCommand {
         listeners.announce().failureReported(new RunFailureEvent(element));
     }
 
-    private void announceFailure(final Throwable throwable, final Element element, final String expression) {
+    private void announceException(final Throwable throwable, final Element element, final String expression) {
         listeners.announce().throwableCaught(new ThrowableCaughtEvent(throwable, element, expression));
     }
 };

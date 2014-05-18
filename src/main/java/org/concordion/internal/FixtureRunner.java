@@ -1,6 +1,8 @@
 package org.concordion.internal;
 
 import java.io.IOException;
+
+import org.concordion.ConcordionFixtureExecutionException;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.extension.FixtureExtensionLoader;
 
