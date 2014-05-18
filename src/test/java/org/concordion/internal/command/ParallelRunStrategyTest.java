@@ -25,55 +25,55 @@ public class ParallelRunStrategyTest {
 
     @Test
     public void testCorrectness() {
-        final int iterations = 100000;
-        final int threadCount = 100;
+        int iterations = 100000;
+        int threadCount = 100;
 
-        final Map<String, Object> expectedResults = createResults(iterations);
+        Map<String, Object> expectedResults = createResults(iterations);
         ParallelRunStrategy.initialise("" + threadCount);
 
-        final long startTimeMillis = System.currentTimeMillis();
-        final long totalSleepMillis = callForEachEntry(expectedResults);
-        final long actualRunMillis = System.currentTimeMillis() - startTimeMillis;
+        long startTimeMillis = System.currentTimeMillis();
+        long totalSleepMillis = callForEachEntry(expectedResults);
+        long actualRunMillis = System.currentTimeMillis() - startTimeMillis;
 
         assertEquals(iterations, results.size());
-        for (final Entry<String, Object> expectedResult : expectedResults.entrySet()) {
-            final String childHref = expectedResult.getKey();
-            final Object expected = expectedResults.get(childHref);
-            final Object actual = results.get(childHref);
+        for (Entry<String, Object> expectedResult : expectedResults.entrySet()) {
+            String childHref = expectedResult.getKey();
+            Object expected = expectedResults.get(childHref);
+            Object actual = results.get(childHref);
             assertEquals("For " + childHref, expected, actual);
         }
 
-        final long minExpectedMillis = totalSleepMillis / threadCount;
-        final String msg = String.format("Expected run time > %d ms (total %d ms / %d threads) . Actual run time = %d ms", minExpectedMillis, totalSleepMillis, threadCount, actualRunMillis);
+        long minExpectedMillis = totalSleepMillis / threadCount;
+        String msg = String.format("Expected run time > %d ms (total %d ms / %d threads) . Actual run time = %d ms", minExpectedMillis, totalSleepMillis, threadCount, actualRunMillis);
         assertTrue(msg, actualRunMillis > minExpectedMillis);
         System.out.println(String.format("%d threads completed %d tasks in %d ms, including total sleep time of %d ms (%d ms per thread)", threadCount, iterations, actualRunMillis, totalSleepMillis, totalSleepMillis / threadCount));
     }
 
     @Test
     public void testNested() {
-        final int iterations = 100000;
-        final int threadCount = 100;
+        int iterations = 100000;
+        int threadCount = 100;
 
-        final Map<String, Object> expectedResults = createResults(iterations);
+        Map<String, Object> expectedResults = createResults(iterations);
         ParallelRunStrategy.initialise("" + threadCount);
 
-        final long startTimeMillis = System.currentTimeMillis();
-        final long totalSleepMillis = doChildCall(expectedResults);
-        final long actualRunMillis = System.currentTimeMillis() - startTimeMillis;
+        long startTimeMillis = System.currentTimeMillis();
+        long totalSleepMillis = doChildCall(expectedResults);
+        long actualRunMillis = System.currentTimeMillis() - startTimeMillis;
 
         assertEquals(iterations + 1, results.size());
         SingleResultSummary summary = (SingleResultSummary) results.get("myChild");
         assertEquals("For " + "myChild", Result.SUCCESS, summary.getResult());
 
-        for (final Entry<String, Object> expectedResult : expectedResults.entrySet()) {
-            final String childHref = expectedResult.getKey();
-            final Object expected = expectedResults.get(childHref);
-            final Object actual = results.get(childHref);
+        for (Entry<String, Object> expectedResult : expectedResults.entrySet()) {
+            String childHref = expectedResult.getKey();
+            Object expected = expectedResults.get(childHref);
+            Object actual = results.get(childHref);
             assertEquals("For " + childHref, expected, actual);
         }
 
-        final long minExpectedMillis = totalSleepMillis / threadCount;
-        final String msg = String.format("Expected run time > %d ms (total %d ms / %d threads) . Actual run time = %d ms", minExpectedMillis, totalSleepMillis, threadCount, actualRunMillis);
+        long minExpectedMillis = totalSleepMillis / threadCount;
+        String msg = String.format("Expected run time > %d ms (total %d ms / %d threads) . Actual run time = %d ms", minExpectedMillis, totalSleepMillis, threadCount, actualRunMillis);
         assertTrue(msg, actualRunMillis > minExpectedMillis);
         System.out.println(String.format("%d threads completed %d tasks in %d ms, including total sleep time of %d ms (%d ms per thread)", threadCount, iterations, actualRunMillis, totalSleepMillis, totalSleepMillis / threadCount));
     }
@@ -84,8 +84,8 @@ public class ParallelRunStrategyTest {
     // test roll-up of results
     // test results recorded
 
-    private Map<String, Object> createResults(final int iterations) {
-        final Map<String, Object> expectedResults = new HashMap<String, Object>();
+    private Map<String, Object> createResults(int iterations) {
+        Map<String, Object> expectedResults = new HashMap<String, Object>();
         for (int i = 0; i < iterations; i++) {
             Object result = null;
             switch (i % 5) {
@@ -115,58 +115,58 @@ public class ParallelRunStrategyTest {
         return expectedResults;
     }
 
-    private final class StubbedResultAnnouncer implements ResultAnnouncer {
-        private final String child;
+    private class StubbedResultAnnouncer implements ResultAnnouncer {
+        private String child;
 
-        public StubbedResultAnnouncer(final String child) {
+        public StubbedResultAnnouncer(String child) {
             this.child = child;
         }
 
         @Override
-        public void announce(final ResultSummary result) {
+        public void announce(ResultSummary result) {
             results.put(child, result);
         }
 
         @Override
-        public void announceException(final Throwable e) {
+        public void announceException(Throwable e) {
             results.put(child, e);
         }
     }
 
-    private final class NullResultRecorder implements ResultRecorder {
+    private class NullResultRecorder implements ResultRecorder {
         public NullResultRecorder() {
         }
 
         @Override
-        public void setSpecificationDescription(final String description) {
+        public void setSpecificationDescription(String description) {
         }
 
         @Override
-        public void recordFailFastException(final FailFastException exception) {
+        public void recordFailFastException(FailFastException exception) {
         }
 
         @Override
-        public void record(final Result result) {
+        public void record(Result result) {
         }
 
 		@Override
-		public void record(final ResultSummary result) {
+		public void record(ResultSummary result) {
 		}
     }
 
-    private long callForEachEntry(final Map<String, Object> expectedResults) {
-        final ParallelRunStrategy parallelRunStrategy = new ParallelRunStrategy();
+    private long callForEachEntry(Map<String, Object> expectedResults) {
+        ParallelRunStrategy parallelRunStrategy = new ParallelRunStrategy();
         parallelRunStrategy.beforeProcessingSpecification(new SpecificationProcessingEvent(parentResource, null));
         long totalSleepMillis = 0;
-        for (final Entry<String, Object> expectedResult : expectedResults.entrySet()) {
-            final String childHref = expectedResult.getKey();
+        for (Entry<String, Object> expectedResult : expectedResults.entrySet()) {
+            String childHref = expectedResult.getKey();
             final Object result = expectedResult.getValue();
             final long sleepMillis = (long) (Math.random() * 10);
             totalSleepMillis += sleepMillis;
 
             parallelRunStrategy.call(new Runner() {
                 @Override
-                public ResultSummary execute(final Resource resource, final String href) throws Exception {
+                public ResultSummary execute(Resource resource, String href) throws Exception {
                     Thread.sleep(sleepMillis);
                     if (result instanceof Exception) {
                         throw (Exception) result;
@@ -183,13 +183,13 @@ public class ParallelRunStrategyTest {
     }
 
     private long doChildCall(final Map<String, Object> expectedResults) {
-        final ParallelRunStrategy parallelRunStrategy = new ParallelRunStrategy();
+        ParallelRunStrategy parallelRunStrategy = new ParallelRunStrategy();
         parallelRunStrategy.beforeProcessingSpecification(new SpecificationProcessingEvent(parentResource, null));
-        final String childHref = "myChild";
+        String childHref = "myChild";
         final long[] totalSleepMillisWrapper = new long[1];
         parallelRunStrategy.call(new Runner() {
             @Override
-            public ResultSummary execute(final Resource resource, final String href) throws Exception {
+            public ResultSummary execute(Resource resource, String href) throws Exception {
                 totalSleepMillisWrapper[0] = callForEachEntry(expectedResults);
                 return new SingleResultSummary(Result.SUCCESS);
             }

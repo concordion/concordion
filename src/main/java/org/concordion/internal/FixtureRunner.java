@@ -9,7 +9,7 @@ import org.concordion.internal.extension.FixtureExtensionLoader;
 public class FixtureRunner {
     private final FixtureExtensionLoader fixtureExtensionLoader = new FixtureExtensionLoader();
 
-    public ResultSummary run(final Object fixture) throws IOException, ConcordionFixtureExecutionException {
+    public ResultSummary run(Object fixture) throws IOException, ConcordionFixtureExecutionException {
         ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture);
         fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
         ResultSummary resultSummary = concordionBuilder.build().process(fixture);
