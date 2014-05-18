@@ -21,4 +21,9 @@ public class SingleResultSummary extends SummarizingResultRecorder {
 		}
 		return false;
 	}
+	
+	@Override
+	public int hashCode() {
+		return result.hashCode();
+	}
 }
