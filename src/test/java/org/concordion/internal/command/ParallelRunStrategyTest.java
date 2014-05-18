@@ -14,9 +14,9 @@ import org.concordion.api.Result;
 import org.concordion.api.ResultRecorder;
 import org.concordion.api.ResultSummary;
 import org.concordion.api.Runner;
-import org.concordion.api.SingleResultSummary;
 import org.concordion.api.listener.SpecificationProcessingEvent;
 import org.concordion.internal.FailFastException;
+import org.concordion.internal.SingleResultSummary;
 import org.junit.Test;
 
 public class ParallelRunStrategyTest {
