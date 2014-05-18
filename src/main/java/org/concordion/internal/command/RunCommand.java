@@ -106,18 +106,9 @@ public class RunCommand extends AbstractCommand {
             throw e; // propagate FailFastExceptions
         } catch (final ConcordionAssertionError e) {
         	resultAnnouncer.announceException(e);
-        	for (int i=0; i<e.getNumSuccesses(); i++) {
-        		resultRecorder.record(Result.SUCCESS);
-        	}
-          	for (int i=0; i<e.getNumFailures(); i++) {
-        		resultRecorder.record(Result.FAILURE);
-        	}
-          	for (int i=0; i<e.getNumExceptions(); i++) {
-        		resultRecorder.record(Result.EXCEPTION);
-        	}
-        }catch (final Exception e) {
+        	resultRecorder.record(e.getResultSummary());
+        } catch (final Exception e) {
             resultAnnouncer.announceException(e);
-
             resultRecorder.record(Result.FAILURE);
         }
 

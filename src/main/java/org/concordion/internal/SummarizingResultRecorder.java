@@ -43,7 +43,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     @Override
 	public void assertIsSatisfied(final Object fixture) {
         final FixtureState state = getFixtureState(fixture);
-        state.assertIsSatisfied(getSuccessCount(), getFailureCount(), getExceptionCount(), failFastException);
+        state.assertIsSatisfied(this, failFastException);
     }
 
     private FixtureState getFixtureState(final Object fixture) {

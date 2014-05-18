@@ -4,6 +4,8 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.concordion.api.ResultSummary;
+
 public enum FixtureState {
     UNIMPLEMENTED {
 
@@ -14,13 +16,13 @@ public enum FixtureState {
                 list.add(plural);
             }
         }
-        
+
         @Override
-        public void assertIsSatisfied(long successCount, long failureCount, long exceptionCount, FailFastException ffe) {
+        public void assertIsSatisfied(ResultSummary rs, FailFastException ffe) {
             List<String> list = new ArrayList<String>();
-            addToList(list, successCount, "a success", "some successes");
-            addToList(list, failureCount, "a failure", "some failures");
-            addToList(list, exceptionCount, "an exception", "some exceptions");
+            addToList(list, rs.getSuccessCount(), "a success", "some successes");
+            addToList(list, rs.getFailureCount(), "a failure", "some failures");
+            addToList(list, rs.getExceptionCount(), "an exception", "some exceptions");
             if (list.size() > 0) {
                 String s = list.get(0);
                 if (list.size() > 1) {
@@ -29,7 +31,7 @@ public enum FixtureState {
                     }
                     s += ", and " + list.get(list.size() - 1);
                 }
-                throw new ConcordionAssertionError("Specification is supposed to be unimplemented, but is reporting " + s + ".", successCount, failureCount, exceptionCount);
+                throw new ConcordionAssertionError("Specification is supposed to be unimplemented, but is reporting " + s + ".", rs);
             }
         }
 
@@ -41,9 +43,9 @@ public enum FixtureState {
     EXPECTED_TO_FAIL {
 
         @Override
-        public void assertIsSatisfied(long successCount, long failureCount, long exceptionCount, FailFastException ffe) {
-            if (failureCount + exceptionCount == 0) {
-                throw new ConcordionAssertionError("Specification is expected to fail but has neither failures nor exceptions.", successCount, failureCount, exceptionCount);
+        public void assertIsSatisfied(ResultSummary rs, FailFastException ffe) {
+            if (rs.getFailureCount() + rs.getExceptionCount() == 0) {
+                throw new ConcordionAssertionError("Specification is expected to fail but has neither failures nor exceptions.", rs);
             }
         }
 
@@ -55,15 +57,15 @@ public enum FixtureState {
     EXPECTED_TO_PASS {
 
         @Override
-        public void assertIsSatisfied(long successCount, long failureCount, long exceptionCount, FailFastException ffe) {
+        public void assertIsSatisfied(ResultSummary rs, FailFastException ffe) {
             if (ffe != null) {
                 throw new AssertionError(ffe);
             }
-            if (failureCount > 0) {
-                throw new ConcordionAssertionError("Specification has failure(s). See output HTML for details.", successCount, failureCount, exceptionCount);
+            if (rs.getFailureCount() > 0) {
+                throw new ConcordionAssertionError("Specification has failure(s). See output HTML for details.", rs);
             }
-            if (exceptionCount > 0) {
-                throw new ConcordionAssertionError("Specification has exception(s). See output HTML for details.", successCount, failureCount, exceptionCount);
+            if (rs.getExceptionCount() > 0) {
+                throw new ConcordionAssertionError("Specification has exception(s). See output HTML for details.", rs);
             }
         }
 
@@ -71,8 +73,8 @@ public enum FixtureState {
         public void printNote(PrintStream out) {
         }
     };
-    
-    public abstract void assertIsSatisfied(long successCount, long failureCount, long exceptionCount, FailFastException ffe);
+
+    public abstract void assertIsSatisfied(ResultSummary rs, FailFastException ffe);
 
     public abstract void printNote(PrintStream out);
 }

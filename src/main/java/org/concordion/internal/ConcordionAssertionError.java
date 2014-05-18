@@ -1,29 +1,20 @@
 package org.concordion.internal;
 
+import org.concordion.api.ResultSummary;
+
 public class ConcordionAssertionError extends AssertionError {
 
 	private static final long serialVersionUID = 1L;
-	private final long numSuccesses;
-	private final long numFailures;
-	private final long numExceptions;
+	private final ResultSummary rs;
 
-	public ConcordionAssertionError(final String message, final long numSuccesses, final long numFailures, final long numExceptions) {
-		super (message);
-		this.numSuccesses = numSuccesses;
-		this.numFailures = numFailures;
-		this.numExceptions = numExceptions;
+
+	public ConcordionAssertionError(String description, ResultSummary rs) {
+		super(description);
+		this.rs= rs;
 	}
 
-	public long getNumSuccesses() {
-		return numSuccesses;
-	}
-
-	public long getNumFailures() {
-		return numFailures;
-	}
-
-	public long getNumExceptions() {
-		return numExceptions;
+	public ResultSummary getResultSummary() {
+		return rs;
 	}
 
 }

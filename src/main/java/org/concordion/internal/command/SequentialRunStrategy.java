@@ -19,7 +19,7 @@ public class SequentialRunStrategy implements RunStrategy {
             throw e;
         } catch (final Throwable e) {
             announcer.announceException(e);
-            resultRecorder.record(Result.FAILURE);
+            resultRecorder.record(Result.EXCEPTION);
         }
     }
 }
