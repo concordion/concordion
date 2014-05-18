@@ -13,6 +13,7 @@ public class FixtureRunner {
 	
     private final FixtureExtensionLoader fixtureExtensionLoader = new FixtureExtensionLoader();
 
+<<<<<<< HEAD
     public ResultSummary run(Object fixture) throws IOException {
     	
     	ResultSummary resultSummary = cachedRunResults.startRun(fixture.getClass());
@@ -26,6 +27,12 @@ public class FixtureRunner {
             additionalInformation = "Returning cached result summary for fixture " + fixture.getClass().getName();
         }
 
+=======
+    public ResultSummary run(Object fixture) throws IOException, ConcordionFixtureExecutionException {
+        ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture);
+        fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
+        ResultSummary resultSummary = concordionBuilder.build().process(fixture);
+>>>>>>> 8abc396... Removed "final" modifiers that were put there automatically by eclipse.
         synchronized (System.out) {
             if (additionalInformation != null) {
                 System.out.println(additionalInformation);

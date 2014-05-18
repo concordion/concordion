@@ -16,23 +16,23 @@ public class Concordion {
     private final EvaluatorFactory evaluatorFactory;
     private final SpecificationReader specificationReader;
 
-    public Concordion(final SpecificationLocator specificationLocator, final SpecificationReader specificationReader, final EvaluatorFactory evaluatorFactory) {
+    public Concordion(SpecificationLocator specificationLocator, SpecificationReader specificationReader, EvaluatorFactory evaluatorFactory) {
         this.specificationLocator = specificationLocator;
         this.specificationReader = specificationReader;
         this.evaluatorFactory = evaluatorFactory;
     }
 
-    public ResultSummary process(final Object fixture) throws IOException {
+    public ResultSummary process(Object fixture) throws IOException {
         return process(specificationLocator.locateSpecification(fixture), fixture);
     }
 
-    public ResultSummary process(final Resource resource, final Object fixture) throws IOException {
+    public ResultSummary process(Resource resource, Object fixture) throws IOException {
 //        try {
-        	final Specification specification = specificationReader.readSpecification(resource);
-            final SummarizingResultRecorder resultRecorder = new SummarizingResultRecorder();
+        	Specification specification = specificationReader.readSpecification(resource);
+            SummarizingResultRecorder resultRecorder = new SummarizingResultRecorder();
             specification.process(evaluatorFactory.createEvaluator(fixture), resultRecorder);
             return resultRecorder;
-//        } catch (final ParsingException e) {
+//        } catch (ParsingException e) {
 //        	e.printStackTrace();
 //        	throw e;
 ////        	throw new ConcordionAssertionError("Could not parse resource " + resource.getPath(), new SingleResultSummary(Result.EXCEPTION));

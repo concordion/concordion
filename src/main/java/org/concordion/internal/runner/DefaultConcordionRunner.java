@@ -142,13 +142,13 @@ public class DefaultConcordionRunner implements Runner {
         rethrowExceptionIfWarranted(concordionClass, exception);
 	}
 
-	private List<Method> getMethodsWithAnnotation(final Class<?> type, Class<? extends Annotation> annotation) {
-        final List<Method> foundMethods = new ArrayList<Method>();
+	private List<Method> getMethodsWithAnnotation( Class<?> type, Class<? extends Annotation> annotation) {
+         List<Method> foundMethods = new ArrayList<Method>();
         Class<?> currentClass = type;
         while (currentClass != Object.class) {
         	// We iterate up through the class heirarchy ensuring we get all the annotated methods.
-            final Method[] allMethods = currentClass.getDeclaredMethods();
-            for (final Method method : allMethods) {
+             Method[] allMethods = currentClass.getDeclaredMethods();
+            for ( Method method : allMethods) {
                 if (method.isAnnotationPresent(annotation)) {
                 	foundMethods.add(method);
                 }

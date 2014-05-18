@@ -23,29 +23,29 @@ import org.concordion.internal.util.Check;
 
 public class RunCommand extends AbstractCommand {
 
-    private final Announcer<RunListener> listeners = Announcer.to(RunListener.class);
+    private Announcer<RunListener> listeners = Announcer.to(RunListener.class);
 
     public void addRunListener(final RunListener runListener) {
         listeners.addListener(runListener);
     }
 
-    public void removeRunListener(final RunListener runListener) {
+    public void removeRunListener(RunListener runListener) {
         listeners.removeListener(runListener);
     }
 
     @Override
-    public void execute(final CommandCall commandCall, final Evaluator evaluator, final ResultRecorder resultRecorder) {
+    public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
         Check.isFalse(commandCall.hasChildCommands(), "Nesting commands inside an 'run' is not supported");
 
-        final Element element = commandCall.getElement();
+        Element element = commandCall.getElement();
 
-        final String href = element.getAttributeValue("href");
+        String href = element.getAttributeValue("href");
 
         Check.notNull(href, "The 'href' attribute must be set for an element containing concordion:run");
 
-        final String runnerType = commandCall.getExpression();
+        String runnerType = commandCall.getExpression();
 
-        final String expression = element.getAttributeValue("concordion:params");
+        String expression = element.getAttributeValue("concordion:params");
         if (expression != null)
             evaluator.evaluate(expression);
 
@@ -60,7 +60,7 @@ public class RunCommand extends AbstractCommand {
             try {
                 Class.forName(runnerType);
                 concordionRunner = runnerType;
-            } catch (final ClassNotFoundException e1) {
+            } catch (ClassNotFoundException e1) {
                 // OK, we're reporting this in a second.
             }
         }
@@ -70,27 +70,28 @@ public class RunCommand extends AbstractCommand {
                 + "' System property is set to a name of an org.concordion.Runner implementation "
                 + "(3) Specify a full class name of an org.concordion.Runner implementation");
         try {
-            final Class<?> clazz = Class.forName(concordionRunner);
-            final Runner runner = (Runner) clazz.newInstance();
-            for (final Method method : runner.getClass().getMethods()) {
-                final String methodName = method.getName();
+            Class<?> clazz = Class.forName(concordionRunner);
+            Runner runner = (Runner) clazz.newInstance();
+            for (Method method : runner.getClass().getMethods()) {
+                String methodName = method.getName();
                 if (methodName.startsWith("set") && methodName.length() > 3 && method.getParameterTypes().length == 1) {
-                    final String variableName = methodName.substring(3, 4).toLowerCase() + method.getName().substring(4);
+                    String variableName = methodName.substring(3, 4).toLowerCase() + method.getName().substring(4);
                     Object variableValue = evaluator.evaluate(variableName);
                     if (variableValue == null) {
                         try {
                             variableValue = evaluator.getVariable(variableName);
-                        } catch (final Exception e) {
+                        } catch (Exception e) {
                         }
                     }
                     if (variableValue != null) {
                         try {
                             method.invoke(runner, variableValue);
-                        } catch (final Exception e) {
+                        } catch (Exception e) {
                         }
                     }
                 }
             }
+<<<<<<< HEAD
             try {
                 final ResultSummary result = runner.execute(commandCall.getResource(), href);
 
@@ -129,11 +130,24 @@ public class RunCommand extends AbstractCommand {
             resultRecorder.record(e.getResultSummary());
         } catch (final Exception e) {
             announceException(e, element, runnerType);
+=======
+
+            runStrategy.call(runner, commandCall.getResource(), href, resultAnnouncer, resultRecorder);
+
+        } catch (FailFastException e) {
+            throw e; // propagate FailFastExceptions
+        } catch (ConcordionAssertionError e) {
+        	resultAnnouncer.announceException(e);
+        	resultRecorder.record(e.getResultSummary());
+        } catch (Exception e) {
+            resultAnnouncer.announceException(e);
+>>>>>>> 8abc396... Removed "final" modifiers that were put there automatically by eclipse.
             resultRecorder.record(Result.FAILURE);
         }
 
     }
 
+<<<<<<< HEAD
     private void announceIgnored(final Element element) {
         listeners.announce().ignoredReported(new RunIgnoreEvent(element));
     }
@@ -148,5 +162,25 @@ public class RunCommand extends AbstractCommand {
 
     private void announceException(final Throwable throwable, final Element element, final String expression) {
         listeners.announce().throwableCaught(new ThrowableCaughtEvent(throwable, element, expression));
+=======
+    private ResultAnnouncer newRunResultAnnouncer(final Element element, final String expression) {
+        return new ResultAnnouncer() {
+            @Override
+            public void announce(ResultSummary result) {
+            	if (result.getFailureCount() + result.getExceptionCount() > 0) {
+                    listeners.announce().failureReported(new RunFailureEvent(element));
+            	} else if (result.getIgnoredCount() > 0) {
+                    listeners.announce().ignoredReported(new RunIgnoreEvent(element));
+            	} else {
+                    listeners.announce().successReported(new RunSuccessEvent(element));
+              	}
+            }
+
+            @Override
+            public void announceException(Throwable throwable) {
+                listeners.announce().throwableCaught(new ThrowableCaughtEvent(throwable, element, expression));
+            }
+        };
+>>>>>>> 8abc396... Removed "final" modifiers that were put there automatically by eclipse.
     }
 };

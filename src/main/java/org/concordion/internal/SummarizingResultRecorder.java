@@ -12,22 +12,22 @@ import org.concordion.api.Unimplemented;
 
 public class SummarizingResultRecorder implements ResultRecorder, ResultSummary {
 
-    private final List<Result> recordedResults = new ArrayList<Result>();
+    private List<Result> recordedResults = new ArrayList<Result>();
     private FailFastException failFastException;
 
     @Override
-	public void record(final Result result) {
+	public void record( Result result) {
         recordedResults.add(result);
     }
 
-    private void recordMultipleResults(final long number, final Result type) {
+    private void recordMultipleResults(long number, Result type) {
 		for (long i=0; i<number; i++) {
 			record(type);
 		}
     }
 
 	@Override
-	public void record(final ResultSummary result) {
+	public void record( ResultSummary result) {
 		recordMultipleResults(result.getSuccessCount(), Result.SUCCESS);
 		recordMultipleResults(result.getFailureCount(), Result.FAILURE);
 		recordMultipleResults(result.getIgnoredCount(), Result.IGNORED);
@@ -40,12 +40,12 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     }
 
     @Override
-	public void assertIsSatisfied(final Object fixture) {
-        final FixtureState state = getFixtureState(fixture);
+	public void assertIsSatisfied( Object fixture) {
+         FixtureState state = getFixtureState(fixture);
         state.assertIsSatisfied(this, failFastException);
     }
 
-    private FixtureState getFixtureState(final Object fixture) {
+    private FixtureState getFixtureState(Object fixture) {
         FixtureState state = FixtureState.EXPECTED_TO_PASS;
         if (fixture.getClass().getAnnotation(ExpectedToFail.class) != null) {
             state = FixtureState.EXPECTED_TO_FAIL;
@@ -61,9 +61,9 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         return getExceptionCount() > 0;
     }
 
-    public long getCount(final Result result) {
+    public long getCount(Result result) {
         int count = 0;
-        for (final Result candidate : recordedResults) {
+        for ( Result candidate : recordedResults) {
             if (candidate == result) {
                 count++;
             }
@@ -92,12 +92,17 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     }
 
     @Override
-	public void print(final PrintStream out) {
+	public void print( PrintStream out) {
         print(out, this);
     }
 
     @Override
+<<<<<<< HEAD
 	public void print(final PrintStream out, final Object fixture) {
+=======
+	public void print(PrintStream out, Object fixture) {
+        out.println(specificationDescription);
+>>>>>>> 8abc396... Removed "final" modifiers that were put there automatically by eclipse.
         out.print("Successes: " + getSuccessCount());
         out.print(", Failures: " + getFailureCount());
         if (getIgnoredCount() > 0) {
@@ -111,7 +116,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     }
 
     @Override
-    public void recordFailFastException(final FailFastException exception) {
+    public void recordFailFastException( FailFastException exception) {
         this.setFailFastException(exception);
     }
 
@@ -119,9 +124,17 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         return failFastException;
     }
 
-    public void setFailFastException(final FailFastException exception) {
+    public void setFailFastException( FailFastException exception) {
         this.failFastException = exception;
     }
+<<<<<<< HEAD
 
 
+=======
+
+    @Override
+    public void setSpecificationDescription( String specificationDescription) {
+        this.specificationDescription = specificationDescription;
+    }
+>>>>>>> 8abc396... Removed "final" modifiers that were put there automatically by eclipse.
 }
