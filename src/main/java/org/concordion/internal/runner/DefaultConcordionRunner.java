@@ -15,6 +15,7 @@ import org.concordion.api.ResultSummary;
 import org.concordion.api.Runner;
 import org.concordion.api.Unimplemented;
 import org.concordion.integration.junit3.ConcordionTestCase;
+import org.concordion.integration.junit4.ConcordionEnhancedReporting;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.concordion.internal.ConcordionAssertionError;
 import org.concordion.internal.FailFastException;
@@ -75,7 +76,9 @@ public class DefaultConcordionRunner implements Runner {
        	// check for a jUnit 4 style annotation
        	if (concordionClass.isAnnotationPresent(RunWith.class)) {
        		RunWith s = concordionClass.getAnnotation(RunWith.class);
-       		if (s.value().isAssignableFrom(ConcordionRunner.class)) {
+       		Class<? extends org.junit.runner.Runner> runWith = s.value();
+       		if (ConcordionRunner.class.isAssignableFrom(runWith) || 
+       				runWith.isAnnotationPresent(ConcordionEnhancedReporting.class)) {
        			return runConcordionJUnit4Test(concordionClass);
        		}
        	}
