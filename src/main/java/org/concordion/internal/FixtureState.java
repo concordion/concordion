@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
 
 public enum FixtureState {
@@ -32,8 +33,17 @@ public enum FixtureState {
                     s += ", and " + list.get(list.size() - 1);
                 }
                 throw new ConcordionAssertionError("Specification is supposed to be unimplemented, but is reporting " + s + ".", rs);
+                
             }
         }
+        
+		@Override
+		public ResultSummary getMeaningfulResultSummary(
+				ResultSummary rs, FailFastException ffe) {
+			assertIsSatisfied(rs, ffe);
+			return new SingleResultSummary(Result.IGNORED);
+		}
+ 
 
         @Override
         public void printNote(PrintStream out) {
@@ -47,8 +57,17 @@ public enum FixtureState {
             if (rs.getFailureCount() + rs.getExceptionCount() == 0) {
                 throw new ConcordionAssertionError("Specification is expected to fail but has neither failures nor exceptions.", rs);
             }
+           
         }
 
+		@Override
+		public ResultSummary getMeaningfulResultSummary(
+				ResultSummary rs, FailFastException ffe) {
+			assertIsSatisfied(rs, ffe);
+			return new SingleResultSummary(Result.IGNORED);
+		}
+ 
+        
         @Override
         public void printNote(PrintStream out) {
             out.print("   <-- Note: This test has been marked as EXPECTED_TO_FAIL");
@@ -59,7 +78,7 @@ public enum FixtureState {
         @Override
         public void assertIsSatisfied(ResultSummary rs, FailFastException ffe) {
             if (ffe != null) {
-                throw new AssertionError(ffe);
+                throw ffe;
             }
             if (rs.getFailureCount() > 0) {
                 throw new ConcordionAssertionError("Specification has failure(s). See output HTML for details.", rs);
@@ -68,13 +87,22 @@ public enum FixtureState {
                 throw new ConcordionAssertionError("Specification has exception(s). See output HTML for details.", rs);
             }
         }
-
+        
         @Override
         public void printNote(PrintStream out) {
         }
+
+		@Override
+		public ResultSummary getMeaningfulResultSummary(
+				ResultSummary rs, FailFastException ffe) {
+			assertIsSatisfied(rs, ffe);
+			return rs;
+		}
     };
 
     public abstract void assertIsSatisfied(ResultSummary rs, FailFastException ffe);
 
     public abstract void printNote(PrintStream out);
+
+	public abstract ResultSummary getMeaningfulResultSummary(ResultSummary rs, FailFastException ffe);
 }

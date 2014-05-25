@@ -33,6 +33,6 @@ public class FixtureRunner {
             resultSummary.assertIsSatisfied(fixture);
         }
 
-        return resultSummary;
+        return resultSummary.getMeaningfulResultSummary(fixture);
     }
 }
