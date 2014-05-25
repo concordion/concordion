@@ -26,7 +26,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
@@ -164,10 +163,17 @@ public class DefaultConcordionRunner implements Runner {
 
     private ResultSummary runConcordionJUnit4Test(Class<?> concordionClass) throws Exception {
 
+    	/*
+    	 * We ignore the ignore annotation. This lets us run tests via a concordion:run command that are marked as @Ignore to JUnit.
+    	 * 
+    	 * Particularly useful for concordion's automated testing - we can have tests that fail that are not run automatically.
+    	 * 
+    	 * 
+    	
     	if (concordionClass.isAnnotationPresent(Ignore.class) ||
     		concordionClass.isAnnotationPresent(Unimplemented.class)) {
     		return new SingleResultSummary(Result.IGNORED);
-    	}
+    	}*/
 
     	List<Method> beforeClassMethods = getMethodsWithAnnotation(concordionClass, BeforeClass.class);
     	for (Method m: beforeClassMethods) {

@@ -16,6 +16,6 @@ public class FixtureRunner {
             resultSummary.print(System.out, fixture);
             resultSummary.assertIsSatisfied(fixture);
         }
-        return resultSummary;
+        return resultSummary.getMeaningfulResultSummary(fixture);
     }
 }
