@@ -26,6 +26,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
@@ -163,37 +164,37 @@ public class DefaultConcordionRunner implements Runner {
 
     private ResultSummary runConcordionJUnit4Test(Class<?> concordionClass) throws Exception {
 
-    	/*
-    	 * We ignore the ignore annotation. This lets us run tests via a concordion:run command that are marked as @Ignore to JUnit.
-    	 * 
-    	 * Particularly useful for concordion's automated testing - we can have tests that fail that are not run automatically.
-    	 * 
-    	 * 
-    	
+    	// first check for jUnit's Ignore annotation.
     	if (concordionClass.isAnnotationPresent(Ignore.class) ||
     		concordionClass.isAnnotationPresent(Unimplemented.class)) {
     		return new SingleResultSummary(Result.IGNORED);
-    	}*/
+    	}
 
+    	// run any before class methods
     	List<Method> beforeClassMethods = getMethodsWithAnnotation(concordionClass, BeforeClass.class);
     	for (Method m: beforeClassMethods) {
     		safeInvokeMethod(concordionClass, null, m);
     	}
 
+    	// construct the object
     	Object o = concordionClass.getConstructor((Class<?>[])null).newInstance((Object[])null);
 
+    	// run any before methods
       	List<Method> beforeMethods = getMethodsWithAnnotation(concordionClass, Before.class);
     	for (Method m: beforeMethods) {
        		safeInvokeMethod(concordionClass, o, m);
        	}
 
+    	// invoke the test method
       	ResultSummary rs = invokeTestMethod(o);
 
+      	// run any after methods
     	List<Method> afterMethods = getMethodsWithAnnotation(concordionClass, After.class);
     	for (Method m: afterMethods) {
        		safeInvokeMethod(concordionClass, o, m);
        	}
 
+    	// finally, any after class methods
       	List<Method> afterClassMethods = getMethodsWithAnnotation(concordionClass, AfterClass.class);
     	for (Method m: afterClassMethods) {
        		safeInvokeMethod(concordionClass, null, m);

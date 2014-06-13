@@ -15,7 +15,6 @@ public class RunTotals extends ConcordionTestCase {
 	public Map<String, String> simulateRun(final String href) {
 		final Element element = new Element(href);
 		element.addAttribute("href", href);
-//		element.addAttribute("concordion:run", "concordion");
 
 		final String path = "/" + getClass().getName().replace('.', '/');
 
