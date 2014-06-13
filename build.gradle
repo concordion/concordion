@@ -16,6 +16,7 @@ apply from: 'http://tellurianring.com/projects/gradle-plugins/gradle-release/app
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
