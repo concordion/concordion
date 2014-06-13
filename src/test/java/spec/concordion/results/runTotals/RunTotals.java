@@ -1,7 +1,5 @@
 package spec.concordion.results.runTotals;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,12 +36,9 @@ public class RunTotals extends ConcordionTestCase {
 		result.put("ignoredCount", Long.toString(recorder.getIgnoredCount()));
 		result.put("exceptionCount", Long.toString(recorder.getExceptionCount()));
 
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		PrintStream pStream = new PrintStream(stream);
-		recorder.print(pStream);
-		pStream.flush();
+		String counts = recorder.printCountsToString(recorder);
 
-		result.put("totalsString", stream.toString());
+		result.put("totalsString", counts);
 		return result;
 	}
 
