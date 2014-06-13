@@ -44,11 +44,11 @@ public enum FixtureState {
 			return new SingleResultSummary(Result.IGNORED);
 		}
  
+       @Override
+       public String printNoteToString() {
+        	return "   <-- Note: This test has been marked as UNIMPLEMENTED";
+       }
 
-        @Override
-        public void printNote(PrintStream out) {
-            out.print("   <-- Note: This test has been marked as UNIMPLEMENTED");
-        }
     },
     EXPECTED_TO_FAIL {
 
@@ -67,11 +67,10 @@ public enum FixtureState {
 			return new SingleResultSummary(Result.IGNORED);
 		}
  
-        
-        @Override
-        public void printNote(PrintStream out) {
-            out.print("   <-- Note: This test has been marked as EXPECTED_TO_FAIL");
-        }
+       @Override
+       public String printNoteToString() {
+        	return "   <-- Note: This test has been marked as EXPECTED_TO_FAIL";
+       }
     },
     EXPECTED_TO_PASS {
 
@@ -89,7 +88,8 @@ public enum FixtureState {
         }
         
         @Override
-        public void printNote(PrintStream out) {
+        public String printNoteToString() {
+        	return "";
         }
 
 		@Override
@@ -102,7 +102,11 @@ public enum FixtureState {
 
     public abstract void assertIsSatisfied(ResultSummary rs, FailFastException ffe);
 
-    public abstract void printNote(PrintStream out);
+    public void printNote(PrintStream out) {
+    	out.print(printNoteToString());
+    }
+    
+    public abstract String printNoteToString();
 
 	public abstract ResultSummary getMeaningfulResultSummary(ResultSummary rs, FailFastException ffe);
 }

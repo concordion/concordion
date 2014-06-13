@@ -104,16 +104,38 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
 
     @Override
 	public void print(PrintStream out, Object fixture) {
-        out.print("Successes: " + getSuccessCount());
-        out.print(", Failures: " + getFailureCount());
+    	out.print(printToString(fixture));
+    }
+    
+    @Override
+    public String printToString(Object fixture) {
+    	StringBuilder builder = new StringBuilder();
+    	builder.append("\n");
+    	builder.append(printCountsToString(fixture));
+        builder.append("\n");
+        return builder.toString();
+    }
+    	
+    @Override
+    public String printCountsToString(Object fixture) {
+    	StringBuilder builder = new StringBuilder();
+
+        builder.append("Successes: ");
+        builder.append(getSuccessCount());
+        builder.append(", Failures: ");
+        builder.append(getFailureCount());
         if (getIgnoredCount() > 0) {
-            out.print(", Ignored: " + getIgnoredCount());
+        	builder.append(", Ignored: ");
+        	builder.append(getIgnoredCount());
         }
         if (hasExceptions()) {
-            out.print(", Exceptions: " + getExceptionCount());
+        	builder.append(", Exceptions: ");
+        	builder.append(getExceptionCount());
         }
-        getFixtureState(fixture).printNote(out);
-        out.println("\n");
+
+        builder.append(getFixtureState(fixture).printNoteToString());
+        
+        return builder.toString();
     }
 
     @Override
