@@ -31,6 +31,18 @@ dependencies {
     }
 }
 
+sourceSets {
+    testDummies {  // "crash test dummies" - specs+fixtures that are used by the tests but aren't run as tests themselves  
+        java {
+            srcDir 'src/test-dummies/java'
+        }
+        resources {
+            srcDir 'src/test-dummies/resources'
+        }
+        compileClasspath = sourceSets.main.output + configurations.compile
+    }
+}
+
 // In order to verify that the build works with JDK5, run this task before compileJava
 task setJava5ClassPath << {
     def java5BootClassPath = System.env.JAVA5_BOOTCLASSPATH
@@ -48,6 +60,8 @@ ensure compatibility with Java 5 libraries for the main classes.''')
 test {
     systemProperties['concordion.output.dir'] = "${reporting.baseDir}"
 }
+
+compileTestJava.dependsOn compileTestDummiesJava
 
 distributions {
     main {
