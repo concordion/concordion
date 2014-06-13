@@ -33,4 +33,8 @@ public interface ResultSummary {
     
     void print(PrintStream out, Object fixture);
 
+	String printToString(Object fixture);
+    String printCountsToString(Object fixture);
+
+
 }

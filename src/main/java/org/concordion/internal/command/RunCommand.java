@@ -119,11 +119,11 @@ public class RunCommand extends AbstractCommand {
             @Override
             public void announce(ResultSummary result) {
             	if (result.getFailureCount() + result.getExceptionCount() > 0) {
-                    listeners.announce().failureReported(new RunFailureEvent(element));
+                    listeners.announce().failureReported(new RunFailureEvent(element, result));
             	} else if (result.getIgnoredCount() > 0) {
-                    listeners.announce().ignoredReported(new RunIgnoreEvent(element));
+                    listeners.announce().ignoredReported(new RunIgnoreEvent(element, result));
             	} else {
-                    listeners.announce().successReported(new RunSuccessEvent(element));
+                    listeners.announce().successReported(new RunSuccessEvent(element, result));
               	}
             }
 
