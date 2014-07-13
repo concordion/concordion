@@ -21,12 +21,20 @@ public class SimpleEvaluator extends OgnlEvaluator {
         super.setVariable(expression, value);
     }
 
+    
     private static String METHOD_NAME_PATTERN = "[a-z][a-zA-Z0-9_]*";
     private static String PROPERTY_NAME_PATTERN = "[a-z][a-zA-Z0-9_]*";
     private static String STRING_PATTERN = "'[^']+'";
     private static String LHS_VARIABLE_PATTERN = "#" + METHOD_NAME_PATTERN;
-    private static String RHS_VARIABLE_PATTERN = "(" + LHS_VARIABLE_PATTERN + "|#TEXT|#HREF)";
+
+
+    private static String RHS_VARIABLE_PATTERN_NO_MAP = "(" + LHS_VARIABLE_PATTERN + "|#TEXT|#HREF|'.*')" ;
+    private static String LIST_PATTERN = "\\{ *" + RHS_VARIABLE_PATTERN_NO_MAP + "( *, *" + RHS_VARIABLE_PATTERN_NO_MAP + " *)\\}";
+    private static String MAP_VALUE_PATTERN = RHS_VARIABLE_PATTERN_NO_MAP + " *\\: *" + RHS_VARIABLE_PATTERN_NO_MAP;
+    private static String MAP_PATTERN = "#\\{ *" + MAP_VALUE_PATTERN + "( *, *" + MAP_VALUE_PATTERN + " *)*\\}";
+    private static String RHS_VARIABLE_PATTERN = "(" + RHS_VARIABLE_PATTERN_NO_MAP + "|" + MAP_PATTERN + "|" + LIST_PATTERN + ")" ;
     
+   
     public static void validateEvaluationExpression(String expression) {
         
         // Examples of possible expressions in test.concordion.internal.ExpressionTest
@@ -57,6 +65,7 @@ public class SimpleEvaluator extends OgnlEvaluator {
                 return;
             }
         }
+        System.err.println("Invalid expression: " + expression);
         throw new RuntimeException("Invalid expression [" + expression + "]");
     }
 
