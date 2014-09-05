@@ -1,4 +1,4 @@
-﻿package spec.concordion.command;
+package spec.concordion.command;
 
 import test.concordion.TestRig;
 
