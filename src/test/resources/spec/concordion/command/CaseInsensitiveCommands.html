@@ -1,0 +1,53 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+
+<head>
+<link href="../../../concordion.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+    <h1>Case Insensitive Commands</h1>
+    
+    <p>
+		Attributes should be lower case in XHTML (e.g.<a href="http://www.w3.org/TR/xhtml1/diffs.html#h-4.2">http://www.w3.org/TR/xhtml1/diffs.html#h-4.2</a>).
+    </p>
+	<p>Concordion is able to parse attributes with 
+		upper case letters such as assertEquals, but also in lower case such as 
+		assertequals.</p>
+    
+    <div class="example">        
+    
+        <h3>Examples</h3>
+
+<p>All of these will work:</p>        
+        
+<pre class="html" concordion:assertEquals="process(#TEXT, &apos;Fred&apos;)">
+&lt;span concordion:assertEquals="#name"&gt;Fred&lt;/span&gt;
+</pre>
+
+<pre class="html" concordion:assertEquals="process(#TEXT, &apos;Fred&apos;)">
+&lt;span concordion:assertequals="#name"&gt;Fred&lt;/span&gt;
+</pre>
+
+<pre class="html" concordion:assertEquals="process(#TEXT, true)">
+&lt;span concordion:assertTrue="#name"&gt;is true&lt;/span&gt;
+</pre>
+
+<pre class="html" concordion:assertEquals="process(#TEXT, true)">
+&lt;strong concordion:asserttrue="#name"&gt;is true&lt;/strong&gt;
+</pre>
+
+<pre class="html" concordion:assertEquals="process(#TEXT, false)">
+&lt;div concordion:assertFalse="#name"&gt;Fred&lt;/div&gt;
+</pre>
+
+<pre class="html" concordion:assertEquals="process(#TEXT, false)">
+&lt;p concordion:assertfalse="#name"&gt;Fred&lt;/p&gt;
+</pre>
+        
+    </div>
+
+    
+
+</body>
+</html>
