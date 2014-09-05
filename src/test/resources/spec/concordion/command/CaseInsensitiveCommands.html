@@ -21,27 +21,27 @@
 
 <p>All of these will work:</p>        
         
-<pre class="html" concordion:assertEquals="process(#TEXT, &apos;Fred&apos;)">
+<pre class="html" concordion:assertEquals="processEquals(#TEXT)">
 &lt;span concordion:assertEquals="#name"&gt;Fred&lt;/span&gt;
 </pre>
 
-<pre class="html" concordion:assertEquals="process(#TEXT, &apos;Fred&apos;)">
+<pre class="html" concordion:assertEquals="processEquals(#TEXT)">
 &lt;span concordion:assertequals="#name"&gt;Fred&lt;/span&gt;
 </pre>
 
-<pre class="html" concordion:assertEquals="process(#TEXT, true)">
+<pre class="html" concordion:assertEquals="processTrue(#TEXT)">
 &lt;span concordion:assertTrue="#name"&gt;is true&lt;/span&gt;
 </pre>
 
-<pre class="html" concordion:assertEquals="process(#TEXT, true)">
+<pre class="html" concordion:assertEquals="processTrue(#TEXT)">
 &lt;strong concordion:asserttrue="#name"&gt;is true&lt;/strong&gt;
 </pre>
 
-<pre class="html" concordion:assertEquals="process(#TEXT, false)">
+<pre class="html" concordion:assertEquals="processFalse(#TEXT)">
 &lt;div concordion:assertFalse="#name"&gt;Fred&lt;/div&gt;
 </pre>
 
-<pre class="html" concordion:assertEquals="process(#TEXT, false)">
+<pre class="html" concordion:assertEquals="processFalse(#TEXT)">
 &lt;p concordion:assertfalse="#name"&gt;Fred&lt;/p&gt;
 </pre>
         
