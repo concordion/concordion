@@ -1,0 +1,26 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<head>
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<title>Run Totals</title>
+</head>
+<body>
+
+    <h1>Run Totals</h1>
+
+	<p>
+	When a concordion fixture is run multiple times, the results are cached. To test this, we call concordion:run on a fixture that is
+        designed to fail if it is called twice.
+    </p>
+
+    <ul>
+        <li><a href="FailIfCalledMultipleTimes.html" concordion:run="concordion">First Execution</a></li>
+        <li><a href="FailIfCalledMultipleTimes.html" concordion:run="concordion">Second Execution</a></li>
+
+    </ul>
+
+
+
+
+
+</body>
+</html>

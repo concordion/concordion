@@ -7,7 +7,7 @@ import org.concordion.api.ResultSummary;
 
 public class CachedRunResults {
 
-	Map<Class<?>, ResultSummary> map = new ConcurrentHashMap<>();
+	Map<Class<?>, ResultSummary> map = new ConcurrentHashMap<Class<?>, ResultSummary>();
 
 	public ResultSummary getCachedResults(Class<?> class1) {
 		return map.get(class1);
