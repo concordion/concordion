@@ -13,13 +13,13 @@ public class FixtureRunner {
 
     public ResultSummary run(Object fixture) throws IOException {
     	
-    	ResultSummary resultSummary = cachedRunResults.getCachedResults(fixture.getClass());
+    	ResultSummary resultSummary = cachedRunResults.startRun(fixture.getClass());
         String additionalInformation = null;
     	if (resultSummary == null)  {
             ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture);
             fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
             resultSummary = concordionBuilder.build().process(fixture);
-            cachedRunResults.addResultSummary(fixture.getClass(), resultSummary);
+            cachedRunResults.finishRun(fixture.getClass(), resultSummary);
         } else {
             additionalInformation = "Returning cached result summary for fixture " + fixture.getClass().getName();
         }
