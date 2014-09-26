@@ -8,8 +8,7 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 
 import org.concordion.api.ExpectedToFail;
-import org.concordion.api.Result;
-import org.concordion.api.RunnerResult;
+import org.concordion.api.ResultSummary;
 import org.concordion.api.Unimplemented;
 import org.concordion.internal.runner.DefaultConcordionRunner;
 import org.junit.Rule;
@@ -22,34 +21,46 @@ public class DefaultConcordionRunnerTest {
 
     @Rule
     public ConsoleLogGobbler logGobbler = new ConsoleLogGobbler(); // Ensure error log messages don't appear on console
-    private StubLogger stubLogger = new StubLogger();
+    private final StubLogger stubLogger = new StubLogger();
 
-    private TestDefaultConcordionRunner runner = new TestDefaultConcordionRunner();
+    private final TestDefaultConcordionRunner runner = new TestDefaultConcordionRunner();
 
     @Test
     public void returnsFailureOnJUnitFailure() throws Exception {
-        RunnerResult myresult = runner.decodeJUnitResult(UnannotatedClass.class, StubResult.FAILURE);
-        assertThat(myresult.getResult(), is(Result.FAILURE));
+        ResultSummary myresult = runner.decodeJUnitResult(UnannotatedClass.class, StubResult.FAILURE);
+        assertThat(myresult.getFailureCount(), is(1L));
+        assertThat(myresult.getIgnoredCount(), is(0L));
+        assertThat(myresult.getExceptionCount(), is(0L));
+        assertThat(myresult.getSuccessCount(), is(0L));
     }
 
     @Test
     public void returnsSuccessOnJUnitSuccess() throws Exception {
-        RunnerResult myresult = runner.decodeJUnitResult(UnannotatedClass.class, StubResult.SUCCESS);
-        assertThat(myresult.getResult(), is(Result.SUCCESS));
-    }
+    	ResultSummary myresult = runner.decodeJUnitResult(UnannotatedClass.class, StubResult.SUCCESS);
+        assertThat(myresult.getFailureCount(), is(0L));
+        assertThat(myresult.getIgnoredCount(), is(0L));
+        assertThat(myresult.getExceptionCount(), is(0L));
+        assertThat(myresult.getSuccessCount(), is(1L));
+  }
 
     // JUnit success is reported when an ExpectedToFail test does fail
     @Test
     public void returnsIgnoredOnJUnitSuccessWhenExpectedToFail() throws Exception {
-        RunnerResult myresult = runner.decodeJUnitResult(ExpectedToFailClass.class, StubResult.SUCCESS);
-        assertThat(myresult.getResult(), is(Result.IGNORED));
-    }
+    	ResultSummary myresult = runner.decodeJUnitResult(ExpectedToFailClass.class, StubResult.SUCCESS);
+        assertThat(myresult.getFailureCount(), is(0L));
+        assertThat(myresult.getIgnoredCount(), is(1L));
+        assertThat(myresult.getExceptionCount(), is(0L));
+        assertThat(myresult.getSuccessCount(), is(0L));
+   }
 
     // JUnit success is reported when an Unimplemented test is unimplemented
     @Test
     public void returnsIgnoredOnJUnitSuccessWhenUnimplemented() throws Exception {
-        RunnerResult myresult = runner.decodeJUnitResult(UnimplementedClass.class, StubResult.SUCCESS);
-        assertThat(myresult.getResult(), is(Result.IGNORED));
+        ResultSummary myresult = runner.decodeJUnitResult(UnimplementedClass.class, StubResult.SUCCESS);
+        assertThat(myresult.getFailureCount(), is(0L));
+        assertThat(myresult.getIgnoredCount(), is(1L));
+        assertThat(myresult.getExceptionCount(), is(0L));
+        assertThat(myresult.getSuccessCount(), is(0L));
     }
 
     // JUnit failure is reported when an ExpectedToFail test does not fail.
@@ -67,8 +78,11 @@ public class DefaultConcordionRunnerTest {
     @Test
     public void doesNotThrowExceptionOnAssertionErrorWhenExpectedToPass() throws Exception {
         Throwable error = new AssertionError();
-        RunnerResult myresult = runner.decodeJUnitResult(UnannotatedClass.class, new StubResult().withFailure(error));
-        assertThat(myresult.getResult(), is(Result.FAILURE));
+        ResultSummary myresult = runner.decodeJUnitResult(UnannotatedClass.class, new StubResult().withFailure(error));
+        assertThat(myresult.getFailureCount(), is(1L));
+        assertThat(myresult.getIgnoredCount(), is(0L));
+        assertThat(myresult.getExceptionCount(), is(0L));
+        assertThat(myresult.getSuccessCount(), is(0L));
     }
 
     @Test
@@ -106,8 +120,11 @@ public class DefaultConcordionRunnerTest {
 
     @Test
     public void returnsIgnoredOnJUnitSuccessWhenIgnoredCountGreaterThanZero() throws Exception {
-        RunnerResult myresult = runner.decodeJUnitResult(UnannotatedClass.class, new StubResult().withIgnoreCount(1));
-        assertThat(myresult.getResult(), is(Result.IGNORED));
+        ResultSummary myresult = runner.decodeJUnitResult(UnannotatedClass.class, new StubResult().withIgnoreCount(1));
+        assertThat(myresult.getFailureCount(), is(0L));
+        assertThat(myresult.getIgnoredCount(), is(1L));
+        assertThat(myresult.getExceptionCount(), is(0L));
+        assertThat(myresult.getSuccessCount(), is(0L));
     }
 
     @Test
@@ -159,7 +176,8 @@ public class DefaultConcordionRunnerTest {
     }
 
     private static final class TestDefaultConcordionRunner extends DefaultConcordionRunner {
-        protected RunnerResult decodeJUnitResult(Class<?> concordionClass, org.junit.runner.Result jUnitResult) throws Exception {
+        @Override
+		protected ResultSummary decodeJUnitResult(Class<?> concordionClass, org.junit.runner.Result jUnitResult) throws Exception {
             return super.decodeJUnitResult(concordionClass, jUnitResult);
         }
     }

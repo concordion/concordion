@@ -14,7 +14,7 @@
     
     <div class="example">
 
-        <h3>Example</h3>
+        <h3>Example - no argument</h3>
         
         <p>The following instrumentation:</p>
 <pre class="html" concordion:set="#fragment">
@@ -26,6 +26,52 @@
         </p> 
         
     </div>            
+
+   <div class="example">
+
+        <h3>Example - single static argument</h3>
+        
+        <p>The following instrumentation:</p>
+<pre class="html" concordion:set="#fragment">
+&lt;p concordion:execute="myMethod('arg')"&gt;Some text goes here.&lt;/p&gt;
+</pre>
+        <p>
+            <span concordion:assertEquals="myMethodWasCalledProcessing(#fragment) ? 'Will' : 'Will not'">Will</span>
+            call <code>myMethod('arg')</code> in the Java fixture code with argument <span concordion:assertEquals="getArgument()">arg</span>.
+        </p> 
+        
+    </div>            
+
+
+   <div class="example">
+
+        <h3>Example - map as argument</h3>
+        
+        <p>The following instrumentation:</p>
+<pre class="html" concordion:set="#fragment">
+&lt;p concordion:execute="myMethod(#{'arg':'value', 'arg2': 'value2'})"&gt;Some text goes here.&lt;/p&gt;
+</pre>
+        <p>
+            <span concordion:assertEquals="myMethodWasCalledProcessing(#fragment) ? 'Will' : 'Will not'">Will</span>
+            call <code>myMethod(#{ 'arg': 'value', 'arg2': 'value2'})</code> in the Java fixture code with argument <span concordion:assertEquals="getArgument()">{(arg:value)(arg2:value2)}</span>.
+        </p> 
+        
+    </div>            
+
+<div class="example">
+
+        <h3>Example - list as argument</h3>
+        
+        <p>The following instrumentation:</p>
+<pre class="html" concordion:set="#fragment">
+&lt;p concordion:execute="myMethod({'arg', 'value','arg2','value2'})"&gt;Some text goes here.&lt;/p&gt;
+</pre>
+        <p>
+            <span concordion:assertEquals="myMethodWasCalledProcessing(#fragment) ? 'Will' : 'Will not'">Will</span>
+            call <code>myMethod({'arg', 'value','arg2','value2'})</code> in the Java fixture code with argument <span concordion:assertEquals="getArgument()">[(arg)(value)(arg2)(value2)]</span>.
+        </p> 
+        
+    </div>     
 
     <h2>Further Details</h2>
 

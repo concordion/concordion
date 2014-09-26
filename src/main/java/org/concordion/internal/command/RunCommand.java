@@ -8,12 +8,14 @@ import org.concordion.api.Element;
 import org.concordion.api.Evaluator;
 import org.concordion.api.Result;
 import org.concordion.api.ResultRecorder;
+import org.concordion.api.ResultSummary;
 import org.concordion.api.Runner;
 import org.concordion.api.listener.RunFailureEvent;
 import org.concordion.api.listener.RunIgnoreEvent;
 import org.concordion.api.listener.RunListener;
 import org.concordion.api.listener.RunSuccessEvent;
 import org.concordion.api.listener.ThrowableCaughtEvent;
+import org.concordion.internal.ConcordionAssertionError;
 import org.concordion.internal.FailFastException;
 import org.concordion.internal.runner.DefaultConcordionRunner;
 import org.concordion.internal.util.Announcer;
@@ -22,6 +24,12 @@ import org.concordion.internal.util.Check;
 public class RunCommand extends AbstractCommand {
 
     private Announcer<RunListener> listeners = Announcer.to(RunListener.class);
+
+    private RunStrategy runStrategy;
+
+    public RunCommand(RunStrategy runStrategy) {
+        this.runStrategy = runStrategy;
+    }
 
     public void addRunListener(RunListener runListener) {
         listeners.addListener(runListener);
@@ -46,6 +54,8 @@ public class RunCommand extends AbstractCommand {
         String expression = element.getAttributeValue("concordion:params");
         if (expression != null)
             evaluator.evaluate(expression);
+
+        ResultAnnouncer resultAnnouncer = newRunResultAnnouncer(element, expression);
 
         String concordionRunner = null;
 
@@ -89,45 +99,38 @@ public class RunCommand extends AbstractCommand {
                     }
                 }
             }
-            try {
-                Result result = runner.execute(commandCall.getResource(), href).getResult();
 
-                if (result == Result.SUCCESS) {
-                    announceSuccess(element);
-                } else if (result == Result.IGNORED) {
-                    announceIgnored(element);
-                } else {
-                    announceFailure(element);
-                }
-                resultRecorder.record(result);
-            } catch (FailFastException e) { 
-                throw e;
-            } catch (Throwable e) {
-                announceFailure(e, element, runnerType);
-                resultRecorder.record(Result.FAILURE);
-            }
-        } catch (FailFastException e) { 
+            runStrategy.call(runner, commandCall.getResource(), href, resultAnnouncer, resultRecorder);
+
+        } catch (FailFastException e) {
             throw e; // propagate FailFastExceptions
+        } catch (ConcordionAssertionError e) {
+        	resultAnnouncer.announceException(e);
+        	resultRecorder.record(e.getResultSummary());
         } catch (Exception e) {
-            announceFailure(e, element, runnerType);
+            resultAnnouncer.announceException(e);
             resultRecorder.record(Result.FAILURE);
         }
 
     }
 
-    private void announceIgnored(Element element) {
-        listeners.announce().ignoredReported(new RunIgnoreEvent(element));
-    }
+    private ResultAnnouncer newRunResultAnnouncer(final Element element, final String expression) {
+        return new ResultAnnouncer() {
+            @Override
+            public void announce(ResultSummary result) {
+            	if (result.getFailureCount() + result.getExceptionCount() > 0) {
+                    listeners.announce().failureReported(new RunFailureEvent(element, result));
+            	} else if (result.getIgnoredCount() > 0) {
+                    listeners.announce().ignoredReported(new RunIgnoreEvent(element, result));
+            	} else {
+                    listeners.announce().successReported(new RunSuccessEvent(element, result));
+              	}
+            }
 
-    private void announceSuccess(Element element) {
-        listeners.announce().successReported(new RunSuccessEvent(element));
-    }
-
-    private void announceFailure(Element element) {
-        listeners.announce().failureReported(new RunFailureEvent(element));
-    }
-
-    private void announceFailure(Throwable throwable, Element element, String expression) {
-        listeners.announce().throwableCaught(new ThrowableCaughtEvent(throwable, element, expression));
+            @Override
+            public void announceException(Throwable throwable) {
+                listeners.announce().throwableCaught(new ThrowableCaughtEvent(throwable, element, expression));
+            }
+        };
     }
 }

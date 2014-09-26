@@ -7,3 +7,6 @@ build/
 .project
 .settings/
 bin/
+
+#Intellj
+*.iml
