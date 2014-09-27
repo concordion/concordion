@@ -1,10 +1,12 @@
 buildscript {
     repositories {
+        mavenCentral()
         jcenter()
     }
 
     dependencies {
         classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.7'
+        classpath 'com.github.townsfolk:gradle-release:1.2'
     }
 }
 
@@ -12,7 +14,7 @@ apply plugin: 'java'
 apply plugin: 'java-library-distribution'
 apply plugin: 'eclipse'
 apply plugin: 'nexus'
-apply from: 'http://tellurianring.com/projects/gradle-plugins/gradle-release/apply.groovy'
+apply plugin: 'release'
 
 repositories {
     mavenCentral()
@@ -26,6 +28,18 @@ dependencies {
         exclude group: 'xalan', module: 'xalan'
         exclude group: 'xerces', module: 'xercesImpl'
         exclude group: 'xml-apis', module: 'xml-apis'
+    }
+}
+
+sourceSets {
+    testDummies {  // "crash test dummies" - specs+fixtures that are used by the tests but aren't run as tests themselves  
+        java {
+            srcDir 'src/test-dummies/java'
+        }
+        resources {
+            srcDir 'src/test-dummies/resources'
+        }
+        compileClasspath = sourceSets.main.output + configurations.compile
     }
 }
 
@@ -46,6 +60,8 @@ ensure compatibility with Java 5 libraries for the main classes.''')
 test {
     systemProperties['concordion.output.dir'] = "${reporting.baseDir}"
 }
+
+compileTestJava.dependsOn compileTestDummiesJava
 
 distributions {
     main {
