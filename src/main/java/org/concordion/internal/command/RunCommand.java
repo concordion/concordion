@@ -1,11 +1,14 @@
 package org.concordion.internal.command;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.concordion.api.AbstractCommand;
 import org.concordion.api.CommandCall;
 import org.concordion.api.Element;
 import org.concordion.api.Evaluator;
+import org.concordion.api.Resource;
 import org.concordion.api.Result;
 import org.concordion.api.ResultRecorder;
 import org.concordion.api.Runner;
@@ -22,7 +25,14 @@ import org.concordion.internal.util.Check;
 public class RunCommand extends AbstractCommand {
 
     private Announcer<RunListener> listeners = Announcer.to(RunListener.class);
-
+    /**
+     * Cache of results that have already been run so we don't
+     * rerun a spec twice.  Must be static because each call
+     * to {@code concordion:run} creates a new instance.
+     */
+    private static Map<Resource, Result> RESULT_CACHE = new HashMap<Resource, Result>();
+    
+    
     public void addRunListener(RunListener runListener) {
         listeners.addListener(runListener);
     }
@@ -67,6 +77,27 @@ public class RunCommand extends AbstractCommand {
                 + "Choices: (1) Use 'concordion' as your runner (2) Ensure that the 'concordion.runner." + runnerType
                 + "' System property is set to a name of an org.concordion.Runner implementation "
                 + "(3) Specify a full class name of an org.concordion.Runner implementation");
+        
+        Resource hrefResource = commandCall.getResource().getParent().getRelativeResource(href);
+     
+        Result cachedResult = RESULT_CACHE.get(hrefResource);
+        
+       
+        if(cachedResult !=null){
+        	//already ran this spec
+        	//notify listeners so we render the page accordingly
+        	if (cachedResult == Result.SUCCESS) {
+                announceSuccess(element);
+            } else if (cachedResult == Result.IGNORED) {
+                announceIgnored(element);
+            } else {
+                announceFailure(element);
+            }
+        	
+        	//but don't update the resultRecorder!
+        	return;
+        }
+        
         try {
             Class<?> clazz = Class.forName(concordionRunner);
             Runner runner = (Runner) clazz.newInstance();
@@ -100,17 +131,22 @@ public class RunCommand extends AbstractCommand {
                     announceFailure(element);
                 }
                 resultRecorder.record(result);
+                
+                RESULT_CACHE.put(hrefResource, result);
+                
             } catch (FailFastException e) { 
                 throw e;
             } catch (Throwable e) {
                 announceFailure(e, element, runnerType);
                 resultRecorder.record(Result.FAILURE);
+                RESULT_CACHE.put(hrefResource, Result.FAILURE);
             }
         } catch (FailFastException e) { 
             throw e; // propagate FailFastExceptions
         } catch (Exception e) {
             announceFailure(e, element, runnerType);
             resultRecorder.record(Result.FAILURE);
+            RESULT_CACHE.put(hrefResource, Result.FAILURE);
         }
 
     }
