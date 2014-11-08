@@ -1,8 +1,12 @@
 package org.concordion.internal.command;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.concordion.api.AbstractCommand;
 import org.concordion.api.CommandCall;
@@ -30,7 +34,13 @@ public class RunCommand extends AbstractCommand {
      * rerun a spec twice.  Must be static because each call
      * to {@code concordion:run} creates a new instance.
      */
-    private static Map<Resource, Result> RESULT_CACHE = new HashMap<Resource, Result>();
+    private static Map<Resource, Result> RESULT_CACHE = new ConcurrentHashMap<Resource, Result>();
+    
+    /**
+     * Set of specs that are in the middle of being executed (and therefore haven't been added to the {@link #RESULT_CACHE}
+     * yet.  We won't re-execute anything that is still running to avoid infinite loops where a child spec references its parent.
+     */
+    private static Set<Resource> PENDING_RESULTS = Collections.newSetFromMap(new ConcurrentHashMap<Resource, Boolean>());
     
     
     public void addRunListener(RunListener runListener) {
@@ -97,6 +107,11 @@ public class RunCommand extends AbstractCommand {
         	//but don't update the resultRecorder!
         	return;
         }
+        //check if this is a pending result
+        if(PENDING_RESULTS.contains(hrefResource)){
+        	//do nothing
+        	return;
+        }
         
         try {
             Class<?> clazz = Class.forName(concordionRunner);
@@ -121,6 +136,7 @@ public class RunCommand extends AbstractCommand {
                 }
             }
             try {
+            	PENDING_RESULTS.add(hrefResource);
                 Result result = runner.execute(commandCall.getResource(), href).getResult();
 
                 if (result == Result.SUCCESS) {
@@ -140,6 +156,8 @@ public class RunCommand extends AbstractCommand {
                 announceFailure(e, element, runnerType);
                 resultRecorder.record(Result.FAILURE);
                 RESULT_CACHE.put(hrefResource, Result.FAILURE);
+            }finally{
+            	PENDING_RESULTS.remove(hrefResource);
             }
         } catch (FailFastException e) { 
             throw e; // propagate FailFastExceptions
