@@ -59,6 +59,8 @@ ensure compatibility with Java 5 libraries for the main classes.''')
 
 test {
     systemProperties['concordion.output.dir'] = "${reporting.baseDir}"
+	
+	include '**/spec/concordion/ConcordionTest.class'
 }
 
 compileTestJava.dependsOn compileTestDummiesJava
