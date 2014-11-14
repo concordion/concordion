@@ -15,6 +15,11 @@ apply plugin: 'java-library-distribution'
 apply plugin: 'eclipse'
 apply plugin: 'nexus'
 apply plugin: 'release'
+apply plugin: 'wrapper'
+
+wrapper {
+    gradleVersion = "2.2"
+}
 
 repositories {
     mavenCentral()
@@ -32,7 +37,7 @@ dependencies {
 }
 
 sourceSets {
-    testDummies {  // "crash test dummies" - specs+fixtures that are used by the tests but aren't run as tests themselves  
+    testDummies {  // "crash test dummies" - specs+fixtures that are used by the tests but aren't run as tests themselves
         java {
             srcDir 'src/test-dummies/java'
         }
@@ -48,8 +53,8 @@ task setJava5ClassPath << {
     def java5BootClassPath = System.env.JAVA5_BOOTCLASSPATH
     if (!(java5BootClassPath)) {
         throw new TaskInstantiationException('''ERROR:
-The environment variable JAVA5_BOOTCLASSPATH must be set to a Java 5 rt.jar.  
-While the test classes require Java 6 or later, this variable must be set to 
+The environment variable JAVA5_BOOTCLASSPATH must be set to a Java 5 rt.jar.
+While the test classes require Java 6 or later, this variable must be set to
 ensure compatibility with Java 5 libraries for the main classes.''')
     }
     compileJava.sourceCompatibility = 1.5
@@ -66,7 +71,7 @@ compileTestJava.dependsOn compileTestDummiesJava
 distributions {
     main {
         contents {
-            from ('.') { include '*.txt','build.gradle','src/**' } 
+            from ('.') { include '*.txt','build.gradle','src/**' }
             into ('lib') {
                 from 'licenses'
             }
@@ -99,7 +104,7 @@ modifyPom {
             }
         }
 
-        issueManagement{ 
+        issueManagement{
             system 'GoogleCode'
             url 'http://code.google.com/p/concordion/issues/list'
         }
