@@ -1,5 +1,10 @@
 package org.concordion.internal;
 
+/**
+ * Created by TimW5 on 15/11/14.
+ *
+ * @author TimW5
+ */
 import org.concordion.api.Result;
 
 public class SingleResultSummary extends SummarizingResultRecorder {
@@ -20,5 +25,10 @@ public class SingleResultSummary extends SummarizingResultRecorder {
 			return this.result == ((SingleResultSummary)o).getResult();
 		}
 		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return result.hashCode();
 	}
 }
