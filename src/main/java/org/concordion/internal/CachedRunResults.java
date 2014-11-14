@@ -20,7 +20,7 @@ public class CachedRunResults {
         public CachedRunSummary(RunStatus runStatus, Class<?> fixtureClass) {
             status = runStatus;
             SingleResultSummary singleResultSummary = new SingleResultSummary(Result.IGNORED);
-            singleResultSummary.setSpecificationDescription("In progress result summary for " + fixtureClass.getName());
+//            singleResultSummary.setSpecificationDescription("In progress result summary for " + fixtureClass.getName());
             this.resultSummary = singleResultSummary;
         }
     }
