@@ -17,4 +17,19 @@ public class ConcordionAssertionError extends AssertionError {
 		return rs;
 	}
 
+	public long getNumSuccesses() {
+		return rs.getSuccessCount();
+	}
+
+	public long getNumFailures() {
+		return rs.getFailureCount();
+	}
+
+	public long getNumExceptions() {
+		return rs.getExceptionCount();
+	}
+
+	public long getNumIgnores() {
+		return rs.getIgnoredCount();
+	}
 }

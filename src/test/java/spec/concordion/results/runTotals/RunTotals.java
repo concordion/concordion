@@ -27,7 +27,7 @@ public class RunTotals extends ConcordionTestCase {
 		final CommandCall commandCall = new CommandCall(command, element, "concordion", resource);
 
 		final SummarizingResultRecorder recorder = new SummarizingResultRecorder();
-		recorder.setSpecificationDescription("");
+//		recorder.setSpecificationDescription("");
 
 		command.execute(commandCall, null, recorder);
 
