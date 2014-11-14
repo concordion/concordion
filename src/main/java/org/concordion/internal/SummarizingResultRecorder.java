@@ -97,12 +97,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     }
 
     @Override
-<<<<<<< HEAD
-	public void print(final PrintStream out, final Object fixture) {
-=======
 	public void print(PrintStream out, Object fixture) {
-        out.println(specificationDescription);
->>>>>>> 8abc396... Removed "final" modifiers that were put there automatically by eclipse.
         out.print("Successes: " + getSuccessCount());
         out.print(", Failures: " + getFailureCount());
         if (getIgnoredCount() > 0) {
@@ -127,14 +122,4 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     public void setFailFastException( FailFastException exception) {
         this.failFastException = exception;
     }
-<<<<<<< HEAD
-
-
-=======
-
-    @Override
-    public void setSpecificationDescription( String specificationDescription) {
-        this.specificationDescription = specificationDescription;
-    }
->>>>>>> 8abc396... Removed "final" modifiers that were put there automatically by eclipse.
 }

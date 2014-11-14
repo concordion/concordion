@@ -91,7 +91,7 @@ public class RunCommand extends AbstractCommand {
                     }
                 }
             }
-<<<<<<< HEAD
+
             try {
                 final ResultSummary result = runner.execute(commandCall.getResource(), href);
 
@@ -130,24 +130,11 @@ public class RunCommand extends AbstractCommand {
             resultRecorder.record(e.getResultSummary());
         } catch (final Exception e) {
             announceException(e, element, runnerType);
-=======
-
-            runStrategy.call(runner, commandCall.getResource(), href, resultAnnouncer, resultRecorder);
-
-        } catch (FailFastException e) {
-            throw e; // propagate FailFastExceptions
-        } catch (ConcordionAssertionError e) {
-        	resultAnnouncer.announceException(e);
-        	resultRecorder.record(e.getResultSummary());
-        } catch (Exception e) {
-            resultAnnouncer.announceException(e);
->>>>>>> 8abc396... Removed "final" modifiers that were put there automatically by eclipse.
             resultRecorder.record(Result.FAILURE);
         }
 
     }
 
-<<<<<<< HEAD
     private void announceIgnored(final Element element) {
         listeners.announce().ignoredReported(new RunIgnoreEvent(element));
     }
@@ -162,25 +149,5 @@ public class RunCommand extends AbstractCommand {
 
     private void announceException(final Throwable throwable, final Element element, final String expression) {
         listeners.announce().throwableCaught(new ThrowableCaughtEvent(throwable, element, expression));
-=======
-    private ResultAnnouncer newRunResultAnnouncer(final Element element, final String expression) {
-        return new ResultAnnouncer() {
-            @Override
-            public void announce(ResultSummary result) {
-            	if (result.getFailureCount() + result.getExceptionCount() > 0) {
-                    listeners.announce().failureReported(new RunFailureEvent(element));
-            	} else if (result.getIgnoredCount() > 0) {
-                    listeners.announce().ignoredReported(new RunIgnoreEvent(element));
-            	} else {
-                    listeners.announce().successReported(new RunSuccessEvent(element));
-              	}
-            }
-
-            @Override
-            public void announceException(Throwable throwable) {
-                listeners.announce().throwableCaught(new ThrowableCaughtEvent(throwable, element, expression));
-            }
-        };
->>>>>>> 8abc396... Removed "final" modifiers that were put there automatically by eclipse.
     }
 };
