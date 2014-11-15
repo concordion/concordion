@@ -4,7 +4,7 @@ import org.concordion.api.Element;
 import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
 
-public class RunSuccessEvent extends RunEvent {
+public class RunSuccessEvent extends AbstractRunEvent {
 
 	public RunSuccessEvent(Element element) {
         super(element,Result.SUCCESS);

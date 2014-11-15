@@ -5,17 +5,17 @@ import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.SingleResultSummary;
 
-public class RunEvent {
+public abstract class AbstractRunEvent {
 
 	private final ResultSummary resultSummary;
 	private final Element element;
 	
-	public RunEvent(Element element, ResultSummary summary) {
+	public AbstractRunEvent(Element element, ResultSummary summary) {
 		this.resultSummary= summary;
 		this.element = element;
 	}
 	
-	public RunEvent(Element element, Result result) {
+	public AbstractRunEvent(Element element, Result result) {
 		this.resultSummary = new SingleResultSummary(result);
 		this.element = element;
 	}
