@@ -1,6 +1,7 @@
 package org.concordion.internal;
 
 import java.io.IOException;
+
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.extension.FixtureExtensionLoader;
 
@@ -12,7 +13,7 @@ public class FixtureRunner {
     private final FixtureExtensionLoader fixtureExtensionLoader = new FixtureExtensionLoader();
 
     public ResultSummary run(Object fixture) throws IOException {
-    	
+
     	ResultSummary resultSummary = cachedRunResults.startRun(fixture.getClass());
         String additionalInformation = null;
     	if (resultSummary == null)  {
@@ -32,6 +33,6 @@ public class FixtureRunner {
             resultSummary.assertIsSatisfied(fixture);
         }
 
-        return resultSummary;
+        return resultSummary.getMeaningfulResultSummary(fixture);
     }
 }

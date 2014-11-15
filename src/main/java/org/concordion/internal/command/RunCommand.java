@@ -8,12 +8,14 @@ import org.concordion.api.Element;
 import org.concordion.api.Evaluator;
 import org.concordion.api.Result;
 import org.concordion.api.ResultRecorder;
+import org.concordion.api.ResultSummary;
 import org.concordion.api.Runner;
 import org.concordion.api.listener.RunFailureEvent;
 import org.concordion.api.listener.RunIgnoreEvent;
 import org.concordion.api.listener.RunListener;
 import org.concordion.api.listener.RunSuccessEvent;
 import org.concordion.api.listener.ThrowableCaughtEvent;
+import org.concordion.internal.ConcordionAssertionError;
 import org.concordion.internal.FailFastException;
 import org.concordion.internal.runner.DefaultConcordionRunner;
 import org.concordion.internal.util.Announcer;
@@ -23,7 +25,7 @@ public class RunCommand extends AbstractCommand {
 
     private Announcer<RunListener> listeners = Announcer.to(RunListener.class);
 
-    public void addRunListener(RunListener runListener) {
+    public void addRunListener(final RunListener runListener) {
         listeners.addListener(runListener);
     }
 
@@ -89,45 +91,63 @@ public class RunCommand extends AbstractCommand {
                     }
                 }
             }
-            try {
-                Result result = runner.execute(commandCall.getResource(), href).getResult();
 
-                if (result == Result.SUCCESS) {
-                    announceSuccess(element);
-                } else if (result == Result.IGNORED) {
+            try {
+                final ResultSummary result = runner.execute(commandCall.getResource(), href);
+
+                if (result.getFailureCount() + result.getExceptionCount() > 0) {
+                	announceFailure(element);
+                } else if (result.getIgnoredCount() > 0) {
                     announceIgnored(element);
                 } else {
-                    announceFailure(element);
+                    announceSuccess(element);
                 }
                 resultRecorder.record(result);
-            } catch (FailFastException e) { 
+            } catch (final FailFastException e) {
                 throw e;
-            } catch (Throwable e) {
-                announceFailure(e, element, runnerType);
-                resultRecorder.record(Result.FAILURE);
+            } catch (final ThreadDeath e) {
+            	// let this one pass through
+            	throw e;
+            } catch (final ConcordionAssertionError e) {
+            	announceException(e, element, runnerType);
+            	for (int i=0; i<e.getNumSuccesses(); i++) {
+            		resultRecorder.record(Result.SUCCESS);
+            	}
+              	for (int i=0; i<e.getNumFailures(); i++) {
+            		resultRecorder.record(Result.FAILURE);
+            	}
+              	for (int i=0; i<e.getNumExceptions(); i++) {
+            		resultRecorder.record(Result.EXCEPTION);
+            	}
+            } catch (final Throwable e) {
+                announceException(e, element, runnerType);
+                resultRecorder.record(Result.EXCEPTION);
             }
-        } catch (FailFastException e) { 
+        } catch (final FailFastException e) {
             throw e; // propagate FailFastExceptions
-        } catch (Exception e) {
-            announceFailure(e, element, runnerType);
+        } catch (final ConcordionAssertionError e) {
+            announceException(e, element, runnerType);
+            resultRecorder.record(e.getResultSummary());
+        } catch (final Exception e) {
+            announceException(e, element, runnerType);
             resultRecorder.record(Result.FAILURE);
         }
 
     }
 
-    private void announceIgnored(Element element) {
+    private void announceIgnored(final Element element) {
         listeners.announce().ignoredReported(new RunIgnoreEvent(element));
     }
 
-    private void announceSuccess(Element element) {
+    private void announceSuccess(final Element element) {
         listeners.announce().successReported(new RunSuccessEvent(element));
     }
 
-    private void announceFailure(Element element) {
+    private void announceFailure(final Element element) {
         listeners.announce().failureReported(new RunFailureEvent(element));
     }
 
-    private void announceFailure(Throwable throwable, Element element, String expression) {
+    private void announceException(final Throwable throwable, final Element element, final String expression) {
         listeners.announce().throwableCaught(new ThrowableCaughtEvent(throwable, element, expression));
     }
-}
+};
