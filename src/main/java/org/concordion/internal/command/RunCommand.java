@@ -121,7 +121,7 @@ public class RunCommand extends AbstractCommand {
             	}
             } catch (final Throwable e) {
                 announceException(e, element, runnerType);
-                resultRecorder.record(Result.FAILURE);
+                resultRecorder.record(Result.EXCEPTION);
             }
         } catch (final FailFastException e) {
             throw e; // propagate FailFastExceptions
