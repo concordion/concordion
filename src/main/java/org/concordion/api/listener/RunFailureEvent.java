@@ -1,17 +1,16 @@
 package org.concordion.api.listener;
 
 import org.concordion.api.Element;
+import org.concordion.api.Result;
+import org.concordion.api.ResultSummary;
 
-public class RunFailureEvent {
-
-    private final Element element;
-
+public class RunFailureEvent extends AbstractRunEvent {
+	
     public RunFailureEvent(Element element) {
-        this.element = element;
+        super(element,Result.FAILURE);
     }
-
-    public Element getElement() {
-        return element;
+ 
+    public RunFailureEvent(Element element, ResultSummary resultSummary) {
+        super(element,resultSummary);
     }
-
 }
