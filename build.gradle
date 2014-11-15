@@ -135,6 +135,10 @@ modifyPom {
                 id 'wangyizhuo'
                 roles  { role 'Developer' }
             }
+            developer {
+                id 'drtimwright'
+                roles  { role 'Developer' }
+            }
         }
     }
 }
