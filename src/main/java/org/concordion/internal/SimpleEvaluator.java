@@ -25,7 +25,7 @@ public class SimpleEvaluator extends OgnlEvaluator {
     private static String PROPERTY_NAME_PATTERN = "[a-z][a-zA-Z0-9_]*";
     private static String STRING_PATTERN = "'[^']+'";
     private static String LHS_VARIABLE_PATTERN = "#" + METHOD_NAME_PATTERN;
-    private static String RHS_VARIABLE_PATTERN = "(" + LHS_VARIABLE_PATTERN + "|#TEXT|#HREF)";
+    private static String RHS_VARIABLE_PATTERN = "(" + LHS_VARIABLE_PATTERN + "|#TEXT|#HREF|#LEVEL)";
     
     public static void validateEvaluationExpression(String expression) {
         
