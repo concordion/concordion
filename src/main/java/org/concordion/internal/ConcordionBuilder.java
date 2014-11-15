@@ -31,6 +31,7 @@ import org.concordion.api.listener.ConcordionBuildListener;
 import org.concordion.api.listener.DocumentParsingListener;
 import org.concordion.api.listener.ExecuteListener;
 import org.concordion.api.listener.RunListener;
+import org.concordion.api.listener.SetListener;
 import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.api.listener.VerifyRowsListener;
@@ -84,6 +85,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private AssertTrueCommand assertTrueCommand = new AssertTrueCommand();
     private AssertFalseCommand assertFalseCommand = new AssertFalseCommand();
     private ExecuteCommand executeCommand = new ExecuteCommand();
+    private SetCommand setCommand = new SetCommand();
     private RunCommand runCommand = new RunCommand();
     private VerifyRowsCommand verifyRowsCommand = new VerifyRowsCommand();
     private EchoCommand echoCommand = new EchoCommand();
@@ -166,6 +168,11 @@ public class ConcordionBuilder implements ConcordionExtender {
         return this;
     }
 
+    public ConcordionExtender withSetListener(SetListener setListener) {
+        setCommand.addSetListener(setListener);
+        return this;
+    }
+
     public ConcordionBuilder withDocumentParsingListener(DocumentParsingListener listener) {
         documentParser.addDocumentParsingListener(listener);
         return this;
@@ -238,7 +245,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "run", runCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "execute", executeCommand);
-        withApprovedCommand(NAMESPACE_CONCORDION_2007, "set", new SetCommand());
+        withApprovedCommand(NAMESPACE_CONCORDION_2007, "set", setCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "assertEquals", assertEqualsCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "assertTrue", assertTrueCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "assertFalse", assertFalseCommand);
