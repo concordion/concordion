@@ -12,6 +12,7 @@ import org.concordion.api.listener.ConcordionBuildListener;
 import org.concordion.api.listener.DocumentParsingListener;
 import org.concordion.api.listener.ExecuteListener;
 import org.concordion.api.listener.RunListener;
+import org.concordion.api.listener.SetListener;
 import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.api.listener.VerifyRowsListener;
@@ -57,6 +58,13 @@ public interface ConcordionExtender {
      * @return this
      */
     ConcordionExtender withExecuteListener(ExecuteListener executeListener);
+
+    /**
+     * Adds a listener to <code>concordion:set</code> commands.
+     * @param setListener
+     * @return this
+     */
+    ConcordionExtender withSetListener(SetListener setListener);
 
     /**
      * Adds a listener to <code>concordion:run</code> commands.

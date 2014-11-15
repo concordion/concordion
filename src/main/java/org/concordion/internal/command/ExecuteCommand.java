@@ -1,5 +1,7 @@
 package org.concordion.internal.command;
 
+import java.util.List;
+
 import org.concordion.api.AbstractCommand;
 import org.concordion.api.CommandCall;
 import org.concordion.api.CommandCallList;
@@ -8,6 +10,8 @@ import org.concordion.api.Evaluator;
 import org.concordion.api.ResultRecorder;
 import org.concordion.api.listener.ExecuteEvent;
 import org.concordion.api.listener.ExecuteListener;
+import org.concordion.internal.ListEntry;
+import org.concordion.internal.ListSupport;
 import org.concordion.internal.Row;
 import org.concordion.internal.TableSupport;
 import org.concordion.internal.util.Announcer;
@@ -29,6 +33,8 @@ public class ExecuteCommand extends AbstractCommand {
         Strategy strategy;
         if (commandCall.getElement().isNamed("table")) {
             strategy = new TableStrategy();
+        } else if (commandCall.getElement().isNamed("ol") || commandCall.getElement().isNamed("ul")) {
+        	strategy = new ListStrategy();
         } else {
             strategy = new DefaultStrategy();
         }
@@ -66,6 +72,43 @@ public class ExecuteCommand extends AbstractCommand {
                 commandCall.execute(evaluator, resultRecorder);
             }
         }
+    }
+    
+    private class ListStrategy implements Strategy {
+    	
+    	private static final String LEVEL_VARIABLE = "#LEVEL";
+
+		@Override
+		public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+			increaseLevel(evaluator);
+			ListSupport listSupport = new ListSupport(commandCall);
+			for (ListEntry listEntry : listSupport.getListEntries()) {
+                commandCall.setElement(listEntry.getElement());
+                if (listEntry.isItem())
+                {
+                    commandCall.execute(evaluator, resultRecorder);
+                }
+                if (listEntry.isList())
+                {
+                    execute(commandCall, evaluator, resultRecorder);
+                }
+            }
+            decreaseLevel(evaluator);
+		}
+
+		private void increaseLevel(Evaluator evaluator) {
+			Integer value = (Integer) evaluator.getVariable(LEVEL_VARIABLE);
+			if (value == null) {
+				value = 0;
+			}
+			evaluator.setVariable(LEVEL_VARIABLE, value + 1);
+		}
+
+		private void decreaseLevel(Evaluator evaluator) {
+			Integer value = (Integer) evaluator.getVariable(LEVEL_VARIABLE);
+			evaluator.setVariable(LEVEL_VARIABLE, value - 1);
+		}
+    	
     }
     
     private void announceExecuteCompleted(Element element) {
