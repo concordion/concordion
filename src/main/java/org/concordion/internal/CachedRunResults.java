@@ -29,12 +29,13 @@ public class CachedRunResults {
 
     public synchronized ResultSummary startRun(Class<? extends Object> fixtureClass) {
 
-        System.err.println("Starting fixture for class" + fixtureClass.getName());
 
         CachedRunSummary runSummary = map.get(fixtureClass);
         if (runSummary != null) {
             return runSummary.resultSummary;
         }
+
+        System.err.println("Starting fixture for class" + fixtureClass.getName());
 
         runSummary = new CachedRunSummary(RunStatus.RUNNING, fixtureClass);
         map.put(fixtureClass, runSummary);
