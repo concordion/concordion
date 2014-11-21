@@ -6,14 +6,13 @@
 
 <body>
 
-    <h1>Case Insensitive Commands</h1>
+    <h1>Lower Case Commands</h1>
     
     <p>
 		Attributes should be lower case in XHTML (e.g.<a href="http://www.w3.org/TR/xhtml1/diffs.html#h-4.2">http://www.w3.org/TR/xhtml1/diffs.html#h-4.2</a>).
     </p>
-	<p>Concordion is able to parse attributes with 
-		upper case letters such as assertEquals, but also in lower case such as 
-		assertequals.</p>
+	<p>Concordion is able to parse attributes with upper case letters such as assertEquals. When the attribute is all lower case, 
+	hyphens are used between words.</p>
     
     <div class="example">        
     
@@ -26,7 +25,7 @@
 </pre>
 
 <pre class="html" concordion:assertEquals="processEquals(#TEXT)">
-&lt;span concordion:assertequals="#name"&gt;Fred&lt;/span&gt;
+&lt;span concordion:assert-equals="#name"&gt;Fred&lt;/span&gt;
 </pre>
 
 <pre class="html" concordion:assertEquals="processTrue(#TEXT)">
@@ -34,7 +33,7 @@
 </pre>
 
 <pre class="html" concordion:assertEquals="processTrue(#TEXT)">
-&lt;strong concordion:asserttrue="#name"&gt;is true&lt;/strong&gt;
+&lt;strong concordion:assert-true="#name"&gt;is true&lt;/strong&gt;
 </pre>
 
 <pre class="html" concordion:assertEquals="processFalse(#TEXT)">
@@ -42,7 +41,7 @@
 </pre>
 
 <pre class="html" concordion:assertEquals="processFalse(#TEXT)">
-&lt;p concordion:assertfalse="#name"&gt;Fred&lt;/p&gt;
+&lt;p concordion:assert-false="#name"&gt;Fred&lt;/p&gt;
 </pre>
         
     </div>

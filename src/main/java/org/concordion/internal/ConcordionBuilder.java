@@ -246,10 +246,19 @@ public class ConcordionBuilder implements ConcordionExtender {
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "run", runCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "execute", executeCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "set", setCommand);
+        
+        withApprovedCommand(NAMESPACE_CONCORDION_2007, "assert-equals", assertEqualsCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "assertEquals", assertEqualsCommand);
+
+        withApprovedCommand(NAMESPACE_CONCORDION_2007, "assert-true", assertTrueCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "assertTrue", assertTrueCommand);
+        
+        withApprovedCommand(NAMESPACE_CONCORDION_2007, "assert-false", assertFalseCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "assertFalse", assertFalseCommand);
+        
+        withApprovedCommand(NAMESPACE_CONCORDION_2007, "verify-rows", verifyRowsCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "verifyRows", verifyRowsCommand);
+        
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "echo", echoCommand);
 
         if (target == null) {

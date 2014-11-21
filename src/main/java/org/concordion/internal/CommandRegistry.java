@@ -20,6 +20,6 @@ public class CommandRegistry implements CommandFactory {
     }
     
     private Object makeKey(String namespaceURI, String commandName) {
-        return namespaceURI + " " + commandName.toLowerCase();
+        return namespaceURI + " " + commandName;
     }
 }

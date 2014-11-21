@@ -5,7 +5,7 @@ import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
-public class CaseInsensitiveCommandsTest {
+public class LowerCaseCommandsTest {
 	
 	public String processEquals(String snippet) throws Exception {
 		return process(snippet, "Fred");
