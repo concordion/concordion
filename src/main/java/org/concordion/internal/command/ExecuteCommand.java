@@ -1,7 +1,5 @@
 package org.concordion.internal.command;
 
-import java.util.List;
-
 import org.concordion.api.AbstractCommand;
 import org.concordion.api.CommandCall;
 import org.concordion.api.CommandCallList;
