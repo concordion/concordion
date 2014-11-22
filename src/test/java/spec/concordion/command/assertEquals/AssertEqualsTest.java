@@ -1,10 +1,12 @@
 package spec.concordion.command.assertEquals;
 
-import org.concordion.integration.junit3.ConcordionTestCase;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
 import test.concordion.TestRig;
 
-public class AssertEqualsTest extends ConcordionTestCase {
+@RunWith(ConcordionRunner.class)
+public class AssertEqualsTest {
     
     public String successOrFailure(String fragment, String evaluationResult) {
         return new TestRig()

@@ -1,10 +1,13 @@
 package spec.concordion.command.assertEquals.whitespace;
 
-import org.concordion.integration.junit3.ConcordionTestCase;
+import org.concordion.integration.junit4.ConcordionRunner;
 import org.concordion.internal.CatchAllExpectationChecker;
+import org.junit.runner.RunWith;
+
 import test.concordion.TestRig;
 
-public class WhitespaceTest extends ConcordionTestCase {
+@RunWith(ConcordionRunner.class)
+public class WhitespaceTest {
 
     public String whichSnippetsSucceed(String snippet1, String snippet2, String evaluationResult) throws Exception {
         return which(succeeds(snippet1, evaluationResult), succeeds(snippet2, evaluationResult));

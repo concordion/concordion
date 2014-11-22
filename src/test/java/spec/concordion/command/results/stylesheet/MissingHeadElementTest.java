@@ -2,11 +2,13 @@ package spec.concordion.command.results.stylesheet;
 
 import nu.xom.Element;
 
-import org.concordion.integration.junit3.ConcordionTestCase;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
 import test.concordion.TestRig;
 
-public class MissingHeadElementTest extends ConcordionTestCase {
+@RunWith(ConcordionRunner.class)
+public class MissingHeadElementTest {
 
     public String process(String html) {
         Element rootElement = new TestRig()

@@ -1,9 +1,9 @@
 package spec.concordion.results.runTotals;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by TimW5 on 26/09/14.

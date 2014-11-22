@@ -3,11 +3,13 @@ package spec.concordion.command.verifyRows;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.concordion.integration.junit3.ConcordionTestCase;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
 import test.concordion.TestRig;
 
-public class TableBodySupportTest extends ConcordionTestCase {
+@RunWith(ConcordionRunner.class)
+public class TableBodySupportTest {
 
     private List<String> names = new ArrayList<String>();
 

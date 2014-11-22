@@ -1,11 +1,14 @@
 package spec.concordion.extension;
 
 import org.concordion.api.Resource;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
 import test.concordion.TestRig;
 import test.concordion.extension.JavaScriptEmbeddedExtension;
 import test.concordion.extension.JavaScriptLinkedExtension;
 
+@RunWith(ConcordionRunner.class)
 public class JavaScriptExtensionTest extends AbstractExtensionTestCase {
 
     public static final String SOURCE_PATH = "/test/concordion/my.js";

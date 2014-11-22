@@ -1,8 +1,9 @@
 package spec.concordion.command;
 
-import test.concordion.TestRig;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
+
+import test.concordion.TestRig;
 
 @RunWith(ConcordionRunner.class)
 public class LowerCaseCommandsTest {

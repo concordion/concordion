@@ -1,11 +1,13 @@
 package spec.concordion.command.assertEquals.nonString;
 
-import org.concordion.integration.junit3.ConcordionTestCase;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
 import test.concordion.ProcessingResult;
 import test.concordion.TestRig;
 
-public class VoidResultTest extends ConcordionTestCase {
+@RunWith(ConcordionRunner.class)
+public class VoidResultTest {
 
     public String process(String snippet) {
         ProcessingResult r = new TestRig()

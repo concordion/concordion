@@ -1,10 +1,12 @@
 package spec.concordion.command.assertEquals.nonString;
 
-import org.concordion.integration.junit3.ConcordionTestCase;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
 import test.concordion.TestRig;
 
-public class NullResultTest extends ConcordionTestCase {
+@RunWith(ConcordionRunner.class)
+public class NullResultTest {
     
     public String outcomeOfPerformingAssertEquals(String snippet, String expectedString, String result) {
         if (result.equals("null")) {

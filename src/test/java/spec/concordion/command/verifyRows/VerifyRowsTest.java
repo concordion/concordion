@@ -7,12 +7,14 @@ import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Nodes;
 
-import org.concordion.integration.junit3.ConcordionTestCase;
+import org.concordion.integration.junit4.ConcordionRunner;
 import org.concordion.internal.util.Check;
+import org.junit.runner.RunWith;
 
 import test.concordion.TestRig;
 
-public class VerifyRowsTest extends ConcordionTestCase {
+@RunWith(ConcordionRunner.class)
+public class VerifyRowsTest {
     public Collection<String> usernames;
 
     public String processFragment(String fragment, String csv) throws Exception {

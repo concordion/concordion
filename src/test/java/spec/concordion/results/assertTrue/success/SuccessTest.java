@@ -1,10 +1,12 @@
 package spec.concordion.results.assertTrue.success;
 
-import org.concordion.integration.junit3.ConcordionTestCase;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
 import test.concordion.TestRig;
 
-public class SuccessTest extends ConcordionTestCase {
+@RunWith(ConcordionRunner.class)
+public class SuccessTest {
     
     public boolean isPalindrome(String s) {
         return new StringBuilder(s).reverse().toString().equals(s); 

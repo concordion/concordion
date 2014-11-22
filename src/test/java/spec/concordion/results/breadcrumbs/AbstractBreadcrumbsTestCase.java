@@ -2,12 +2,11 @@ package spec.concordion.results.breadcrumbs;
 
 import org.concordion.api.Element;
 import org.concordion.api.Resource;
-import org.concordion.integration.junit3.ConcordionTestCase;
 
 import test.concordion.TestRig;
 
 
-public abstract class AbstractBreadcrumbsTestCase extends ConcordionTestCase {
+public abstract class AbstractBreadcrumbsTestCase {
 
     private TestRig testRig = new TestRig();
 
