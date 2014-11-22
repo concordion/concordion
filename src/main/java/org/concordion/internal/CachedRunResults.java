@@ -16,22 +16,11 @@ import org.concordion.api.ResultSummary;
 public class CachedRunResults {
 
     /**
-     * Basic status of a cache entry
-     */
-    private enum RunStatus {
-        NOT_STARTED,
-        RUNNING,
-        FINISHED
-    }
-
-    /**
      * Data to store in the cache
      */
-    private class CachedRunSummary {
-        private RunStatus status;
+    private static class CachedRunSummary {
         private ResultSummary resultSummary;
-        public CachedRunSummary(RunStatus runStatus, Class<?> fixtureClass) {
-            status = runStatus;
+        public CachedRunSummary(Class<?> fixtureClass) {
             SingleResultSummary singleResultSummary = new SingleResultSummary(Result.IGNORED);
 //            singleResultSummary.setSpecificationDescription("In progress result summary for " + fixtureClass.getName());
             this.resultSummary = singleResultSummary;
@@ -55,8 +44,8 @@ public class CachedRunResults {
             return runSummary.resultSummary;
         }
 
-        // no cached result, so update the cache with a "running" state - that means we can detect circular dependancies
-        runSummary = new CachedRunSummary(RunStatus.RUNNING, fixtureClass);
+        // no cached result, so update the cache - that means we can detect circular dependencies
+        runSummary = new CachedRunSummary(fixtureClass);
         map.put(fixtureClass, runSummary);
         return null;
     }
@@ -73,13 +62,11 @@ public class CachedRunResults {
         if (runSummary == null) {
             // no result? Create one. This should never happen because startRun should always be called before
             // finishRun
-            runSummary = new CachedRunSummary(RunStatus.FINISHED, fixtureClass);
+            runSummary = new CachedRunSummary(fixtureClass);
         }
 
         // update the cache
-        runSummary.status = RunStatus.FINISHED;
         runSummary.resultSummary = resultSummary;
-
         map.put(fixtureClass, runSummary);
 	}
 
