@@ -47,6 +47,9 @@ sourceSets {
     }
 }
 
+compileJava.sourceCompatibility = 1.5
+compileJava.targetCompatibility = 1.5
+
 // In order to verify that the build works with JDK5, run this task before compileJava
 task setJava5ClassPath << {
     def java5BootClassPath = System.env.JAVA5_BOOTCLASSPATH
@@ -56,8 +59,6 @@ The environment variable JAVA5_BOOTCLASSPATH must be set to a Java 5 rt.jar.
 While the test classes require Java 6 or later, this variable must be set to
 ensure compatibility with Java 5 libraries for the main classes.''')
     }
-    compileJava.sourceCompatibility = 1.5
-    compileJava.targetCompatibility = 1.5
     compileJava.options.bootClasspath = java5BootClassPath
 }
 
