@@ -10,7 +10,7 @@ import org.concordion.api.ResultSummary;
  *
  * A thread-safe class to provide caching of run results.
  *
- * @author Tim Wright <tim@tfwright.co.nz>
+ * @author Tim Wright &lt;tim@tfwright.co.nz&gt;
  *
  */
 public class CachedRunResults {
