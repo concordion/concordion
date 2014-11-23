@@ -12,7 +12,6 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'java-library-distribution'
-apply plugin: 'eclipse'
 apply plugin: 'nexus'
 apply plugin: 'release'
 apply plugin: 'wrapper'
@@ -67,6 +66,8 @@ test {
 }
 
 compileTestJava.dependsOn compileTestDummiesJava
+release.dependsOn clean
+release.dependsOn setJava5ClassPath
 
 distributions {
     main {
@@ -81,6 +82,7 @@ distributions {
 
 // 'gradle release' will also upload release to Nexus
 createReleaseTag.dependsOn uploadArchives
+release.dependsOn
 
 modifyPom {
     project {
