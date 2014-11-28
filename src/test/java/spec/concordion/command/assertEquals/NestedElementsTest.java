@@ -1,10 +1,12 @@
 package spec.concordion.command.assertEquals;
 
-import org.concordion.integration.junit3.ConcordionTestCase;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
 import test.concordion.TestRig;
 
-public class NestedElementsTest extends ConcordionTestCase {
+@RunWith(ConcordionRunner.class)
+public class NestedElementsTest {
     
     public String matchOrNotMatch(String snippet, String evaluationResult) throws Exception {
         return new TestRig()

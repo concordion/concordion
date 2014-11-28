@@ -1,10 +1,12 @@
 package spec.concordion.command.assertEquals;
 
-import org.concordion.integration.junit3.ConcordionTestCase;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
 import test.concordion.TestRig;
 
-public class ExceptionsTest extends ConcordionTestCase {
+@RunWith(ConcordionRunner.class)
+public class ExceptionsTest {
     
     public Object countsFromExecutingSnippetWithSimulatedEvaluationResult(String snippet, String simulatedResult) {
         TestRig harness = new TestRig();

@@ -1,10 +1,12 @@
 package spec.concordion.command.execute;
 
-import org.concordion.integration.junit3.ConcordionTestCase;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
 import test.concordion.TestRig;
 
-public class ExecuteTest extends ConcordionTestCase {
+@RunWith(ConcordionRunner.class)
+public class ExecuteTest {
 
     private boolean myMethodWasCalled = false;
     

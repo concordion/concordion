@@ -2,14 +2,10 @@ package org.concordion.api.listener;
 
 import org.concordion.api.Element;
 
-public class ExecuteEvent {
-    private final Element element;
+public class ExecuteEvent extends AbstractElementEvent {
 
     public ExecuteEvent(Element element) {
-        this.element = element;
+        super(element);
     }
 
-    public Element getElement() {
-        return element;
-    }
 }

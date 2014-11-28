@@ -1,6 +1,10 @@
 package spec.concordion.results.breadcrumbs;
 
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
+
+@RunWith(ConcordionRunner.class)
 public class WordingTest extends AbstractBreadcrumbsTestCase {
 
     public String getBreadcrumbWordingFor(String resourceName, String content) throws Exception {

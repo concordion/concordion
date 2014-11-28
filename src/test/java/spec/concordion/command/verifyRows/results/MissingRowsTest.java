@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.concordion.integration.junit3.ConcordionTestCase;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
 import test.concordion.TestRig;
 
-public class MissingRowsTest extends ConcordionTestCase {
+@RunWith(ConcordionRunner.class)
+public class MissingRowsTest {
     private List<Person> people = new ArrayList<Person>();
 
     public void addPerson(String firstName, String lastName, int birthYear) {

@@ -1,12 +1,14 @@
 package spec.concordion.command.execute;
 
 import org.concordion.api.listener.AssertFailureEvent;
-import org.concordion.integration.junit3.ConcordionTestCase;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
 import test.concordion.ProcessingResult;
 import test.concordion.TestRig;
 
-public class ExecutingTablesTest extends ConcordionTestCase {
+@RunWith(ConcordionRunner.class)
+public class ExecutingTablesTest {
 
     public Result process(String fragment) throws Exception {
         

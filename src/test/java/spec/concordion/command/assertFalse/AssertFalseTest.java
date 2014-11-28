@@ -1,10 +1,12 @@
 package spec.concordion.command.assertFalse;
 
-import org.concordion.integration.junit3.ConcordionTestCase;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
 import test.concordion.TestRig;
 
-public class AssertFalseTest extends ConcordionTestCase {
+@RunWith(ConcordionRunner.class)
+public class AssertFalseTest {
     
     public String successOrFailure(String fragment, String evaluationResult) {
         return new TestRig()

@@ -2,16 +2,10 @@ package org.concordion.api.listener;
 
 import org.concordion.api.Element;
 
-public class RunSuccessEvent {
-
-    private final Element element;
+public class RunSuccessEvent extends AbstractRunEvent {
 
     public RunSuccessEvent(Element element) {
-        this.element = element;
-    }
-    
-    public Element getElement() {
-        return element;
+        super(element);
     }
 
 }

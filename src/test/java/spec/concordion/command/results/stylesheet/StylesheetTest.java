@@ -1,11 +1,13 @@
 package spec.concordion.command.results.stylesheet;
 
 import org.concordion.api.Element;
-import org.concordion.integration.junit3.ConcordionTestCase;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
 import test.concordion.TestRig;
 
-public class StylesheetTest extends ConcordionTestCase {
+@RunWith(ConcordionRunner.class)
+public class StylesheetTest {
 
     private Element outputDocument;
 

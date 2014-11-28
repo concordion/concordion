@@ -1,18 +1,24 @@
 buildscript {
     repositories {
+        mavenCentral()
         jcenter()
     }
 
     dependencies {
         classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.7'
+        classpath 'com.github.townsfolk:gradle-release:1.2'
     }
 }
 
 apply plugin: 'java'
 apply plugin: 'java-library-distribution'
-apply plugin: 'eclipse'
 apply plugin: 'nexus'
-apply from: 'http://tellurianring.com/projects/gradle-plugins/gradle-release/apply.groovy'
+apply plugin: 'release'
+apply plugin: 'wrapper'
+
+wrapper {
+    gradleVersion = "2.2"
+}
 
 repositories {
     mavenCentral()
@@ -31,17 +37,30 @@ dependencies {
     }
 }
 
+sourceSets {
+    testDummies {  // "crash test dummies" - specs+fixtures that are used by the tests but aren't run as tests themselves
+        java {
+            srcDir 'src/test-dummies/java'
+        }
+        resources {
+            srcDir 'src/test-dummies/resources'
+        }
+        compileClasspath = sourceSets.main.output + configurations.compile
+    }
+}
+
+compileJava.sourceCompatibility = 1.5
+compileJava.targetCompatibility = 1.5
+
 // In order to verify that the build works with JDK5, run this task before compileJava
 task setJava5ClassPath << {
     def java5BootClassPath = System.env.JAVA5_BOOTCLASSPATH
     if (!(java5BootClassPath)) {
         throw new TaskInstantiationException('''ERROR:
-The environment variable JAVA5_BOOTCLASSPATH must be set to a Java 5 rt.jar.  
-While the test classes require Java 6 or later, this variable must be set to 
+The environment variable JAVA5_BOOTCLASSPATH must be set to a Java 5 rt.jar.
+While the test classes require Java 6 or later, this variable must be set to
 ensure compatibility with Java 5 libraries for the main classes.''')
     }
-    compileJava.sourceCompatibility = 1.5
-    compileJava.targetCompatibility = 1.5
     compileJava.options.bootClasspath = java5BootClassPath
 }
 
@@ -49,10 +68,14 @@ test {
     systemProperties['concordion.output.dir'] = "${reporting.baseDir}"
 }
 
+compileTestJava.dependsOn compileTestDummiesJava
+release.dependsOn clean
+release.dependsOn setJava5ClassPath
+
 distributions {
     main {
         contents {
-            from ('.') { include '*.txt','build.gradle','src/**' } 
+            from ('.') { include '*.txt','build.gradle','src/**' }
             into ('lib') {
                 from 'licenses'
             }
@@ -62,6 +85,7 @@ distributions {
 
 // 'gradle release' will also upload release to Nexus
 createReleaseTag.dependsOn uploadArchives
+release.dependsOn
 
 modifyPom {
     project {
@@ -85,7 +109,7 @@ modifyPom {
             }
         }
 
-        issueManagement{ 
+        issueManagement{
             system 'GoogleCode'
             url 'http://code.google.com/p/concordion/issues/list'
         }

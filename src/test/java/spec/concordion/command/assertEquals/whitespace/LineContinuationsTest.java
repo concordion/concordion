@@ -3,11 +3,13 @@ package spec.concordion.command.assertEquals.whitespace;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.concordion.integration.junit3.ConcordionTestCase;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
 import test.concordion.TestRig;
 
-public class LineContinuationsTest extends ConcordionTestCase {
+@RunWith(ConcordionRunner.class)
+public class LineContinuationsTest {
     
     private List<String> snippets = new ArrayList<String>();
     
@@ -36,7 +38,8 @@ public class LineContinuationsTest extends ConcordionTestCase {
         return result;
     }
     
-    public class Result {
+    @RunWith(ConcordionRunner.class)
+public class Result {
         public String successes = "";
         public String failures = "";
     }
