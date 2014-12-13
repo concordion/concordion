@@ -10,3 +10,4 @@ bin/
 
 #Intellj
 *.iml
+.idea*
