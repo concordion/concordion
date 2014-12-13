@@ -42,6 +42,11 @@ sourceSets {
         }
         compileClasspath = sourceSets.main.output + configurations.compile
     }
+
+
+    test {
+        runtimeClasspath += sourceSets.testDummies.output
+    }
 }
 
 // In order to verify that the build works with JDK5, run this task before compileJava
