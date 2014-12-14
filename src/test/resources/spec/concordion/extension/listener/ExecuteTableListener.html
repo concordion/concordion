@@ -5,7 +5,7 @@
     <h1>Listeners for Executing Tables</h1>
 
     <p>
-       When <a href="../../command/execute/ExecutingTables.html">executing tables</a>, Concordion notifies <a href="Listener.html">listeners</a> of execute events for each row of the table.  
+       When <a concordion:run="concordion" href="../../command/execute/ExecutingTables.html">executing tables</a>, Concordion notifies <a concordion:run="concordion" href="Listener.html">listeners</a> of execute events for each row of the table.  
        Execute listeners are notified that execution is complete prior to the assertions being evaluated.  
     </p>
 
@@ -41,10 +41,13 @@
         </p>
         <table concordion:verifyRows="#event : getEventLog()">
         <tr><th concordion:assertEquals="#event">Event</th></tr>
+        <tr><td>Set #fullName = 'Fred Bloggs'</td></tr>
         <tr><td>Execute 'Fred Bloggs, fredbloggs'</td></tr>
         <tr><td>Success 'fredbloggs'</td></tr>
+        <tr><td>Set #fullName = 'John Doe'</td></tr>
         <tr><td>Execute 'John Doe, johndoe'</td></tr>
         <tr><td>Success 'johndoe'</td></tr>
+        <tr><td>Set #fullName = 'Winston Churchill'</td></tr>
         <tr><td>Execute 'Winston Churchill, winston'</td></tr>
         <tr><td>Failure expected:'winston' actual:'winstonchurchill'</td></tr>
         </table>

@@ -1,9 +1,11 @@
 package spec.concordion.command.run;
 
 import org.concordion.api.Resource;
-import org.concordion.integration.junit3.ConcordionTestCase;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
-public class SyntaxForRelativePathsTest extends ConcordionTestCase{
+@RunWith(ConcordionRunner.class)
+public class SyntaxForRelativePathsTest{
 
     public String getPath(String resourcePath, String relativePath) {
         return new Resource(resourcePath).getRelativeResource(relativePath).getPath();

@@ -5,7 +5,7 @@ import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
 
 public class RunFailureEvent extends AbstractRunEvent {
-	
+
     public RunFailureEvent(Element element) {
         super(element,Result.FAILURE);
     }

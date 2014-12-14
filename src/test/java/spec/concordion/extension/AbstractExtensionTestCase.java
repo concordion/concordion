@@ -8,12 +8,11 @@ import java.util.List;
 
 import org.concordion.api.Resource;
 import org.concordion.api.extension.ConcordionExtension;
-import org.concordion.integration.junit3.ConcordionTestCase;
 
 import test.concordion.ProcessingResult;
 import test.concordion.TestRig;
 
-public abstract class AbstractExtensionTestCase extends ConcordionTestCase {
+public abstract class AbstractExtensionTestCase {
 
     private List<String> eventList;
     private TestRig testRig;

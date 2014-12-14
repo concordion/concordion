@@ -6,7 +6,6 @@ import org.concordion.api.ResultSummary;
 import org.concordion.internal.extension.FixtureExtensionLoader;
 
 public class FixtureRunner {
-	
 	private static CachedRunResults cachedRunResults = new CachedRunResults();
 
 	

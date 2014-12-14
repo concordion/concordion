@@ -8,6 +8,6 @@ build/
 .settings/
 bin/
 
-#Intellj
+# IDEA
+.idea/
 *.iml
-.idea*

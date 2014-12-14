@@ -5,12 +5,14 @@ import java.util.List;
 
 import org.concordion.api.Element;
 import org.concordion.api.listener.ThrowableCaughtEvent;
-import org.concordion.integration.junit3.ConcordionTestCase;
+import org.concordion.integration.junit4.ConcordionRunner;
 import org.concordion.internal.listener.ThrowableRenderer;
+import org.junit.runner.RunWith;
 
 import test.concordion.TestRig;
 
-public class ExceptionTest extends ConcordionTestCase {
+@RunWith(ConcordionRunner.class)
+public class ExceptionTest {
     
     private List<StackTraceElement> stackTraceElements = new ArrayList<StackTraceElement>();
     

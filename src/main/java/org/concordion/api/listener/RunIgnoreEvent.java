@@ -5,7 +5,7 @@ import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
 
 public class RunIgnoreEvent extends AbstractRunEvent {
-	
+
     public RunIgnoreEvent(Element element) {
     	super(element, Result.IGNORED);
     }

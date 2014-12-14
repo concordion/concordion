@@ -3,9 +3,13 @@ package spec.concordion.extension.listener;
 import java.util.Arrays;
 import java.util.List;
 
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
+
 import spec.concordion.extension.AbstractExtensionTestCase;
 import test.concordion.extension.LoggingExtension;
 
+@RunWith(ConcordionRunner.class)
 public class VerifyRowsListenerTest extends AbstractExtensionTestCase {
 
     public void addLoggingExtension() {

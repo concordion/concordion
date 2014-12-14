@@ -1,8 +1,9 @@
 package spec.concordion;
 
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
-import org.concordion.integration.junit3.ConcordionTestCase;
-
-public class ConcordionTest extends ConcordionTestCase {
+@RunWith(ConcordionRunner.class)
+public class ConcordionTest {
 
 }
