@@ -9,19 +9,27 @@ import org.concordion.internal.extension.FixtureExtensionLoader;
 
 public class FixtureRunner {
 	private static CachedRunResults cachedRunResults = new CachedRunResults();
+    private final Object fixture;
 
-	
+    public FixtureRunner(Object fixture) {
+        this.fixture = fixture;
+
+        ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture);
+        fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
+        concordion = concordionBuilder.build();
+
+    }
+
     private final FixtureExtensionLoader fixtureExtensionLoader = new FixtureExtensionLoader();
+    private Concordion concordion;
 
-    public ResultSummary run(Object fixture, String example) throws IOException {
+    public ResultSummary run(String example) throws IOException {
     	
     	ResultSummary resultSummary = cachedRunResults.startRun(fixture.getClass(), example);
         String additionalInformation = null;
 
     	if (resultSummary == null)  {
-            ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture);
-            fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
-            Concordion concordion = concordionBuilder.build();
+
             if (example != null) {
                 resultSummary = concordion.processExample(fixture, example);
             } else {
@@ -43,7 +51,11 @@ public class FixtureRunner {
         return resultSummary.getMeaningfulResultSummary(fixture);
     }
 
-    public ResultSummary run(Object fixture) throws IOException {
-        return run(fixture, null);
+    public synchronized Concordion getConcordion() {
+            return concordion;
+    }
+
+    public ResultSummary run() throws IOException {
+        return run(null);
     }
 }

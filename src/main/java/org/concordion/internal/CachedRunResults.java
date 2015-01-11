@@ -105,11 +105,11 @@ public class CachedRunResults {
             // no result? Create one. This should never happen because startRun should always be called before
             // finishRun
             runSummary = new CachedRunSummary(fixtureClass);
+            map.put(getID(fixtureClass, example), runSummary);
         }
 
-        // update the cache
+        // update the cached value
         runSummary.resultSummary = resultSummary;
-        map.put(getID(fixtureClass, example), runSummary);
 	}
 
 }

@@ -30,6 +30,7 @@ import org.junit.Ignore;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunNotifier;
 
 public class DefaultConcordionRunner implements Runner {
 
@@ -107,7 +108,7 @@ public class DefaultConcordionRunner implements Runner {
     		// do nothing - method doesn't exist
     	}
 
-    	 ResultSummary rs = invokeTestMethod(o);
+    	 ResultSummary rs = invokeTestMethods(o);
 
        	// invoke the tearDown method if it exists
     	try {
@@ -120,14 +121,25 @@ public class DefaultConcordionRunner implements Runner {
     	return rs;
  	}
 
-	private ResultSummary invokeTestMethod(Object o) throws Exception {
-		ResultSummary rs;
-		try {
-    		rs = new FixtureRunner().run(o);
-    	} catch (ConcordionAssertionError e) {
-    		rs = e.getResultSummary();
-    	}
-		return rs;
+	private ResultSummary invokeTestMethods(Object o) throws Exception {
+        FixtureRunner fixtureRunner = new FixtureRunner(o);
+        SummarizingResultRecorder recorder = new SummarizingResultRecorder();
+
+        for (String example: fixtureRunner.getConcordion().getExampleNames(o)) {
+            ResultSummary rs;
+
+            try {
+                rs = new FixtureRunner(o).run();
+            } catch (ConcordionAssertionError e) {
+                rs = e.getResultSummary();
+            } catch (FailFastException e) {
+                rs = new SummarizingResultRecorder();
+                ((SummarizingResultRecorder)rs).record(Result.EXCEPTION);
+            }
+
+            recorder.record(rs);
+        }
+		return recorder;
 	}
 
 	private void safeInvokeMethod(Class<?> concordionClass, Object o, Method m)
@@ -145,7 +157,7 @@ public class DefaultConcordionRunner implements Runner {
         rethrowExceptionIfWarranted(concordionClass, exception);
 	}
 
-	private List<Method> getMethodsWithAnnotation( Class<?> type, Class<? extends Annotation> annotation) {
+	private static List<Method> getMethodsWithAnnotation( Class<?> type, Class<? extends Annotation> annotation) {
          List<Method> foundMethods = new ArrayList<Method>();
         Class<?> currentClass = type;
         while (currentClass != Object.class) {
@@ -171,39 +183,29 @@ public class DefaultConcordionRunner implements Runner {
     	}
 
     	// run any before class methods
-    	List<Method> beforeClassMethods = getMethodsWithAnnotation(concordionClass, BeforeClass.class);
-    	for (Method m: beforeClassMethods) {
-    		safeInvokeMethod(concordionClass, null, m);
-    	}
+        runMethodsWithAnnotation(concordionClass, BeforeClass.class);
 
-    	// construct the object
-    	Object o = concordionClass.getConstructor((Class<?>[])null).newInstance((Object[])null);
+        ConcordionRunner concordionRunner = new ConcordionRunner(concordionClass);
 
-    	// run any before methods
-      	List<Method> beforeMethods = getMethodsWithAnnotation(concordionClass, Before.class);
-    	for (Method m: beforeMethods) {
-       		safeInvokeMethod(concordionClass, o, m);
-       	}
+        concordionRunner.run(new RunNotifier());
 
-    	// invoke the test method
-      	ResultSummary rs = invokeTestMethod(o);
+        ResultSummary rs = concordionRunner.getAccumulatedResultSummary();
 
-      	// run any after methods
-    	List<Method> afterMethods = getMethodsWithAnnotation(concordionClass, After.class);
-    	for (Method m: afterMethods) {
-       		safeInvokeMethod(concordionClass, o, m);
-       	}
+        // run any after class methods
+        runMethodsWithAnnotation(concordionClass, AfterClass.class);
 
-    	// finally, any after class methods
-      	List<Method> afterClassMethods = getMethodsWithAnnotation(concordionClass, AfterClass.class);
-    	for (Method m: afterClassMethods) {
-       		safeInvokeMethod(concordionClass, null, m);
-       	}
 
-    	return rs;
+        return rs;
  	}
 
-	protected org.junit.runner.Result runJUnitClass(Class<?> concordionClass) {
+    private void runMethodsWithAnnotation(Class<?> concordionClass, Class<? extends Annotation> annotation) throws Exception {
+        List<Method> methods = getMethodsWithAnnotation(concordionClass, annotation);
+        for (Method method: methods) {
+            safeInvokeMethod(concordionClass, null, method);
+        }
+    }
+
+    protected org.junit.runner.Result runJUnitClass(Class<?> concordionClass) {
         org.junit.runner.Result jUnitResult = JUnitCore.runClasses(concordionClass);
         return jUnitResult;
     }
