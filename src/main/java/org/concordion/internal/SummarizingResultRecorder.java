@@ -16,6 +16,10 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     private FailFastException failFastException;
     private String specificationDescription;
 
+    public SummarizingResultRecorder() {
+
+    }
+
     @Override
 	public void record( Result result) {
         recordedResults.add(result);

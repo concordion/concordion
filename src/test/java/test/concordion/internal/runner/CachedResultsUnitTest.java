@@ -17,8 +17,29 @@ public class CachedResultsUnitTest {
     public void testCacheInProgress() {
         CachedRunResults runResults = new CachedRunResults();
 
-        assertNull(runResults.startRun(this.getClass()));
-        assertNotNull(runResults.startRun(this.getClass()));
+        assertNull(runResults.startRun(this.getClass(), null));
+        assertNotNull(runResults.startRun(this.getClass(), null));
+
+    }
+
+    @Test
+    public void testCacheInProgressWithExample() {
+        CachedRunResults runResults = new CachedRunResults();
+
+        assertNull(runResults.startRun(this.getClass(), "eg"));
+        assertNotNull(runResults.startRun(this.getClass(), "eg"));
+
+    }
+
+    private static class JustAnotherClass {};
+
+    @Test
+    public void testNotFoundInCache() {
+        CachedRunResults runResults = new CachedRunResults();
+
+        assertNull(runResults.startRun(this.getClass(), "eg1"));
+        assertNull(runResults.startRun(this.getClass(), "eg2"));
+        assertNull(runResults.startRun(JustAnotherClass.class, "eg3"));
 
     }
 
