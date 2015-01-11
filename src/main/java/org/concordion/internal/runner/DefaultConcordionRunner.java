@@ -1,6 +1,7 @@
 package org.concordion.internal.runner;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import org.concordion.internal.FailFastException;
 import org.concordion.internal.FixtureRunner;
 import org.concordion.internal.SingleResultSummary;
 import org.concordion.internal.SummarizingResultRecorder;
+import org.concordion.internal.listener.PageFooterRenderer;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -30,6 +32,7 @@ import org.junit.Ignore;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;
 
 public class DefaultConcordionRunner implements Runner {
@@ -185,17 +188,26 @@ public class DefaultConcordionRunner implements Runner {
     	// run any before class methods
         runMethodsWithAnnotation(concordionClass, BeforeClass.class);
 
-        ConcordionRunner concordionRunner = new ConcordionRunner(concordionClass);
+        RunWith rw = concordionClass.getAnnotation(RunWith.class);
+        Class<? extends org.junit.runner.Runner> runnerClass = rw.value();
 
-        concordionRunner.run(new RunNotifier());
+        Constructor<? extends org.junit.runner.Runner> constructor = runnerClass.getConstructor(Class.class);
+        org.junit.runner.Runner runner = constructor.newInstance(concordionClass);
 
-        ResultSummary rs = concordionRunner.getAccumulatedResultSummary();
+        if (runner instanceof ConcordionRunner) {
+            ResultSummary rs ;
 
-        // run any after class methods
-        runMethodsWithAnnotation(concordionClass, AfterClass.class);
+            RunNotifier notifier = new RunNotifier();
+            runner.run(notifier);
+            ConcordionRunner concordionRunner = (ConcordionRunner) runner;
+            rs = concordionRunner.getAccumulatedResultSummary();
 
-
-        return rs;
+            // run any after class methods
+            runMethodsWithAnnotation(concordionClass, AfterClass.class);
+            return rs;
+        } else {
+            throw new Exception("the concordion:run command can only run classes that have a @RunWith annotation that extends ConcordionRunner.");
+        }
  	}
 
     private void runMethodsWithAnnotation(Class<?> concordionClass, Class<? extends Annotation> annotation) throws Exception {
