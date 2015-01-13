@@ -12,12 +12,18 @@ import java.util.List;
  *
  * Created by tim on 9/01/15.
  */
-public abstract class AbstractSpecification implements Specification {
+public class SpecificationToSpecificationByExampleAdaptor implements SpecificationByExample {
 
     private String testDescription;
+    private final Specification specification;
 
-    public AbstractSpecification() {
-        setFixtureClass(Object.class);
+    public SpecificationToSpecificationByExampleAdaptor(Specification s) {
+        specification = s;
+    }
+
+    @Override
+    public void process(Evaluator evaluator, ResultRecorder resultRecorder) {
+        specification.process(evaluator, resultRecorder);
     }
 
     @Override
@@ -28,7 +34,7 @@ public abstract class AbstractSpecification implements Specification {
     @Override
     public void processExample(Evaluator evaluator, String example, ResultRecorder resultRecorder) {
         if (testDescription.equals(example)) {
-            process(evaluator, resultRecorder);
+            specification.process(evaluator, resultRecorder);
         }
     }
 

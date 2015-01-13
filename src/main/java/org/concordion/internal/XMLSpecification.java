@@ -2,7 +2,7 @@ package org.concordion.internal;
 
 import org.concordion.api.*;
 
-public class XMLSpecification extends AbstractSpecification {
+public class XMLSpecification implements Specification {
 
     private final CommandCall rootCommandNode;
 

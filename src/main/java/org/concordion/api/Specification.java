@@ -13,9 +13,4 @@ public interface Specification {
 
     void process(Evaluator evaluator, ResultRecorder resultRecorder);
 
-    void setFixtureClass(Class<?> fixture);
-
-    void processExample(Evaluator evaluator, String example, ResultRecorder resultRecorder);
-
-    List<String> getExampleNames();
 }
