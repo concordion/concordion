@@ -1,6 +1,7 @@
 package org.concordion.integration.junit4;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
+import org.omg.CORBA.PUBLIC_MEMBER;
 
 public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
@@ -47,16 +49,19 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         String testDescription = ("[Concordion Specification for '" + fixtureClass.getSimpleName()).replaceAll("Test$", "']"); // Based on suggestion by Danny Guerrier
         fixtureDescription = Description.createTestDescription(fixtureClass, testDescription);
         try {
-            fakeMethod = new FakeFrameworkMethod();
+            fakeMethod = new FakeFrameworkMethod(getClass().getMethod("fakeMethod", (Class<?>[]) null));
         } catch (Exception e) {
             throw new InitializationError("Failed to initialize ConcordionRunner");
         }
     }
     
+    public void fakeMethod() {
+    }
+    
     static class FakeFrameworkMethod extends FrameworkMethod {
 
-        public FakeFrameworkMethod() {
-            super(null);
+        public FakeFrameworkMethod(Method method) {
+            super(method);
         }
         
         public String getName() {
