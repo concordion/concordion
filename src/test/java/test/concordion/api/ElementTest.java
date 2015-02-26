@@ -1,13 +1,21 @@
 package test.concordion.api;
 
 import java.io.StringReader;
+
 import junit.framework.TestCase;
 import nu.xom.Builder;
+import nu.xom.Document;
+
 import org.concordion.api.Element;
+import org.concordion.internal.XMLParser;
+import org.junit.Test;
 
-public class ElementTest extends TestCase {
+import static org.junit.Assert.*;
 
-    public void testCanMoveChildrenToAnotherElement() throws Exception {
+public class ElementTest {
+
+    @Test
+    public void canMoveChildrenToAnotherElement() throws Exception {
         Element fred = new Element("fred");
         fred.appendChild(new Element("child1"));
         Element child2 = new Element("child2");
@@ -21,7 +29,8 @@ public class ElementTest extends TestCase {
         assertEquals("<barney><child1 /><child2><grandchild /></child2></barney>", barney.toXML());
     }
     
-    public void testChildElementsCanBeFoundById() throws Exception {
+    @Test
+    public void childElementsCanBeFoundById() throws Exception {
         for (String namespaceDeclaration : new String[] { "", "xmlns='" + Element.XHTML_URI + "'" }) {
             
             String xhtml = "<html " + namespaceDeclaration + ">";
@@ -37,5 +46,30 @@ public class ElementTest extends TestCase {
             assertEquals("Second paragraph", root.getElementById("second").getText());
             assertNull(root.getElementById("third"));
         }
+    }
+    
+    @Test
+    public void getParentElementOfChildReturnsParent() throws Exception {
+        Document document = XMLParser.parse("<root><child1/><child2><grandChild/>x</child2></root>");
+        Element root = new Element(document.getRootElement());
+        Element child1 = (root.getChildElements("child1"))[0];
+        Element child2 = (root.getChildElements("child2"))[0];
+        Element grandChild = (child2.getChildElements("grandChild"))[0];
+        assertEquals(root, child1.getParentElement());
+        assertEquals(root, child2.getParentElement());
+        assertEquals(child2, grandChild.getParentElement());
+    }
+    
+    @Test
+    public void getParentElementOfRootReturnsNull() throws Exception {
+        Document document = XMLParser.parse("<root></root>");
+        Element root = new Element(document.getRootElement());
+        assertNull(root.getParentElement());
+    }
+
+    @Test
+    public void getParentElementOfOrphanReturnsNull() {
+        Element fred = new Element("fred");
+        assertEquals(null, fred.getParentElement());
     }
 }

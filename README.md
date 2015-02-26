@@ -84,9 +84,9 @@ Note: If the current directory is not on your path, you will need to use `./grad
 
 Compiling and Running the Tests
 -------------------------------------------------
-After installing Gradle, run the following from the command line:
+Run the following from the command line:
 
-> gradlew clean test
+```gradlew clean test```
     
 This will download the required dependencies, clean the existing project, recompile all source code and run all the tests. Concordion output is written to the `./build/reports/spec` folder.
 

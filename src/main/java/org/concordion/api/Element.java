@@ -2,10 +2,13 @@ package org.concordion.api;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import nu.xom.Attribute;
+import nu.xom.Document;
 import nu.xom.Elements;
 import nu.xom.Node;
 import nu.xom.Nodes;
+import nu.xom.ParentNode;
 import nu.xom.XPathContext;
 
 public final class Element {
@@ -236,5 +239,16 @@ public final class Element {
             return null;
         }
         return new Element((nu.xom.Element) nodes.get(0));
+    }
+    
+    /**
+     * Returns the element that contains this element, or null if this element is the root element or is orphaned.
+     */
+    public Element getParentElement() {
+        ParentNode parent = xomElement.getParent();
+        if (parent == null || parent instanceof Document) {
+            return null;
+        }
+        return new Element((nu.xom.Element) parent);
     }
 }
