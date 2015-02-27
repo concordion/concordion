@@ -27,8 +27,8 @@ repositories {
 dependencies {
     compile 'junit:junit:4.12',
             'ognl:ognl:2.6.9',
-            'com.google.guava:guava:17.0',
-            'org.slf4j:slf4j-api:1.7.7'
+            'com.google.guava:guava:18.0',
+            'org.slf4j:slf4j-api:1.7.10'
 
     compile ('xom:xom:1.2.5') {
         exclude group: 'xalan', module: 'xalan'
