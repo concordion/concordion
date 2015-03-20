@@ -9,4 +9,6 @@ public interface ResultRecorder {
     void recordFailFastException(FailFastException exception);
 
     void setSpecificationDescription(String description);
+
+    void record(ResultSummary result);
 }

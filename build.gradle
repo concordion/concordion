@@ -22,6 +22,7 @@ wrapper {
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
@@ -46,6 +47,10 @@ sourceSets {
             srcDir 'src/test-dummies/resources'
         }
         compileClasspath = sourceSets.main.output + configurations.compile
+    }
+
+    test {
+        runtimeClasspath += sourceSets.testDummies.output
     }
 }
 

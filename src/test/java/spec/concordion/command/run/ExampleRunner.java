@@ -5,18 +5,23 @@ import java.util.Map;
 
 import org.concordion.api.Resource;
 import org.concordion.api.Result;
+import org.concordion.api.ResultSummary;
 import org.concordion.api.Runner;
-import org.concordion.api.RunnerResult;
+import org.concordion.internal.SummarizingResultRecorder;
 
 public class ExampleRunner implements Runner {
 
     private static Map<String, String> mappings = new LinkedHashMap<String, String>();
     
-    public RunnerResult execute(Resource resource, String href) throws Exception {
+    @Override
+	public ResultSummary execute(Resource resource, String href) throws Exception {
         
         for (String regex : mappings.keySet()) {
             if (href.matches(regex)) {
-                return new RunnerResult(Result.valueOf(mappings.get(regex)));
+            	
+            	SummarizingResultRecorder res = new SummarizingResultRecorder();
+            	res.record(Result.valueOf(mappings.get(regex)));
+                return res;
             }
         }
         

@@ -22,7 +22,7 @@ public class CachedRunResults {
         private ResultSummary resultSummary;
         public CachedRunSummary(Class<?> fixtureClass) {
             SingleResultSummary singleResultSummary = new SingleResultSummary(Result.IGNORED);
-//            singleResultSummary.setSpecificationDescription("In progress result summary for " + fixtureClass.getName());
+            singleResultSummary.setSpecificationDescription("In progress result summary for " + fixtureClass.getName());
             this.resultSummary = singleResultSummary;
         }
     }

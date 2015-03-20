@@ -4,6 +4,9 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.concordion.api.Result;
+import org.concordion.api.ResultSummary;
+
 public enum FixtureState {
     UNIMPLEMENTED {
 
@@ -14,13 +17,13 @@ public enum FixtureState {
                 list.add(plural);
             }
         }
-        
+
         @Override
-        public void assertIsSatisfied(long successCount, long failureCount, long exceptionCount, FailFastException ffe) {
+        public void assertIsSatisfied(ResultSummary rs, FailFastException ffe) {
             List<String> list = new ArrayList<String>();
-            addToList(list, successCount, "a success", "some successes");
-            addToList(list, failureCount, "a failure", "some failures");
-            addToList(list, exceptionCount, "an exception", "some exceptions");
+            addToList(list, rs.getSuccessCount(), "a success", "some successes");
+            addToList(list, rs.getFailureCount(), "a failure", "some failures");
+            addToList(list, rs.getExceptionCount(), "an exception", "some exceptions");
             if (list.size() > 0) {
                 String s = list.get(0);
                 if (list.size() > 1) {
@@ -29,50 +32,81 @@ public enum FixtureState {
                     }
                     s += ", and " + list.get(list.size() - 1);
                 }
-                throw new AssertionError("Specification is supposed to be unimplemented, but is reporting " + s + ".");
+                throw new ConcordionAssertionError("Specification is supposed to be unimplemented, but is reporting " + s + ".", rs);
+                
             }
         }
+        
+		@Override
+		public ResultSummary getMeaningfulResultSummary(
+				ResultSummary rs, FailFastException ffe) {
+			assertIsSatisfied(rs, ffe);
+			return new SingleResultSummary(Result.IGNORED);
+		}
+ 
+       @Override
+       public String printNoteToString() {
+        	return "   <-- Note: This test has been marked as UNIMPLEMENTED";
+       }
 
-        @Override
-        public void printNote(PrintStream out) {
-            out.print("   <-- Note: This test has been marked as UNIMPLEMENTED");
-        }
     },
     EXPECTED_TO_FAIL {
 
         @Override
-        public void assertIsSatisfied(long successCount, long failureCount, long exceptionCount, FailFastException ffe) {
-            if (failureCount + exceptionCount == 0) {
-                throw new AssertionError("Specification is expected to fail but has neither failures nor exceptions.");
+        public void assertIsSatisfied(ResultSummary rs, FailFastException ffe) {
+            if (rs.getFailureCount() + rs.getExceptionCount() == 0) {
+                throw new ConcordionAssertionError("Specification is expected to fail but has neither failures nor exceptions.", rs);
             }
+           
         }
 
-        @Override
-        public void printNote(PrintStream out) {
-            out.print("   <-- Note: This test has been marked as EXPECTED_TO_FAIL");
-        }
+		@Override
+		public ResultSummary getMeaningfulResultSummary(
+				ResultSummary rs, FailFastException ffe) {
+			assertIsSatisfied(rs, ffe);
+			return new SingleResultSummary(Result.IGNORED);
+		}
+ 
+       @Override
+       public String printNoteToString() {
+        	return "   <-- Note: This test has been marked as EXPECTED_TO_FAIL";
+       }
     },
     EXPECTED_TO_PASS {
 
         @Override
-        public void assertIsSatisfied(long successCount, long failureCount, long exceptionCount, FailFastException ffe) {
+        public void assertIsSatisfied(ResultSummary rs, FailFastException ffe) {
             if (ffe != null) {
-                throw new AssertionError(ffe);
+                throw ffe;
             }
-            if (failureCount > 0) {
-                throw new AssertionError("Specification has failure(s). See output HTML for details.");
+            if (rs.getFailureCount() > 0) {
+                throw new ConcordionAssertionError("Specification has failure(s). See output HTML for details.", rs);
             }
-            if (exceptionCount > 0) {
-                throw new AssertionError("Specification has exception(s). See output HTML for details.");
+            if (rs.getExceptionCount() > 0) {
+                throw new ConcordionAssertionError("Specification has exception(s). See output HTML for details.", rs);
             }
         }
-
+        
         @Override
-        public void printNote(PrintStream out) {
+        public String printNoteToString() {
+        	return "";
         }
-    };
-    
-    public abstract void assertIsSatisfied(long successCount, long failureCount, long exceptionCount, FailFastException ffe);
 
-    public abstract void printNote(PrintStream out);
+		@Override
+		public ResultSummary getMeaningfulResultSummary(
+				ResultSummary rs, FailFastException ffe) {
+			assertIsSatisfied(rs, ffe);
+			return rs;
+		}
+    };
+
+    public abstract void assertIsSatisfied(ResultSummary rs, FailFastException ffe);
+
+    public void printNote(PrintStream out) {
+    	out.print(printNoteToString());
+    }
+    
+    public abstract String printNoteToString();
+
+	public abstract ResultSummary getMeaningfulResultSummary(ResultSummary rs, FailFastException ffe);
 }
