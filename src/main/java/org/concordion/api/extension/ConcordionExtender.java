@@ -16,6 +16,8 @@ import org.concordion.api.listener.SetListener;
 import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.api.listener.VerifyRowsListener;
+import org.concordion.internal.command.RunCommand;
+import org.concordion.internal.command.RunStrategy;
 
 /**
  * Allows {@link ConcordionExtension}s to add features to Concordion.
@@ -170,4 +172,11 @@ public interface ConcordionExtender {
      * @return this
      */
     ConcordionExtender withSpecificationLocator(SpecificationLocator locator);
+
+    /**
+     * Sets the strategy for the {@link RunCommand}.
+     * @param runStrategy the new strategy for running the specifications
+     * @return this
+     */
+    ConcordionExtender withRunStrategy(RunStrategy runStrategy);
 }

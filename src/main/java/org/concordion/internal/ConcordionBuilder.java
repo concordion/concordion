@@ -41,10 +41,8 @@ import org.concordion.internal.command.AssertTrueCommand;
 import org.concordion.internal.command.EchoCommand;
 import org.concordion.internal.command.ExecuteCommand;
 import org.concordion.internal.command.LocalTextDecorator;
-import org.concordion.internal.command.ParallelRunStrategy;
 import org.concordion.internal.command.RunCommand;
 import org.concordion.internal.command.RunStrategy;
-import org.concordion.internal.command.SequentialRunStrategy;
 import org.concordion.internal.command.SetCommand;
 import org.concordion.internal.command.SpecificationCommand;
 import org.concordion.internal.command.ThrowableCatchingDecorator;
@@ -76,15 +74,6 @@ public class ConcordionBuilder implements ConcordionExtender {
     private static final String PROPERTY_EXTENSIONS = "concordion.extensions";
     public static final String PROPERTY_RUN_THREAD_COUNT = "concordion.run.threadCount";
     private static final String EMBEDDED_STYLESHEET_RESOURCE = "/org/concordion/internal/resource/embedded.css";
-    private static final String runThreadCount;
-
-    static {
-        runThreadCount = System.getProperty(PROPERTY_RUN_THREAD_COUNT);
-        if (runThreadCount != null) {
-            ParallelRunStrategy.initialise(runThreadCount);
-        }
-    }
-    
     private SpecificationLocator specificationLocator = new ClassNameBasedSpecificationLocator();
     private Source source = new ClassPathSource();
     private Target target = null;
@@ -98,7 +87,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private AssertFalseCommand assertFalseCommand = new AssertFalseCommand();
     private ExecuteCommand executeCommand = new ExecuteCommand();
     private SetCommand setCommand = new SetCommand();
-    private RunCommand runCommand;
+    private RunCommand runCommand = new RunCommand();
     private VerifyRowsCommand verifyRowsCommand = new VerifyRowsCommand();
     private EchoCommand echoCommand = new EchoCommand();
     private File baseOutputDir;
@@ -107,18 +96,9 @@ public class ConcordionBuilder implements ConcordionExtender {
     private List<SpecificationProcessingListener> specificationProcessingListeners = new ArrayList<SpecificationProcessingListener>();
     private List<Class<? extends Throwable>> failFastExceptions = Collections.<Class<? extends Throwable>>emptyList();
     private boolean builtAlready;
+
     
     {
-        RunStrategy runStrategy;
-        if (runThreadCount == null) {
-            runStrategy = new SequentialRunStrategy();
-        } else {
-            ParallelRunStrategy parallelRunStrategy = new ParallelRunStrategy();
-            specificationCommand.addSpecificationListener(parallelRunStrategy);
-            runStrategy = parallelRunStrategy;
-        }
-        runCommand = new RunCommand(runStrategy);
-        
         withThrowableListener(new ThrowableRenderer());
         
         commandRegistry.register("", "specification", specificationCommand);
@@ -182,6 +162,12 @@ public class ConcordionBuilder implements ConcordionExtender {
     
     public ConcordionBuilder withRunListener(RunListener listener) {
         runCommand.addRunListener(listener);
+        return this;
+    }
+    
+    @Override
+    public ConcordionExtender withRunStrategy(RunStrategy runStrategy) {
+        runCommand.setRunStrategy(runStrategy);
         return this;
     }
 
@@ -264,7 +250,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     public Concordion build() {
         Check.isFalse(builtAlready, "ConcordionBuilder currently does not support calling build() twice");
         builtAlready = true;
-        
+
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "run", runCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "execute", executeCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "set", setCommand);

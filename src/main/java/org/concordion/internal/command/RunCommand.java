@@ -22,19 +22,18 @@ import org.concordion.internal.util.Check;
 public class RunCommand extends AbstractCommand {
 
     private Announcer<RunListener> listeners = Announcer.to(RunListener.class);
-    
-    private final RunStrategy runStrategy;
+    private RunStrategy runStrategy = new SequentialRunStrategy();
 
-    public RunCommand(RunStrategy runStrategy) {
-        this.runStrategy = runStrategy;
-    }
-    
     public void addRunListener(RunListener runListener) {
         listeners.addListener(runListener);
     }
 
     public void removeRunListener(RunListener runListener) {
         listeners.removeListener(runListener);
+    }
+    
+    public void setRunStrategy(RunStrategy runStrategy) {
+        this.runStrategy = runStrategy;
     }
 
     @Override
