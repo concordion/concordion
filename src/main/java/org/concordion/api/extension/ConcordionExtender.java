@@ -2,6 +2,7 @@ package org.concordion.api.extension;
 
 import org.concordion.api.Command;
 import org.concordion.api.Resource;
+import org.concordion.api.RunStrategy;
 import org.concordion.api.Source;
 import org.concordion.api.SpecificationLocator;
 import org.concordion.api.Target;
@@ -17,7 +18,6 @@ import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.api.listener.VerifyRowsListener;
 import org.concordion.internal.command.RunCommand;
-import org.concordion.internal.command.RunStrategy;
 
 /**
  * Allows {@link ConcordionExtension}s to add features to Concordion.

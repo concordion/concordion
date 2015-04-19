@@ -1,8 +1,6 @@
-package org.concordion.internal.command;
+package org.concordion.api;
 
-import org.concordion.api.Resource;
-import org.concordion.api.ResultRecorder;
-import org.concordion.api.Runner;
+import org.concordion.internal.command.ResultAnnouncer;
 
 public interface RunStrategy {
 

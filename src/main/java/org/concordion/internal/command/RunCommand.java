@@ -8,6 +8,7 @@ import org.concordion.api.Element;
 import org.concordion.api.Evaluator;
 import org.concordion.api.Result;
 import org.concordion.api.ResultRecorder;
+import org.concordion.api.RunStrategy;
 import org.concordion.api.Runner;
 import org.concordion.api.listener.RunFailureEvent;
 import org.concordion.api.listener.RunIgnoreEvent;
