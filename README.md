@@ -63,9 +63,11 @@ Notes
 
 API changes
 -----------
-There are a number of breaking API changes in this version:
+There are a number of potentially breaking API changes in this version. These shouldn't affect you unless you are extending the Concordion code base directly:
 
  * The `org.concordion.api.ResultRecorder` interface has one additional method - `setSpecificationDescription(String description)` to set the description of the specification for which the results are being recorded. (_In order to support this, `org.concordion.internal.command.SpecificationCommand` contains a new method `setSpecificationDescriber()` which in turn sets the specification description on the ResultRecorder_).
+ * The `org.concordion.api.extension.ConcordionExtender` interface has one additional method to allow a RunStrategy to be set -
+ `ConcordionExtender withRunStrategy(RunStrategy runStrategy)`
  * The unused class `org.concordion.api.Context` is removed.
 
 
