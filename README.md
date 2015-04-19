@@ -1,9 +1,13 @@
 [![Build Status](https://travis-ci.org/concordion/concordion.svg?branch=parallel-run-strategy)](https://travis-ci.org/concordion/concordion)
 
+**NOTE**: The parallel runner functionality is being moved into a Concordion extension. This repository now only contains the source code changes to Concordion core to support the parallel runner. The parallel runner is currently [here](https://github.com/nigelcharman/concordion-parallel-run-extension) and will be moved to the Concordion organisation and published in due course. 
+
+You're still welcome to try out the parallel runner as stated below. The functionality will be identical in the final version, only the packaging will change.
+
 Parallel Runner
 ===============
 
-This is an experimental fork of the [Concordion project](https://github.com/concordion/concordion) with a parallel Concordion runner. This may or may not make it into Concordion core, or it may be implemented as a Concordion extension. 
+This is an experimental fork of the [Concordion project](https://github.com/concordion/concordion) with support for a parallel Concordion runner. 
 
 Overview
 --------
@@ -48,8 +52,6 @@ This has been published to the Sonatype snapshot repository (https://oss.sonatyp
     }
 
     test.dependsOn cleanTest
-
-Alternatively you can build from source.
 
 Notes
 -----
