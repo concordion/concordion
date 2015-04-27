@@ -72,8 +72,8 @@ public class ConcordionBuilder implements ConcordionExtender {
     public static final String NAMESPACE_CONCORDION_2007 = "http://www.concordion.org/2007/concordion";
     private static final String PROPERTY_OUTPUT_DIR = "concordion.output.dir";
     private static final String PROPERTY_EXTENSIONS = "concordion.extensions";
-    public static final String PROPERTY_RUN_THREAD_COUNT = "concordion.run.threadCount";
     private static final String EMBEDDED_STYLESHEET_RESOURCE = "/org/concordion/internal/resource/embedded.css";
+    
     private SpecificationLocator specificationLocator = new ClassNameBasedSpecificationLocator();
     private Source source = new ClassPathSource();
     private Target target = null;
@@ -97,7 +97,6 @@ public class ConcordionBuilder implements ConcordionExtender {
     private List<Class<? extends Throwable>> failFastExceptions = Collections.<Class<? extends Throwable>>emptyList();
     private boolean builtAlready;
 
-    
     {
         withThrowableListener(new ThrowableRenderer());
         
@@ -250,7 +249,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     public Concordion build() {
         Check.isFalse(builtAlready, "ConcordionBuilder currently does not support calling build() twice");
         builtAlready = true;
-
+        
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "run", runCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "execute", executeCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "set", setCommand);
