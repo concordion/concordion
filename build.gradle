@@ -5,19 +5,19 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.7'
-        classpath 'com.github.townsfolk:gradle-release:1.2'
+        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
+        classpath 'net.researchgate:gradle-release:2.0.2'
     }
 }
 
 apply plugin: 'java'
 apply plugin: 'java-library-distribution'
-apply plugin: 'nexus'
-apply plugin: 'release'
+apply plugin: 'com.bmuschko.nexus'
+apply plugin: 'net.researchgate.release'
 apply plugin: 'wrapper'
 
 wrapper {
-    gradleVersion = "2.2"
+    gradleVersion = "2.3"
 }
 
 repositories {
@@ -84,6 +84,10 @@ distributions {
 // 'gradle release' will also upload release to Nexus
 createReleaseTag.dependsOn uploadArchives
 release.dependsOn
+
+extraArchive {
+    tests = true    // create tests jar file and upload
+}
 
 modifyPom {
     project {
