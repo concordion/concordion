@@ -9,7 +9,6 @@ import org.concordion.api.Resource;
 import org.concordion.integration.junit3.ConcordionTestCase;
 import org.concordion.internal.SummarizingResultRecorder;
 import org.concordion.internal.command.RunCommand;
-import org.concordion.internal.command.SequentialRunStrategy;
 
 public class RunTotals extends ConcordionTestCase {
 
@@ -21,7 +20,7 @@ public class RunTotals extends ConcordionTestCase {
 
 		final Resource resource = new Resource(path);
 
-		final RunCommand command = new RunCommand(new SequentialRunStrategy());
+		final RunCommand command = new RunCommand();
 		final CommandCall commandCall = new CommandCall(command, element, "concordion", resource);
 
 		final SummarizingResultRecorder recorder = new SummarizingResultRecorder();
