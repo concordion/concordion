@@ -1,11 +1,11 @@
 package org.concordion.internal;
 
 import java.io.IOException;
+
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.extension.FixtureExtensionLoader;
 
 public class FixtureRunner {
-
 	private static CachedRunResults cachedRunResults = new CachedRunResults();
 
 	
@@ -32,6 +32,6 @@ public class FixtureRunner {
             resultSummary.assertIsSatisfied(fixture);
         }
 
-        return resultSummary;
+        return resultSummary.getMeaningfulResultSummary(fixture);
     }
 }

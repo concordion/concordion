@@ -8,7 +8,9 @@ import java.util.List;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.FixtureRunner;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -63,19 +65,23 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
             super(method);
         }
         
-        public String getName() {
+        @Override
+		public String getName() {
             return "[Concordion Specification]";
         }
         
-        public Annotation[] getAnnotations() {
+        @Override
+		public Annotation[] getAnnotations() {
             return new Annotation[0];
         }
         
-        public <T extends Annotation> T getAnnotation(Class<T> annotationType) {
+        @Override
+		public <T extends Annotation> T getAnnotation(Class<T> annotationType) {
             return null;
         }
         
-        public int hashCode() {
+        @Override
+		public int hashCode() {
             return 1;
         }
     }
@@ -88,7 +94,8 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         return children;
     }
 
-    protected Statement methodInvoker(FrameworkMethod method, Object test) {
+    @Override
+	protected Statement methodInvoker(FrameworkMethod method, Object test) {
         if (method == fakeMethod) {
             return specExecStatement(test);
         }
@@ -113,7 +120,8 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
     protected Statement specExecStatement(final Object fixture) {
         return new Statement() {
-            public void evaluate() throws Throwable {
+            @Override
+			public void evaluate() throws Throwable {
                 result = new FixtureRunner().run(fixture);
             }
         };
@@ -121,6 +129,8 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
     @Override
     protected void validateInstanceMethods(List<Throwable> errors) {
+    	validatePublicVoidNoArgMethods(BeforeClass.class, true, errors);
+    	validatePublicVoidNoArgMethods(AfterClass.class, true, errors);
         validatePublicVoidNoArgMethods(After.class, false, errors);
         validatePublicVoidNoArgMethods(Before.class, false, errors);
         validateTestMethods(errors);

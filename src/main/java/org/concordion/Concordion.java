@@ -27,9 +27,15 @@ public class Concordion {
     }
 
     public ResultSummary process(Resource resource, Object fixture) throws IOException {
-        Specification specification = specificationReader.readSpecification(resource);
-        SummarizingResultRecorder resultRecorder = new SummarizingResultRecorder();
-        specification.process(evaluatorFactory.createEvaluator(fixture), resultRecorder);
-        return resultRecorder;
+//        try {
+        	Specification specification = specificationReader.readSpecification(resource);
+            SummarizingResultRecorder resultRecorder = new SummarizingResultRecorder();
+            specification.process(evaluatorFactory.createEvaluator(fixture), resultRecorder);
+            return resultRecorder;
+//        } catch (ParsingException e) {
+//        	e.printStackTrace();
+//        	throw e;
+////        	throw new ConcordionAssertionError("Could not parse resource " + resource.getPath(), new SingleResultSummary(Result.EXCEPTION));
+//       }
     }
 }

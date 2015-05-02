@@ -8,6 +8,7 @@ import org.concordion.api.Element;
 import org.concordion.api.Evaluator;
 import org.concordion.api.Result;
 import org.concordion.api.ResultRecorder;
+import org.concordion.api.ResultSummary;
 import org.concordion.api.RunStrategy;
 import org.concordion.api.Runner;
 import org.concordion.api.listener.RunFailureEvent;
@@ -15,6 +16,7 @@ import org.concordion.api.listener.RunIgnoreEvent;
 import org.concordion.api.listener.RunListener;
 import org.concordion.api.listener.RunSuccessEvent;
 import org.concordion.api.listener.ThrowableCaughtEvent;
+import org.concordion.internal.ConcordionAssertionError;
 import org.concordion.internal.FailFastException;
 import org.concordion.internal.runner.DefaultConcordionRunner;
 import org.concordion.internal.util.Announcer;
@@ -43,7 +45,7 @@ public class RunCommand extends AbstractCommand {
 
         Element element = commandCall.getElement();
 
-        final String href = element.getAttributeValue("href");
+        String href = element.getAttributeValue("href");
 
         Check.notNull(href, "The 'href' attribute must be set for an element containing concordion:run");
 
@@ -54,7 +56,7 @@ public class RunCommand extends AbstractCommand {
             evaluator.evaluate(expression);
 
         ResultAnnouncer resultAnnouncer = newRunResultAnnouncer(element, expression);
-        
+
         String concordionRunner = null;
 
         concordionRunner = System.getProperty("concordion.runner." + runnerType);
@@ -77,7 +79,7 @@ public class RunCommand extends AbstractCommand {
                 + "(3) Specify a full class name of an org.concordion.Runner implementation");
         try {
             Class<?> clazz = Class.forName(concordionRunner);
-            final Runner runner = (Runner) clazz.newInstance();
+            Runner runner = (Runner) clazz.newInstance();
             for (Method method : runner.getClass().getMethods()) {
                 String methodName = method.getName();
                 if (methodName.startsWith("set") && methodName.length() > 3 && method.getParameterTypes().length == 1) {
@@ -97,11 +99,14 @@ public class RunCommand extends AbstractCommand {
                     }
                 }
             }
-            
+
             runStrategy.call(runner, commandCall.getResource(), href, resultAnnouncer, resultRecorder);
-            
-        } catch (FailFastException e) { 
+
+        } catch (FailFastException e) {
             throw e; // propagate FailFastExceptions
+        } catch (ConcordionAssertionError e) {
+        	resultAnnouncer.announceException(e);
+        	resultRecorder.record(e.getResultSummary());
         } catch (Exception e) {
             resultAnnouncer.announceException(e);
             resultRecorder.record(Result.FAILURE);
@@ -112,23 +117,16 @@ public class RunCommand extends AbstractCommand {
     private ResultAnnouncer newRunResultAnnouncer(final Element element, final String expression) {
         return new ResultAnnouncer() {
             @Override
-            public void announce(Result result) {
-                switch (result) {
-                case SUCCESS:
-                    listeners.announce().successReported(new RunSuccessEvent(element));
-                    break;
-                
-                case FAILURE:
-                case EXCEPTION: // If the test runner returns a RunnerResult containing an exception this is reported as a failure, not as an exception.
-                    listeners.announce().failureReported(new RunFailureEvent(element));
-                    break;
-                
-                case IGNORED:
-                    listeners.announce().ignoredReported(new RunIgnoreEvent(element));
-                    break;
-                }
+            public void announce(ResultSummary result) {
+            	if (result.getFailureCount() + result.getExceptionCount() > 0) {
+                    listeners.announce().failureReported(new RunFailureEvent(element, result));
+            	} else if (result.getIgnoredCount() > 0) {
+                    listeners.announce().ignoredReported(new RunIgnoreEvent(element, result));
+            	} else {
+                    listeners.announce().successReported(new RunSuccessEvent(element, result));
+              	}
             }
-                
+
             @Override
             public void announceException(Throwable throwable) {
                 listeners.announce().throwableCaught(new ThrowableCaughtEvent(throwable, element, expression));
