@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/concordion/concordion.svg?branch=master)](https://travis-ci.org/concordion/concordion)
+[![Build Status](https://travis-ci.org/concordion/concordion.svg?branch=parallel-run-strategy)](https://travis-ci.org/concordion/concordion)
+
+**NOTE**: The parallel runner functionality has been moved into a new [ParallelRunExtension](https://github.com/concordion/concordion-parallel-run-extension). 
 
 [Concordion](http://www.concordion.org) is an open source framework for Java that lets you turn a plain English description of a requirement into an automated test.
 

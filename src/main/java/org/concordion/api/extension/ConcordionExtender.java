@@ -2,6 +2,7 @@ package org.concordion.api.extension;
 
 import org.concordion.api.Command;
 import org.concordion.api.Resource;
+import org.concordion.api.RunStrategy;
 import org.concordion.api.Source;
 import org.concordion.api.SpecificationLocator;
 import org.concordion.api.Target;
@@ -16,6 +17,7 @@ import org.concordion.api.listener.SetListener;
 import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.api.listener.VerifyRowsListener;
+import org.concordion.internal.command.RunCommand;
 
 /**
  * Allows {@link ConcordionExtension}s to add features to Concordion.
@@ -170,4 +172,11 @@ public interface ConcordionExtender {
      * @return this
      */
     ConcordionExtender withSpecificationLocator(SpecificationLocator locator);
+
+    /**
+     * Sets the strategy for the {@link RunCommand}.
+     * @param runStrategy the new strategy for running the specifications
+     * @return this
+     */
+    ConcordionExtender withRunStrategy(RunStrategy runStrategy);
 }

@@ -16,6 +16,7 @@ import org.concordion.api.EvaluatorFactory;
 import org.concordion.api.FailFast;
 import org.concordion.api.FullOGNL;
 import org.concordion.api.Resource;
+import org.concordion.api.RunStrategy;
 import org.concordion.api.Source;
 import org.concordion.api.SpecificationLocator;
 import org.concordion.api.SpecificationReader;
@@ -95,7 +96,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private List<SpecificationProcessingListener> specificationProcessingListeners = new ArrayList<SpecificationProcessingListener>();
     private List<Class<? extends Throwable>> failFastExceptions = Collections.<Class<? extends Throwable>>emptyList();
     private boolean builtAlready;
-    
+
     {
         withThrowableListener(new ThrowableRenderer());
         
@@ -160,6 +161,12 @@ public class ConcordionBuilder implements ConcordionExtender {
     
     public ConcordionBuilder withRunListener(RunListener listener) {
         runCommand.addRunListener(listener);
+        return this;
+    }
+    
+    @Override
+    public ConcordionExtender withRunStrategy(RunStrategy runStrategy) {
+        runCommand.setRunStrategy(runStrategy);
         return this;
     }
 
@@ -276,7 +283,9 @@ public class ConcordionBuilder implements ConcordionExtender {
 
         addSpecificationListeners();
 
-        specificationCommand.addSpecificationListener(new SpecificationExporter(target));
+        SpecificationExporter exporter = new SpecificationExporter(target);
+        specificationCommand.addSpecificationListener(exporter);
+        specificationCommand.setSpecificationDescriber(exporter);
         
         listeners.announce().concordionBuilt(new ConcordionBuildEvent(target));
         
