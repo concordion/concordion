@@ -202,5 +202,33 @@ public class BaseFixture {
     <p>Concordion fixtures will be <span concordion:execute="#result5 = process()">run</span> with both extensions <span concordion:assertEquals="#result5">FakeExtension1, FakeExtension2FromFactory</span>.</p>
     </div>
 
+    <h2>Combining the configuration methods</h2>
+    <p>In some cases, you may wish to combine multiple methods of configuration from above.</p> 
+
+<!-- ==================================================== -->
+    <div class="example">
+    <h4>Example - Combined configuration methods</h4>
+    <p>Executing the following fixture:</p>
+    <pre class="java" concordion:set="#javaFragment">
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
+import org.concordion.api.extension.*;
+import test.concordion.extension.fake.*;
+ 
+@RunWith(ConcordionRunner.class)
+<b>@Extensions({FakeExtension1.class})</b>
+public class ExampleFixture {
+    
+    <b>@Extension
+    public ConcordionExtension extension = new FakeExtension2();
+    </b>
+}    
+    </pre>
+    <p concordion:execute="setSystemProperty(#key, #value)">with the system property <b><code concordion:set="#key">concordion.extensions</code></b> set to "<b><code concordion:set="#value">test.concordion.extension.fake.FakeExtension3</code></b>",</p>
+    
+    
+    <p concordion:execute="#result1 = process(#javaFragment)">will install the extensions <span concordion:assertEquals="#result1">FakeExtension1, FakeExtension2, FakeExtension3</span>.</p>
+    </div> 
+
 </body>
 </html>
