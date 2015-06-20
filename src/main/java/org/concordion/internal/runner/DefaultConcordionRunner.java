@@ -1,6 +1,7 @@
 package org.concordion.internal.runner;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -22,14 +23,13 @@ import org.concordion.internal.FailFastException;
 import org.concordion.internal.FixtureRunner;
 import org.concordion.internal.SingleResultSummary;
 import org.concordion.internal.SummarizingResultRecorder;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
+import org.junit.*;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
+import org.junit.runners.model.Statement;
 
 public class DefaultConcordionRunner implements Runner {
 
@@ -130,12 +130,13 @@ public class DefaultConcordionRunner implements Runner {
 		return rs;
 	}
 
-	private void safeInvokeMethod(Class<?> concordionClass, Object o, Method m)
+	private Object safeInvokeMethod(Class<?> concordionClass, Object o, Method m)
 			throws AssertionError, Exception {
 		try {
-			m.invoke(o, (Object[])null);
+			return m.invoke(o, (Object[])null);
 		} catch (InvocationTargetException e) {
 			processTestException(e.getTargetException(), concordionClass);
+            return null;
 		}
 	}
 
@@ -162,46 +163,84 @@ public class DefaultConcordionRunner implements Runner {
         return foundMethods;
     }
 
-    private ResultSummary runConcordionJUnit4Test(Class<?> concordionClass) throws Exception {
+    private List<Field> getFieldsWithAnnotation( Class<?> type, Class<? extends Annotation> annotation) {
+        List<Field> foundFields = new ArrayList<Field>();
+        Class<?> currentClass = type;
+        while (currentClass != Object.class) {
+            // We iterate up through the class heirarchy ensuring we get all the annotated methods.
+            Field[] allFields = currentClass.getDeclaredFields();
+            for ( Field field : allFields) {
+                if (field.isAnnotationPresent(annotation)) {
+                    foundFields.add(field);
+                }
+            }
+            // move up oner class in the hierarchy to search for more methods
+            currentClass = currentClass.getSuperclass();
+        }
+        return foundFields;
+    }
 
-    	// first check for jUnit's Ignore annotation.
-    	if (concordionClass.isAnnotationPresent(Ignore.class) ||
-    		concordionClass.isAnnotationPresent(Unimplemented.class)) {
-    		return new SingleResultSummary(Result.IGNORED);
-    	}
+    private ResultSummary runConcordionJUnit4Test(final Class<?> concordionClass) throws Exception {
 
-    	// run any before class methods
-    	List<Method> beforeClassMethods = getMethodsWithAnnotation(concordionClass, BeforeClass.class);
-    	for (Method m: beforeClassMethods) {
-    		safeInvokeMethod(concordionClass, null, m);
-    	}
+        // first check for jUnit's Ignore annotation.
+        if (concordionClass.isAnnotationPresent(Ignore.class) ||
+                concordionClass.isAnnotationPresent(Unimplemented.class)) {
+            return new SingleResultSummary(Result.IGNORED);
+        }
 
-    	// construct the object
-    	Object o = concordionClass.getConstructor((Class<?>[])null).newInstance((Object[])null);
+        // run any before class methods
+        List<Method> beforeClassMethods = getMethodsWithAnnotation(concordionClass, BeforeClass.class);
+        for (Method m : beforeClassMethods) {
+            safeInvokeMethod(concordionClass, null, m);
+        }
 
-    	// run any before methods
-      	List<Method> beforeMethods = getMethodsWithAnnotation(concordionClass, Before.class);
-    	for (Method m: beforeMethods) {
-       		safeInvokeMethod(concordionClass, o, m);
-       	}
+        // construct the object
+        final Object o = concordionClass.getConstructor((Class<?>[]) null).newInstance((Object[]) null);
 
-    	// invoke the test method
-      	ResultSummary rs = invokeTestMethod(o);
+        List<TestRule> rules = new ArrayList<TestRule>();
 
-      	// run any after methods
-    	List<Method> afterMethods = getMethodsWithAnnotation(concordionClass, After.class);
-    	for (Method m: afterMethods) {
-       		safeInvokeMethod(concordionClass, o, m);
-       	}
+        // find any method rules
+        List<Method> ruleMethods = getMethodsWithAnnotation(concordionClass, Rule.class);
+        for (Method m : ruleMethods) {
+            Object rule = safeInvokeMethod(concordionClass, o, m);
+            if (rule instanceof TestRule) {
+                rules.add((TestRule) rule);
+            }
+        }
 
-    	// finally, any after class methods
-      	List<Method> afterClassMethods = getMethodsWithAnnotation(concordionClass, AfterClass.class);
-    	for (Method m: afterClassMethods) {
-       		safeInvokeMethod(concordionClass, null, m);
-       	}
+        List<Field> ruleFields = getFieldsWithAnnotation(concordionClass, Rule.class);
+        for (Field f : ruleFields) {
+            Object rule = f.get(o);
+            if (rule instanceof TestRule) {
+                rules.add((TestRule) rule);
+            }
+        }
 
-    	return rs;
- 	}
+
+        // Prepare the base statement
+        ConcordionInvocationStatement concordionInvocationStatement = new ConcordionInvocationStatement(concordionClass, o);
+        Statement invocationStatement = concordionInvocationStatement;
+        Description description = Description.createTestDescription(concordionClass, "Concordion Rule Description placeholder");
+
+        for (TestRule rule : rules) {
+            invocationStatement = rule.apply(invocationStatement, description);
+        }
+
+        try {
+            invocationStatement.evaluate();
+        } catch (Throwable e) {
+            processTestException(e, concordionClass);
+        }
+
+
+        // finally, any after class methods
+        List<Method> afterClassMethods = getMethodsWithAnnotation(concordionClass, AfterClass.class);
+        for (Method m : afterClassMethods) {
+            safeInvokeMethod(concordionClass, null, m);
+        }
+
+        return concordionInvocationStatement.getResultSummary();
+    }
 
 	protected org.junit.runner.Result runJUnitClass(Class<?> concordionClass) {
         org.junit.runner.Result jUnitResult = JUnitCore.runClasses(concordionClass);
@@ -262,5 +301,41 @@ public class DefaultConcordionRunner implements Runner {
 
     private boolean fullyImplemented(Class<?> concordionClass) {
         return !(onlyPartiallyImplemented(concordionClass));
+    }
+
+    private class ConcordionInvocationStatement extends Statement {
+
+        private final Class<?> concordionClass;
+        private final Object o;
+        private ResultSummary resultSummary;
+
+        public ConcordionInvocationStatement(Class<?> concordionClass, Object o) {
+            this.concordionClass = concordionClass;
+            this.o = o;
+        }
+
+        @Override
+        public void evaluate() throws Throwable {
+
+            // run any before methods
+            List<Method> beforeMethods = getMethodsWithAnnotation(concordionClass, Before.class);
+            for (Method m: beforeMethods) {
+                safeInvokeMethod(concordionClass, o, m);
+            }
+
+            // invoke the test method
+            resultSummary = invokeTestMethod(o);
+
+            // run any after methods
+            List<Method> afterMethods = getMethodsWithAnnotation(concordionClass, After.class);
+            for (Method m: afterMethods) {
+                safeInvokeMethod(concordionClass, o, m);
+            }
+
+        }
+
+        public ResultSummary getResultSummary() {
+            return resultSummary;
+        }
     }
 }
