@@ -146,12 +146,12 @@ public class DefaultConcordionRunner implements Runner {
         rethrowExceptionIfWarranted(concordionClass, exception);
 	}
 
-	private List<Method> getMethodsWithAnnotation( Class<?> type, Class<? extends Annotation> annotation) {
+	static List<Method> getMethodsWithAnnotation(Class<?> type, Class<? extends Annotation> annotation) {
          List<Method> foundMethods = new ArrayList<Method>();
         Class<?> currentClass = type;
         while (currentClass != Object.class) {
         	// We iterate up through the class heirarchy ensuring we get all the annotated methods.
-             Method[] allMethods = currentClass.getDeclaredMethods();
+            Method[] allMethods = currentClass.getDeclaredMethods();
             for ( Method method : allMethods) {
                 if (method.isAnnotationPresent(annotation)) {
                 	foundMethods.add(method);
@@ -163,13 +163,13 @@ public class DefaultConcordionRunner implements Runner {
         return foundMethods;
     }
 
-    private List<Field> getFieldsWithAnnotation( Class<?> type, Class<? extends Annotation> annotation) {
+    static List<Field> getFieldsWithAnnotation(Class<?> type, Class<? extends Annotation> annotation) {
         List<Field> foundFields = new ArrayList<Field>();
         Class<?> currentClass = type;
         while (currentClass != Object.class) {
             // We iterate up through the class heirarchy ensuring we get all the annotated methods.
             Field[] allFields = currentClass.getDeclaredFields();
-            for ( Field field : allFields) {
+            for (Field field : allFields) {
                 if (field.isAnnotationPresent(annotation)) {
                     foundFields.add(field);
                 }
