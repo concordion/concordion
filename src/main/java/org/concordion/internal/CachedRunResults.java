@@ -110,6 +110,10 @@ public enum CachedRunResults {
         map.put(fixtureClass, runSummary);
 	}
 
+    public ResultSummary convertForCache(ResultSummary rs, Object fixture) {
+        FixtureState state = FixtureState.getFixtureState(fixture);
+        return state.convertForCache(rs);
+    }
 }
 
 /**

@@ -36,6 +36,4 @@ public interface ResultSummary {
 	String printToString(Object fixture);
     String printCountsToString(Object fixture);
 
-
-    ResultSummary convertForCache(Object fixture);
 }

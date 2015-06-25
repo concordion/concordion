@@ -42,33 +42,16 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
 
     @Override
 	public void assertIsSatisfied( Object fixture) {
-        FixtureState state = getFixtureState(fixture);
+        FixtureState state = FixtureState.getFixtureState(fixture);
         state.assertIsSatisfied(this, failFastException);
     }
     
     @Override
     public ResultSummary getMeaningfulResultSummary(Object fixture) {
-    	FixtureState state = getFixtureState(fixture);
+        FixtureState state = FixtureState.getFixtureState(fixture);
     	return state.getMeaningfulResultSummary(this, failFastException);
     }
 
-    @Override
-    public ResultSummary convertForCache(Object fixture) {
-        FixtureState state = getFixtureState(fixture);
-        return state.convertForCache(this);
-    }
-
-
-    private FixtureState getFixtureState(Object fixture) {
-        FixtureState state = FixtureState.EXPECTED_TO_PASS;
-        if (fixture.getClass().getAnnotation(ExpectedToFail.class) != null) {
-            state = FixtureState.EXPECTED_TO_FAIL;
-        }
-        if (fixture.getClass().getAnnotation(Unimplemented.class) != null) {
-            state = FixtureState.UNIMPLEMENTED;
-        }
-        return state;
-    }
 
     @Override
 	public boolean hasExceptions() {
@@ -141,7 +124,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         	builder.append(getExceptionCount());
         }
 
-        builder.append(getFixtureState(fixture).printNoteToString());
+        builder.append(FixtureState.getFixtureState(fixture).printNoteToString());
         
         return builder.toString();
     }

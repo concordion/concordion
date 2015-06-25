@@ -20,7 +20,7 @@ public class FixtureRunner {
             resultSummary = concordionBuilder.build().process(fixture);
 
             // we want to make sure all the annotations are considered when storing the result summary
-            cachedRunResults.finishRun(fixture.getClass(), resultSummary.convertForCache(fixture));
+            cachedRunResults.finishRun(fixture.getClass(), cachedRunResults.convertForCache(resultSummary, fixture));
         } else {
             additionalInformation = "Returning cached result summary for fixture " + fixture.getClass().getName();
         }
