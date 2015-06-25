@@ -15,7 +15,8 @@ public class CachedResultsUnitTest {
 
     @Test
     public void testCacheInProgress() {
-        CachedRunResults runResults = new CachedRunResults();
+        CachedRunResults runResults = CachedRunResults.SINGLETON;
+        runResults.clearCache();
 
         assertNull(runResults.startRun(this.getClass()));
         assertNotNull(runResults.startRun(this.getClass()));

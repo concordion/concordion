@@ -1,9 +1,10 @@
 package org.concordion.internal.runner;
 
-import org.concordion.internal.runner.rules.FaultyOrderTest;
-import org.concordion.internal.runner.rules.WorkingOrderTest;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -18,50 +19,18 @@ import static org.junit.Assert.assertThat;
  */
 public class DefaultConcordionRunnerTest {
 
-    @Test
-    public void testGetMethodsWithAnnotation() throws Exception {
-        List<Method> methods = DefaultConcordionRunner.getMethodsWithAnnotation(AnnotatedClass.class, TestAnnotation.class);
-
-        assertThat(methods.size(), is(equalTo(8)));
-
-        System.err.println("Found Methods");
-        for (Method method: methods) {
-            System.err.println("   " + method.getName());
+    @Rule
+    public TestRule testRule = new TestRule() {
+        @Override
+        public Statement apply(final Statement base, Description description) {
+            return new Statement() {
+                @Override
+                public void evaluate() throws Throwable {
+                    base.evaluate();
+                }
+            };
         }
-    }
+    };
 
-    @Test
-    public void testGetFieldsWithAnnotation() throws Exception {
-        List<Field> fields = DefaultConcordionRunner.getFieldsWithAnnotation(AnnotatedClass.class, TestAnnotation.class);
-        assertThat(fields.size(), is(equalTo(8)));
 
-        System.err.println("Found Fields:");
-        for (Field field: fields) {
-            System.err.println("   " + field.getName());
-        }
-    }
-
-    @Test
-    public void testWorkingOrderTest() throws Exception {
-        List<Field> fields = DefaultConcordionRunner.getFieldsWithAnnotation(WorkingOrderTest.class, Rule.class);
-        assertThat(fields.size(), is(equalTo(3)));
-
-        System.err.println("Found Fields:");
-        for (Field field: fields) {
-            System.err.println("   " + field.getName());
-        }
-
-    }
-
-    @Test
-    public void testNotWorkingOrderTest() throws Exception {
-        List<Field> fields = DefaultConcordionRunner.getFieldsWithAnnotation(FaultyOrderTest.class, Rule.class);
-        assertThat(fields.size(), is(equalTo(4)));
-
-        System.err.println("Found Fields:");
-        for (Field field: fields) {
-            System.err.println("   " + field.getName());
-        }
-
-    }
 }

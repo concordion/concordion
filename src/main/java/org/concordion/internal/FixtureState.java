@@ -36,14 +36,24 @@ public enum FixtureState {
                 
             }
         }
-        
-		@Override
+
+        @Override
+        public ResultSummary convertForCache(ResultSummary rs) {
+            try {
+                assertIsSatisfied(rs, null);
+                return new SingleResultSummary(Result.IGNORED);
+            } catch (ConcordionAssertionError cce) {
+                return new SingleResultSummary(Result.FAILURE);
+            }
+        }
+
+        @Override
 		public ResultSummary getMeaningfulResultSummary(
 				ResultSummary rs, FailFastException ffe) {
 			assertIsSatisfied(rs, ffe);
 			return new SingleResultSummary(Result.IGNORED);
 		}
- 
+
        @Override
        public String printNoteToString() {
         	return "   <-- Note: This test has been marked as UNIMPLEMENTED";
@@ -66,8 +76,18 @@ public enum FixtureState {
 			assertIsSatisfied(rs, ffe);
 			return new SingleResultSummary(Result.IGNORED);
 		}
- 
-       @Override
+
+        @Override
+        public ResultSummary convertForCache(ResultSummary rs) {
+            try {
+                assertIsSatisfied(rs, null);
+                return new SingleResultSummary(Result.IGNORED);
+            } catch (ConcordionAssertionError cce) {
+                return new SingleResultSummary(Result.FAILURE);
+            }
+        }
+
+        @Override
        public String printNoteToString() {
         	return "   <-- Note: This test has been marked as EXPECTED_TO_FAIL";
        }
@@ -98,6 +118,12 @@ public enum FixtureState {
 			assertIsSatisfied(rs, ffe);
 			return rs;
 		}
+
+        @Override
+        public ResultSummary convertForCache(ResultSummary rs) {
+            // if we're expected to pass, then just use the result summary.
+            return rs;
+        }
     };
 
     public abstract void assertIsSatisfied(ResultSummary rs, FailFastException ffe);
@@ -109,4 +135,6 @@ public enum FixtureState {
     public abstract String printNoteToString();
 
 	public abstract ResultSummary getMeaningfulResultSummary(ResultSummary rs, FailFastException ffe);
+
+    public abstract ResultSummary convertForCache(ResultSummary rs);
 }

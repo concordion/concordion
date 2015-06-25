@@ -14,7 +14,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
 
     private List<Result> recordedResults = new ArrayList<Result>();
     private FailFastException failFastException;
-    private String specificationDescription;
+    private String specificationDescription = "";
 
     @Override
 	public void record( Result result) {
@@ -51,6 +51,13 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     	FixtureState state = getFixtureState(fixture);
     	return state.getMeaningfulResultSummary(this, failFastException);
     }
+
+    @Override
+    public ResultSummary convertForCache(Object fixture) {
+        FixtureState state = getFixtureState(fixture);
+        return state.convertForCache(this);
+    }
+
 
     private FixtureState getFixtureState(Object fixture) {
         FixtureState state = FixtureState.EXPECTED_TO_PASS;
@@ -138,6 +145,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         
         return builder.toString();
     }
+
 
     @Override
     public void recordFailFastException( FailFastException exception) {
