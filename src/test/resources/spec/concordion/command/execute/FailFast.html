@@ -15,7 +15,18 @@
     <p> However, fixtures can be annotated with <code>@FailFast</code> to stop further
         processing if an exception is encountered. This can be useful if further processing
         after an exception is undesirable (e.g. because it's slow, could cause corruption or
-        would make the results hard to explain to others).
+        would make the results hard to explain to others). It is possible to
+        <a href="FailFastOnSpecificExceptions.html" concordion:run="concordion">specify specific exceptions</a> on the <code>@FailFast</code>
+        annotation.
+    </p>
+
+    <p>
+        Note that the @FailFast annotation is <a href="FailFastPassthrough.html" concordion:run="concordion">transitive</a> when used with the <a href="../run/Run.html" concordion:run="concordion">run command</a>. That is:
+        <ul>
+            <li>Given one fixture executes another fixture, and both fixtures are annotated with @FailFast,</li>
+            <li>When the called test throws an exception, </li>
+            <li>Then further processing of both tests is stopped. </li>
+        </ul>
     </p>
 
     <div class="example">

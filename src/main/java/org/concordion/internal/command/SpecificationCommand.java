@@ -30,7 +30,7 @@ public class SpecificationCommand extends AbstractCommand {
         try {
             commandCall.getChildren().processSequentially(evaluator, resultRecorder);
         } catch (FailFastException e) {
-            // Ignore
+            // Ignore - it'll be re-thrown later if necessary.
         }
         announceAfterProcessingEvent(commandCall.getResource(), commandCall.getElement());
     }

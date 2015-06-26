@@ -117,6 +117,12 @@ public class DefaultConcordionRunner implements Runner {
                     + summary.printToString(concordionClass.newInstance()));
         }
 
+        if (summary instanceof SummarizingResultRecorder) {
+            if (((SummarizingResultRecorder) summary).getFailFastException() != null) {
+                throw ((SummarizingResultRecorder) summary).getFailFastException();
+            }
+        }
+
         // done! Return the summary
         return summary;
     }

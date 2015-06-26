@@ -1,12 +1,12 @@
-package spec.concordion.results.runTotals;
+package spec.concordion.command.execute;
 
-import org.concordion.api.FailFast;
 import org.concordion.api.extension.Extension;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
+import spec.concordion.results.runTotals.RunTotalsExtension;
 
-@RunWith(ConcordionRunner.class) @FailFast
-public class FailFastRunningFailFastTest {
+@RunWith(ConcordionRunner.class)
+public class NotFailFastRunningFailFastTest {
 
 	@Extension
 	public RunTotalsExtension runTotalsExtension = new RunTotalsExtension();

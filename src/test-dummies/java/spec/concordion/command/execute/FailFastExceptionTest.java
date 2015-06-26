@@ -1,4 +1,4 @@
-package spec.concordion.results.runTotals;
+package spec.concordion.command.execute;
 
 import org.concordion.api.FailFast;
 import org.concordion.integration.junit4.ConcordionRunner;

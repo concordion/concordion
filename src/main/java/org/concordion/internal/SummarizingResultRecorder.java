@@ -16,6 +16,15 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     private FailFastException failFastException;
     private String specificationDescription = "";
 
+    public SummarizingResultRecorder() {
+
+    }
+
+    public SummarizingResultRecorder(ResultSummary initialSummary) {
+        this();
+        record(initialSummary);
+    }
+
     @Override
 	public void record( Result result) {
         recordedResults.add(result);
@@ -35,7 +44,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
 		recordMultipleResults(result.getExceptionCount(), Result.EXCEPTION);
 	}
 
-    @Override
+    @Override @Deprecated
 	public void assertIsSatisfied() {
         assertIsSatisfied(this);
     }
@@ -88,7 +97,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         return getCount(Result.IGNORED);
     }
 
-    @Override
+    @Override @Deprecated
 	public void print( PrintStream out) {
         print(out, this);
     }
@@ -135,7 +144,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         this.setFailFastException(exception);
     }
 
-    public Throwable getFailFastException() {
+    public FailFastException getFailFastException() {
         return failFastException;
     }
 
