@@ -26,6 +26,8 @@ public final class Element {
 
     /**
      * For internal use only.
+     *
+     * @param xomElement the xomElement
      */
     public Element(nu.xom.Element xomElement) {
         this.xomElement = xomElement;
@@ -231,6 +233,9 @@ public final class Element {
     /**
      * Returns the first child Element with the specified "id" attribute, or null,
      * if no matching element is found.
+     *
+     * @param id the id of the element to find
+     * @return Element
      */
     public Element getElementById(String id) {
         String query = ".//*[@id='" + id + "']";
@@ -242,7 +247,10 @@ public final class Element {
     }
     
     /**
-     * Returns the element that contains this element, or null if this element is the root element or is orphaned.
+     * Returns the element that contains this element, or null if this element is the root element or
+     * is orphaned.
+     *
+     * @return Element
      */
     public Element getParentElement() {
         ParentNode parent = xomElement.getParent();

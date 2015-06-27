@@ -18,11 +18,7 @@ import org.concordion.api.Unimplemented;
 import org.concordion.integration.junit3.ConcordionTestCase;
 import org.concordion.integration.junit4.ConcordionEnhancedReporting;
 import org.concordion.integration.junit4.ConcordionRunner;
-import org.concordion.internal.ConcordionAssertionError;
-import org.concordion.internal.FailFastException;
-import org.concordion.internal.FixtureRunner;
-import org.concordion.internal.SingleResultSummary;
-import org.concordion.internal.SummarizingResultRecorder;
+import org.concordion.internal.*;
 import org.junit.*;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -34,6 +30,7 @@ import org.junit.runners.model.Statement;
 public class DefaultConcordionRunner implements Runner {
 
     private static Logger logger = Logger.getLogger(DefaultConcordionRunner.class.getName());
+
 
     @Override
 	public ResultSummary execute(Resource resource, String href) throws Exception {
@@ -68,179 +65,75 @@ public class DefaultConcordionRunner implements Runner {
     }
 
     protected ResultSummary runTestClass(Class<?> concordionClass) throws Exception {
-    	// check for a jUnit 3 style test extension
-       	if (ConcordionTestCase.class.isAssignableFrom(concordionClass)) {
-    		return runConcordionJUnit3Test(concordionClass);
-    	}
+        CachedRunResults cache = CachedRunResults.SINGLETON;
 
-       	// check for a jUnit 4 style annotation
-       	if (concordionClass.isAnnotationPresent(RunWith.class)) {
-       		RunWith s = concordionClass.getAnnotation(RunWith.class);
-       		Class<? extends org.junit.runner.Runner> runWith = s.value();
-       		if (ConcordionRunner.class.isAssignableFrom(runWith) || 
-       				runWith.isAnnotationPresent(ConcordionEnhancedReporting.class)) {
-       			return runConcordionJUnit4Test(concordionClass);
-       		}
-       	}
+        // first check the cache.
+        ResultSummary summary = cache.getFromCache(concordionClass);
+
+        // if we found something in the cache, we can do much less work.
+        if (summary == null) {
+
+            // Now check the Unimplemented annotation and abort if we find it.
+            if (concordionClass.isAnnotationPresent(Unimplemented.class)) {
+
+                summary = new SingleResultSummary(Result.IGNORED);
+                // may as well stick it in the cache for next time.
+                cache.enterIntoCache(concordionClass, summary);
+
+                logger.info("Returning unimplemented result summay "
+                        + summary.printToString(concordionClass.newInstance()));
 
 
-    	org.junit.runner.Result jUnitResult = runJUnitClass(concordionClass);
-        return decodeJUnitResult(concordionClass, jUnitResult);
+            } else {
+
+                // Not in cache, test is not @Unimplemented, so run the test...
+                org.junit.runner.Result jUnitResult = runJUnitClass(concordionClass);
+
+                // check the cache again - if the test was a concordion test, it will have stuck the results
+                // in the cache
+                summary = cache.getFromCache(concordionClass);
+
+                // check the test actually put something in the cache
+                if (summary == null) {
+
+                    // Nothing in the cache, so create a summary based on the jUnit result
+                    summary = decodeJUnitResult(concordionClass, jUnitResult);
+
+                    // and stick it in the cache for next time.
+                    cache.enterIntoCache(concordionClass, summary);
+
+                    logger.info("Returning converted jUnit result summary "
+                            + summary.printToString(concordionClass.newInstance()));
+
+                } else {
+
+                    logger.info("Returning result summary from executing test "
+                            + summary.printToString(concordionClass.newInstance()));
+                }
+
+            }
+        } else {
+            logger.info("Returning cached result summary "
+                    + summary.printToString(concordionClass.newInstance()));
+        }
+
+        if (summary instanceof SummarizingResultRecorder) {
+            if (((SummarizingResultRecorder) summary).getFailFastException() != null) {
+                throw ((SummarizingResultRecorder) summary).getFailFastException();
+            }
+        }
+
+        // done! Return the summary
+        return summary;
     }
 
 
-
-    private ResultSummary runConcordionJUnit3Test(Class<?> concordionClass) throws Exception {
-
-       	if (concordionClass.isAnnotationPresent(Unimplemented.class)) {
-    		return new SingleResultSummary(Result.IGNORED);
-    	}
-
-
-    	Object o = concordionClass.getConstructor((Class<?>[])null).newInstance((Object[])null);
-
-    	// invoke the setUp method if it exists
-    	try {
-    		Method setup = concordionClass.getMethod("setUp", (Class<?>[])null);
-    		safeInvokeMethod(concordionClass, o, setup);
-    	} catch (NoSuchMethodException e) {
-    		// do nothing - method doesn't exist
-    	}
-
-    	 ResultSummary rs = invokeTestMethod(o);
-
-       	// invoke the tearDown method if it exists
-    	try {
-	     	Method m = concordionClass.getMethod("tearDown", (Class<?>[])null);
-	    	safeInvokeMethod(concordionClass, o, m);
-    	} catch (NoSuchMethodException e) {
-       		// do nothing - method doesn't exist
-    	}
-
-    	return rs;
- 	}
-
-	private ResultSummary invokeTestMethod(Object o) throws Exception {
-		ResultSummary rs;
-		try {
-    		rs = new FixtureRunner().run(o);
-    	} catch (ConcordionAssertionError e) {
-    		rs = e.getResultSummary();
-    	}
-		return rs;
-	}
-
-	private Object safeInvokeMethod(Class<?> concordionClass, Object o, Method m)
-			throws AssertionError, Exception {
-		try {
-			return m.invoke(o, (Object[])null);
-		} catch (InvocationTargetException e) {
-			processTestException(e.getTargetException(), concordionClass);
-            return null;
-		}
-	}
 
     private void processTestException(Throwable exception,
 			Class<?> concordionClass) throws AssertionError, Exception {
         logExceptionIfNotAssertionError(exception);
         rethrowExceptionIfWarranted(concordionClass, exception);
 	}
-
-	private List<Method> getMethodsWithAnnotation( Class<?> type, Class<? extends Annotation> annotation) {
-         List<Method> foundMethods = new ArrayList<Method>();
-        Class<?> currentClass = type;
-        while (currentClass != Object.class) {
-        	// We iterate up through the class heirarchy ensuring we get all the annotated methods.
-             Method[] allMethods = currentClass.getDeclaredMethods();
-            for ( Method method : allMethods) {
-                if (method.isAnnotationPresent(annotation)) {
-                	foundMethods.add(method);
-                }
-            }
-            // move up oner class in the hierarchy to search for more methods
-            currentClass = currentClass.getSuperclass();
-        }
-        return foundMethods;
-    }
-
-    private List<Field> getFieldsWithAnnotation( Class<?> type, Class<? extends Annotation> annotation) {
-        List<Field> foundFields = new ArrayList<Field>();
-        Class<?> currentClass = type;
-        while (currentClass != Object.class) {
-            // We iterate up through the class heirarchy ensuring we get all the annotated methods.
-            Field[] allFields = currentClass.getDeclaredFields();
-            for ( Field field : allFields) {
-                if (field.isAnnotationPresent(annotation)) {
-                    foundFields.add(field);
-                }
-            }
-            // move up oner class in the hierarchy to search for more methods
-            currentClass = currentClass.getSuperclass();
-        }
-        return foundFields;
-    }
-
-    private ResultSummary runConcordionJUnit4Test(final Class<?> concordionClass) throws Exception {
-
-        // first check for jUnit's Ignore annotation.
-        if (concordionClass.isAnnotationPresent(Ignore.class) ||
-                concordionClass.isAnnotationPresent(Unimplemented.class)) {
-            return new SingleResultSummary(Result.IGNORED);
-        }
-
-        // run any before class methods
-        List<Method> beforeClassMethods = getMethodsWithAnnotation(concordionClass, BeforeClass.class);
-        for (Method m : beforeClassMethods) {
-            safeInvokeMethod(concordionClass, null, m);
-        }
-
-        // construct the object
-        final Object o = concordionClass.getConstructor((Class<?>[]) null).newInstance((Object[]) null);
-
-        List<TestRule> rules = new ArrayList<TestRule>();
-
-        // find any method rules
-        List<Method> ruleMethods = getMethodsWithAnnotation(concordionClass, Rule.class);
-        for (Method m : ruleMethods) {
-            Object rule = safeInvokeMethod(concordionClass, o, m);
-            if (rule instanceof TestRule) {
-                rules.add((TestRule) rule);
-            }
-        }
-
-        List<Field> ruleFields = getFieldsWithAnnotation(concordionClass, Rule.class);
-        for (Field f : ruleFields) {
-            Object rule = f.get(o);
-            if (rule instanceof TestRule) {
-                rules.add((TestRule) rule);
-            }
-        }
-
-
-        // Prepare the base statement
-        ConcordionInvocationStatement concordionInvocationStatement = new ConcordionInvocationStatement(concordionClass, o);
-        Statement invocationStatement = concordionInvocationStatement;
-        Description description = Description.createTestDescription(concordionClass, "Concordion Rule Description placeholder");
-
-        for (TestRule rule : rules) {
-            invocationStatement = rule.apply(invocationStatement, description);
-        }
-
-        try {
-            invocationStatement.evaluate();
-        } catch (Throwable e) {
-            processTestException(e, concordionClass);
-        }
-
-
-        // finally, any after class methods
-        List<Method> afterClassMethods = getMethodsWithAnnotation(concordionClass, AfterClass.class);
-        for (Method m : afterClassMethods) {
-            safeInvokeMethod(concordionClass, null, m);
-        }
-
-        return concordionInvocationStatement.getResultSummary();
-    }
 
 	protected org.junit.runner.Result runJUnitClass(Class<?> concordionClass) {
         org.junit.runner.Result jUnitResult = JUnitCore.runClasses(concordionClass);
@@ -303,39 +196,4 @@ public class DefaultConcordionRunner implements Runner {
         return !(onlyPartiallyImplemented(concordionClass));
     }
 
-    private class ConcordionInvocationStatement extends Statement {
-
-        private final Class<?> concordionClass;
-        private final Object o;
-        private ResultSummary resultSummary;
-
-        public ConcordionInvocationStatement(Class<?> concordionClass, Object o) {
-            this.concordionClass = concordionClass;
-            this.o = o;
-        }
-
-        @Override
-        public void evaluate() throws Throwable {
-
-            // run any before methods
-            List<Method> beforeMethods = getMethodsWithAnnotation(concordionClass, Before.class);
-            for (Method m: beforeMethods) {
-                safeInvokeMethod(concordionClass, o, m);
-            }
-
-            // invoke the test method
-            resultSummary = invokeTestMethod(o);
-
-            // run any after methods
-            List<Method> afterMethods = getMethodsWithAnnotation(concordionClass, After.class);
-            for (Method m: afterMethods) {
-                safeInvokeMethod(concordionClass, o, m);
-            }
-
-        }
-
-        public ResultSummary getResultSummary() {
-            return resultSummary;
-        }
-    }
 }

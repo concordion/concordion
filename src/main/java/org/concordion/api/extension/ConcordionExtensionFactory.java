@@ -7,7 +7,7 @@ package org.concordion.api.extension;
  * To use an extension factory, include the fully-qualified class name of the
  * factory in the comma-separated list of extensions and extension factories
  * specified by the system property <code>concordion.extensions</code>.
- * <p>
+ * </p>
  * 
  * @see ConcordionExtension
  */

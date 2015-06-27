@@ -6,8 +6,7 @@ import org.concordion.api.ResultSummary;
 import org.concordion.internal.extension.FixtureExtensionLoader;
 
 public class FixtureRunner {
-	private static CachedRunResults cachedRunResults = new CachedRunResults();
-
+	private static CachedRunResults cachedRunResults = CachedRunResults.SINGLETON;
 	
     private final FixtureExtensionLoader fixtureExtensionLoader = new FixtureExtensionLoader();
 
@@ -19,7 +18,9 @@ public class FixtureRunner {
             ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture);
             fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
             resultSummary = concordionBuilder.build().process(fixture);
-            cachedRunResults.finishRun(fixture.getClass(), resultSummary);
+
+            // we want to make sure all the annotations are considered when storing the result summary
+            cachedRunResults.finishRun(fixture.getClass(), cachedRunResults.convertForCache(resultSummary, fixture));
         } else {
             additionalInformation = "Returning cached result summary for fixture " + fixture.getClass().getName();
         }

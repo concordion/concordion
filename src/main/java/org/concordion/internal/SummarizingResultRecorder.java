@@ -14,7 +14,16 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
 
     private List<Result> recordedResults = new ArrayList<Result>();
     private FailFastException failFastException;
-    private String specificationDescription;
+    private String specificationDescription = "";
+
+    public SummarizingResultRecorder() {
+
+    }
+
+    public SummarizingResultRecorder(ResultSummary initialSummary) {
+        this();
+        record(initialSummary);
+    }
 
     @Override
 	public void record( Result result) {
@@ -35,33 +44,23 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
 		recordMultipleResults(result.getExceptionCount(), Result.EXCEPTION);
 	}
 
-    @Override
+    @Override @Deprecated
 	public void assertIsSatisfied() {
         assertIsSatisfied(this);
     }
 
     @Override
 	public void assertIsSatisfied( Object fixture) {
-        FixtureState state = getFixtureState(fixture);
+        FixtureState state = FixtureState.getFixtureState(fixture);
         state.assertIsSatisfied(this, failFastException);
     }
     
     @Override
     public ResultSummary getMeaningfulResultSummary(Object fixture) {
-    	FixtureState state = getFixtureState(fixture);
+        FixtureState state = FixtureState.getFixtureState(fixture);
     	return state.getMeaningfulResultSummary(this, failFastException);
     }
 
-    private FixtureState getFixtureState(Object fixture) {
-        FixtureState state = FixtureState.EXPECTED_TO_PASS;
-        if (fixture.getClass().getAnnotation(ExpectedToFail.class) != null) {
-            state = FixtureState.EXPECTED_TO_FAIL;
-        }
-        if (fixture.getClass().getAnnotation(Unimplemented.class) != null) {
-            state = FixtureState.UNIMPLEMENTED;
-        }
-        return state;
-    }
 
     @Override
 	public boolean hasExceptions() {
@@ -98,7 +97,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         return getCount(Result.IGNORED);
     }
 
-    @Override
+    @Override @Deprecated
 	public void print( PrintStream out) {
         print(out, this);
     }
@@ -134,17 +133,18 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         	builder.append(getExceptionCount());
         }
 
-        builder.append(getFixtureState(fixture).printNoteToString());
+        builder.append(FixtureState.getFixtureState(fixture).printNoteToString());
         
         return builder.toString();
     }
+
 
     @Override
     public void recordFailFastException( FailFastException exception) {
         this.setFailFastException(exception);
     }
 
-    public Throwable getFailFastException() {
+    public FailFastException getFailFastException() {
         return failFastException;
     }
 

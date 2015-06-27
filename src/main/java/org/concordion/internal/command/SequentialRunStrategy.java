@@ -17,6 +17,9 @@ public class SequentialRunStrategy implements RunStrategy {
             announcer.announce(result);
             resultRecorder.record(result);
         } catch (FailFastException e) {
+            announcer.announceException(e);
+            resultRecorder.record(Result.EXCEPTION);
+            // we let fail fast exceptions percolate up through the system
             throw e;
         } catch (Throwable e) {
             announcer.announceException(e);
