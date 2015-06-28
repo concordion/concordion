@@ -112,7 +112,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     	StringBuilder builder = new StringBuilder(specificationDescription);
     	builder.append("\n");
     	builder.append(printCountsToString(fixture));
-        builder.append("\n");
+        builder.append("\n\n");
         return builder.toString();
     }
     	
