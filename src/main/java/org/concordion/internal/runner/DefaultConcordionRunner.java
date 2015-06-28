@@ -1,10 +1,5 @@
 package org.concordion.internal.runner;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,17 +10,11 @@ import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
 import org.concordion.api.Runner;
 import org.concordion.api.Unimplemented;
-import org.concordion.integration.junit3.ConcordionTestCase;
-import org.concordion.integration.junit4.ConcordionEnhancedReporting;
-import org.concordion.integration.junit4.ConcordionRunner;
-import org.concordion.internal.*;
-import org.junit.*;
-import org.junit.rules.TestRule;
-import org.junit.runner.Description;
+import org.concordion.internal.CachedRunResults;
+import org.concordion.internal.FailFastException;
+import org.concordion.internal.SummarizingResultRecorder;
 import org.junit.runner.JUnitCore;
-import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
-import org.junit.runners.model.Statement;
 
 public class DefaultConcordionRunner implements Runner {
 
@@ -73,20 +62,7 @@ public class DefaultConcordionRunner implements Runner {
         // if we found something in the cache, we can do much less work.
         if (summary == null) {
 
-            // Now check the Unimplemented annotation and abort if we find it.
-            if (concordionClass.isAnnotationPresent(Unimplemented.class)) {
-
-                summary = new SingleResultSummary(Result.IGNORED);
-                // may as well stick it in the cache for next time.
-                cache.enterIntoCache(concordionClass, summary);
-
-                logger.info("Returning unimplemented result summay "
-                        + summary.printToString(concordionClass.newInstance()));
-
-
-            } else {
-
-                // Not in cache, test is not @Unimplemented, so run the test...
+                // Not in cache, so run the test...
                 org.junit.runner.Result jUnitResult = runJUnitClass(concordionClass);
 
                 // check the cache again - if the test was a concordion test, it will have stuck the results
@@ -111,7 +87,6 @@ public class DefaultConcordionRunner implements Runner {
                             + summary.printToString(concordionClass.newInstance()));
                 }
 
-            }
         } else {
             logger.info("Returning cached result summary "
                     + summary.printToString(concordionClass.newInstance()));
@@ -123,7 +98,6 @@ public class DefaultConcordionRunner implements Runner {
             }
         }
 
-        // done! Return the summary
         return summary;
     }
 
