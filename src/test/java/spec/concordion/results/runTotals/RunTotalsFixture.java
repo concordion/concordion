@@ -1,17 +1,18 @@
 package spec.concordion.results.runTotals;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.concordion.api.CommandCall;
 import org.concordion.api.Element;
 import org.concordion.api.Resource;
-import org.concordion.integration.junit3.ConcordionTestCase;
 import org.concordion.integration.junit4.ConcordionRunner;
+import org.concordion.internal.ConcordionBuilder;
 import org.concordion.internal.FailFastException;
+import org.concordion.internal.FileTarget;
 import org.concordion.internal.SummarizingResultRecorder;
 import org.concordion.internal.command.RunCommand;
-import org.concordion.internal.command.SpecificationCommand;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
@@ -24,6 +25,7 @@ public class RunTotalsFixture {
 		final String path = "/" + getClass().getName().replace('.', '/');
 
 		final Resource resource = new Resource(path);
+		File parentFile = new FileTarget(ConcordionBuilder.getBaseOutputDir()).getFile(resource).getParentFile();
 
 		final RunCommand command = new RunCommand();
 
@@ -38,9 +40,13 @@ public class RunTotalsFixture {
 			System.out.println("Caught fail fast exception thrown by the fixture under test. Ignoring...");
 		}
 
+		File fileName = new File(parentFile, href);
+		System.out.println(fileName.getAbsolutePath());
+        boolean isOutputGenerated = fileName.exists();
 
 		Map<String, String> result = new HashMap<String, String>();
 
+        result.put("isOutputGenerated", isOutputGenerated ? "Yes" : "No");
 		result.put("successCount", Long.toString(recorder.getSuccessCount()));
 		result.put("failureCount", Long.toString(recorder.getFailureCount()));
 		result.put("ignoredCount", Long.toString(recorder.getIgnoredCount()));
