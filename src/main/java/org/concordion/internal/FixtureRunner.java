@@ -22,12 +22,12 @@ public class FixtureRunner {
             // we want to make sure all the annotations are considered when storing the result summary
             cachedRunResults.finishRun(fixture.getClass(), cachedRunResults.convertForCache(resultSummary, fixture));
         } else {
-            additionalInformation = "Returning cached result summary for fixture " + fixture.getClass().getName();
+            additionalInformation = "From cache: ";
         }
 
         synchronized (System.out) {
             if (additionalInformation != null) {
-                System.out.println(additionalInformation);
+                System.out.print(additionalInformation);
             }
             resultSummary.print(System.out, fixture);
             resultSummary.assertIsSatisfied(fixture);

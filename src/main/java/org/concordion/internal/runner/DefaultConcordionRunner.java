@@ -57,40 +57,27 @@ public class DefaultConcordionRunner implements Runner {
         CachedRunResults cache = CachedRunResults.SINGLETON;
 
         // first check the cache.
-        ResultSummary summary = cache.getFromCache(concordionClass);
+        ResultSummary summary = null;
 
-        // if we found something in the cache, we can do much less work.
+        // we always run the test to ensure that the FixtureRunner class
+        // has an opportuinity to print out any necessary debugging information.
+        org.junit.runner.Result jUnitResult = runJUnitClass(concordionClass);
+
+        // check the cache again - if the test was a concordion test, it will have stuck the results
+        // in the cache
+        summary = cache.getFromCache(concordionClass);
+
+        // check the test actually put something in the cache
         if (summary == null) {
 
-                // Not in cache, so run the test...
-                org.junit.runner.Result jUnitResult = runJUnitClass(concordionClass);
+            // Nothing in the cache, so create a summary based on the jUnit result
+            summary = decodeJUnitResult(concordionClass, jUnitResult);
 
-                // check the cache again - if the test was a concordion test, it will have stuck the results
-                // in the cache
-                summary = cache.getFromCache(concordionClass);
-
-                // check the test actually put something in the cache
-                if (summary == null) {
-
-                    // Nothing in the cache, so create a summary based on the jUnit result
-                    summary = decodeJUnitResult(concordionClass, jUnitResult);
-
-                    // and stick it in the cache for next time.
-                    cache.enterIntoCache(concordionClass, summary);
-
-                    logger.info("Returning converted jUnit result summary "
-                            + summary.printToString(concordionClass.newInstance()));
-
-                } else {
-
-                    logger.info("Returning result summary from executing test "
-                            + summary.printToString(concordionClass.newInstance()));
-                }
-
-        } else {
-            logger.info("Returning cached result summary "
-                    + summary.printToString(concordionClass.newInstance()));
+            // and stick it in the cache for next time. Just in case there's something else
+            // that needs it.
+            cache.enterIntoCache(concordionClass, summary);
         }
+
 
         if (summary instanceof SummarizingResultRecorder) {
             if (((SummarizingResultRecorder) summary).getFailFastException() != null) {

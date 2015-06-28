@@ -111,8 +111,11 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     public String printToString(Object fixture) {
     	StringBuilder builder = new StringBuilder(specificationDescription);
     	builder.append("\n");
-    	builder.append(printCountsToString(fixture));
-        builder.append("\n\n");
+        String counts = printCountsToString(fixture);
+    	if (counts != null) {
+            builder.append(counts).append("\n");
+        }
+        builder.append("\n");
         return builder.toString();
     }
     	
@@ -134,7 +137,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         }
 
         builder.append(FixtureState.getFixtureState(fixture).printNoteToString());
-        
+
         return builder.toString();
     }
 

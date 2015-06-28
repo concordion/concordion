@@ -122,8 +122,8 @@ public enum CachedRunResults {
 class CachedRunSummary {
     private ResultSummary resultSummary;
     public CachedRunSummary(Class<?> fixtureClass) {
-        SingleResultSummary singleResultSummary = new SingleResultSummary(Result.IGNORED);
-        singleResultSummary.setSpecificationDescription("In progress result summary for " + fixtureClass.getName());
+        SingleResultSummary singleResultSummary = new CacheResultSummary(Result.IGNORED,
+                "No current results for fixture " + fixtureClass.getName() + " as the specification is currently being executed");
         this.resultSummary = singleResultSummary;
     }
 
@@ -133,5 +133,18 @@ class CachedRunSummary {
 
     public void setResultSummary(ResultSummary resultSummary) {
         this.resultSummary = resultSummary;
+    }
+}
+
+class CacheResultSummary extends SingleResultSummary {
+
+    public CacheResultSummary(Result result, String specificationDescription) {
+        super(result, specificationDescription);
+    }
+
+    @Override
+    public String printCountsToString(Object fixture) {
+        // no counts for cached result summary
+        return null;
     }
 }
