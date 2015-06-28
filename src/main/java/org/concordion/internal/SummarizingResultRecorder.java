@@ -50,14 +50,14 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     }
 
     @Override
-	public void assertIsSatisfied( Object fixture) {
-        FixtureState state = FixtureState.getFixtureState(fixture);
+	public void assertIsSatisfied(Object fixture) {
+        FixtureState state = FixtureState.getFixtureState(fixture.getClass());
         state.assertIsSatisfied(this, failFastException);
     }
     
     @Override
     public ResultSummary getMeaningfulResultSummary(Object fixture) {
-        FixtureState state = FixtureState.getFixtureState(fixture);
+        FixtureState state = FixtureState.getFixtureState(fixture.getClass());
     	return state.getMeaningfulResultSummary(this, failFastException);
     }
 
@@ -136,7 +136,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         	builder.append(getExceptionCount());
         }
 
-        builder.append(FixtureState.getFixtureState(fixture).printNoteToString());
+        builder.append(FixtureState.getFixtureState(fixture.getClass()).printNoteToString());
 
         return builder.toString();
     }

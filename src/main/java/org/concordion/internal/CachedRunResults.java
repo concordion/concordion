@@ -16,7 +16,7 @@ import org.concordion.api.ResultSummary;
 public enum CachedRunResults {
     SINGLETON;
 
-	Map<Class<?>, CachedRunSummary> map = new ConcurrentHashMap<Class<?>, CachedRunSummary>();
+	Map<Class<?>, ConcordionRunOutput> map = new ConcurrentHashMap<Class<?>, ConcordionRunOutput>();
 
     /**
      *
@@ -36,37 +36,37 @@ public enum CachedRunResults {
      */
 
 
-    public synchronized  ResultSummary getFromCache(Class<?> testClass) {
-        CachedRunSummary summary = map.get(testClass);
+    public synchronized  ConcordionRunOutput getFromCache(Class<?> testClass) {
+        ConcordionRunOutput summary = map.get(testClass);
 
         // check for nothing in cache
         if (summary == null) {
             return null;
         }
 
-        return summary.getResultSummary();
+        return summary;
     }
 
-    /**
-     *
-     * Provides a direct method to put a result summary in the class. Generally should be used if a test is being
-     * invoked but it's not a Concordion test (ie: concorion:run is being called on a regular junit test)
-     *
-     * @param testClass the class to enter into the cache
-     * @param summary the summary to enter into the cache
-     */
-    public synchronized void enterIntoCache(Class<?> testClass, ResultSummary summary) {
-
-        CachedRunSummary runSummary = map.get(testClass);
-
-        // check for nothing in cache
-        if (runSummary == null) {
-            runSummary = new CachedRunSummary(testClass);
-            map.put(testClass, runSummary);
-        }
-
-        runSummary.setResultSummary(summary);
-    }
+//    /**
+//     *
+//     * Provides a direct method to put a result summary in the class. Generally should be used if a test is being
+//     * invoked but it's not a Concordion test (ie: concorion:run is being called on a regular junit test)
+//     *
+//     * @param testClass the class to enter into the cache
+//     * @param summary the summary to enter into the cache
+//     */
+//    public synchronized void enterIntoCache(Class<?> testClass, ResultSummary summary) {
+//
+//        ConcordionRunOutput runSummary = map.get(testClass);
+//
+//        // check for nothing in cache
+//        if (runSummary == null) {
+//            runSummary = new ConcordionRunOutput(testClass);
+//            map.put(testClass, runSummary);
+//        }
+//
+//        runSummary.setActualResultSummary(summary);
+//    }
 
 
     /**
@@ -76,63 +76,51 @@ public enum CachedRunResults {
      * @param fixtureClass the class to retrieve
      * @return the result summary from the cache
      */
-    public synchronized ResultSummary startRun(Class<? extends Object> fixtureClass) {
+    public synchronized ConcordionRunOutput startRun(Class<? extends Object> fixtureClass) {
 
         // check to see if there is a result in the cache
-        CachedRunSummary runSummary = map.get(fixtureClass);
+        ConcordionRunOutput runSummary = map.get(fixtureClass);
         if (runSummary != null) {
-            return runSummary.getResultSummary();
+            return runSummary;
         }
 
         // no cached result, so update the cache - that means we can detect circular dependencies
-        runSummary = new CachedRunSummary(fixtureClass);
+        runSummary = new ConcordionRunOutput(fixtureClass);
         map.put(fixtureClass, runSummary);
         return null;
     }
 
     /**
      * Updates the cache with the results of a run
-     *
-     * @param fixtureClass the class to update
-     * @param resultSummary the results
+     *  @param fixtureClass the class to update
+     * @param actualSummary the actual summary returned
+     * @param convertedSummary the summary converted by any annotations
      */
-    public synchronized void finishRun(Class<?> fixtureClass, ResultSummary resultSummary) {
+    public synchronized void finishRun(Class<?> fixtureClass,
+                                       ResultSummary actualSummary,
+                                       ResultSummary convertedSummary) {
         // check if there is already a result
-        CachedRunSummary runSummary = map.get(fixtureClass);
+        ConcordionRunOutput runSummary = map.get(fixtureClass);
         if (runSummary == null) {
             // no result? Create one. This should never happen because startRun should always be called before
             // finishRun
-            runSummary = new CachedRunSummary(fixtureClass);
+            runSummary = new ConcordionRunOutput(fixtureClass);
         }
 
         // update the cache
-        runSummary.setResultSummary(resultSummary);
+        runSummary.setActualResultSummary(actualSummary);
+        runSummary.setPostProcessedResultSummary(convertedSummary);
         map.put(fixtureClass, runSummary);
 	}
 
-    public ResultSummary convertForCache(ResultSummary rs, Object fixture) {
-        FixtureState state = FixtureState.getFixtureState(fixture);
+    public ResultSummary convertForCache(ResultSummary rs, Class<?> fixtureClass) {
+        FixtureState state = FixtureState.getFixtureState(fixtureClass);
         return state.convertForCache(rs);
     }
-}
 
-/**
- * Data to store in the cache
- */
-class CachedRunSummary {
-    private ResultSummary resultSummary;
-    public CachedRunSummary(Class<?> fixtureClass) {
-        SingleResultSummary singleResultSummary = new CacheResultSummary(Result.IGNORED,
-                "No current results for fixture " + fixtureClass.getName() + " as the specification is currently being executed");
-        this.resultSummary = singleResultSummary;
-    }
-
-    public ResultSummary getResultSummary() {
-        return resultSummary;
-    }
-
-    public void setResultSummary(ResultSummary resultSummary) {
-        this.resultSummary = resultSummary;
+    public void failRun(Class<? extends Object> aClass) {
+        // run failed. Remove our placeholder value.
+        map.remove(aClass);
     }
 }
 
