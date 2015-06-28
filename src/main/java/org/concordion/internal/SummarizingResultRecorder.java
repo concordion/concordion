@@ -156,4 +156,8 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     public void setSpecificationDescription( String specificationDescription) {
         this.specificationDescription = specificationDescription;
     }
+
+    public String getSpecificationDescription() {
+        return specificationDescription;
+    }
 }
