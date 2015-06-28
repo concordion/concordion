@@ -74,6 +74,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private static final String PROPERTY_EXTENSIONS = "concordion.extensions";
     private static final String EMBEDDED_STYLESHEET_RESOURCE = "/org/concordion/internal/resource/embedded.css";
     
+    private static File baseOutputDir;
     private SpecificationLocator specificationLocator = new ClassNameBasedSpecificationLocator();
     private Source source = new ClassPathSource();
     private Target target = null;
@@ -90,7 +91,6 @@ public class ConcordionBuilder implements ConcordionExtender {
     private RunCommand runCommand = new RunCommand();
     private VerifyRowsCommand verifyRowsCommand = new VerifyRowsCommand();
     private EchoCommand echoCommand = new EchoCommand();
-    private File baseOutputDir;
     private ThrowableCaughtPublisher throwableListenerPublisher = new ThrowableCaughtPublisher();
     private LinkedHashMap<String, Resource> resourceToCopyMap = new LinkedHashMap<String, Resource>();
     private List<SpecificationProcessingListener> specificationProcessingListeners = new ArrayList<SpecificationProcessingListener>();
@@ -353,15 +353,16 @@ public class ConcordionBuilder implements ConcordionExtender {
         extension.addTo(this);
     }
 
-    private File getBaseOutputDir() {
-        if (baseOutputDir != null) {
-            return baseOutputDir;
+    public static File getBaseOutputDir() {
+        if (baseOutputDir == null) {
+            String outputPath = System.getProperty(PROPERTY_OUTPUT_DIR);
+            if (outputPath != null) {
+                baseOutputDir = new File(outputPath);
+            } else {
+                baseOutputDir = new File(System.getProperty("java.io.tmpdir"), "concordion");
+            } 
         }
-        String outputPath = System.getProperty(PROPERTY_OUTPUT_DIR);
-        if (outputPath == null) {
-            return new File(System.getProperty("java.io.tmpdir"), "concordion");
-        }
-        return new File(outputPath);
+        return baseOutputDir;
     }
 
     public ConcordionBuilder withFailFast(Class<? extends Throwable>[] failFastExceptions) {

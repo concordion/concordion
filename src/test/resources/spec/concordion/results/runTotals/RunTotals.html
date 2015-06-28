@@ -8,13 +8,14 @@
     <h1>Run Totals</h1>
 
 	<p>
-	When the concordion:run command is used, concordion adds adds the totals to the existing test.
+	When the concordion:run command is used, Concordion adds the totals to the existing test.
 	</p>
 	
 	<table concordion:execute="#result = simulateRun(#href)">
 		<tr>
 			<th>Description</th>
 			<th concordion:set="#href">Href</th>
+            <th concordion:assertEquals="#result.isOutputGenerated">Output Generated?</th>
 			<th concordion:assertEquals="#result.successCount">Successes</th>
 			<th concordion:assertEquals="#result.failureCount">Failures</th>
 			<th concordion:assertEquals="#result.exceptionCount">Exceptions</th>
@@ -25,6 +26,7 @@
 	  	<tr>
 	  		<td>JUnit 3 test class that has multiple successful tests in it.</td>
 			<td><a href="JUnit3RunTotals.html">JUnit3RunTotals.html</a></td>
+            <td>Yes</td>
 			<td>2</td>
 			<td>0</td>
 			<td>0</td>
@@ -35,6 +37,7 @@
 		<tr>
 			<td>Test a JUnit 4 test class that has multiple successful tests in it</td>
 			<td><a href="JUnit4RunTotals.html">JUnit4RunTotals.html</a></td>
+            <td>Yes</td>
 			<td>2</td>
 			<td>0</td>
 			<td>0</td>
@@ -45,6 +48,7 @@
 		<tr>
 			<td>Test missing HTML</td>
 			<td><a href="NoHtml.html">NoHtml.html</a></td>
+            <td>No</td>
 			<td>0</td>
 			<td>0</td>
 			<td>1</td>
@@ -55,6 +59,7 @@
 		<tr>
 			<td>Test a fixture that returns a mixture of successes, failures, and exceptions</td>
 			<td><a href="MixedSuccessesAndFailures.html">MixedSuccessesAndFailures.html</a></td>
+            <td>Yes</td>
 			<td>3</td>
 			<td>2</td>
 			<td>1</td>
@@ -63,8 +68,9 @@
 		</tr>
 
 	 	<tr>
-	 		<td>Test a test with a jUit "ignore" annotation </td>
+	 		<td>Test a test with a jUnit "ignore" annotation </td>
 			<td><a href="Ignored.html">Ignored.html</a></td>
+            <td>No</td>
 			<td>0</td>
 			<td>0</td>
 			<td>0</td>
@@ -75,6 +81,7 @@
 	 	<tr>
 	 		<td>Test an "unimplemented" test</td>
 			<td><a href="Unimplemented.html">Unimplemented.html</a></td>
+            <td>Yes</td>
 			<td>0</td>
 			<td>0</td>
 			<td>0</td>
@@ -85,6 +92,7 @@
 	 	<tr>
 	 		<td>Test the case where the fixture cannot be found</td>
 	 		<td><a href="MissingFixtureFile.html">MissingFixtureFile.html</a></td>
+            <td>No</td>
 			<td>0</td>
 			<td>0</td>
 			<td>1</td>
@@ -95,6 +103,7 @@
 	 	<tr>
 	 		<td>Test the case where both the fixture and HTML cannot be found</td>
 	 		<td><a href="AllGoneAway.html">AllGoneAway.html</a></td>
+            <td>No</td>
 			<td>0</td>
 			<td>0</td>
 			<td>1</td>
@@ -105,6 +114,7 @@
 		<tr>
 			<td>Test the case where a file does a c:run on other files</td>
 			<td><a href="RunSomeOthers.html">RunSomeOthers.html</a></td>
+            <td>Yes</td>
 			<td>7</td>
 			<td>2</td>
 			<td>3</td>
@@ -115,6 +125,7 @@
 		<tr>
 			<td>Test the case where a file is expected to fail</td>
 			<td><a href="ExpectedToFail.html">ExpectedToFail.html</a></td>
+            <td>Yes</td>
 			<td>0</td>
 			<td>0</td>
 			<td>0</td>
@@ -125,17 +136,13 @@
 		<tr>
 			<td>Test that the JUnit annotations work when performing a concordion:run command</td>
 			<td><a href="Annotations.html">Annotations.html</a></td>
+            <td>Yes</td>
 			<td>4</td>
 			<td>0</td>
 			<td>0</td>
 			<td>0</td>
 			<td>Successes: 4, Failures: 0</td>
 		</tr>
-
-
-
 	</table>
-	
-
 </body>
 </html>
