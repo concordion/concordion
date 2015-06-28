@@ -14,6 +14,7 @@ public class ConcordionRunOutput {
         SingleResultSummary singleResultSummary = new CacheResultSummary(Result.IGNORED,
                 "No current results for fixture " + fixtureClass.getName() + " as the specification is currently being executed");
         this.actualResultSummary = singleResultSummary;
+        this.postProcessedResultSummary = singleResultSummary;
     }
 
     public ResultSummary getActualResultSummary() {
