@@ -5,19 +5,19 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.7'
-        classpath 'com.github.townsfolk:gradle-release:1.2'
+        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
+        classpath 'net.researchgate:gradle-release:2.0.2'
     }
 }
 
 apply plugin: 'java'
 apply plugin: 'java-library-distribution'
-apply plugin: 'nexus'
-apply plugin: 'release'
+apply plugin: 'com.bmuschko.nexus'
+apply plugin: 'net.researchgate.release'
 apply plugin: 'wrapper'
 
 wrapper {
-    gradleVersion = "2.2"
+    gradleVersion = "2.4"
 }
 
 repositories {
@@ -26,10 +26,8 @@ repositories {
 }
 
 dependencies {
-    compile 'junit:junit:4.11',
-            'ognl:ognl:2.6.9',
-            'com.google.guava:guava:17.0',
-            'org.slf4j:slf4j-api:1.7.7'
+    compile 'junit:junit:4.12',
+            'ognl:ognl:2.6.9'
 
     compile ('xom:xom:1.2.5') {
         exclude group: 'xalan', module: 'xalan'
@@ -54,8 +52,8 @@ sourceSets {
     }
 }
 
-compileJava.sourceCompatibility = 1.5
-compileJava.targetCompatibility = 1.5
+sourceCompatibility = 1.5
+targetCompatibility = 1.5
 
 // In order to verify that the build works with JDK5, run this task before compileJava
 task setJava5ClassPath << {
@@ -91,6 +89,10 @@ distributions {
 // 'gradle release' will also upload release to Nexus
 createReleaseTag.dependsOn uploadArchives
 release.dependsOn
+
+extraArchive {
+    tests = true    // create tests jar file and upload
+}
 
 modifyPom {
     project {

@@ -2,6 +2,7 @@ package org.concordion.api.extension;
 
 import org.concordion.api.Command;
 import org.concordion.api.Resource;
+import org.concordion.api.RunStrategy;
 import org.concordion.api.Source;
 import org.concordion.api.SpecificationLocator;
 import org.concordion.api.Target;
@@ -16,6 +17,7 @@ import org.concordion.api.listener.SetListener;
 import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.api.listener.VerifyRowsListener;
+import org.concordion.internal.command.RunCommand;
 
 /**
  * Allows {@link ConcordionExtension}s to add features to Concordion.
@@ -68,14 +70,22 @@ public interface ConcordionExtender {
 
     /**
      * Adds a listener to <code>concordion:run</code> commands.
+<<<<<<< HEAD
      * @param listener the listener
+=======
+     * @param listener  the listener
+>>>>>>> origin/master
      * @return this
      */
     ConcordionExtender withRunListener(RunListener listener);
     
     /**
      * Adds a listener to <code>concordion:verifyRows</code> commands.
+<<<<<<< HEAD
      * @param listener the listener
+=======
+     * @param listener  the listener
+>>>>>>> origin/master
      * @return this
      */
     ConcordionExtender withVerifyRowsListener(VerifyRowsListener listener);
@@ -83,7 +93,11 @@ public interface ConcordionExtender {
     /**
      * Adds a listener that is invoked when an uncaught {@link Throwable} is thrown by a command,
      * including commands that have been added using {@link #withCommand(String, String, Command)}.
+<<<<<<< HEAD
      * @param throwableListener the listener
+=======
+     * @param throwableListener  the listener
+>>>>>>> origin/master
      * @return this
      */
     ConcordionExtender withThrowableListener(ThrowableCaughtListener throwableListener);
@@ -91,7 +105,11 @@ public interface ConcordionExtender {
     /**
      * Adds a listener that is invoked when Concordion parses the specification document, providing 
      * access to the parsed document.
+<<<<<<< HEAD
      * @param listener the listener
+=======
+     * @param listener  the listener
+>>>>>>> origin/master
      * @return this
      */
     ConcordionExtender withDocumentParsingListener(DocumentParsingListener listener);
@@ -114,30 +132,48 @@ public interface ConcordionExtender {
     
     /**
      * Copies a resource to the Concordion output.
+<<<<<<< HEAD
      * @param sourcePath Storage Path
      * @param targetResource Target Resource
+=======
+     * @param sourcePath Path to source
+     * @param targetResource target resource
+>>>>>>> origin/master
      * @return this
      */
     ConcordionExtender withResource(String sourcePath, Resource targetResource);
     
     /**
      * Embeds the given CSS in the Concordion output.
+<<<<<<< HEAD
      * @param css CSS
+=======
+     * @param css The CSS
+>>>>>>> origin/master
      * @return this
      */
     ConcordionExtender withEmbeddedCSS(String css);
     
     /**
      * Copies the given CSS file to the Concordion output folder, and adds a link to the CSS in the &lt;head&gt; section of the Concordion HTML.  
+<<<<<<< HEAD
      * @param cssPath CSS Path
      * @param targetResource Target Resource
+=======
+     * @param cssPath Path to CSS
+     * @param targetResource Target resource
+>>>>>>> origin/master
      * @return this
      */
     ConcordionExtender withLinkedCSS(String cssPath, Resource targetResource);
     
     /**
      * Embeds the given JavaScript in the Concordion output.
+<<<<<<< HEAD
      * @param javaScript javaScript
+=======
+     * @param javaScript JavaScript to embedd
+>>>>>>> origin/master
      * @return this
      */
     ConcordionExtender withEmbeddedJavaScript(String javaScript);
@@ -170,4 +206,11 @@ public interface ConcordionExtender {
      * @return this
      */
     ConcordionExtender withSpecificationLocator(SpecificationLocator locator);
+
+    /**
+     * Sets the strategy for the {@link RunCommand}.
+     * @param runStrategy the new strategy for running the specifications
+     * @return this
+     */
+    ConcordionExtender withRunStrategy(RunStrategy runStrategy);
 }

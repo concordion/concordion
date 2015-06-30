@@ -9,6 +9,7 @@ import org.concordion.api.Evaluator;
 import org.concordion.api.Result;
 import org.concordion.api.ResultRecorder;
 import org.concordion.api.ResultSummary;
+import org.concordion.api.RunStrategy;
 import org.concordion.api.Runner;
 import org.concordion.api.listener.RunFailureEvent;
 import org.concordion.api.listener.RunIgnoreEvent;
@@ -24,12 +25,7 @@ import org.concordion.internal.util.Check;
 public class RunCommand extends AbstractCommand {
 
     private Announcer<RunListener> listeners = Announcer.to(RunListener.class);
-
-    private RunStrategy runStrategy;
-
-    public RunCommand(RunStrategy runStrategy) {
-        this.runStrategy = runStrategy;
-    }
+    private RunStrategy runStrategy = new SequentialRunStrategy();
 
     public void addRunListener(RunListener runListener) {
         listeners.addListener(runListener);
@@ -37,6 +33,10 @@ public class RunCommand extends AbstractCommand {
 
     public void removeRunListener(RunListener runListener) {
         listeners.removeListener(runListener);
+    }
+    
+    public void setRunStrategy(RunStrategy runStrategy) {
+        this.runStrategy = runStrategy;
     }
 
     @Override

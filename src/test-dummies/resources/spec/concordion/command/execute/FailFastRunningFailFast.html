@@ -1,0 +1,18 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<head>
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<title>Fail Fast Running Fail Fast</title>
+</head>
+<body>
+
+    <h1>Fail Fast Running a Fail Fast Test</h1>
+
+    This class does two things:
+    <ol>
+    	<li>Runs a test that is <a href="FailFastException.html" concordion:run="concordion">failing fast</a>.</li>
+    	<li>Asserts some <span concordion:assertEquals="getSuccessString()">Success</span> that should not
+            happen - this test is annotated @FailFast so execution will stop before the assertion.</li>
+    </ol>
+
+</body>
+</html>

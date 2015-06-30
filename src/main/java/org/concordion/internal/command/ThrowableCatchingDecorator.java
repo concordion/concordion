@@ -40,16 +40,23 @@ public class ThrowableCatchingDecorator extends AbstractCommandDecorator {
     protected void process(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Runnable runnable) {
         try {
             runnable.run();
+        } catch (FailFastException ffe) {
+            // We get here if a sub-fixture has thrown an exception and we want the fail fast exception to percolate up.
+            rethrowFailFastException(resultRecorder, ffe.getCause());
         } catch (Throwable t) {
             resultRecorder.record(Result.EXCEPTION);
             announceThrowableCaught(commandCall.getElement(), t, commandCall.getExpression());
-            for (Class<? extends Throwable> exceptionType : failFastExceptions) {
-                if (exceptionType.isAssignableFrom(t.getCause().getClass())) {
-                    FailFastException failFastException = new FailFastException("An exception was thrown", t);
-                    resultRecorder.recordFailFastException(failFastException);
-                    throw failFastException;
-                }
-            }
+            rethrowFailFastException(resultRecorder, t);
         }        
+    }
+
+    private void rethrowFailFastException(ResultRecorder resultRecorder, Throwable t) {
+        for (Class<? extends Throwable> exceptionType : failFastExceptions) {
+            if (exceptionType.isAssignableFrom(t.getCause().getClass())) {
+                FailFastException failFastException = new FailFastException("An exception was thrown in a @FailFast fixture", t);
+                resultRecorder.recordFailFastException(failFastException);
+                throw failFastException;
+            }
+        }
     }
 }

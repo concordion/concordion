@@ -16,6 +16,7 @@ import org.concordion.api.EvaluatorFactory;
 import org.concordion.api.FailFast;
 import org.concordion.api.FullOGNL;
 import org.concordion.api.Resource;
+import org.concordion.api.RunStrategy;
 import org.concordion.api.Source;
 import org.concordion.api.SpecificationLocator;
 import org.concordion.api.SpecificationReader;
@@ -41,10 +42,7 @@ import org.concordion.internal.command.AssertTrueCommand;
 import org.concordion.internal.command.EchoCommand;
 import org.concordion.internal.command.ExecuteCommand;
 import org.concordion.internal.command.LocalTextDecorator;
-import org.concordion.internal.command.ParallelRunStrategy;
 import org.concordion.internal.command.RunCommand;
-import org.concordion.internal.command.RunStrategy;
-import org.concordion.internal.command.SequentialRunStrategy;
 import org.concordion.internal.command.SetCommand;
 import org.concordion.internal.command.SpecificationCommand;
 import org.concordion.internal.command.ThrowableCatchingDecorator;
@@ -74,17 +72,9 @@ public class ConcordionBuilder implements ConcordionExtender {
     public static final String NAMESPACE_CONCORDION_2007 = "http://www.concordion.org/2007/concordion";
     private static final String PROPERTY_OUTPUT_DIR = "concordion.output.dir";
     private static final String PROPERTY_EXTENSIONS = "concordion.extensions";
-    public static final String PROPERTY_RUN_THREAD_COUNT = "concordion.run.threadCount";
     private static final String EMBEDDED_STYLESHEET_RESOURCE = "/org/concordion/internal/resource/embedded.css";
-    private static final String runThreadCount;
-
-    static {
-        runThreadCount = System.getProperty(PROPERTY_RUN_THREAD_COUNT);
-        if (runThreadCount != null) {
-            ParallelRunStrategy.initialise(runThreadCount);
-        }
-    }
     
+    private static File baseOutputDir;
     private SpecificationLocator specificationLocator = new ClassNameBasedSpecificationLocator();
     private Source source = new ClassPathSource();
     private Target target = null;
@@ -98,27 +88,16 @@ public class ConcordionBuilder implements ConcordionExtender {
     private AssertFalseCommand assertFalseCommand = new AssertFalseCommand();
     private ExecuteCommand executeCommand = new ExecuteCommand();
     private SetCommand setCommand = new SetCommand();
-    private RunCommand runCommand;
+    private RunCommand runCommand = new RunCommand();
     private VerifyRowsCommand verifyRowsCommand = new VerifyRowsCommand();
     private EchoCommand echoCommand = new EchoCommand();
-    private File baseOutputDir;
     private ThrowableCaughtPublisher throwableListenerPublisher = new ThrowableCaughtPublisher();
     private LinkedHashMap<String, Resource> resourceToCopyMap = new LinkedHashMap<String, Resource>();
     private List<SpecificationProcessingListener> specificationProcessingListeners = new ArrayList<SpecificationProcessingListener>();
     private List<Class<? extends Throwable>> failFastExceptions = Collections.<Class<? extends Throwable>>emptyList();
     private boolean builtAlready;
-    
+
     {
-        RunStrategy runStrategy;
-        if (runThreadCount == null) {
-            runStrategy = new SequentialRunStrategy();
-        } else {
-            ParallelRunStrategy parallelRunStrategy = new ParallelRunStrategy();
-            specificationCommand.addSpecificationListener(parallelRunStrategy);
-            runStrategy = parallelRunStrategy;
-        }
-        runCommand = new RunCommand(runStrategy);
-        
         withThrowableListener(new ThrowableRenderer());
         
         commandRegistry.register("", "specification", specificationCommand);
@@ -182,6 +161,12 @@ public class ConcordionBuilder implements ConcordionExtender {
     
     public ConcordionBuilder withRunListener(RunListener listener) {
         runCommand.addRunListener(listener);
+        return this;
+    }
+    
+    @Override
+    public ConcordionExtender withRunStrategy(RunStrategy runStrategy) {
+        runCommand.setRunStrategy(runStrategy);
         return this;
     }
 
@@ -368,15 +353,16 @@ public class ConcordionBuilder implements ConcordionExtender {
         extension.addTo(this);
     }
 
-    private File getBaseOutputDir() {
-        if (baseOutputDir != null) {
-            return baseOutputDir;
+    public static File getBaseOutputDir() {
+        if (baseOutputDir == null) {
+            String outputPath = System.getProperty(PROPERTY_OUTPUT_DIR);
+            if (outputPath != null) {
+                baseOutputDir = new File(outputPath);
+            } else {
+                baseOutputDir = new File(System.getProperty("java.io.tmpdir"), "concordion");
+            } 
         }
-        String outputPath = System.getProperty(PROPERTY_OUTPUT_DIR);
-        if (outputPath == null) {
-            return new File(System.getProperty("java.io.tmpdir"), "concordion");
-        }
-        return new File(outputPath);
+        return baseOutputDir;
     }
 
     public ConcordionBuilder withFailFast(Class<? extends Throwable>[] failFastExceptions) {

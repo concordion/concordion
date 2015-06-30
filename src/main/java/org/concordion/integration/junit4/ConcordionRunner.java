@@ -9,13 +9,11 @@ import org.concordion.internal.FailFastException;
 import org.concordion.internal.FixtureRunner;
 import org.concordion.internal.SummarizingResultRecorder;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.runner.Description;
-import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
-import org.junit.runners.ParentRunner;
+import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 
 import java.io.IOException;
@@ -25,32 +23,31 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConcordionRunner extends ParentRunner<String> {
+public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
+    // this sort of thing is so much easier with Java 8!
+    public ConcordionFrameworkMethod.ConcordionRunnerInterface concordionRunnerInterface = new ConcordionFrameworkMethod.ConcordionRunnerInterface() {
+        @Override
+        public void invoke(ConcordionFrameworkMethod concordionFrameworkMethod) {
+            ConcordionRunner.this.invoke(concordionFrameworkMethod);
+        }
+    };
 
     private final Class<?> fixtureClass;
     private final FixtureRunner fixtureRunner;
-    private ResultSummary result;
     private final Concordion concordion;
-    private final List<String> exampleNames;
+    private final List<ConcordionFrameworkMethod> concordionFrameworkMethods;
     private final Object fixture;
     private SummarizingResultRecorder accumulatedResultSummary;
 
-    private FailFastException failFastException = null;
 
+    private FailFastException failFastException = null;
 
     public ConcordionRunner(Class<?> fixtureClass) throws InitializationError {
         super(fixtureClass);
         this.fixtureClass = fixtureClass;
         this.accumulatedResultSummary = new SummarizingResultRecorder();
         accumulatedResultSummary.setSpecificationDescription(Concordion.getDefaultFixtureClassName(fixtureClass));
-
-        // check all instance methods are setup correctly
-        List<Throwable> errors = new ArrayList<Throwable>();
-        validateFixtureClass(errors);
-        if (errors.size() > 0) {
-            throw new InitializationError(errors);
-        }
 
         try {
             fixture = fixtureClass.newInstance();
@@ -64,10 +61,20 @@ public class ConcordionRunner extends ParentRunner<String> {
         concordion = fixtureRunner.getConcordion();
 
         try {
-            exampleNames = concordion.getExampleNames(fixture);
+            List<String> examples = concordion.getExampleNames(fixture);
+            concordionFrameworkMethods = new ArrayList<ConcordionFrameworkMethod>(examples.size());
+            for (String example: examples) {
+                concordionFrameworkMethods.add(new ConcordionFrameworkMethod(concordionRunnerInterface, example));
+            }
         } catch (IOException e) {
             throw new InitializationError(e);
         }
+    }
+
+    // This is important or else jUnit will create lots of different instances of the class under test.
+    @Override
+    protected Object createTest() throws Exception {
+        return fixture;
     }
 
     @Override
@@ -82,28 +89,32 @@ public class ConcordionRunner extends ParentRunner<String> {
     }
 
     @Override
-    protected List<String> getChildren() {
-        return exampleNames;
+    protected List<FrameworkMethod> getChildren() {
+        // downcast from ConcordionFrameworkMethod to FrameworkMethod
+        ArrayList<FrameworkMethod> frameworkMethods = new ArrayList<FrameworkMethod>(concordionFrameworkMethods);
+        return frameworkMethods;
     }
 
     @Override
-    protected Description describeChild(String example) {
-        return Description.createTestDescription(fixtureClass, example);
+    protected Description describeChild(FrameworkMethod frameworkMethod) {
+        ConcordionFrameworkMethod concordionFrameworkMethod = (ConcordionFrameworkMethod) frameworkMethod;
+        return Description.createTestDescription(fixtureClass, concordionFrameworkMethod.getExampleName());
     }
 
     @Override
-    protected void runChild(String example, RunNotifier notifier) {
+    protected void runChild(FrameworkMethod method, RunNotifier notifier) {
+        ((ConcordionFrameworkMethod) method).setNotifier(notifier);
+        super.runChild(method, notifier);
+    }
 
-        Description description = describeChild(example);
+    void invoke(ConcordionFrameworkMethod concordionFrameworkMethod) {
+
+        String example = concordionFrameworkMethod.getExampleName();
 
         // check the fail fast condition
         if (failFastException != null) {
-            notifier.fireTestStarted(description);
-            notifier.fireTestFailure(new Failure(description, failFastException));
-            notifier.fireTestFinished(description);
-            return;
+            throw failFastException;
         }
-
 
         try {
 
@@ -112,7 +123,6 @@ public class ConcordionRunner extends ParentRunner<String> {
             // invoke them here.
 
             invokeMethodsWithAnnotation(fixtureClass, fixture, Before.class);
-            notifier.fireTestStarted(description);
             ResultSummary result = fixtureRunner.run(example);
 
 //            System.err.printf("Accumulated %s into %s\n",
@@ -120,29 +130,21 @@ public class ConcordionRunner extends ParentRunner<String> {
 //                    accumulatedResultSummary.printToString(fixture));
 
             invokeMethodsWithAnnotation(fixtureClass, fixture, After.class);
-//            result.assertIsSatisfied(fixture);
+            result.assertIsSatisfied(fixture);
 
-            accumulatedResultSummary.record(result);
 
         } catch (ConcordionAssertionError e) {
-            notifier.fireTestFailure(new Failure(description, e));
             accumulatedResultSummary.record(e.getResultSummary());
+            throw e;
         } catch (FailFastException e){
-            notifier.fireTestFailure(new Failure(description, e));
             accumulatedResultSummary.record(Result.EXCEPTION);
             failFastException = e;
             throw e;
 
         }catch (Throwable e) {
             // if *anything* goes wrong, we fire a test failure notification.
-
-            notifier.fireTestFailure(new Failure(description, e));
-            accumulatedResultSummary.record(Result.EXCEPTION);
             e.printStackTrace(System.err);
 
-        }  finally {
-            // we fire the finish even in failure cases - so having it in the finally block makes sense.
-            notifier.fireTestFinished(description);
         }
     }
 
@@ -152,14 +154,6 @@ public class ConcordionRunner extends ParentRunner<String> {
             m.invoke(fixture, new Object[] {});
         }
     }
-
-    private void invokeStaticMethodsWithAnnotation(Class<?> fixtureClass, Class<? extends Annotation> annotation) throws InvocationTargetException, IllegalAccessException {
-        List<Method> methods = getMethodsWithAnnotation(fixtureClass, annotation);
-        for (Method m: methods) {
-            m.invoke(null, new Object[] {});
-        }
-    }
-
 
     private static List<Method> getMethodsWithAnnotation( Class<?> type, Class<? extends Annotation> annotation) {
         List<Method> foundMethods = new ArrayList<Method>();
@@ -178,26 +172,9 @@ public class ConcordionRunner extends ParentRunner<String> {
         return foundMethods;
     }
 
-    protected void validateFixtureClass(List<Throwable> errors) {
+    @Override @Deprecated
+    protected void validateInstanceMethods(List<Throwable> errors) {
 
-        validatePresenceOfAConstructorThatTakesNoArguments(errors);
-
-    	validatePublicVoidNoArgMethods(BeforeClass.class, true, errors);
-    	validatePublicVoidNoArgMethods(AfterClass.class, true, errors);
-        validatePublicVoidNoArgMethods(After.class, false, errors);
-        validatePublicVoidNoArgMethods(Before.class, false, errors);
-    }
-
-    private void validatePresenceOfAConstructorThatTakesNoArguments(List<Throwable> errors) {
-        try {
-            fixtureClass.getConstructor(new Class[] {});
-        } catch (NoSuchMethodException e) {
-            errors.add(e);
-        }
-    }
-
-    public ResultSummary getAccumulatedResultSummary() {
-        return accumulatedResultSummary;
     }
 
 }

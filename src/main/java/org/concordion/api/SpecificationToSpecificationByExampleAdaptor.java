@@ -1,6 +1,5 @@
 package org.concordion.api;
 
-import com.google.common.collect.Lists;
 import org.concordion.Concordion;
 
 import java.util.ArrayList;
