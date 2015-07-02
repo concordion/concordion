@@ -12,10 +12,11 @@ public class FixtureRunner {
     private static CachedRunResults cachedRunResults = CachedRunResults.SINGLETON;
     private final Object fixture;
 
-    public FixtureRunner(Object fixture) {
+    public FixtureRunner(Object fixture) throws UnableToBuildConcordionException {
         this.fixture = fixture;
 
-        ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture);
+        ConcordionBuilder concordionBuilder = new ConcordionBuilder()
+                .withFixture(fixture);
         fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
         concordion = concordionBuilder.build();
 
@@ -38,14 +39,12 @@ public class FixtureRunner {
 
         String additionalInformation = null;
     	if (runOutput == null) {
-            ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture);
-            fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
 
             try {
                 if (example != null) {
-                    actualResultSummary = concordion.processExample(fixture, example);
+                    actualResultSummary = concordion.processExample(example);
                 } else {
-                    actualResultSummary = concordion.process(fixture);
+                    actualResultSummary = concordion.process();
                 }
                 // we want to make sure all the annotations are considered when storing the result summary
 

@@ -116,7 +116,6 @@ public class RunCommand extends AbstractCommand {
 
     private ResultAnnouncer newRunResultAnnouncer(final Element element, final String expression) {
         return new ResultAnnouncer() {
-            @Override
             public void announce(ResultSummary result) {
             	if (result.getFailureCount() + result.getExceptionCount() > 0) {
                     listeners.announce().failureReported(new RunFailureEvent(element, result));
@@ -127,7 +126,6 @@ public class RunCommand extends AbstractCommand {
               	}
             }
 
-            @Override
             public void announceException(Throwable throwable) {
                 listeners.announce().throwableCaught(new ThrowableCaughtEvent(throwable, element, expression));
             }

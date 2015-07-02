@@ -36,18 +36,7 @@ import org.concordion.api.listener.SetListener;
 import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.api.listener.VerifyRowsListener;
-import org.concordion.internal.command.AssertEqualsCommand;
-import org.concordion.internal.command.AssertFalseCommand;
-import org.concordion.internal.command.AssertTrueCommand;
-import org.concordion.internal.command.EchoCommand;
-import org.concordion.internal.command.ExecuteCommand;
-import org.concordion.internal.command.LocalTextDecorator;
-import org.concordion.internal.command.RunCommand;
-import org.concordion.internal.command.SetCommand;
-import org.concordion.internal.command.SpecificationCommand;
-import org.concordion.internal.command.ThrowableCatchingDecorator;
-import org.concordion.internal.command.ThrowableCaughtPublisher;
-import org.concordion.internal.command.VerifyRowsCommand;
+import org.concordion.internal.command.*;
 import org.concordion.internal.listener.AssertResultRenderer;
 import org.concordion.internal.listener.BreadcrumbRenderer;
 import org.concordion.internal.listener.DocumentStructureImprover;
@@ -91,11 +80,13 @@ public class ConcordionBuilder implements ConcordionExtender {
     private RunCommand runCommand = new RunCommand();
     private VerifyRowsCommand verifyRowsCommand = new VerifyRowsCommand();
     private EchoCommand echoCommand = new EchoCommand();
+    private ExampleCommand exampleCommand = new ExampleCommand();
     private ThrowableCaughtPublisher throwableListenerPublisher = new ThrowableCaughtPublisher();
     private LinkedHashMap<String, Resource> resourceToCopyMap = new LinkedHashMap<String, Resource>();
     private List<SpecificationProcessingListener> specificationProcessingListeners = new ArrayList<SpecificationProcessingListener>();
     private List<Class<? extends Throwable>> failFastExceptions = Collections.<Class<? extends Throwable>>emptyList();
     private boolean builtAlready;
+    private Object fixture;
 
     {
         withThrowableListener(new ThrowableRenderer());
@@ -164,7 +155,6 @@ public class ConcordionBuilder implements ConcordionExtender {
         return this;
     }
     
-    @Override
     public ConcordionExtender withRunStrategy(RunStrategy runStrategy) {
         runCommand.setRunStrategy(runStrategy);
         return this;
@@ -246,14 +236,15 @@ public class ConcordionBuilder implements ConcordionExtender {
         return this;
     }
     
-    public Concordion build() {
+    public Concordion build() throws UnableToBuildConcordionException {
         Check.isFalse(builtAlready, "ConcordionBuilder currently does not support calling build() twice");
         builtAlready = true;
         
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "run", runCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "execute", executeCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "set", setCommand);
-        
+        withApprovedCommand(NAMESPACE_CONCORDION_2007, "example", exampleCommand);
+
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "assert-equals", assertEqualsCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "assertEquals", assertEqualsCommand);
 
@@ -288,8 +279,12 @@ public class ConcordionBuilder implements ConcordionExtender {
         specificationCommand.setSpecificationDescriber(exporter);
         
         listeners.announce().concordionBuilt(new ConcordionBuildEvent(target));
-        
-        return new Concordion(specificationLocator, specificationReader, evaluatorFactory);
+
+        try {
+            return new Concordion(specificationLocator, specificationReader, evaluatorFactory, fixture);
+        } catch (IOException e) {
+            throw new UnableToBuildConcordionException(e);
+        }
     }
 
     private void addSpecificationListeners() {
@@ -371,6 +366,8 @@ public class ConcordionBuilder implements ConcordionExtender {
     }
 
     public ConcordionBuilder withFixture(Object fixture) {
+        this.fixture = fixture;
+
         if (fixture.getClass().isAnnotationPresent(FailFast.class)) {
             FailFast failFastAnnotation = fixture.getClass().getAnnotation(FailFast.class);
             Class<? extends Throwable>[] failFastExceptions = failFastAnnotation.onExceptionType();

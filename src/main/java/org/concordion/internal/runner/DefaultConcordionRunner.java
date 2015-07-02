@@ -16,9 +16,7 @@ public class DefaultConcordionRunner implements Runner {
 
     private static Logger logger = Logger.getLogger(DefaultConcordionRunner.class.getName());
 
-
-    @Override
-	public ResultSummary execute(Resource resource, String href) throws Exception {
+    public ResultSummary execute(Resource resource, String href) throws Exception {
         Class<?> concordionClass = findTestClass(resource, href);
         return runTestClass(concordionClass);
     }

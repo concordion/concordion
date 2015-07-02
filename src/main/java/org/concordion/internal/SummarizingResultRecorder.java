@@ -25,7 +25,6 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         record(initialSummary);
     }
 
-    @Override
 	public void record( Result result) {
         recordedResults.add(result);
     }
@@ -36,7 +35,6 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
 		}
     }
 
-	@Override
 	public void record( ResultSummary result) {
 		recordMultipleResults(result.getSuccessCount(), Result.SUCCESS);
 		recordMultipleResults(result.getFailureCount(), Result.FAILURE);
@@ -44,25 +42,22 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
 		recordMultipleResults(result.getExceptionCount(), Result.EXCEPTION);
 	}
 
-    @Override @Deprecated
+    @Deprecated
 	public void assertIsSatisfied() {
         assertIsSatisfied(this);
     }
 
-    @Override
 	public void assertIsSatisfied(Object fixture) {
         FixtureState state = FixtureState.getFixtureState(fixture.getClass());
         state.assertIsSatisfied(this, failFastException);
     }
     
-    @Override
     public ResultSummary getMeaningfulResultSummary(Object fixture) {
         FixtureState state = FixtureState.getFixtureState(fixture.getClass());
     	return state.getMeaningfulResultSummary(this, failFastException);
     }
 
 
-    @Override
 	public boolean hasExceptions() {
         return getExceptionCount() > 0;
     }
@@ -77,37 +72,31 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         return count;
     }
 
-    @Override
 	public long getExceptionCount() {
         return getCount(Result.EXCEPTION);
     }
 
-    @Override
 	public long getFailureCount() {
         return getCount(Result.FAILURE);
     }
 
-    @Override
 	public long getSuccessCount() {
         return getCount(Result.SUCCESS);
     }
 
-    @Override
 	public long getIgnoredCount() {
         return getCount(Result.IGNORED);
     }
 
-    @Override @Deprecated
+    @Deprecated
 	public void print( PrintStream out) {
         print(out, this);
     }
 
-    @Override
 	public void print(PrintStream out, Object fixture) {
     	out.print(printToString(fixture));
     }
     
-    @Override
     public String printToString(Object fixture) {
     	StringBuilder builder = new StringBuilder(specificationDescription);
     	builder.append("\n");
@@ -119,7 +108,6 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         return builder.toString();
     }
     	
-    @Override
     public String printCountsToString(Object fixture) {
     	StringBuilder builder = new StringBuilder();
 
@@ -142,7 +130,6 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     }
 
 
-    @Override
     public void recordFailFastException( FailFastException exception) {
         this.setFailFastException(exception);
     }
@@ -155,7 +142,6 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         this.failFastException = exception;
     }
 
-    @Override
     public void setSpecificationDescription( String specificationDescription) {
         this.specificationDescription = specificationDescription;
     }

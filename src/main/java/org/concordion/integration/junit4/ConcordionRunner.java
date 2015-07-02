@@ -4,10 +4,7 @@ import org.concordion.Concordion;
 import org.concordion.api.FailFast;
 import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
-import org.concordion.internal.ConcordionAssertionError;
-import org.concordion.internal.FailFastException;
-import org.concordion.internal.FixtureRunner;
-import org.concordion.internal.SummarizingResultRecorder;
+import org.concordion.internal.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.Description;
@@ -27,7 +24,6 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
     // this sort of thing is so much easier with Java 8!
     public ConcordionFrameworkMethod.ConcordionRunnerInterface concordionRunnerInterface = new ConcordionFrameworkMethod.ConcordionRunnerInterface() {
-        @Override
         public void invoke(ConcordionFrameworkMethod concordionFrameworkMethod) {
             ConcordionRunner.this.invoke(concordionFrameworkMethod);
         }
@@ -57,11 +53,15 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
             throw new InitializationError(e);
         }
 
-        fixtureRunner = new FixtureRunner(fixture);
+        try {
+            fixtureRunner = new FixtureRunner(fixture);
+        } catch (UnableToBuildConcordionException e) {
+            throw new InitializationError(e);
+        }
         concordion = fixtureRunner.getConcordion();
 
         try {
-            List<String> examples = concordion.getExampleNames(fixture);
+            List<String> examples = concordion.getExampleNames();
             concordionFrameworkMethods = new ArrayList<ConcordionFrameworkMethod>(examples.size());
             for (String example: examples) {
                 concordionFrameworkMethods.add(new ConcordionFrameworkMethod(concordionRunnerInterface, example));

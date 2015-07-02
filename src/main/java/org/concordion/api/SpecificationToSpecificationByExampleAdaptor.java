@@ -20,24 +20,20 @@ public class SpecificationToSpecificationByExampleAdaptor implements Specificati
         specification = s;
     }
 
-    @Override
     public void process(Evaluator evaluator, ResultRecorder resultRecorder) {
         specification.process(evaluator, resultRecorder);
     }
 
-    @Override
     public void setFixtureClass(Class<?> fixture) {
         testDescription = Concordion.getDefaultFixtureClassName(fixture);
     }
 
-    @Override
     public void processExample(Evaluator evaluator, String example, ResultRecorder resultRecorder) {
         if (testDescription.equals(example)) {
             specification.process(evaluator, resultRecorder);
         }
     }
 
-    @Override
     public List<String> getExampleNames() {
         ArrayList<String> list = new ArrayList<String>();
         list.add(testDescription);

@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 /**
  * Created by tim on 30/06/15.
  */
-class ConcordionFrameworkMethod extends FrameworkMethod {
+public class ConcordionFrameworkMethod extends FrameworkMethod {
 
     private static final Method CONCORDION_METHOD;
 

@@ -11,20 +11,39 @@ public class Concordion {
     private final SpecificationLocator specificationLocator;
     private final EvaluatorFactory evaluatorFactory;
     private final SpecificationReader specificationReader;
+    private Object fixture;
+    private final Resource resource;
+    private final SpecificationByExample specification;
 
-    public Concordion(SpecificationLocator specificationLocator, SpecificationReader specificationReader, EvaluatorFactory evaluatorFactory) {
+    public Concordion(SpecificationLocator specificationLocator, SpecificationReader specificationReader, EvaluatorFactory evaluatorFactory, Object fixture) throws IOException {
         this.specificationLocator = specificationLocator;
         this.specificationReader = specificationReader;
         this.evaluatorFactory = evaluatorFactory;
+        this.fixture = fixture;
+
+        if (fixture != null) {
+            resource = specificationLocator.locateSpecification(fixture);
+            specification = loadSpecificationFromResource(resource);
+        } else {
+            resource = null;
+            specification = null;
+        }
     }
 
-    public ResultSummary process(Object fixture) throws IOException {
-        return process(specificationLocator.locateSpecification(fixture), fixture);
+    public ResultSummary process() throws IOException {
+        return process(specification, fixture);
+    }
+
+    public ResultSummary process(Resource resource) throws IOException {
+        return process(loadSpecificationFromResource(resource), fixture);
     }
 
     public ResultSummary process(Resource resource, Object fixture) throws IOException {
+        return process(loadSpecificationFromResource(resource), fixture);
+    }
+
+    private ResultSummary process(SpecificationByExample specification, Object fixture) {
 //        try {
-        	Specification specification = loadSpecificationFromResource(resource, fixture);
             SummarizingResultRecorder resultRecorder = new SummarizingResultRecorder();
             resultRecorder.setSpecificationDescription(getDefaultFixtureName(fixture));
             specification.process(evaluatorFactory.createEvaluator(fixture), resultRecorder);
@@ -36,18 +55,13 @@ public class Concordion {
 //       }
     }
 
-    public List<String> getExampleNames(Object fixture) throws IOException {
-        SpecificationByExample specification = loadSpecificationFromFixture(fixture);
+    public List<String> getExampleNames() throws IOException {
         return specification.getExampleNames();
     }
 
-    public ResultSummary processExample(Object fixture, String example) throws IOException {
-        return processExample(specificationLocator.locateSpecification(fixture), fixture, example);
-    }
+    public ResultSummary processExample(String example) throws IOException {
 
-    public ResultSummary processExample(Resource resource, Object fixture, String example) throws IOException {
 //        try {
-        SpecificationByExample specification = loadSpecificationFromResource(resource, fixture);
         SummarizingResultRecorder resultRecorder = new SummarizingResultRecorder();
         resultRecorder.setSpecificationDescription(example);
         specification.processExample(evaluatorFactory.createEvaluator(fixture), example, resultRecorder);
@@ -63,23 +77,21 @@ public class Concordion {
     /**
      * Loads the specification for the specified fixture.
      *
-     * @param fixture the fixture for the spcification
      * @return
      * @throws IOException if the fixture's specification cannot be loaded
      */
-    private SpecificationByExample loadSpecificationFromFixture(Object fixture) throws IOException {
-        return loadSpecificationFromResource(specificationLocator.locateSpecification(fixture), fixture);
+    private SpecificationByExample loadSpecificationFromFixture() throws IOException {
+        return loadSpecificationFromResource(resource);
     }
 
     /**
      * Loads the specification for the specified fixture.
      *
      * @param resource the resource to load
-     * @param fixture the fixture object to use for loading
      * @return a SpecificationByExample object to use
      * @throws IOException if the resource cannot be loaded
      */
-    private SpecificationByExample loadSpecificationFromResource(Resource resource, Object fixture) throws IOException {
+    private SpecificationByExample loadSpecificationFromResource(Resource resource) throws IOException {
         Specification specification= specificationReader.readSpecification(resource);
 
         SpecificationByExample specificationByExample;
