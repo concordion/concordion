@@ -11,11 +11,11 @@
         An <code>execute</code> command lets you run a method in the
         Java fixture code.
     </p>        
-    
+
     <div class="example">
 
         <h3>Example - no argument</h3>
-        
+
         <p>The following instrumentation:</p>
 <pre class="html" concordion:set="#fragment">
 &lt;p concordion:execute="myMethod()"&gt;Some text goes here.&lt;/p&gt;
@@ -23,9 +23,9 @@
         <p>
             <span concordion:assertEquals="myMethodWasCalledProcessing(#fragment) ? 'Will' : 'Will not'">Will</span>
             call <code>myMethod()</code> in the Java fixture code.
-        </p> 
-        
-    </div>            
+        </p>
+
+    </div>
 
    <div class="example">
 
@@ -46,7 +46,7 @@
    <div class="example">
 
         <h3>Example - map as argument</h3>
-        
+
         <p>The following instrumentation:</p>
 <pre class="html" concordion:set="#fragment">
 &lt;p concordion:execute="myMethod(#{'arg':'value', 'arg2': 'value2'})"&gt;Some text goes here.&lt;/p&gt;
@@ -54,14 +54,14 @@
         <p>
             <span concordion:assertEquals="myMethodWasCalledProcessing(#fragment) ? 'Will' : 'Will not'">Will</span>
             call <code>myMethod(#{ 'arg': 'value', 'arg2': 'value2'})</code> in the Java fixture code with argument <span concordion:assertEquals="getArgument()">{(arg:value)(arg2:value2)}</span>.
-        </p> 
-        
-    </div>            
+        </p>
+
+    </div>
 
 <div class="example">
 
         <h3>Example - list as argument</h3>
-        
+
         <p>The following instrumentation:</p>
 <pre class="html" concordion:set="#fragment">
 &lt;p concordion:execute="myMethod({'arg', 'value','arg2','value2'})"&gt;Some text goes here.&lt;/p&gt;
@@ -69,15 +69,15 @@
         <p>
             <span concordion:assertEquals="myMethodWasCalledProcessing(#fragment) ? 'Will' : 'Will not'">Will</span>
             call <code>myMethod({'arg', 'value','arg2','value2'})</code> in the Java fixture code with argument <span concordion:assertEquals="getArgument()">[(arg)(value)(arg2)(value2)]</span>.
-        </p> 
-        
-    </div>     
+        </p>
+
+    </div>
 
     <h2>Further Details</h2>
 
     <ul>
         <li><a concordion:run="concordion" href="ExecutingTables.html">Special handling of "execute" on a &lt;table&gt; element</a></li>
-        <li><a concordion:run="concordion" href="ExecutingList.html">Special handling of &quot;execute&quot; on list 
+        <li><a concordion:run="concordion" href="ExecutingList.html">Special handling of &quot;execute&quot; on list
         elements (&lt;ol&gt;, &lt;ul&gt;)</a></li>
         <li><a concordion:run="concordion" href="AccessToLinkHref.html">Is it possible to access to linked test data (e.g. a CSV file)?</a></li>
     </ul>

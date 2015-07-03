@@ -1,58 +1,22 @@
 package org.concordion.internal;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map.Entry;
-
 import org.concordion.Concordion;
-import org.concordion.api.Command;
-import org.concordion.api.EvaluatorFactory;
-import org.concordion.api.FailFast;
-import org.concordion.api.FullOGNL;
-import org.concordion.api.Resource;
-import org.concordion.api.RunStrategy;
-import org.concordion.api.Source;
-import org.concordion.api.SpecificationLocator;
-import org.concordion.api.SpecificationReader;
-import org.concordion.api.Target;
+import org.concordion.api.*;
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.api.extension.ConcordionExtensionFactory;
-import org.concordion.api.listener.AssertEqualsListener;
-import org.concordion.api.listener.AssertFalseListener;
-import org.concordion.api.listener.AssertTrueListener;
-import org.concordion.api.listener.ConcordionBuildEvent;
-import org.concordion.api.listener.ConcordionBuildListener;
-import org.concordion.api.listener.DocumentParsingListener;
-import org.concordion.api.listener.ExecuteListener;
-import org.concordion.api.listener.RunListener;
-import org.concordion.api.listener.SetListener;
-import org.concordion.api.listener.SpecificationProcessingListener;
-import org.concordion.api.listener.ThrowableCaughtListener;
-import org.concordion.api.listener.VerifyRowsListener;
+import org.concordion.api.listener.*;
 import org.concordion.internal.command.*;
-import org.concordion.internal.listener.AssertResultRenderer;
-import org.concordion.internal.listener.BreadcrumbRenderer;
-import org.concordion.internal.listener.DocumentStructureImprover;
-import org.concordion.internal.listener.JavaScriptEmbedder;
-import org.concordion.internal.listener.JavaScriptLinker;
-import org.concordion.internal.listener.MetadataCreator;
-import org.concordion.internal.listener.PageFooterRenderer;
-import org.concordion.internal.listener.RunResultRenderer;
-import org.concordion.internal.listener.SpecificationExporter;
-import org.concordion.internal.listener.StylesheetEmbedder;
-import org.concordion.internal.listener.StylesheetLinker;
-import org.concordion.internal.listener.ThrowableRenderer;
-import org.concordion.internal.listener.VerifyRowsResultRenderer;
+import org.concordion.internal.listener.*;
 import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 import org.concordion.internal.util.IOUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class ConcordionBuilder implements ConcordionExtender {
 
@@ -199,7 +163,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         Check.notNull(command, "Command is null");
         Check.isFalse(namespaceURI.contains("concordion.org"),
                 "The namespace URI for user-contributed command '" + commandName + "' "
-              + "must not contain 'concordion.org'. Use your own domain name instead.");
+                        + "must not contain 'concordion.org'. Use your own domain name instead.");
         return withApprovedCommand(namespaceURI, commandName, command);
     }
     
@@ -367,6 +331,13 @@ public class ConcordionBuilder implements ConcordionExtender {
 
     public ConcordionBuilder withFixture(Object fixture) {
         this.fixture = fixture;
+        return withFixtureForAnnotationsOnly(fixture);
+    }
+
+    public ConcordionBuilder withFixtureForAnnotationsOnly(Object fixture) {
+        if (fixture == null) {
+            return this;
+        }
 
         if (fixture.getClass().isAnnotationPresent(FailFast.class)) {
             FailFast failFastAnnotation = fixture.getClass().getAnnotation(FailFast.class);

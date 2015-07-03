@@ -1,10 +1,10 @@
 package org.concordion;
 
-import java.io.IOException;
-import java.util.List;
-
 import org.concordion.api.*;
 import org.concordion.internal.SummarizingResultRecorder;
+
+import java.io.IOException;
+import java.util.List;
 
 public class Concordion {
 
