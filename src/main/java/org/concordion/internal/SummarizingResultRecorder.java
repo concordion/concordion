@@ -15,7 +15,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     private List<Result> recordedResults = new ArrayList<Result>();
     private FailFastException failFastException;
     private String specificationDescription = "";
-    boolean forExample;
+    boolean forExample = false;
 
     public SummarizingResultRecorder() {
         this(null);
@@ -128,7 +128,9 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         	builder.append(getExceptionCount());
         }
 
-        builder.append(FixtureState.getFixtureState(fixture.getClass()).printNoteToString());
+        if (fixture != null) {
+            builder.append(FixtureState.getFixtureState(fixture.getClass()).printNoteToString());
+        }
 
         return builder.toString();
     }
@@ -159,6 +161,10 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     }
 
     public boolean isForExample() {
-        return isForExample();
+        return forExample;
+    }
+
+    public long getTotalCount() {
+        return getSuccessCount() + getFailureCount() + getExceptionCount() + getIgnoredCount();
     }
 }

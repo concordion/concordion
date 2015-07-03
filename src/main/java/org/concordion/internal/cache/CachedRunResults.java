@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.concordion.Concordion;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.FixtureState;
+import org.concordion.internal.SingleResultSummary;
 import org.concordion.internal.SummarizingResultRecorder;
 import org.concordion.internal.cache.CacheKey;
 import org.concordion.internal.cache.ConcordionRunOutput;
@@ -124,12 +125,20 @@ public enum CachedRunResults {
         // and now accumulate
         SummarizingResultRecorder totalActualResults = new SummarizingResultRecorder(specificationDescription);
         totalActualResults.record(output.getActualResultSummary());
-        totalActualResults.record(actualSummary);
+        if (actualSummary.isForExample()) {
+            totalActualResults.record(new SingleResultSummary(actualSummary));
+        } else {
+            totalActualResults.record(actualSummary);
+        }
         output.setActualResultSummary(totalActualResults);
 
         SummarizingResultRecorder totalConvertedResults = new SummarizingResultRecorder(specificationDescription);
         totalConvertedResults.record(output.getPostProcessedResultSummary());
-        totalConvertedResults.record(convertedSummary);
+        if (convertedSummary.isForExample()) {
+            totalConvertedResults.record(new SingleResultSummary(convertedSummary));
+        } else {
+            totalConvertedResults.record(convertedSummary);
+        }
         output.setPostProcessedResultSummary(totalConvertedResults);
 
     }

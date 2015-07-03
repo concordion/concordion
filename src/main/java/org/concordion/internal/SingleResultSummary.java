@@ -16,6 +16,29 @@ public class SingleResultSummary extends SummarizingResultRecorder {
         this.result = result;
     }
 
+    public SingleResultSummary(ResultSummary resultSummary) {
+        // exceptions always override
+        if (resultSummary.getExceptionCount() > 0) {
+            result = Result.EXCEPTION;
+        } else if (resultSummary.getFailureCount() > 0) {
+            // a single failure makes the whole thing fail
+
+            result = Result.FAILURE;
+        } else if (resultSummary.getSuccessCount() > 0) {
+            // check success count before ignore count - as if there is a single successfull test
+            // then the result summary is not completly ignored.
+
+            result = Result.SUCCESS;
+        } else if (resultSummary.getIgnoredCount() > 0) {
+            result = Result.IGNORED;
+        } else {
+
+            // result summary has no tests in it.
+            result = Result.SUCCESS;
+        }
+        record(result);
+    }
+
     @Override
     public ResultSummary getMeaningfulResultSummary(Object fixture) {
         return super.getMeaningfulResultSummary(fixture);

@@ -11,7 +11,7 @@ public class ConcordionAssertionError extends AssertionError {
 	public ConcordionAssertionError(String description, ResultSummary rs) {
 		super(description);
 		this.rs= rs;
-		this.setStackTrace(new StackTraceElement[] {});
+//		this.setStackTrace(new StackTraceElement[] {});
 	}
 
 	public ResultSummary getResultSummary() {

@@ -15,19 +15,45 @@ public class XMLSpecification implements SpecificationByExample {
 
     private final CommandCall rootCommandNode;
     private final List<CommandCall> examples;
+    private final List<CommandCall> beforeExamples;
     private Class<?> fixtureClass;
 
     public XMLSpecification(CommandCall rootCommandNode) {
         this.rootCommandNode = rootCommandNode;
-        examples = findExamples(rootCommandNode);
+        examples = new ArrayList<CommandCall>();
+        beforeExamples = new ArrayList<CommandCall>();
+
+        List<CommandCall> allExamples = findExamples(rootCommandNode);
+
+        for (CommandCall call: allExamples) {
+            if (call.getExpression().equalsIgnoreCase("before")) {
+                beforeExamples.add(call);
+            } else {
+                examples.add(call);
+            }
+        }
+
     }
 
     public void processNode(CommandCall node, Evaluator evaluator, ResultRecorder resultRecorder) {
+
+        for (CommandCall before: beforeExamples) {
+            SummarizingResultRecorder beforeResultRecorder = new SummarizingResultRecorder();
+            before.getCommand().executeAsExample(before, evaluator, beforeResultRecorder);
+            if (beforeResultRecorder.getTotalCount() > 0) {
+                beforeResultRecorder.setSpecificationDescription("Running before for example " + node.getExpression());
+                String errorText = String.format("Before example performed tests in %s %s",
+                        testDescription,
+                        beforeResultRecorder.printToString(null)
+                );
+
+                throw new ConcordionAssertionError(errorText, beforeResultRecorder);
+            }
+        }
+
         if (node.getCommand().isExample()) {
-            resultRecorder.setForExample(true);
             node.getCommand().executeAsExample(node, evaluator, resultRecorder);
         } else {
-            resultRecorder.setForExample(false);
             node.execute(evaluator, resultRecorder);
         }
     }
@@ -49,6 +75,7 @@ public class XMLSpecification implements SpecificationByExample {
 
         for (CommandCall commandCall: examples) {
             if (makeJunitTestName(commandCall, fixtureClass).equals(example)) {
+                resultRecorder.setForExample(true);
                 processNode(commandCall, evaluator, resultRecorder);
             }
         }
@@ -62,6 +89,7 @@ public class XMLSpecification implements SpecificationByExample {
             commands.add(makeJunitTestName(exampleCall, fixtureClass));
         }
 
+        // we have to run the spec as a whole to ensure the HTML file is written.
         commands.add(testDescription);
 
         return commands;
