@@ -23,7 +23,7 @@ public class SpecificationCommand extends AbstractCommand {
     public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
         
         if (specificationDescriber != null) {
-            resultRecorder.setSpecificationDescription(specificationDescriber.getDescription(commandCall.getResource()));
+            resultRecorder.setSpecificationDescription(specificationDescriber.getDescription(commandCall.getResource(), ""));
         }
         
         announceBeforeProcessingEvent(commandCall.getResource(), commandCall.getElement());

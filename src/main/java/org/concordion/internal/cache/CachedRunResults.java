@@ -3,6 +3,7 @@ package org.concordion.internal.cache;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.concordion.Concordion;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.FixtureState;
 import org.concordion.internal.SummarizingResultRecorder;
@@ -35,10 +36,9 @@ public enum CachedRunResults {
      * Provides a direct method to access the cache
      *
      * @param testClass class to retrieve from the cache
+     * @param example the example to get from the cache
      * @return can return null if not in the cache
      */
-
-
     public synchronized  ConcordionRunOutput getFromCache(Class<?> testClass, String example) {
         ConcordionRunOutput summary = map.get(getID(testClass, example));
 
@@ -108,23 +108,26 @@ public enum CachedRunResults {
         runSummary.setActualResultSummary(actualSummary);
         runSummary.setPostProcessedResultSummary(convertedSummary);
 
+        String specificationDescription = Concordion.getDefaultFixtureClassName(fixtureClass);
+
+
         // now accumulate into the parent
         ConcordionRunOutput output = map.get(getID(fixtureClass, null));
         if (output == null) {
             output = new ConcordionRunOutput(fixtureClass);
             map.put(getID(fixtureClass, null), output);
             // give them empty result summaries by default
-            output.setActualResultSummary(new SummarizingResultRecorder());
-            output.setPostProcessedResultSummary(new SummarizingResultRecorder());
+            output.setActualResultSummary(new SummarizingResultRecorder(specificationDescription));
+            output.setPostProcessedResultSummary(new SummarizingResultRecorder(specificationDescription));
         }
 
         // and now accumulate
-        SummarizingResultRecorder totalActualResults = new SummarizingResultRecorder();
+        SummarizingResultRecorder totalActualResults = new SummarizingResultRecorder(specificationDescription);
         totalActualResults.record(output.getActualResultSummary());
         totalActualResults.record(actualSummary);
         output.setActualResultSummary(totalActualResults);
 
-        SummarizingResultRecorder totalConvertedResults = new SummarizingResultRecorder();
+        SummarizingResultRecorder totalConvertedResults = new SummarizingResultRecorder(specificationDescription);
         totalConvertedResults.record(output.getPostProcessedResultSummary());
         totalConvertedResults.record(convertedSummary);
         output.setPostProcessedResultSummary(totalConvertedResults);

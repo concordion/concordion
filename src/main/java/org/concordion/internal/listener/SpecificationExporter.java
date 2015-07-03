@@ -29,9 +29,12 @@ public class SpecificationExporter implements SpecificationProcessingListener, S
         // No action required
     }
 
-    @Override
     public String getDescription(Resource resource) {
         return target.resolvedPathFor(resource);
     }
-    
+
+    public String getDescription(Resource resource, String exampleName) {
+        return String.format("%s#%s", getDescription(resource), exampleName);
+    }
+
 }

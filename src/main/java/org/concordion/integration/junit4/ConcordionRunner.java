@@ -5,6 +5,8 @@ import org.concordion.api.FailFast;
 import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.*;
+import org.concordion.internal.cache.CachedRunResults;
+import org.concordion.internal.cache.ConcordionRunOutput;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.Description;
@@ -69,6 +71,8 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         } catch (IOException e) {
             throw new InitializationError(e);
         }
+
+
     }
 
     // This is important or else jUnit will create lots of different instances of the class under test.
@@ -80,6 +84,16 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
     @Override
     public void run(RunNotifier notifier) {
         super.run(notifier);
+
+        ConcordionRunOutput results = CachedRunResults.SINGLETON.getFromCache(fixtureClass, null);
+        if (results != null) {
+            // we only print meta-results when the spec has multiple examples.
+            if (concordionFrameworkMethods.size() > 1) {
+                synchronized (System.out) {
+                    results.getActualResultSummary().print(System.out, fixture);
+                }
+            }
+        }
 
         if (failFastException != null) {
             if (fixtureClass.getAnnotation(FailFast.class) != null) {

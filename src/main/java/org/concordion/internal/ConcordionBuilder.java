@@ -241,6 +241,8 @@ public class ConcordionBuilder implements ConcordionExtender {
         SpecificationExporter exporter = new SpecificationExporter(target);
         specificationCommand.addSpecificationListener(exporter);
         specificationCommand.setSpecificationDescriber(exporter);
+
+        exampleCommand.setSpecificationDescriber(exporter);
         
         listeners.announce().concordionBuilt(new ConcordionBuildEvent(target));
 

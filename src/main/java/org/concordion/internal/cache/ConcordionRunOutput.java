@@ -34,4 +34,5 @@ public class ConcordionRunOutput {
     public void setPostProcessedResultSummary(ResultSummary postProcessedResultSummary) {
         this.postProcessedResultSummary = postProcessedResultSummary;
     }
+
 }

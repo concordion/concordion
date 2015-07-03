@@ -112,6 +112,29 @@ public class Concordion {
     }
 
     public static String getDefaultFixtureClassName(Class<?> fixtureClass) {
-        return ("[Concordion Specification for '" + fixtureClass.getSimpleName()).replaceAll("Test$", "']"); // Based on suggestion by Danny Guerrier
+
+        String name = cleanFixtureName(fixtureClass);
+
+        return formatName(name); // Based on suggestion by Danny Guerrier
     }
+
+
+    public static String getDefaultFixtureClassName(Class<?> fixtureClass , String example) {
+
+        String name = cleanFixtureName(fixtureClass);
+
+        return formatName(String.format("%s#%s", name, example));
+    }
+
+    private static String cleanFixtureName(Class<?> fixtureClass) {
+        String name = fixtureClass.getSimpleName();
+        name = name.replaceAll("Test$", "");
+        name = name.replaceAll("Fixture$", "");
+        return name;
+    }
+
+    private static String formatName(String name) {
+        return String.format("[Concordion Specification for '%s']", name);
+    }
+
 }

@@ -234,13 +234,8 @@ public final class Element {
      * Returns the first child Element with the specified "id" attribute, or null,
      * if no matching element is found.
      *
-<<<<<<< HEAD
      * @param id the id of the element to get
      * @return the element - or null if not found
-=======
-     * @param id the id of the element to find
-     * @return Element
->>>>>>> origin/master
      */
     public Element getElementById(String id) {
         String query = ".//*[@id='" + id + "']";

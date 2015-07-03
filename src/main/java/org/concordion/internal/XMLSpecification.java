@@ -1,12 +1,12 @@
 package org.concordion.internal;
 
 import org.concordion.Concordion;
-import org.concordion.api.*;
-import org.concordion.internal.command.ExampleCommand;
-import org.concordion.internal.command.ThrowableCatchingDecorator;
+import org.concordion.api.CommandCall;
+import org.concordion.api.Evaluator;
+import org.concordion.api.ResultRecorder;
+import org.concordion.api.SpecificationByExample;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class XMLSpecification implements SpecificationByExample {
@@ -15,6 +15,7 @@ public class XMLSpecification implements SpecificationByExample {
 
     private final CommandCall rootCommandNode;
     private final List<CommandCall> examples;
+    private Class<?> fixtureClass;
 
     public XMLSpecification(CommandCall rootCommandNode) {
         this.rootCommandNode = rootCommandNode;
@@ -23,8 +24,10 @@ public class XMLSpecification implements SpecificationByExample {
 
     public void processNode(CommandCall node, Evaluator evaluator, ResultRecorder resultRecorder) {
         if (node.getCommand().isExample()) {
+            resultRecorder.setForExample(true);
             node.getCommand().executeAsExample(node, evaluator, resultRecorder);
         } else {
+            resultRecorder.setForExample(false);
             node.execute(evaluator, resultRecorder);
         }
     }
@@ -34,6 +37,7 @@ public class XMLSpecification implements SpecificationByExample {
     }
 
     public void setFixtureClass(Class<?> fixture) {
+        fixtureClass = fixture;
         testDescription = Concordion.getDefaultFixtureClassName(fixture);
     }
 
@@ -44,7 +48,7 @@ public class XMLSpecification implements SpecificationByExample {
         }
 
         for (CommandCall commandCall: examples) {
-            if (commandCall.getExpression().equals(example)) {
+            if (makeJunitTestName(commandCall, fixtureClass).equals(example)) {
                 processNode(commandCall, evaluator, resultRecorder);
             }
         }
@@ -55,12 +59,16 @@ public class XMLSpecification implements SpecificationByExample {
         List<String> commands = new ArrayList<String>();
 
         for (CommandCall exampleCall: examples) {
-            commands.add(exampleCall.getExpression());
+            commands.add(makeJunitTestName(exampleCall, fixtureClass));
         }
 
         commands.add(testDescription);
 
         return commands;
+    }
+
+    private String makeJunitTestName(CommandCall exampleCall, Class<?> fixtureClass) {
+        return Concordion.getDefaultFixtureClassName(fixtureClass, exampleCall.getExpression());
     }
 
     private List<CommandCall> findExamples(CommandCall node) {

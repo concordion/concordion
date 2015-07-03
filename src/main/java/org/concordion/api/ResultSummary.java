@@ -37,4 +37,6 @@ public interface ResultSummary {
     String printCountsToString(Object fixture);
 
     String getSpecificationDescription();
+
+    boolean isForExample();
 }

@@ -62,7 +62,7 @@ public class FixtureRunner {
             }
 
         } else {
-            additionalInformation = "From cache: ";
+            additionalInformation = "\nFrom cache: ";
         }
 
         printResultSummary(fixture, actualResultSummary, additionalInformation);

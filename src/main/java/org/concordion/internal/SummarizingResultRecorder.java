@@ -15,17 +15,18 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     private List<Result> recordedResults = new ArrayList<Result>();
     private FailFastException failFastException;
     private String specificationDescription = "";
+    boolean forExample;
 
     public SummarizingResultRecorder() {
-
+        this(null);
     }
 
-    public SummarizingResultRecorder(ResultSummary initialSummary) {
-        this();
-        record(initialSummary);
+    public SummarizingResultRecorder(String specificationDescription) {
+        this.specificationDescription = specificationDescription;
     }
 
-	public void record( Result result) {
+
+    public void record( Result result) {
         recordedResults.add(result);
     }
 
@@ -41,6 +42,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
 		recordMultipleResults(result.getIgnoredCount(), Result.IGNORED);
 		recordMultipleResults(result.getExceptionCount(), Result.EXCEPTION);
 	}
+
 
     @Deprecated
 	public void assertIsSatisfied() {
@@ -98,16 +100,18 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     }
     
     public String printToString(Object fixture) {
-    	StringBuilder builder = new StringBuilder(specificationDescription);
-    	builder.append("\n");
+        StringBuilder builder = new StringBuilder();
+        builder.append("\n");
+        builder.append(specificationDescription);
+        builder.append("\n");
         String counts = printCountsToString(fixture);
     	if (counts != null) {
             builder.append(counts).append("\n");
         }
-        builder.append("\n");
+//        builder.append("\n");
         return builder.toString();
     }
-    	
+
     public String printCountsToString(Object fixture) {
     	StringBuilder builder = new StringBuilder();
 
@@ -148,5 +152,13 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
 
     public String getSpecificationDescription() {
         return specificationDescription;
+    }
+
+    public void setForExample(boolean isForExample) {
+        this.forExample = isForExample;
+    }
+
+    public boolean isForExample() {
+        return isForExample();
     }
 }
