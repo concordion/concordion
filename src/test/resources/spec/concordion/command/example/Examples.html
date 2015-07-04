@@ -76,16 +76,21 @@
     <p>When reporting run results for the specification as a whole, concordion follows the following rules:</p>
     <ol>
         <li>Each example contributes 1 success, failure, ignored, or exception to the total count.</li>
-        <li>If an example has any exception, then it contributes 1 exception.</li>
+        <li>If an example has any exceptions, then it contributes 1 exception.</li>
         <li>If the example has no exceptions, but some failures, then it contributes 1 failure.</li>
         <li>If the example has no exceptions, no failures, and some success, then it contributes 1 success.</li>
         <li>If the example has no exceptions, no failures, no successes, but some ignores, then it contributes 1 ignored</li>
         <li>If the example has an empty result summary, it is treated as success.</li>
     </ol>
 
-    <p>So, for example, a spec with 3 examples where 2 succeed and 1 fails will report 2 successes and 1 failure</p>
-
-
+    <p>
+        For example, a spec (<a href="LotsOfExamples.html" c:execute="#result=runTestDummySpec(#TEXT)">LotsOfExamples.html</a>)
+        with two successfull examples, a failed example, an an exception example,
+        returns <span c:assertEquals="#result.successCount">2</span> successes,
+        <span c:assertEquals="#result.failureCount">1</span> failure,
+        <span c:assertEquals="#result.exceptionCount">1</span> exceptions, and
+        <span c:assertEquals="#result.ignoredCount">0</span> ignores
+    </p>
 </div>
 
 <div class="example">
@@ -93,8 +98,16 @@
 
     <p>Tests outside of any example block are <span c:assertTrue="isTrue()">still executed</span> and the results
     of these tests are reported
-    back in the same way as if the test had no examples.</p>
+    back in the same way as if the test had no examples:</p>
 
+    <p>
+            A spec (<a href="AssertsOutsideExamples.html" c:execute="#result=runTestDummySpec(#TEXT)">AssertsOutsideExamples.html</a>)
+        with a successfull example and two tests outside the example, one of which
+            fails, returns <span c:assertEquals="#result.successCount">2</span> successes,
+        <span c:assertEquals="#result.failureCount">1</span> failure,
+            <span c:assertEquals="#result.exceptionCount">0</span> exceptions, and
+                <span c:assertEquals="#result.ignoredCount">0</span> ignores
+    </p>
 </div>
 
 </body>

@@ -1,0 +1,53 @@
+<html xmlns:c="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+<h1>Examples</h1>
+
+<div class="example" c:example="example1-success">
+    <h3>Example 1 - Success</h3>
+    <p>This example has 3 successes. It will report "Success" as a whole</p>
+    <ul>
+        <li><span c:assertTrue="isTrue()">Success</span></li>
+        <li><span c:assertTrue="isTrue()">Success</span></li>
+        <li><span c:assertTrue="isTrue()">Success</span></li>
+    </ul>
+</div>
+
+<div class="example" c:example="example2-success">
+    <h3>Example 2 - Success</h3>
+    <p>This example has 3 successes. It will report "Success" as a whole</p>
+
+    <ul>
+        <li><span c:assertTrue="isTrue()">Success</span></li>
+        <li><span c:assertTrue="isTrue()">Success</span></li>
+        <li><span c:assertTrue="isTrue()">Success</span></li>
+    </ul>
+</div>
+
+<div class="example" c:example="example3-fail">
+    <h3>Example 3 - Fail</h3>
+    <p>This example has 2 successes and 1 failure. It will report "Failure" as a whole</p>
+    <ul>
+        <li><span c:assertTrue="isTrue()">Success</span></li>
+        <li><span c:assertTrue="isTrue()">Success</span></li>
+        <li><span c:assertFalse="isTrue()">Fail</span></li>
+    </ul>
+</div>
+
+
+<div class="example" c:example="example4-exception">
+    <h3>Example 4</h3>
+    <p>This example has 2 successes, one failure, and 2 exceptions. It will report "Exception" as a whole.</p>
+    <ul>
+        <li><span c:assertTrue="isTrue()">Success</span></li>
+        <li><span c:assertTrue="isTrue()">Success</span></li>
+        <li><span c:assertFalse="isTrue()">Fail</span></li>
+        <li><span c:assertTrue="throwException()">Exception</span></li>
+        <li><span c:assertTrue="throwException()">Exception</span></li>
+    </ul>
+
+</div>
+
+</body>
+</html>
