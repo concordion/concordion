@@ -17,7 +17,13 @@
 
     In this case, we simply reset a counter.
     <pre>
-<code c:execute="setCounter('10')">&lt;span c:execute="setCounter('0')"/&gt;</code></pre>
+<code c:execute="setCounter('10')">&lt;span c:execute="setCounter('10')"/&gt;</code></pre>
+
+    <p>And set a variable for use in an example</p>
+
+        <pre>
+<code c:set="#are = 'are'">&lt;span c:set="#are = 'are'"/&gt;</code></pre>
+
 </div>
 
 <div class="example" c:example="example1">
@@ -37,12 +43,16 @@
 
     <p>In this case, we can assert that our counter is <span c:assertEquals="getCounter()">10</span> and then
     <span c:execute="incrementCounter()">increment the counter</span> so that other examples will fail if the before
-    part of the specification is not run.</p>
+    part of the specification is not run. The counter is now <span c:assertEquals="getCounter()">11</span></p>
 
     <p>Namespaces in examples are separate. So if you set a variable in your spec to a value,
         then other examples will not have access to that value. To prove this, in both examples we assert that
     <span c:assertTrue="isNull(#notshared)">#notshared variable is null</span> and then
         set it to "<span c:set="#notshared">a value</span>". We do this in both examples to counter running order effects.</p>
+
+    <p>Of course, variables set in the before example <span c:assertEquals="#are">are</span> accessible
+        (but changes to them in one example are not visible in the other examples)</p>
+
 
 </div>
 
@@ -59,14 +69,16 @@
 
     <p>In this case, we also assert that our counter is <span c:assertEquals="getCounter()">10</span> and then
     <span c:execute="incrementCounter()">increment the counter</span> so that other examples will fail if the before
-    part of the specification is not run.</p>
+    part of the specification is not run. The counter is now <span c:assertEquals="getCounter()">11</span></p>
 
-    <p>Namespaces in examples are separate. So if you set a variable in your spec to a value
+    <p>Namespaces in examples are separate. So if you set a variable in one example to a value
         using something like </p>
     <pre>&lt;span c:set="#notshared"/&gt;</pre>
         <p>Then other examples will not have access to that value. To prove this, in both examples we assert that
         <span c:assertTrue="isNull(#notshared)">#notshared variable is null</span> and then
         set it to "<span c:set="#notshared">a value</span>". We do this in both examples to counter running order effects.</p>
+
+    <p>Of course, variables set in the before example <span c:assertEquals="#are">are</span> accessible.</p>
 
 </div>
 
@@ -96,7 +108,8 @@
 <div class="example">
     <h3>Tests outside any example</h3>
 
-    <p>Tests outside of any example block are <span c:assertTrue="isTrue()">still executed</span> and the results
+    <p>Tests outside of any example block (the tests in this block are outside an example block)
+        are <span c:assertTrue="isTrue()">still executed</span> and the results
     of these tests are reported
     back in the same way as if the test had no examples:</p>
 
