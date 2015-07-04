@@ -45,8 +45,4 @@ public class ExampleCommand extends AbstractCommand {
     public void setSpecificationDescriber(SpecificationDescriber specificationDescriber) {
         this.specificationDescriber = specificationDescriber;
     }
-
-    public SpecificationDescriber getSpecificationDescriber() {
-        return specificationDescriber;
-    }
 }
