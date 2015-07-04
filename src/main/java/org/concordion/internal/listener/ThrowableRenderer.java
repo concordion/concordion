@@ -50,10 +50,11 @@ public class ThrowableRenderer implements ThrowableCaughtListener {
                 System.out.println(rootElement.toXML());
             }
             Check.notNull(head, "Document <head> section is missing");
-            Element script = new Element("script").addAttribute("type", "text/javascript");
-            head.prependChild(script);
-            script.appendText(IOUtil.readResourceAsString(TOGGLING_SCRIPT_RESOURCE_PATH, "UTF-8"));
-            
+            if (head != null) {
+                Element script = new Element("script").addAttribute("type", "text/javascript");
+                head.prependChild(script);
+                script.appendText(IOUtil.readResourceAsString(TOGGLING_SCRIPT_RESOURCE_PATH, "UTF-8"));
+            }
         }
     }
 

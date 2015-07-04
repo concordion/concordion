@@ -31,6 +31,7 @@ public class ConcordionFrameworkMethod extends FrameworkMethod {
 
     public ConcordionFrameworkMethod(ConcordionRunnerInterface runner, String exampleName) {
         super(CONCORDION_METHOD);
+        assert exampleName != null;
         this.exampleName = exampleName;
         this.runner = runner;
     }
@@ -60,5 +61,22 @@ public class ConcordionFrameworkMethod extends FrameworkMethod {
 
     public interface ConcordionRunnerInterface {
         void invoke(ConcordionFrameworkMethod concordionFrameworkMethod);
+    }
+
+    public boolean equals(Object other) {
+        if (other == null) {
+            return false;
+        }
+        if (!(other instanceof ConcordionFrameworkMethod)) {
+            return false;
+        }
+
+        ConcordionFrameworkMethod that = (ConcordionFrameworkMethod) other;
+
+        return this.getExampleName().equals(that.getExampleName());
+    }
+
+    public int hashCode() {
+        return this.getExampleName().hashCode();
     }
 }

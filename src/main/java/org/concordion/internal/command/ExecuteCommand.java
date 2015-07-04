@@ -51,7 +51,7 @@ public class ExecuteCommand extends AbstractCommand {
         }
     }
     
-    private class TableStrategy implements Strategy {
+    private static class TableStrategy implements Strategy {
 
         public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
             TableSupport tableSupport = new TableSupport(commandCall);
@@ -67,7 +67,7 @@ public class ExecuteCommand extends AbstractCommand {
         }
     }
     
-    private class ListStrategy implements Strategy {
+    private static class ListStrategy implements Strategy {
     	
     	private static final String LEVEL_VARIABLE = "#LEVEL";
 

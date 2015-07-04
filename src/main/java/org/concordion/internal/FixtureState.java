@@ -27,12 +27,13 @@ public enum FixtureState {
             addToList(list, rs.getFailureCount(), "a failure", "some failures");
             addToList(list, rs.getExceptionCount(), "an exception", "some exceptions");
             if (list.size() > 0) {
-                String s = list.get(0);
+                StringBuilder s = new StringBuilder();
+                s.append(list.get(0));
                 if (list.size() > 1) {
                     for (int i = 1; i < (list.size() - 1); i++) {
-                        s += ", " + list.get(i);
+                        s.append(", ").append(list.get(i));
                     }
-                    s += ", and " + list.get(list.size() - 1);
+                    s.append(", and ").append(list.get(list.size() - 1));
                 }
                 throw new ConcordionAssertionError("Specification is supposed to be unimplemented, but is reporting " + s + ".", rs);
                 
