@@ -43,9 +43,9 @@ public enum FixtureState {
         public ResultSummary convertForCache(ResultSummary rs) {
             try {
                 assertIsSatisfied(rs, null);
-                return new SingleResultSummary(Result.IGNORED);
+                return new SingleResultSummary(Result.IGNORED, rs.getSpecificationDescription());
             } catch (ConcordionAssertionError cce) {
-                return new SingleResultSummary(Result.FAILURE);
+                return new SingleResultSummary(Result.FAILURE, rs.getSpecificationDescription());
             }
         }
 
@@ -83,9 +83,9 @@ public enum FixtureState {
         public ResultSummary convertForCache(ResultSummary rs) {
             try {
                 assertIsSatisfied(rs, null);
-                return new SingleResultSummary(Result.IGNORED);
+                return new SingleResultSummary(Result.IGNORED, rs.getSpecificationDescription());
             } catch (ConcordionAssertionError cce) {
-                return new SingleResultSummary(Result.FAILURE);
+                return new SingleResultSummary(Result.FAILURE, rs.getSpecificationDescription());
             }
         }
 
@@ -141,12 +141,12 @@ public enum FixtureState {
     public abstract ResultSummary convertForCache(ResultSummary rs);
 
 
-    public static FixtureState getFixtureState(Object fixture) {
+    public static FixtureState getFixtureState(Class<?> fixtureClass) {
         FixtureState state = FixtureState.EXPECTED_TO_PASS;
-        if (fixture.getClass().getAnnotation(ExpectedToFail.class) != null) {
+        if (fixtureClass.getAnnotation(ExpectedToFail.class) != null) {
             state = FixtureState.EXPECTED_TO_FAIL;
         }
-        if (fixture.getClass().getAnnotation(Unimplemented.class) != null) {
+        if (fixtureClass.getAnnotation(Unimplemented.class) != null) {
             state = FixtureState.UNIMPLEMENTED;
         }
         return state;

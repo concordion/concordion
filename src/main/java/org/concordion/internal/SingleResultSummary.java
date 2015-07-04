@@ -6,6 +6,7 @@ package org.concordion.internal;
  * @author TimW5
  */
 import org.concordion.api.Result;
+import org.concordion.api.ResultSummary;
 
 public class SingleResultSummary extends SummarizingResultRecorder {
     private final Result result;
@@ -13,6 +14,19 @@ public class SingleResultSummary extends SummarizingResultRecorder {
     public SingleResultSummary(final Result result) {
         this.record(result);
         this.result = result;
+    }
+
+    @Override
+    public ResultSummary getMeaningfulResultSummary(Object fixture) {
+        return super.getMeaningfulResultSummary(fixture);
+    }
+
+    public SingleResultSummary(final Result result, String specificationDescription) {
+        this.record(result);
+        this.result = result;
+
+        this.setSpecificationDescription(specificationDescription);
+
     }
 
     public Result getResult() {

@@ -50,14 +50,14 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     }
 
     @Override
-	public void assertIsSatisfied( Object fixture) {
-        FixtureState state = FixtureState.getFixtureState(fixture);
+	public void assertIsSatisfied(Object fixture) {
+        FixtureState state = FixtureState.getFixtureState(fixture.getClass());
         state.assertIsSatisfied(this, failFastException);
     }
     
     @Override
     public ResultSummary getMeaningfulResultSummary(Object fixture) {
-        FixtureState state = FixtureState.getFixtureState(fixture);
+        FixtureState state = FixtureState.getFixtureState(fixture.getClass());
     	return state.getMeaningfulResultSummary(this, failFastException);
     }
 
@@ -111,8 +111,11 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     public String printToString(Object fixture) {
     	StringBuilder builder = new StringBuilder(specificationDescription);
     	builder.append("\n");
-    	builder.append(printCountsToString(fixture));
-        builder.append("\n\n");
+        String counts = printCountsToString(fixture);
+    	if (counts != null) {
+            builder.append(counts).append("\n");
+        }
+        builder.append("\n");
         return builder.toString();
     }
     	
@@ -133,8 +136,8 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         	builder.append(getExceptionCount());
         }
 
-        builder.append(FixtureState.getFixtureState(fixture).printNoteToString());
-        
+        builder.append(FixtureState.getFixtureState(fixture.getClass()).printNoteToString());
+
         return builder.toString();
     }
 
@@ -155,5 +158,9 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     @Override
     public void setSpecificationDescription( String specificationDescription) {
         this.specificationDescription = specificationDescription;
+    }
+
+    public String getSpecificationDescription() {
+        return specificationDescription;
     }
 }

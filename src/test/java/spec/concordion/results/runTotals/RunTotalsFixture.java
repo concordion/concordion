@@ -19,7 +19,7 @@ import org.junit.runner.RunWith;
 public class RunTotalsFixture {
 
 	public Map<String, String> simulateRun(final String href) {
-		final Element element = new Element(href);
+		final Element element = new Element("a");
 		element.addAttribute("href", href);
 
 		final String path = "/" + getClass().getName().replace('.', '/');

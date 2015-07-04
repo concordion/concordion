@@ -2,6 +2,7 @@ package org.concordion.internal;
 
 import java.io.IOException;
 
+import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.extension.FixtureExtensionLoader;
 
@@ -12,27 +13,53 @@ public class FixtureRunner {
 
     public ResultSummary run(Object fixture) throws IOException {
     	
-    	ResultSummary resultSummary = cachedRunResults.startRun(fixture.getClass());
+    	ConcordionRunOutput runOutput = cachedRunResults.startRun(fixture.getClass());
+        ResultSummary actualResultSummary = runOutput==null?
+                null:
+                runOutput.getActualResultSummary();
+
+        ResultSummary postProcessedResultSummary = runOutput==null?
+                null:
+                runOutput.getPostProcessedResultSummary();
+
+
         String additionalInformation = null;
-    	if (resultSummary == null)  {
+    	if (runOutput == null) {
             ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture);
             fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
-            resultSummary = concordionBuilder.build().process(fixture);
 
-            // we want to make sure all the annotations are considered when storing the result summary
-            cachedRunResults.finishRun(fixture.getClass(), cachedRunResults.convertForCache(resultSummary, fixture));
+            try {
+                actualResultSummary = concordionBuilder.build().process(fixture);
+                // we want to make sure all the annotations are considered when storing the result summary
+
+                postProcessedResultSummary = cachedRunResults.convertForCache(actualResultSummary, fixture.getClass());
+
+                cachedRunResults.finishRun(fixture.getClass(),
+                        actualResultSummary,
+                        postProcessedResultSummary);
+
+            } catch (RuntimeException e) {
+                // the run failed miserably. Tell the cache that the run failed
+                cachedRunResults.failRun(fixture.getClass());
+                throw e;
+            }
+
         } else {
-            additionalInformation = "Returning cached result summary for fixture " + fixture.getClass().getName();
+            additionalInformation = "From cache: ";
         }
 
+        printResultSummary(fixture, actualResultSummary, additionalInformation);
+
+        return actualResultSummary.getMeaningfulResultSummary(fixture);
+    }
+
+    private void printResultSummary(Object fixture, ResultSummary resultSummary, String additionalInformation) {
         synchronized (System.out) {
             if (additionalInformation != null) {
-                System.out.println(additionalInformation);
+                System.out.print(additionalInformation);
             }
             resultSummary.print(System.out, fixture);
             resultSummary.assertIsSatisfied(fixture);
         }
-
-        return resultSummary.getMeaningfulResultSummary(fixture);
     }
 }

@@ -11,6 +11,7 @@ import org.concordion.api.ResultSummary;
 import org.concordion.api.Runner;
 import org.concordion.api.Unimplemented;
 import org.concordion.internal.CachedRunResults;
+import org.concordion.internal.ConcordionRunOutput;
 import org.concordion.internal.FailFastException;
 import org.concordion.internal.SummarizingResultRecorder;
 import org.junit.runner.JUnitCore;
@@ -57,41 +58,28 @@ public class DefaultConcordionRunner implements Runner {
         CachedRunResults cache = CachedRunResults.SINGLETON;
 
         // first check the cache.
-        ResultSummary summary = cache.getFromCache(concordionClass);
+        ResultSummary summary = null;
 
-        // if we found something in the cache, we can do much less work.
-        if (summary == null) {
+        // we always run the test to ensure that the FixtureRunner class
+        // has an opportuinity to print out any necessary debugging information.
+        org.junit.runner.Result jUnitResult = runJUnitClass(concordionClass);
 
-                // Not in cache, so run the test...
-                org.junit.runner.Result jUnitResult = runJUnitClass(concordionClass);
+        // we always decode the jUnut summary because it handles specification exceptions
+        // (as opposed to exceptions that occured in a specification) better.
+        ResultSummary jUnitSummary = decodeJUnitResult(concordionClass, jUnitResult);
 
-                // check the cache again - if the test was a concordion test, it will have stuck the results
-                // in the cache
-                summary = cache.getFromCache(concordionClass);
+        // check the cache - if the test was a concordion test, it will have stuck the results
+        // in the cache
+        ConcordionRunOutput concordionRunOutput = cache.getFromCache(concordionClass);
 
-                // check the test actually put something in the cache
-                if (summary == null) {
-
-                    // Nothing in the cache, so create a summary based on the jUnit result
-                    summary = decodeJUnitResult(concordionClass, jUnitResult);
-
-                    // and stick it in the cache for next time.
-                    cache.enterIntoCache(concordionClass, summary);
-
-                    logger.info("Returning converted jUnit result summary "
-                            + summary.printToString(concordionClass.newInstance()));
-
-                } else {
-
-                    logger.info("Returning result summary from executing test "
-                            + summary.printToString(concordionClass.newInstance()));
-                }
-
+        // check the test actually put something in the cache
+        if (concordionRunOutput == null) {
+            summary = jUnitSummary;
         } else {
-            logger.info("Returning cached result summary "
-                    + summary.printToString(concordionClass.newInstance()));
+            summary = concordionRunOutput.getPostProcessedResultSummary();
         }
 
+        // throw an exception if we're failing fast...
         if (summary instanceof SummarizingResultRecorder) {
             if (((SummarizingResultRecorder) summary).getFailFastException() != null) {
                 throw ((SummarizingResultRecorder) summary).getFailFastException();

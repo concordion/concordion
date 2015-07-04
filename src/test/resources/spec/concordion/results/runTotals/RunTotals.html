@@ -78,18 +78,28 @@
 			<td>Successes: 0, Failures: 0, Ignored: 1</td>
 		</tr>
 
-	 	<tr>
-	 		<td>Test an "unimplemented" test</td>
+		<tr>
+			<td>Test an "unimplemented" test</td>
 			<td><a href="Unimplemented.html">Unimplemented.html</a></td>
-            <td>Yes</td>
+			<td>Yes</td>
 			<td>0</td>
 			<td>0</td>
 			<td>0</td>
 			<td>1</td>
 			<td>Successes: 0, Failures: 0, Ignored: 1</td>
 		</tr>
+		<tr>
+			<td>Test an "unimplemented" test that performs an assert</td>
+			<td><a href="UnimplementedWithAssert.html">UnimplementedWithAssert.html</a></td>
+			<td>Yes</td>
+			<td>0</td>
+			<td>0</td>
+			<td>1</td>
+			<td>0</td>
+			<td>Successes: 0, Failures: 0, Exceptions: 1</td>
+		</tr>
 
-	 	<tr>
+		<tr>
 	 		<td>Test the case where the fixture cannot be found</td>
 	 		<td><a href="MissingFixtureFile.html">MissingFixtureFile.html</a></td>
             <td>No</td>
@@ -125,7 +135,17 @@
 		<tr>
 			<td>Test the case where a file is expected to fail</td>
 			<td><a href="ExpectedToFail.html">ExpectedToFail.html</a></td>
-            <td>Yes</td>
+			<td>Yes</td>
+			<td>0</td>
+			<td>0</td>
+			<td>0</td>
+			<td>1</td>
+			<td>Successes: 0, Failures: 0, Ignored: 1</td>
+		</tr>
+		<tr>
+			<td>Test the case where a file is expected to fail</td>
+			<td><a href="ExpectedToFail.html">ExpectedToFail.html</a></td>
+			<td>Yes</td>
 			<td>0</td>
 			<td>0</td>
 			<td>0</td>
@@ -143,6 +163,30 @@
 			<td>0</td>
 			<td>Successes: 4, Failures: 0</td>
 		</tr>
+
+		<tr>
+			<td>Invalid HTML</td>
+			<td><a href="InvalidHTML.html">InvalidHTML.html</a></td>
+			<td>No</td>
+			<td>0</td>
+			<td>0</td>
+			<td>1</td>
+			<td>0</td>
+			<td>Successes: 0, Failures: 0, Exceptions: 1</td>
+		</tr>
+
+		<tr>
+			<td>Large test suite</td>
+			<td><a href="testsuite/TestSuite.html">testsuite/TestSuite.html</a></td>
+			<td>Yes</td>
+			<td>4</td>
+			<td>1</td>
+			<td>6</td>
+			<td>4</td>
+			<td>Successes: 4, Failures: 1, Ignored: 4, Exceptions: 6</td>
+		</tr>
+
+
 	</table>
 </body>
 </html>
