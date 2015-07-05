@@ -44,7 +44,6 @@ public class StubTarget implements Target {
         throw new UnsupportedOperationException("not implemented on StubTarget");
     }
 
-    @Override
     public String resolvedPathFor(Resource resource) {
         return null;
     }

@@ -116,4 +116,8 @@ public class XMLSpecification implements SpecificationByExample {
 
         return commands;
     }
+    
+    public void cleanUp() {
+    	rootCommandNode.getCommand().cleanUp(rootCommandNode);
+    }
 }

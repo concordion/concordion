@@ -137,4 +137,9 @@ public class Concordion {
         return String.format("[Concordion Specification for '%s']", name);
     }
 
+    public void cleanUp() {
+        if (specification != null) {
+            specification.cleanUp();
+        }
+    }
 }

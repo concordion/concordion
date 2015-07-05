@@ -13,7 +13,6 @@ public class ExampleRunner implements Runner {
 
     private static Map<String, String> mappings = new LinkedHashMap<String, String>();
     
-    @Override
 	public ResultSummary execute(Resource resource, String href) throws Exception {
         
         for (String regex : mappings.keySet()) {

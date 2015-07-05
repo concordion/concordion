@@ -85,6 +85,8 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
     public void run(RunNotifier notifier) {
         super.run(notifier);
 
+        concordion.cleanUp();
+
         ConcordionRunOutput results = CachedRunResults.SINGLETON.getFromCache(fixtureClass, null);
         if (results != null) {
             // we only print meta-results when the spec has multiple examples.

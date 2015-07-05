@@ -11,6 +11,7 @@ public interface Command {
 
     void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder);
 
+    void cleanUp(CommandCall commandCall);
 
     List<CommandCall> getExamples(CommandCall command);
 

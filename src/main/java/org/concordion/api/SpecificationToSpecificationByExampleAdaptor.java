@@ -19,6 +19,9 @@ public class SpecificationToSpecificationByExampleAdaptor implements Specificati
     public SpecificationToSpecificationByExampleAdaptor(Specification s) {
         specification = s;
     }
+    
+    public void cleanUp() {
+    }
 
     public void process(Evaluator evaluator, ResultRecorder resultRecorder) {
         specification.process(evaluator, resultRecorder);

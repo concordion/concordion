@@ -14,6 +14,8 @@ import org.concordion.internal.util.Announcer;
 
 public class SpecificationCommand extends AbstractCommand {
 
+    private boolean specificationExecuted=false;
+
     @Override
     public void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
         throw new IllegalStateException("Unexpected call to " + getClass().getSimpleName() + "'s setUp() method. Only the execute() method should be called.");
@@ -21,11 +23,13 @@ public class SpecificationCommand extends AbstractCommand {
     
     @Override
     public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
-        
+
+        specificationExecuted = true;
+
         if (specificationDescriber != null) {
             resultRecorder.setSpecificationDescription(specificationDescriber.getDescription(commandCall.getResource()));
         }
-        
+
         announceBeforeProcessingEvent(commandCall.getResource(), commandCall.getElement());
         try {
             commandCall.getChildren().processSequentially(evaluator, resultRecorder);
@@ -33,6 +37,14 @@ public class SpecificationCommand extends AbstractCommand {
             // Ignore - it'll be re-thrown later if necessary.
         }
         announceAfterProcessingEvent(commandCall.getResource(), commandCall.getElement());
+    }
+
+    public void cleanUp(CommandCall commandCall) {
+
+        if (!specificationExecuted) {
+            announceBeforeProcessingEvent(commandCall.getResource(), commandCall.getElement());
+            announceAfterProcessingEvent(commandCall.getResource(), commandCall.getElement());
+        }
     }
 
     @Override
