@@ -123,13 +123,13 @@
     </p>
 </div>
 
-<div class="example" c:example="expectedToFail?ExpectedToFail=true">
+<div class="example" c:example="expectedToFail" c:state="ExpectedToFail">
     <h3>Expected to Fail</h3>
 
     <p>Concordion examples can be marked as expected to <span c:assertFalse="isTrue()">fail</span>:</p>
 
     <code><pre>
-&lt;div class="example" concordion:example="example3?ExpectedToFail=true"&gt;
+&lt;div class="example" concordion:example="example3" concordion:state="ExpectedToFail"&gt;
         Example goes here
 &lt;/div&gt;</pre></code>
 
@@ -138,13 +138,13 @@ as a whole, but the specification will still pass.</p>
 
 </div>
 
-<div class="example" c:example="unimplemented?Unimplemented=true">
+<div class="example" c:example="unimplemented" c:state="Unimplemented">
     <h3>Unimplemented</h3>
 
     <p>Concordion examples can be marked as unimplemented.</p>
 
     <code><pre>
-&lt;div class="example" concordion:example="unimplemented?Unimplemented=true"&gt;
+&lt;div class="example" concordion:example="unimplemented" concordion:state="Unimplemented"&gt;
         Example goes here
 &lt;/div&gt;</pre></code>
 

@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.concordion.Concordion;
 import org.concordion.api.ResultSummary;
-import org.concordion.internal.FixtureState;
+import org.concordion.internal.InternalFixtureState;
 import org.concordion.internal.SingleResultSummary;
 import org.concordion.internal.SummarizingResultRecorder;
 
@@ -146,9 +146,9 @@ public enum CachedRunResults {
     }
 
     public ResultSummary convertForCache(ResultSummary rs, Class<?> fixtureClass, String example) {
-        FixtureState state = FixtureState.getFixtureState(
+        InternalFixtureState state = InternalFixtureState.getFixtureState(
                 fixtureClass,
-                rs.isForExample()?example:null);
+                rs.isForExample() ? rs.getFixtureState() : null);
         return state.convertForCache(rs);
     }
 

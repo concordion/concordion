@@ -51,7 +51,7 @@ public class RunCommand extends AbstractCommand {
 
         String runnerType = commandCall.getExpression();
 
-        String expression = element.getAttributeValue("concordion:params");
+        String expression = commandCall.getParameter("params");
         if (expression != null)
             evaluator.evaluate(expression);
 

@@ -13,4 +13,7 @@ public interface ResultRecorder {
     void record(ResultSummary result);
 
     void setForExample(boolean isForExample);
+
+    void setFixtureState(FixtureState state);
+    FixtureState getFixtureState();
 }

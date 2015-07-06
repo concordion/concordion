@@ -51,4 +51,6 @@ public interface ResultSummary {
     String getSpecificationDescription();
 
     boolean isForExample();
+
+    FixtureState getFixtureState();
 }
