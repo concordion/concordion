@@ -44,7 +44,7 @@ public class XMLSpecification implements SpecificationByExample {
                 beforeResultRecorder.setSpecificationDescription("Running before for example " + node.getExpression());
                 String errorText = String.format("Before example performed tests in %s %s",
                         testDescription,
-                        beforeResultRecorder.printToString(null)
+                        beforeResultRecorder.printToString(null, "before")
                 );
 
                 throw new ConcordionAssertionError(errorText, beforeResultRecorder);
@@ -89,14 +89,14 @@ public class XMLSpecification implements SpecificationByExample {
             commands.add(makeJunitTestName(exampleCall, fixtureClass));
         }
 
-        // we have to run the spec as a whole to ensure the HTML file is written.
+        // always add the main spec last. Helps with junit test ordering
         commands.add(testDescription);
 
         return commands;
     }
 
     private String makeJunitTestName(CommandCall exampleCall, Class<?> fixtureClass) {
-        return Concordion.getDefaultFixtureClassName(fixtureClass, exampleCall.getExpression());
+        return exampleCall.getExpression();
     }
 
     private List<CommandCall> findExamples(CommandCall node) {

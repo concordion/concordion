@@ -2,6 +2,7 @@ package org.concordion.internal.command;
 
 import org.concordion.api.*;
 import org.concordion.internal.FailFastException;
+import org.concordion.internal.FixtureState;
 import org.concordion.internal.SpecificationDescriber;
 import org.concordion.internal.listener.SpecificationExporter;
 
@@ -31,8 +32,19 @@ public class ExampleCommand extends AbstractCommand {
             node.getChildren().processSequentially(evaluator, resultRecorder);
             Element aName = new Element("a");
             aName.addAttribute("name", "#"+node.getExpression());
-            aName.addAttribute("id", "#"+node.getExpression()); // html5 version
+            aName.addAttribute("id", "#" + node.getExpression()); // html5 version
             node.getElement().prependChild(aName);
+
+            // let's be really nice and add the fixture state text into the element itself.
+            FixtureState state = FixtureState.getFixtureState(
+                    null,
+                    node.getExpression());
+
+            String note = state.printNoteToString();
+            Element fixtureNode = new Element("p");
+            fixtureNode.appendText(note);
+            node.getElement().prependChild(fixtureNode);
+
         } catch (FailFastException e) {
             // Ignore - it'll be re-thrown later if necessary.
         }

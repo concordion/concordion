@@ -33,7 +33,7 @@ public class RunTotalsExtension implements ConcordionExtension, RunListener {
     }
 
     private void writeText(AbstractRunEvent event) {
-        writeText(event.getElement(), event.getResultSummary().printCountsToString(event.getResultSummary()));
+        writeText(event.getElement(), event.getResultSummary().printCountsToString(event.getResultSummary(), null));
     }
 
     private void writeText(Element element, String text) {

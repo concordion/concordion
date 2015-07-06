@@ -48,7 +48,7 @@ public class FixtureRunner {
                 }
                 // we want to make sure all the annotations are considered when storing the result summary
 
-                postProcessedResultSummary = cachedRunResults.convertForCache(actualResultSummary, fixture.getClass());
+                postProcessedResultSummary = cachedRunResults.convertForCache(actualResultSummary, fixture.getClass(), example);
 
                 cachedRunResults.finishRun(fixture.getClass(),
                         example,
@@ -65,18 +65,18 @@ public class FixtureRunner {
             additionalInformation = "\nFrom cache: ";
         }
 
-        printResultSummary(fixture, actualResultSummary, additionalInformation);
+        printResultSummary(fixture, example, actualResultSummary, additionalInformation);
 
         return actualResultSummary;
     }
 
-    private void printResultSummary(Object fixture, ResultSummary resultSummary, String additionalInformation) {
+    private void printResultSummary(Object fixture, String example, ResultSummary resultSummary, String additionalInformation) {
         synchronized (System.out) {
             if (additionalInformation != null) {
                 System.out.print(additionalInformation);
             }
-            resultSummary.print(System.out, fixture);
-            resultSummary.assertIsSatisfied(fixture);
+            resultSummary.print(System.out, fixture, example);
+            resultSummary.assertIsSatisfied(fixture, example);
         }
     }
 

@@ -4,11 +4,9 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.concordion.api.ExpectedToFail;
 import org.concordion.api.Result;
 import org.concordion.api.ResultRecorder;
 import org.concordion.api.ResultSummary;
-import org.concordion.api.Unimplemented;
 
 public class SummarizingResultRecorder implements ResultRecorder, ResultSummary {
 
@@ -49,13 +47,32 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         assertIsSatisfied(this);
     }
 
-	public void assertIsSatisfied(Object fixture) {
-        FixtureState state = FixtureState.getFixtureState(fixture.getClass());
+    @Deprecated
+    public void assertIsSatisfied(Object fixture) {
+        assertIsSatisfied(fixture, null);
+    }
+
+    public void assertIsSatisfied(Object fixture, String example) {
+        // only pass the example name through if this is an actual example - not any stray tests in the
+        // spec
+        FixtureState state = FixtureState.getFixtureState(
+                fixture.getClass(),
+                isForExample()?example:null);
         state.assertIsSatisfied(this, failFastException);
     }
-    
+
+    @Deprecated
     public ResultSummary getMeaningfulResultSummary(Object fixture) {
-        FixtureState state = FixtureState.getFixtureState(fixture.getClass());
+        return getMeaningfulResultSummary(fixture, null);
+    }
+
+    public ResultSummary getMeaningfulResultSummary(Object fixture, String example) {
+        // we pass null for the example if this is not an example. That lets the fixture state
+        // use class annotations instead of the example tags.
+        FixtureState state = FixtureState.getFixtureState(
+                fixture.getClass(),
+                isForExample()?example:null);
+
     	return state.getMeaningfulResultSummary(this, failFastException);
     }
 
@@ -95,11 +112,21 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         print(out, this);
     }
 
+    @Deprecated
 	public void print(PrintStream out, Object fixture) {
-    	out.print(printToString(fixture));
+        print(out, fixture, null);
     }
-    
+
+    public void print(PrintStream out, Object fixture, String example) {
+        out.print(printToString(fixture, example));
+    }
+
+    @Deprecated
     public String printToString(Object fixture) {
+        return printToString(fixture, null);
+    }
+
+    public String printToString(Object fixture, String example) {
         StringBuilder builder = new StringBuilder();
         builder.append("\n");
         builder.append(specificationDescription);
@@ -112,7 +139,12 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         return builder.toString();
     }
 
+    @Deprecated
     public String printCountsToString(Object fixture) {
+        return printCountsToString(fixture, null);
+    }
+
+    public String printCountsToString(Object fixture, String example) {
     	StringBuilder builder = new StringBuilder();
 
         builder.append("Successes: ");
@@ -129,7 +161,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         }
 
         if (fixture != null) {
-            builder.append(FixtureState.getFixtureState(fixture.getClass()).printNoteToString());
+            builder.append(FixtureState.getFixtureState(fixture.getClass(), example).printNoteToString());
         }
 
         return builder.toString();

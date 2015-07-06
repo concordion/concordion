@@ -13,8 +13,9 @@ class CacheResultSummary extends SingleResultSummary {
     }
 
     @Override
-    public String printCountsToString(Object fixture) {
+    public String printCountsToString(Object fixture, String example) {
         // no counts for cached result summary
         return null;
     }
+
 }

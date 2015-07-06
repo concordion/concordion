@@ -31,10 +31,7 @@ public class RunTotalsFixture {
 	}
 
 	public Map<String, String> simulateRun(final String href) throws Exception {
-		return simulateRunOld(href);
-	}
 
-	public Map<String, String> simulateRunOld(final String href) {
 		final Element element = new Element("a");
 		element.addAttribute("href", href);
 
@@ -77,12 +74,5 @@ public class RunTotalsFixture {
 
 		result.put("totalsString", counts);
 		return result;
-	}
-
-	private class ExtendedDefaultConcordionRunner extends DefaultConcordionRunner {
-		@Override
-		public Class<?> findTestClass(Resource resource, String href) throws ClassNotFoundException {
-			return super.findTestClass(resource, href);
-		}
 	}
 }

@@ -8,8 +8,6 @@ import org.concordion.api.ResultSummary;
 import org.concordion.internal.FixtureState;
 import org.concordion.internal.SingleResultSummary;
 import org.concordion.internal.SummarizingResultRecorder;
-import org.concordion.internal.cache.CacheKey;
-import org.concordion.internal.cache.ConcordionRunOutput;
 
 /**
  *
@@ -144,7 +142,13 @@ public enum CachedRunResults {
     }
 
     public ResultSummary convertForCache(ResultSummary rs, Class<?> fixtureClass) {
-        FixtureState state = FixtureState.getFixtureState(fixtureClass);
+        return convertForCache(rs, fixtureClass, null);
+    }
+
+    public ResultSummary convertForCache(ResultSummary rs, Class<?> fixtureClass, String example) {
+        FixtureState state = FixtureState.getFixtureState(
+                fixtureClass,
+                rs.isForExample()?example:null);
         return state.convertForCache(rs);
     }
 

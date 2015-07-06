@@ -39,10 +39,9 @@ public class SingleResultSummary extends SummarizingResultRecorder {
         record(result);
     }
 
-    @Override
-    public ResultSummary getMeaningfulResultSummary(Object fixture) {
-        return super.getMeaningfulResultSummary(fixture);
-    }
+//    public ResultSummary getMeaningfulResultSummary(Object fixture, String example) {
+//        return super.getMeaningfulResultSummary(fixture, example);
+//    }
 
     public SingleResultSummary(final Result result, String specificationDescription) {
         this.record(result);

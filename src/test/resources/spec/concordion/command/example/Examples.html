@@ -123,5 +123,37 @@
     </p>
 </div>
 
+<div class="example" c:example="expectedToFail?ExpectedToFail=true">
+    <h3>Expected to Fail</h3>
+
+    <p>Concordion examples can be marked as expected to <span c:assertFalse="isTrue()">fail</span>:</p>
+
+    <code><pre>
+&lt;div class="example" concordion:example="example3?ExpectedToFail=true"&gt;
+        Example goes here
+&lt;/div&gt;</pre></code>
+
+<p>In these cases, the example will return 0 success, 1 failures, 0 ignored, and 0 exceptions back to the specification
+as a whole, but the specification will still pass.</p>
+
+</div>
+
+<div class="example" c:example="unimplemented?Unimplemented=true">
+    <h3>Unimplemented</h3>
+
+    <p>Concordion examples can be marked as unimplemented.</p>
+
+    <code><pre>
+&lt;div class="example" concordion:example="unimplemented?Unimplemented=true"&gt;
+        Example goes here
+&lt;/div&gt;</pre></code>
+
+    <p>Any asserts done in the example will cause the example to fail the spec.</p>
+
+    <p>In these cases, the example will return 1 success, 0 failures, 0 ignored, and 0 exceptions back to the specification
+        as a whole.</p>
+
+</div>
+
 </body>
 </html>

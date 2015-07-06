@@ -20,7 +20,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
@@ -64,6 +66,9 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
         try {
             List<String> examples = concordion.getExampleNames();
+
+            verifyUniqueExampleMethods(examples);
+
             concordionFrameworkMethods = new ArrayList<ConcordionFrameworkMethod>(examples.size());
             for (String example: examples) {
                 concordionFrameworkMethods.add(new ConcordionFrameworkMethod(concordionRunnerInterface, example));
@@ -73,6 +78,24 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         }
 
 
+    }
+
+    private void verifyUniqueExampleMethods(List<String> exampleNames) throws InitializationError {
+        // use a hash set to store examples - gives us quick lookup and add.
+        Set<String> setOfExamples = new HashSet<String>();
+
+        for (String example: exampleNames) {
+            int questionPlace = example.indexOf('?');
+
+            if (questionPlace >=0 ) {
+                example = example.substring(0, questionPlace);
+            }
+
+            if (setOfExamples.contains(example)) {
+                throw new InitializationError("Specification has duplicate example " + example);
+            }
+            setOfExamples.add(example);
+        }
     }
 
     // This is important or else jUnit will create lots of different instances of the class under test.
@@ -92,7 +115,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
             // we only print meta-results when the spec has multiple examples.
             if (concordionFrameworkMethods.size() > 1) {
                 synchronized (System.out) {
-                    results.getActualResultSummary().print(System.out, fixture);
+                    results.getActualResultSummary().print(System.out, fixture, null);
                 }
             }
         }
@@ -146,7 +169,8 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 //                    accumulatedResultSummary.printToString(fixture));
 
             invokeMethodsWithAnnotation(fixtureClass, fixture, After.class);
-            result.assertIsSatisfied(fixture);
+
+            result.assertIsSatisfied(fixture, example);
 
 
         } catch (ConcordionAssertionError e) {
