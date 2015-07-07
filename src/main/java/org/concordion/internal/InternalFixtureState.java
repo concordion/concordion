@@ -158,14 +158,12 @@ public enum InternalFixtureState {
             }
         }
 
-        if (fixtureClass == null) {
-            // loop through the states
-            if (fixtureClass != null) {
-                for (InternalFixtureState state : values()) {
-                    // if we found a match, then return the state
-                    if (fixtureClass.getAnnotation(state.annotation) != null) {
-                        return state;
-                    }
+        // loop through the states
+        if (fixtureClass != null) {
+            for (InternalFixtureState state : values()) {
+                // if we found a match, then return the state
+                if (fixtureClass.getAnnotation(state.annotation) != null) {
+                    return state;
                 }
             }
         }
