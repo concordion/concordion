@@ -18,7 +18,7 @@ public class CachedResultsUnitTest {
 
     @Before
     public void before() {
-        runResults.clearCache();
+        runResults.removeAllFromCache(this.getClass());
     }
 
     @Test

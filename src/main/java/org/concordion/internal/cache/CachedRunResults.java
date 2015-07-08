@@ -156,5 +156,13 @@ public enum CachedRunResults {
         // run failed. Remove our placeholder value.
         map.remove(getID(aClass, example));
     }
+
+    public void removeAllFromCache(Class<?> aClass) {
+        for (CacheKey key : map.keySet()) {
+            if (key.isForClass(aClass)) {
+                map.remove(key);
+            }
+        }
+    }
 }
 

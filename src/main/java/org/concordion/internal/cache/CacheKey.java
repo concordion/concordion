@@ -36,4 +36,8 @@ public class CacheKey {
 
         return classesEqual && examplesEqual;
     }
+
+    public boolean isForClass(Class<?> aClass) {
+        return this.clas.equals(aClass);
+    }
 }
