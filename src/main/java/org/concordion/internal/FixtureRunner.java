@@ -48,7 +48,8 @@ public class FixtureRunner {
                 }
                 // we want to make sure all the annotations are considered when storing the result summary
 
-                postProcessedResultSummary = cachedRunResults.convertForCache(actualResultSummary, fixture.getClass(), example);
+                // converting for the cache doesn't need the example - it just does annotation based conversions.
+                postProcessedResultSummary = cachedRunResults.convertForCache(actualResultSummary, fixture.getClass());
 
                 cachedRunResults.finishRun(fixture.getClass(),
                         example,

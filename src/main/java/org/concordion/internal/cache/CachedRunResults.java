@@ -84,15 +84,15 @@ public enum CachedRunResults {
      * @param fixtureClass the class to update
      * @param example the name of the example that is being finished (null ok)
      * @param actualSummary the results as reported from the spec
-     * @param convertedSummary the results as post processed by any fixture annotations
+     * @param postProcessedResultSummary the results as post processed by any fixture annotations
      */
     public synchronized void finishRun(Class<?> fixtureClass,
                                        String example,
                                        ResultSummary actualSummary,
-                                       ResultSummary convertedSummary) {
+                                       ResultSummary postProcessedResultSummary) {
         assert fixtureClass != null;
         assert actualSummary != null;
-        assert convertedSummary != null;
+        assert postProcessedResultSummary != null;
 
         // check if there is already a result
         ConcordionRunOutput runSummary = map.get(getID(fixtureClass, example));
@@ -105,7 +105,7 @@ public enum CachedRunResults {
 
         // update the cached value
         runSummary.setActualResultSummary(actualSummary);
-        runSummary.setPostProcessedResultSummary(convertedSummary);
+        runSummary.setPostProcessedResultSummary(postProcessedResultSummary);
 
         String specificationDescription = Concordion.getDefaultFixtureClassName(fixtureClass);
 
@@ -132,20 +132,16 @@ public enum CachedRunResults {
 
         SummarizingResultRecorder totalConvertedResults = new SummarizingResultRecorder(specificationDescription);
         totalConvertedResults.record(output.getPostProcessedResultSummary());
-        if (convertedSummary.isForExample()) {
-            totalConvertedResults.record(new SingleResultSummary(convertedSummary));
+        if (postProcessedResultSummary.isForExample()) {
+            totalConvertedResults.record(new SingleResultSummary(postProcessedResultSummary));
         } else {
-            totalConvertedResults.record(convertedSummary);
+            totalConvertedResults.record(postProcessedResultSummary);
         }
         output.setPostProcessedResultSummary(totalConvertedResults);
 
     }
 
     public ResultSummary convertForCache(ResultSummary rs, Class<?> fixtureClass) {
-        return convertForCache(rs, fixtureClass, null);
-    }
-
-    public ResultSummary convertForCache(ResultSummary rs, Class<?> fixtureClass, String example) {
         InternalFixtureState state = InternalFixtureState.getFixtureState(
                 fixtureClass,
                 rs.isForExample() ? rs.getFixtureState() : null);
