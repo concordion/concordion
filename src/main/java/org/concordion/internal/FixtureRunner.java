@@ -2,7 +2,6 @@ package org.concordion.internal;
 
 import java.io.IOException;
 
-import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.extension.FixtureExtensionLoader;
 
@@ -13,26 +12,18 @@ public class FixtureRunner {
 
     public ResultSummary run(Object fixture) throws IOException {
     	
-    	ConcordionRunOutput runOutput = cachedRunResults.startRun(fixture.getClass());
-        ResultSummary actualResultSummary = runOutput==null?
-                null:
-                runOutput.getActualResultSummary();
-
-        ResultSummary postProcessedResultSummary = runOutput==null?
-                null:
-                runOutput.getPostProcessedResultSummary();
-
-
+        ResultSummary actualResultSummary = null; 
         String additionalInformation = null;
-    	if (runOutput == null) {
+        ConcordionRunOutput cachedRunOutput = cachedRunResults.startRun(fixture.getClass());
+        
+    	if (cachedRunOutput == null) {
             ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture);
             fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
 
             try {
                 actualResultSummary = concordionBuilder.build().process(fixture);
                 // we want to make sure all the annotations are considered when storing the result summary
-
-                postProcessedResultSummary = cachedRunResults.convertForCache(actualResultSummary, fixture.getClass());
+                ResultSummary postProcessedResultSummary = cachedRunResults.convertForCache(actualResultSummary, fixture.getClass());
 
                 cachedRunResults.finishRun(fixture.getClass(),
                         actualResultSummary,
@@ -45,6 +36,7 @@ public class FixtureRunner {
             }
 
         } else {
+            actualResultSummary = cachedRunOutput.getActualResultSummary();
             additionalInformation = "From cache: ";
         }
 
