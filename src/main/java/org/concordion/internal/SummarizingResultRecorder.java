@@ -1,21 +1,16 @@
 package org.concordion.internal;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.concordion.api.ExpectedToFail;
 import org.concordion.api.Result;
 import org.concordion.api.ResultRecorder;
 import org.concordion.api.ResultSummary;
-import org.concordion.api.Unimplemented;
 
-public class SummarizingResultRecorder implements ResultRecorder, ResultSummary {
+public class SummarizingResultRecorder extends AbstractResultSummary implements ResultRecorder, ResultSummary {
 
     private List<Result> recordedResults = new ArrayList<Result>();
     private FailFastException failFastException;
-    private String specificationDescription = "";
-
     public SummarizingResultRecorder() {
 
     }
@@ -97,51 +92,6 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         return getCount(Result.IGNORED);
     }
 
-    @Override @Deprecated
-	public void print( PrintStream out) {
-        print(out, this);
-    }
-
-    @Override
-	public void print(PrintStream out, Object fixture) {
-    	out.print(printToString(fixture));
-    }
-    
-    @Override
-    public String printToString(Object fixture) {
-    	StringBuilder builder = new StringBuilder(specificationDescription);
-    	builder.append("\n");
-        String counts = printCountsToString(fixture);
-    	if (counts != null) {
-            builder.append(counts).append("\n");
-        }
-        builder.append("\n");
-        return builder.toString();
-    }
-    	
-    @Override
-    public String printCountsToString(Object fixture) {
-    	StringBuilder builder = new StringBuilder();
-
-        builder.append("Successes: ");
-        builder.append(getSuccessCount());
-        builder.append(", Failures: ");
-        builder.append(getFailureCount());
-        if (getIgnoredCount() > 0) {
-        	builder.append(", Ignored: ");
-        	builder.append(getIgnoredCount());
-        }
-        if (hasExceptions()) {
-        	builder.append(", Exceptions: ");
-        	builder.append(getExceptionCount());
-        }
-
-        builder.append(FixtureState.getFixtureState(fixture.getClass()).printNoteToString());
-
-        return builder.toString();
-    }
-
-
     @Override
     public void recordFailFastException( FailFastException exception) {
         this.setFailFastException(exception);
@@ -153,14 +103,5 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
 
     public void setFailFastException( FailFastException exception) {
         this.failFastException = exception;
-    }
-
-    @Override
-    public void setSpecificationDescription( String specificationDescription) {
-        this.specificationDescription = specificationDescription;
-    }
-
-    public String getSpecificationDescription() {
-        return specificationDescription;
     }
 }

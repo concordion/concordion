@@ -8,25 +8,22 @@ package org.concordion.internal;
 import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
 
-public class SingleResultSummary extends SummarizingResultRecorder {
+public class SingleResultSummary extends AbstractResultSummary implements ResultSummary {
     private final Result result;
 
-    public SingleResultSummary(final Result result) {
-        this.record(result);
+    public SingleResultSummary(Result result) {
         this.result = result;
     }
 
+    public SingleResultSummary(Result result, String specificationDescription) {
+        this.result = result;
+        this.setSpecificationDescription(specificationDescription);
+    }
+    
     @Override
     public ResultSummary getMeaningfulResultSummary(Object fixture) {
-        return super.getMeaningfulResultSummary(fixture);
-    }
-
-    public SingleResultSummary(final Result result, String specificationDescription) {
-        this.record(result);
-        this.result = result;
-
-        this.setSpecificationDescription(specificationDescription);
-
+        FixtureState state = FixtureState.getFixtureState(fixture.getClass());
+        return state.getMeaningfulResultSummary(this, null);
     }
 
     public Result getResult() {
@@ -44,5 +41,41 @@ public class SingleResultSummary extends SummarizingResultRecorder {
     @Override
     public int hashCode() {
         return result.hashCode();
+    }
+
+    @Override
+    public void assertIsSatisfied() {
+        assertIsSatisfied(this);
+    }
+
+    @Override
+    public void assertIsSatisfied(Object fixture) {
+        FixtureState state = FixtureState.getFixtureState(fixture.getClass());
+        state.assertIsSatisfied(this, null);
+    }
+
+    @Override
+    public boolean hasExceptions() {
+        return result == Result.EXCEPTION;
+    }
+
+    @Override
+    public long getSuccessCount() {
+        return result == Result.SUCCESS ? 1 : 0;
+    }
+
+    @Override
+    public long getFailureCount() {
+        return result == Result.FAILURE ? 1 : 0;
+    }
+
+    @Override
+    public long getExceptionCount() {
+        return result == Result.EXCEPTION ? 1 : 0;
+    }
+
+    @Override
+    public long getIgnoredCount() {
+        return result == Result.IGNORED ? 1 : 0;
     }
 }

@@ -53,7 +53,7 @@ public enum FixtureState {
 		public ResultSummary getMeaningfulResultSummary(
 				ResultSummary rs, FailFastException ffe) {
 			assertIsSatisfied(rs, ffe);
-			return new SingleResultSummary(Result.IGNORED);
+			return new SingleResultSummary(Result.IGNORED, rs.getSpecificationDescription());
 		}
 
        @Override
@@ -76,7 +76,7 @@ public enum FixtureState {
 		public ResultSummary getMeaningfulResultSummary(
 				ResultSummary rs, FailFastException ffe) {
 			assertIsSatisfied(rs, ffe);
-			return new SingleResultSummary(Result.IGNORED);
+			return new SingleResultSummary(Result.IGNORED, rs.getSpecificationDescription());
 		}
 
         @Override
