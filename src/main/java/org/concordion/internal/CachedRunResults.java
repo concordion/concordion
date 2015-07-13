@@ -47,28 +47,6 @@ public enum CachedRunResults {
         return summary;
     }
 
-//    /**
-//     *
-//     * Provides a direct method to put a result summary in the class. Generally should be used if a test is being
-//     * invoked but it's not a Concordion test (ie: concorion:run is being called on a regular junit test)
-//     *
-//     * @param testClass the class to enter into the cache
-//     * @param summary the summary to enter into the cache
-//     */
-//    public synchronized void enterIntoCache(Class<?> testClass, ResultSummary summary) {
-//
-//        ConcordionRunOutput runSummary = map.get(testClass);
-//
-//        // check for nothing in cache
-//        if (runSummary == null) {
-//            runSummary = new ConcordionRunOutput(testClass);
-//            map.put(testClass, runSummary);
-//        }
-//
-//        runSummary.setActualResultSummary(summary);
-//    }
-
-
     /**
      * Searches for a match in the cache. If there is no match, it marks the test as "in progress".
      * This is done in one method to avoid thread synchronization issues
@@ -99,17 +77,8 @@ public enum CachedRunResults {
     public synchronized void finishRun(Class<?> fixtureClass,
                                        ResultSummary actualSummary,
                                        ResultSummary convertedSummary) {
-        // check if there is already a result
-        ConcordionRunOutput runSummary = map.get(fixtureClass);
-        if (runSummary == null) {
-            // no result? Create one. This should never happen because startRun should always be called before
-            // finishRun
-            runSummary = new ConcordionRunOutput(fixtureClass);
-        }
 
-        // update the cache
-        runSummary.setActualResultSummary(actualSummary);
-        runSummary.setPostProcessedResultSummary(convertedSummary);
+        ConcordionRunOutput runSummary = new ConcordionRunOutput(fixtureClass, actualSummary, convertedSummary);
         map.put(fixtureClass, runSummary);
 	}
 
