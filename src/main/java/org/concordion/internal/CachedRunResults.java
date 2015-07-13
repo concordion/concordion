@@ -122,6 +122,10 @@ public enum CachedRunResults {
         // run failed. Remove our placeholder value.
         map.remove(aClass);
     }
+
+    public void removeAllFromCache(Class<?> aClass) {
+        map.remove(aClass);
+    }
 }
 
 class CacheResultSummary extends SingleResultSummary {

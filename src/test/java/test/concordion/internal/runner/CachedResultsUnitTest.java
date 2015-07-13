@@ -1,6 +1,7 @@
 package test.concordion.internal.runner;
 
 import org.concordion.internal.CachedRunResults;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
@@ -13,10 +14,15 @@ import static org.junit.Assert.assertNull;
  */
 public class CachedResultsUnitTest {
 
+    private CachedRunResults runResults = CachedRunResults.SINGLETON;
+
+    @Before
+    public void before() {
+        runResults.removeAllFromCache(this.getClass());
+    }
+
     @Test
     public void testCacheInProgress() {
-        CachedRunResults runResults = CachedRunResults.SINGLETON;
-        runResults.clearCache();
 
         assertNull(runResults.startRun(this.getClass()));
         assertNotNull(runResults.startRun(this.getClass()));
