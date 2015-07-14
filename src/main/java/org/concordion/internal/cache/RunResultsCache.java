@@ -5,7 +5,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.concordion.Concordion;
 import org.concordion.api.ResultSummary;
-import org.concordion.internal.InternalFixtureState;
 import org.concordion.internal.SingleResultSummary;
 import org.concordion.internal.SummarizingResultRecorder;
 
@@ -16,7 +15,7 @@ import org.concordion.internal.SummarizingResultRecorder;
  * @author Tim Wright &lt;tim@tfwright.co.nz&gt;
  *
  */
-public enum CachedRunResults {
+public enum RunResultsCache {
     SINGLETON;
 
 	Map<CacheKey, ConcordionRunOutput> map = new ConcurrentHashMap<CacheKey, ConcordionRunOutput>();
@@ -105,7 +104,7 @@ public enum CachedRunResults {
 
         // update the cached value
         runSummary.setActualResultSummary(actualSummary);
-        runSummary.setPostProcessedResultSummary(postProcessedResultSummary);
+        runSummary.setModifiedResultSummary(postProcessedResultSummary);
 
         String specificationDescription = Concordion.getDefaultFixtureClassName(fixtureClass);
 
@@ -117,7 +116,7 @@ public enum CachedRunResults {
             map.put(getID(fixtureClass, null), output);
             // give them empty result summaries by default
             output.setActualResultSummary(new SummarizingResultRecorder(specificationDescription));
-            output.setPostProcessedResultSummary(new SummarizingResultRecorder(specificationDescription));
+            output.setModifiedResultSummary(new SummarizingResultRecorder(specificationDescription));
         }
 
         // and now accumulate
@@ -131,21 +130,14 @@ public enum CachedRunResults {
         output.setActualResultSummary(totalActualResults);
 
         SummarizingResultRecorder totalConvertedResults = new SummarizingResultRecorder(specificationDescription);
-        totalConvertedResults.record(output.getPostProcessedResultSummary());
+        totalConvertedResults.record(output.getModifiedResultSummary());
         if (postProcessedResultSummary.isForExample()) {
             totalConvertedResults.record(new SingleResultSummary(postProcessedResultSummary));
         } else {
             totalConvertedResults.record(postProcessedResultSummary);
         }
-        output.setPostProcessedResultSummary(totalConvertedResults);
+        output.setModifiedResultSummary(totalConvertedResults);
 
-    }
-
-    public ResultSummary convertForCache(ResultSummary rs, Class<?> fixtureClass) {
-        InternalFixtureState state = InternalFixtureState.getFixtureState(
-                fixtureClass,
-                rs.isForExample() ? rs.getFixtureState() : null);
-        return state.convertForCache(rs);
     }
 
     public void failRun(Class<? extends Object> aClass, String example) {

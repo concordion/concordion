@@ -49,36 +49,42 @@ public class DocumentParser {
     private void generateCommandCallTree(nu.xom.Element xomElement, CommandCall parentCommandCall, Resource resource) {
         boolean commandIsAssigned = false;
 
-        Map<String, String> params = new HashMap<String, String>();
         Command command = null;
         CommandCall commandCall = null;
+        String namespaceURI = null;
 
         for (int i = 0; i < xomElement.getAttributeCount(); i++) {
             Attribute attribute = xomElement.getAttribute(i);
-            String namespaceURI = attribute.getNamespaceURI();
-            
+            namespaceURI = attribute.getNamespaceURI();
+
             if (!namespaceURI.equals("")) {
                 String commandName = attribute.getLocalName();
                 command = createCommand(namespaceURI, commandName);
                 if (command != null) {
                     Check.isFalse(commandIsAssigned, "Multiple commands per element is currently not supported.");
-                    commandIsAssigned = true;
                     String expression = attribute.getValue();
                     commandCall = new CommandCall(command, new Element(xomElement), expression, resource);
-                } else {
-                    // something in concordion namespace, not a command. Assume it is a parameter of some
-                    // description
-                    params.put(attribute.getLocalName(), attribute.getValue());
+                    break;
                 }
             }
         }
 
         if (commandCall != null) {
+            Map<String, String> params = new HashMap<String, String>();
+
+            // assume that because the commandCall is not null that the namespaceURI has also been set
+            for (int i = 0; i < xomElement.getAttributeCount(); i++) {
+                Attribute attribute = xomElement.getAttribute(i);
+                if (namespaceURI.equals(attribute.getNamespaceURI())) {
+                    // something in the same namespace. Assume it is a parameter of some
+                    // description
+                    params.put(attribute.getLocalName(), attribute.getValue());
+                }
+            }
+
             parentCommandCall.appendChild(commandCall);
             parentCommandCall = commandCall;
             commandCall.setParameters(params);
-        } else {
-            Check.isTrue(params.size() == 0, "Concordion paramaters found but no command. " + params.toString() );
         }
 
         Elements children = xomElement.getChildElements();

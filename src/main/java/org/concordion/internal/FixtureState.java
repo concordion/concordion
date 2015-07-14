@@ -1,14 +1,13 @@
 package org.concordion.internal;
 
 import java.io.PrintStream;
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.concordion.api.*;
 
-public enum InternalFixtureState {
-    UNIMPLEMENTED("unimplemented", Unimplemented.class) {
+public enum FixtureState {
+    UNIMPLEMENTED(ResultModifier.UNIMPLEMENTED) {
 
         private void addToList(List<String> list, long x, String singular, String plural) {
             if (x == 1) {
@@ -61,7 +60,7 @@ public enum InternalFixtureState {
        }
 
     },
-    EXPECTED_TO_FAIL("ExpectedToFail", ExpectedToFail.class) {
+    EXPECTED_TO_FAIL(ResultModifier.EXPECTED_TO_FAIL) {
 
         @Override
         public void assertIsSatisfied(ResultSummary rs, FailFastException ffe) {
@@ -93,7 +92,7 @@ public enum InternalFixtureState {
         	return "   <-- Note: This test has been marked as EXPECTED_TO_FAIL";
        }
     },
-    EXPECTED_TO_PASS("ExpectedToPass", ExpectedToPass.class) {
+    EXPECTED_TO_PASS(ResultModifier.EXPECTED_TO_PASS) {
 
         @Override
         public void assertIsSatisfied(ResultSummary rs, FailFastException ffe) {
@@ -127,12 +126,11 @@ public enum InternalFixtureState {
         }
     };
 
-    private final String tag;
-    private final Class<? extends Annotation> annotation;
 
-    InternalFixtureState(String tag, Class<? extends Annotation> annotation) {
-        this.tag = tag;
-        this.annotation = annotation;
+    private final ResultModifier resultModifier;
+
+    FixtureState(ResultModifier resultModifier) {
+        this.resultModifier = resultModifier;
     }
 
     public abstract void assertIsSatisfied(ResultSummary rs, FailFastException ffe);
@@ -148,11 +146,11 @@ public enum InternalFixtureState {
     public abstract ResultSummary convertForCache(ResultSummary rs);
 
 
-    public static InternalFixtureState getFixtureState(Class<?> fixtureClass, FixtureState fixtureState) {
+    public static FixtureState getFixtureState(Class<?> fixtureClass, ResultModifier resultModifier) {
         // examples have precedence
-        if (fixtureState != null) {
-            for (InternalFixtureState state: values()) {
-                if (state.getAnnotationTag().equalsIgnoreCase(fixtureState.name())) {
+        if (resultModifier != null) {
+            for (FixtureState state: values()) {
+                if (state.getAnnotationTag().equalsIgnoreCase(resultModifier.name())) {
                     return state;
                 }
             }
@@ -160,9 +158,9 @@ public enum InternalFixtureState {
 
         // loop through the states
         if (fixtureClass != null) {
-            for (InternalFixtureState state : values()) {
+            for (FixtureState state : values()) {
                 // if we found a match, then return the state
-                if (fixtureClass.getAnnotation(state.annotation) != null) {
+                if (fixtureClass.getAnnotation(state.resultModifier.getAnnotation()) != null) {
                     return state;
                 }
             }
@@ -172,6 +170,6 @@ public enum InternalFixtureState {
     }
 
     public String getAnnotationTag() {
-        return tag;
+        return resultModifier.getTag();
     }
 }

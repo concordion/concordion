@@ -1,6 +1,6 @@
 package test.concordion.internal.runner;
 
-import org.concordion.internal.cache.CachedRunResults;
+import org.concordion.internal.cache.RunResultsCache;
 import org.concordion.internal.cache.ConcordionRunOutput;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +21,7 @@ public class CachedResultsUnitTest {
     public static final String EXAMPLE_1_NAME = "eg1";
     public static final String EXAMPLE_2_NAME = "eg2";
     
-    private CachedRunResults runResults = CachedRunResults.SINGLETON;
+    private RunResultsCache runResults = RunResultsCache.SINGLETON;
 
     @Before
     public void before() {
@@ -42,10 +42,10 @@ public class CachedResultsUnitTest {
         assertThat(concordionRunOutput.getActualResultSummary().getFailureCount(), is(equalTo(0L)));
         assertThat(concordionRunOutput.getActualResultSummary().getIgnoredCount(), is(equalTo(1L)));
 
-        assertThat(concordionRunOutput.getPostProcessedResultSummary().getExceptionCount(), is(equalTo(0L)));
-        assertThat(concordionRunOutput.getPostProcessedResultSummary().getSuccessCount(), is(equalTo(0L)));
-        assertThat(concordionRunOutput.getPostProcessedResultSummary().getFailureCount(), is(equalTo(0L)));
-        assertThat(concordionRunOutput.getPostProcessedResultSummary().getIgnoredCount(), is(equalTo(1L)));
+        assertThat(concordionRunOutput.getModifiedResultSummary().getExceptionCount(), is(equalTo(0L)));
+        assertThat(concordionRunOutput.getModifiedResultSummary().getSuccessCount(), is(equalTo(0L)));
+        assertThat(concordionRunOutput.getModifiedResultSummary().getFailureCount(), is(equalTo(0L)));
+        assertThat(concordionRunOutput.getModifiedResultSummary().getIgnoredCount(), is(equalTo(1L)));
 
     }
 
@@ -63,10 +63,10 @@ public class CachedResultsUnitTest {
         assertThat(concordionRunOutput.getActualResultSummary().getFailureCount(), is(equalTo(0L)));
         assertThat(concordionRunOutput.getActualResultSummary().getIgnoredCount(), is(equalTo(1L)));
 
-        assertThat(concordionRunOutput.getPostProcessedResultSummary().getExceptionCount(), is(equalTo(0L)));
-        assertThat(concordionRunOutput.getPostProcessedResultSummary().getSuccessCount(), is(equalTo(0L)));
-        assertThat(concordionRunOutput.getPostProcessedResultSummary().getFailureCount(), is(equalTo(0L)));
-        assertThat(concordionRunOutput.getPostProcessedResultSummary().getIgnoredCount(), is(equalTo(1L)));
+        assertThat(concordionRunOutput.getModifiedResultSummary().getExceptionCount(), is(equalTo(0L)));
+        assertThat(concordionRunOutput.getModifiedResultSummary().getSuccessCount(), is(equalTo(0L)));
+        assertThat(concordionRunOutput.getModifiedResultSummary().getFailureCount(), is(equalTo(0L)));
+        assertThat(concordionRunOutput.getModifiedResultSummary().getIgnoredCount(), is(equalTo(1L)));
 
     }
 

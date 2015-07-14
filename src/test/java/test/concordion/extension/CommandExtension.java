@@ -43,7 +43,7 @@ public class CommandExtension implements ConcordionExtension {
 
             public void executeAsExample(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
             }
-            public void cleanUp(CommandCall commandCall) {
+            public void finish(CommandCall commandCall) {
             }
 
         });

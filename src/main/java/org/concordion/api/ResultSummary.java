@@ -18,8 +18,6 @@ public interface ResultSummary {
      * change the result summary to something that doesn't cause the parent fixture to fail when
      * the numbers of successes, failures, and exceptions are added up. This method gets the meaningful summary.
      */
-    ResultSummary getMeaningfulResultSummary(Object fixture, String example);
-
     @Deprecated
     ResultSummary getMeaningfulResultSummary(Object fixture);
 
@@ -52,5 +50,5 @@ public interface ResultSummary {
 
     boolean isForExample();
 
-    FixtureState getFixtureState();
+    ResultModifier getResultModifier();
 }

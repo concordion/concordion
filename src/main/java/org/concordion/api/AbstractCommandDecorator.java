@@ -1,7 +1,6 @@
 package org.concordion.api;
 
 
-import java.util.Collections;
 import java.util.List;
 
 public abstract class AbstractCommandDecorator implements Command {
@@ -55,7 +54,7 @@ public abstract class AbstractCommandDecorator implements Command {
 
     protected abstract void process(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Runnable runnable);
 
-    public void cleanUp(CommandCall commandCall) {
-        this.command.cleanUp(commandCall);
+    public void finish(CommandCall commandCall) {
+        this.command.finish(commandCall);
     }
 }

@@ -39,7 +39,7 @@ public class SpecificationCommand extends AbstractCommand {
         announceAfterProcessingEvent(commandCall.getResource(), commandCall.getElement());
     }
 
-    public void cleanUp(CommandCall commandCall) {
+    public void finish(CommandCall commandCall) {
 
         if (!specificationExecuted) {
             announceBeforeProcessingEvent(commandCall.getResource(), commandCall.getElement());

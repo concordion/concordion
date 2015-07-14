@@ -41,5 +41,5 @@ public interface SpecificationByExample extends Specification {
      * Called once all examples have been executed so the spec can do things like "save HTML results to file"
      * 
      */
-    void cleanUp();
+    void finish();
 }

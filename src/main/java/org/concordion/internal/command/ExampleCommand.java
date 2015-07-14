@@ -2,7 +2,7 @@ package org.concordion.internal.command;
 
 import org.concordion.api.*;
 import org.concordion.internal.FailFastException;
-import org.concordion.internal.InternalFixtureState;
+import org.concordion.internal.FixtureState;
 import org.concordion.internal.SpecificationDescriber;
 
 import java.util.Arrays;
@@ -36,15 +36,15 @@ public class ExampleCommand extends AbstractCommand {
 
             String params = node.getParameter("state");
             if (params != null) {
-                FixtureState fixtureState = FixtureState.valueOf(params);
-                resultRecorder.setFixtureState(fixtureState);
+                ResultModifier resultModifier = ResultModifier.valueOf(params);
+                resultRecorder.setResultModifier(resultModifier);
                 // let's be really nice and add the fixture state text into the element itself.
-                InternalFixtureState internalFixtureState = InternalFixtureState.getFixtureState(null, fixtureState);
+                FixtureState fixtureState = FixtureState.getFixtureState(null, resultModifier);
 
                 String note;
-                if (internalFixtureState != null) {
-                    note = internalFixtureState.printNoteToString();
-                } else if (internalFixtureState == null) {
+                if (fixtureState != null) {
+                    note = fixtureState.printNoteToString();
+                } else if (fixtureState == null) {
                     note = "Invalid state expression " + params;
                 } else {
                     note = "";

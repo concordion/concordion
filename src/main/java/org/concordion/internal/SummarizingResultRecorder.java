@@ -4,7 +4,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.concordion.api.FixtureState;
+import org.concordion.api.ResultModifier;
 import org.concordion.api.Result;
 import org.concordion.api.ResultRecorder;
 import org.concordion.api.ResultSummary;
@@ -15,7 +15,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     private FailFastException failFastException;
     private String specificationDescription = "";
     boolean forExample = false;
-    private FixtureState fixtureState;
+    private ResultModifier resultModifier;
 
     public SummarizingResultRecorder() {
         this(null);
@@ -57,9 +57,9 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
     public void assertIsSatisfied(Object fixture, String example) {
         // only pass the example name through if this is an actual example - not any stray tests in the
         // spec
-        InternalFixtureState state = InternalFixtureState.getFixtureState(
+        FixtureState state = FixtureState.getFixtureState(
                 fixture.getClass(),
-                isForExample() ? this.getFixtureState() : null);
+                isForExample() ? this.getResultModifier() : null);
         state.assertIsSatisfied(this, failFastException);
     }
 
@@ -68,12 +68,12 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         return getMeaningfulResultSummary(fixture, null);
     }
 
-    public ResultSummary getMeaningfulResultSummary(Object fixture, String example) {
+    private ResultSummary getMeaningfulResultSummary(Object fixture, String example) {
         // we pass null for the example if this is not an example. That lets the fixture state
         // use class annotations instead of the example tags.
-        InternalFixtureState state = InternalFixtureState.getFixtureState(
+        FixtureState state = FixtureState.getFixtureState(
                 fixture.getClass(),
-                isForExample() ? this.getFixtureState() : null);
+                isForExample() ? this.getResultModifier() : null);
 
     	return state.getMeaningfulResultSummary(this, failFastException);
     }
@@ -163,7 +163,7 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         }
 
         if (fixture != null) {
-            builder.append(InternalFixtureState.getFixtureState(fixture.getClass(), this.getFixtureState()).printNoteToString());
+            builder.append(FixtureState.getFixtureState(fixture.getClass(), this.getResultModifier()).printNoteToString());
         }
 
         return builder.toString();
@@ -202,11 +202,11 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         return getSuccessCount() + getFailureCount() + getExceptionCount() + getIgnoredCount();
     }
 
-    public FixtureState getFixtureState() {
-        return fixtureState;
+    public ResultModifier getResultModifier() {
+        return resultModifier;
     }
 
-    public void setFixtureState(FixtureState fixtureState) {
-        this.fixtureState = fixtureState;
+    public void setResultModifier(ResultModifier resultModifier) {
+        this.resultModifier = resultModifier;
     }
 }

@@ -26,6 +26,6 @@ public abstract class AbstractCommand implements Command {
     public void executeAsExample(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
     }
 
-    public void cleanUp(CommandCall commandCall) {
+    public void finish(CommandCall commandCall) {
     }
 }

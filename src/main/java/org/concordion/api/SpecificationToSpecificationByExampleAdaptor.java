@@ -20,7 +20,7 @@ public class SpecificationToSpecificationByExampleAdaptor implements Specificati
         specification = s;
     }
     
-    public void cleanUp() {
+    public void finish() {
     }
 
     public void process(Evaluator evaluator, ResultRecorder resultRecorder) {

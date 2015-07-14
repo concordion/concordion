@@ -1,7 +1,7 @@
 package org.concordion.internal.runner;
 
 import org.concordion.api.*;
-import org.concordion.internal.cache.CachedRunResults;
+import org.concordion.internal.cache.RunResultsCache;
 import org.concordion.internal.FailFastException;
 import org.concordion.internal.SummarizingResultRecorder;
 import org.concordion.internal.cache.ConcordionRunOutput;
@@ -48,7 +48,7 @@ public class DefaultConcordionRunner implements Runner {
     }
 
     protected ResultSummary runTestClass(Class<?> concordionClass) throws Exception {
-        CachedRunResults cache = CachedRunResults.SINGLETON;
+        RunResultsCache cache = RunResultsCache.SINGLETON;
 
         // first check the cache.
         ResultSummary summary = null;
@@ -69,7 +69,7 @@ public class DefaultConcordionRunner implements Runner {
         if (concordionRunOutput == null) {
             summary = jUnitSummary;
         } else {
-            summary = concordionRunOutput.getPostProcessedResultSummary();
+            summary = concordionRunOutput.getModifiedResultSummary();
         }
 
         // throw an exception if we're failing fast...

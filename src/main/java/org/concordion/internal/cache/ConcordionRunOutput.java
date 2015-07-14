@@ -3,20 +3,19 @@ package org.concordion.internal.cache;
 import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.SingleResultSummary;
-import org.concordion.internal.cache.CacheResultSummary;
 
 /**
  * Data to store in the cache
  */
 public class ConcordionRunOutput {
     private ResultSummary actualResultSummary;
-    private ResultSummary postProcessedResultSummary;
+    private ResultSummary modifiedResultSummary;
 
     public ConcordionRunOutput(Class<?> fixtureClass) {
         SingleResultSummary singleResultSummary = new CacheResultSummary(Result.IGNORED,
                 "No current results for fixture " + fixtureClass.getName() + " as the specification is currently being executed");
         this.actualResultSummary = singleResultSummary;
-        this.postProcessedResultSummary = singleResultSummary;
+        this.modifiedResultSummary = singleResultSummary;
     }
 
     public ResultSummary getActualResultSummary() {
@@ -27,12 +26,11 @@ public class ConcordionRunOutput {
         this.actualResultSummary = actualResultSummary;
     }
 
-    public ResultSummary getPostProcessedResultSummary() {
-        return postProcessedResultSummary;
+    public ResultSummary getModifiedResultSummary() {
+        return modifiedResultSummary;
     }
 
-    public void setPostProcessedResultSummary(ResultSummary postProcessedResultSummary) {
-        this.postProcessedResultSummary = postProcessedResultSummary;
+    public void setModifiedResultSummary(ResultSummary modifiedResultSummary) {
+        this.modifiedResultSummary = modifiedResultSummary;
     }
-
 }

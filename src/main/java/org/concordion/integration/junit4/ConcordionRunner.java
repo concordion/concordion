@@ -5,10 +5,8 @@ import org.concordion.api.FailFast;
 import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.*;
-import org.concordion.internal.cache.CachedRunResults;
+import org.concordion.internal.cache.RunResultsCache;
 import org.concordion.internal.cache.ConcordionRunOutput;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -108,9 +106,9 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
     public void run(RunNotifier notifier) {
         super.run(notifier);
 
-        concordion.cleanUp();
+        concordion.finish();
 
-        ConcordionRunOutput results = CachedRunResults.SINGLETON.getFromCache(fixtureClass, null);
+        ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
         if (results != null) {
             // we only print meta-results when the spec has multiple examples.
             if (concordionFrameworkMethods.size() > 1) {
@@ -161,14 +159,12 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
             // to worry about them. But it doesn't invoke the @Before and @After methods. So we explicitly
             // invoke them here.
 
-            invokeMethodsWithAnnotation(fixtureClass, fixture, Before.class);
             ResultSummary result = fixtureRunner.run(example);
 
 //            System.err.printf("Accumulated %s into %s\n",
 //                    result.printToString(fixture),
 //                    accumulatedResultSummary.printToString(fixture));
 
-            invokeMethodsWithAnnotation(fixtureClass, fixture, After.class);
 
             result.assertIsSatisfied(fixture, example);
 
