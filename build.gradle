@@ -85,8 +85,6 @@ distributions {
     }
 }
 
-distZip.dependsOn clean
-
 // 'gradle release' will also upload release to Nexus
 createReleaseTag.dependsOn uploadArchives
 release.dependsOn clean
