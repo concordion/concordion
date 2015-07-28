@@ -150,7 +150,7 @@ public enum FixtureState {
         // examples have precedence
         if (resultModifier != null) {
             for (FixtureState state: values()) {
-                if (state.getAnnotationTag().equalsIgnoreCase(resultModifier.name())) {
+                if (state.getResultModifier() ==  resultModifier) {
                     return state;
                 }
             }
@@ -171,5 +171,9 @@ public enum FixtureState {
 
     public String getAnnotationTag() {
         return resultModifier.getTag();
+    }
+
+    public ResultModifier getResultModifier() {
+        return resultModifier;
     }
 }

@@ -36,7 +36,7 @@ public class ExampleCommand extends AbstractCommand {
 
             String params = node.getParameter("state");
             if (params != null) {
-                ResultModifier resultModifier = ResultModifier.valueOf(params);
+                ResultModifier resultModifier = ResultModifier.getModifier(params);
                 resultRecorder.setResultModifier(resultModifier);
                 // let's be really nice and add the fixture state text into the element itself.
                 FixtureState fixtureState = FixtureState.getFixtureState(null, resultModifier);

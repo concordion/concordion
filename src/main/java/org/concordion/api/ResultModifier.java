@@ -25,4 +25,13 @@ public enum ResultModifier {
     public String getTag() {
         return tag;
     }
+
+    public static ResultModifier getModifier(String tag) {
+        for (ResultModifier resultModifier: values()) {
+            if (resultModifier.getTag().equalsIgnoreCase(tag)) {
+                return resultModifier;
+            }
+        }
+        throw new IllegalArgumentException("No result modifier for " + tag);
+    }
 }
