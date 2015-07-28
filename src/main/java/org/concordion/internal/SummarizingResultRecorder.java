@@ -9,13 +9,12 @@ import org.concordion.api.Result;
 import org.concordion.api.ResultRecorder;
 import org.concordion.api.ResultSummary;
 
-public class SummarizingResultRecorder implements ResultRecorder, ResultSummary {
+public class SummarizingResultRecorder extends AbstractResultSummary implements ResultRecorder, ResultSummary {
 
     private List<Result> recordedResults = new ArrayList<Result>();
     private FailFastException failFastException;
     private String specificationDescription = "";
     boolean forExample = false;
-    private ResultModifier resultModifier;
 
     public SummarizingResultRecorder() {
         this(null);
@@ -202,11 +201,4 @@ public class SummarizingResultRecorder implements ResultRecorder, ResultSummary 
         return getSuccessCount() + getFailureCount() + getExceptionCount() + getIgnoredCount();
     }
 
-    public ResultModifier getResultModifier() {
-        return resultModifier;
-    }
-
-    public void setResultModifier(ResultModifier resultModifier) {
-        this.resultModifier = resultModifier;
-    }
 }

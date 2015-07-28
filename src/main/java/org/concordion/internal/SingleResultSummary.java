@@ -6,13 +6,15 @@ package org.concordion.internal;
  * @author TimW5
  */
 import org.concordion.api.Result;
+import org.concordion.api.ResultModifier;
 import org.concordion.api.ResultSummary;
 
-public class SingleResultSummary extends SummarizingResultRecorder {
+import java.io.PrintStream;
+
+public class SingleResultSummary extends AbstractResultSummary implements ResultSummary {
     private final Result result;
 
-    public SingleResultSummary(final Result result) {
-        this.record(result);
+    public SingleResultSummary(Result result) {
         this.result = result;
     }
 
@@ -36,7 +38,7 @@ public class SingleResultSummary extends SummarizingResultRecorder {
             // result summary has no tests in it.
             result = Result.SUCCESS;
         }
-        record(result);
+        setResultModifier(resultSummary.getResultModifier());
     }
 
 //    public ResultSummary getMeaningfulResultSummary(Object fixture, String example) {
@@ -44,11 +46,13 @@ public class SingleResultSummary extends SummarizingResultRecorder {
 //    }
 
     public SingleResultSummary(final Result result, String specificationDescription) {
-        this.record(result);
         this.result = result;
-
         this.setSpecificationDescription(specificationDescription);
-
+    }
+    
+    public ResultSummary getMeaningfulResultSummary(Object fixture) {
+        FixtureState state = FixtureState.getFixtureState(fixture.getClass(), getResultModifier());
+        return state.getMeaningfulResultSummary(this, null);
     }
 
     public Result getResult() {
@@ -67,4 +71,40 @@ public class SingleResultSummary extends SummarizingResultRecorder {
     public int hashCode() {
         return result.hashCode();
     }
+
+    public void assertIsSatisfied() {
+        assertIsSatisfied(this);
+    }
+
+    public void assertIsSatisfied(Object fixture) {
+        assertIsSatisfied(fixture, null);
+    }
+
+
+    public void assertIsSatisfied(Object fixture, String example) {
+        FixtureState state = FixtureState.getFixtureState(fixture.getClass(), getResultModifier());
+        state.assertIsSatisfied(this, null);
+    }
+
+    public boolean hasExceptions() {
+        return result == Result.EXCEPTION;
+    }
+
+    public long getSuccessCount() {
+        return result == Result.SUCCESS ? 1 : 0;
+    }
+
+    public long getFailureCount() {
+        return result == Result.FAILURE ? 1 : 0;
+    }
+
+    public long getExceptionCount() {
+        return result == Result.EXCEPTION ? 1 : 0;
+    }
+
+    public long getIgnoredCount() {
+        return result == Result.IGNORED ? 1 : 0;
+    }
+
+
 }

@@ -72,10 +72,9 @@ test {
 }
 
 compileTestJava.dependsOn compileTestDummiesJava
-release.dependsOn clean
-release.dependsOn setJava5ClassPath
 
 distributions {
+    version = version - "-SNAPSHOT"
     main {
         contents {
             from ('.') { include '*.txt','build.gradle','src/**' }
@@ -88,7 +87,8 @@ distributions {
 
 // 'gradle release' will also upload release to Nexus
 createReleaseTag.dependsOn uploadArchives
-release.dependsOn
+release.dependsOn clean
+release.dependsOn setJava5ClassPath
 
 extraArchive {
     tests = true    // create tests jar file and upload

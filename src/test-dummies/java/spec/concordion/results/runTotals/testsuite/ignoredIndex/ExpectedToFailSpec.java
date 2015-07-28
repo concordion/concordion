@@ -7,6 +7,6 @@ import org.junit.runner.RunWith;
 @org.concordion.api.ExpectedToFail
 public class ExpectedToFailSpec {
     public void sleep(int secs) throws InterruptedException {
-        Thread.sleep(secs * 1000);
+        Thread.sleep(secs);
     }
 }

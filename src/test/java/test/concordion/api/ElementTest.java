@@ -42,7 +42,9 @@ public class ElementTest {
             
             Element root = new Element(new Builder(false).build(new StringReader(xhtml)).getRootElement());
             
+            assertNotNull(root.getElementById("first"));
             assertEquals("First paragraph", root.getElementById("first").getText());
+            assertNotNull(root.getElementById("second"));
             assertEquals("Second paragraph", root.getElementById("second").getText());
             assertNull(root.getElementById("third"));
         }

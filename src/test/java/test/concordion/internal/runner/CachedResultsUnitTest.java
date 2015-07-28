@@ -1,15 +1,13 @@
 package test.concordion.internal.runner;
 
-import org.concordion.internal.cache.RunResultsCache;
 import org.concordion.internal.cache.ConcordionRunOutput;
+import org.concordion.internal.cache.RunResultsCache;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 /**
  * Created by TimW5 on 27/09/14.

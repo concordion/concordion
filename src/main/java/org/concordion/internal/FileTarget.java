@@ -32,7 +32,12 @@ public class FileTarget implements Target {
         if (outputFile.exists() && isFreshEnough(outputFile)) {
             return;
         }
-        IOUtil.copy(inputStream, createOutputStream(resource));
+        OutputStream outputStream = createOutputStream(resource);
+        try {
+            IOUtil.copy(inputStream, outputStream);
+        } finally {
+            outputStream.close();
+        }
     }
 
     public void delete(Resource resource) throws IOException {
@@ -43,16 +48,14 @@ public class FileTarget implements Target {
     public void write(Resource resource, String s) throws IOException {
         Check.notNull(resource, "resource is null");
         mkdirs(resource);
-        Writer writer = new BufferedWriter(createWriter(resource, "UTF-8"));
+        FileOutputStream os = new FileOutputStream(getFile(resource));
+        Writer writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
         try {
             writer.write(s);
         } finally {
             writer.close();
+            os.close();
         }
-    }
-
-    private OutputStreamWriter createWriter(Resource resource, String encoding) throws IOException {
-        return new OutputStreamWriter(new FileOutputStream(getFile(resource)), encoding);
     }
 
     public File getFile(Resource resource) {

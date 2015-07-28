@@ -6,6 +6,6 @@ import org.junit.runner.RunWith;
 @RunWith(ConcordionRunner.class)
 public class FailureSpec {
     public void sleep(int secs) throws InterruptedException {
-        Thread.sleep(secs * 1000);
+        Thread.sleep(secs);
     }
 }

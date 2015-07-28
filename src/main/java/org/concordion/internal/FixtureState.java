@@ -177,3 +177,4 @@ public enum FixtureState {
         return resultModifier;
     }
 }
+
