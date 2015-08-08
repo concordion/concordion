@@ -36,18 +36,7 @@ import org.concordion.api.listener.SetListener;
 import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.api.listener.VerifyRowsListener;
-import org.concordion.internal.command.AssertEqualsCommand;
-import org.concordion.internal.command.AssertFalseCommand;
-import org.concordion.internal.command.AssertTrueCommand;
-import org.concordion.internal.command.EchoCommand;
-import org.concordion.internal.command.ExecuteCommand;
-import org.concordion.internal.command.LocalTextDecorator;
-import org.concordion.internal.command.RunCommand;
-import org.concordion.internal.command.SetCommand;
-import org.concordion.internal.command.SpecificationCommand;
-import org.concordion.internal.command.ThrowableCatchingDecorator;
-import org.concordion.internal.command.ThrowableCaughtPublisher;
-import org.concordion.internal.command.VerifyRowsCommand;
+import org.concordion.internal.command.*;
 import org.concordion.internal.listener.AssertResultRenderer;
 import org.concordion.internal.listener.BreadcrumbRenderer;
 import org.concordion.internal.listener.DocumentStructureImprover;
@@ -90,6 +79,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private SetCommand setCommand = new SetCommand();
     private RunCommand runCommand = new RunCommand();
     private VerifyRowsCommand verifyRowsCommand = new VerifyRowsCommand();
+    private VerifyRowsUnorderedCommand verifyRowsUnorderedCommand = new VerifyRowsUnorderedCommand();
     private EchoCommand echoCommand = new EchoCommand();
     private ThrowableCaughtPublisher throwableListenerPublisher = new ThrowableCaughtPublisher();
     private LinkedHashMap<String, Resource> resourceToCopyMap = new LinkedHashMap<String, Resource>();
@@ -107,6 +97,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         withAssertTrueListener(assertRenderer);
         withAssertFalseListener(assertRenderer);
         withVerifyRowsListener(new VerifyRowsResultRenderer());
+        withVerifyRowsUnorderedListener(new VerifyRowsResultRenderer());
         withRunListener(new RunResultRenderer());
         withDocumentParsingListener(new DocumentStructureImprover());
         withDocumentParsingListener(new MetadataCreator());
@@ -156,6 +147,11 @@ public class ConcordionBuilder implements ConcordionExtender {
     
     public ConcordionBuilder withVerifyRowsListener(VerifyRowsListener listener) {
         verifyRowsCommand.addVerifyRowsListener(listener);
+        return this;
+    }
+
+    public ConcordionBuilder withVerifyRowsUnorderedListener(VerifyRowsListener listener) {
+        verifyRowsUnorderedCommand.addVerifyRowsListener(listener);
         return this;
     }
     
@@ -265,7 +261,10 @@ public class ConcordionBuilder implements ConcordionExtender {
         
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "verify-rows", verifyRowsCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "verifyRows", verifyRowsCommand);
-        
+
+        withApprovedCommand(NAMESPACE_CONCORDION_2007, "verify-rows-unordered", verifyRowsUnorderedCommand);
+        withApprovedCommand(NAMESPACE_CONCORDION_2007, "verifyRowsUnordered", verifyRowsUnorderedCommand);
+
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "echo", echoCommand);
 
         if (target == null) {
