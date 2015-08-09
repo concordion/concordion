@@ -38,27 +38,55 @@ public class AssertEqualsCommand extends AbstractCommand {
     
     @Override
     public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
-        Check.isFalse(commandCall.hasChildCommands(), "Nesting commands inside an 'assertEquals' is not supported");
-        
-        Element element = commandCall.getElement();
-        
-        Object actual = evaluator.evaluate(commandCall.getExpression());
-        String expected = element.getText();
-        
-        if (comparator.compare(actual, expected) == 0) {
+        ComparisonResult result = doCompare(commandCall, evaluator);
+
+        if (result.equals) {
             resultRecorder.record(Result.SUCCESS);
-            announceSuccess(element);
+            announceSuccess(result.element);
         } else {
             resultRecorder.record(Result.FAILURE);
-            announceFailure(element, expected, actual);
+            announceFailure(result.element, result.expected, result.actual);
         }
     }
-    
+
+    @Override
+    public Result verifyInBackground(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+        return doCompare(commandCall, evaluator).equals
+                ? Result.SUCCESS
+                : Result.FAILURE;
+    }
+
+    private ComparisonResult doCompare(CommandCall commandCall, Evaluator evaluator) {
+        Check.isFalse(commandCall.hasChildCommands(), "Nesting commands inside an 'assertEquals' is not supported");
+
+        Element element = commandCall.getElement();
+
+        Object actual = evaluator.evaluate(commandCall.getExpression());
+        String expected = element.getText();
+
+        return new ComparisonResult(comparator.compare(actual, expected) == 0, actual, expected, element);
+    }
+
     private void announceSuccess(Element element) {
         listeners.announce().successReported(new AssertSuccessEvent(element));
     }
 
     private void announceFailure(Element element, String expected, Object actual) {
         listeners.announce().failureReported(new AssertFailureEvent(element, expected, actual));
+    }
+
+    private static final class ComparisonResult {
+
+        private final boolean equals;
+        private final Object actual;
+        private final String expected;
+        private final Element element;
+
+        public ComparisonResult(boolean equals, Object actual, String expected, Element element ) {
+            this.equals = equals;
+            this.actual = actual;
+            this.expected = expected;
+            this.element = element;
+        }
     }
 }

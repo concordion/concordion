@@ -8,4 +8,6 @@ public interface Command {
     void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder);
 
     void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder);
+
+    Result verifyInBackground(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder);
 }

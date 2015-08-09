@@ -11,4 +11,8 @@ public abstract class AbstractCommand implements Command {
 
     public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
     }
+
+    public Result verifyInBackground(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+        return Result.IGNORED;
+    }
 }

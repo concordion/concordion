@@ -20,18 +20,8 @@ import org.concordion.internal.TableSupport;
 import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 
-public class VerifyRowsCommand extends AbstractCommand {
+public class VerifyRowsCommand extends AbstractVerifyRowsCommand {
 
-    private Announcer<VerifyRowsListener> listeners = Announcer.to(VerifyRowsListener.class);
-
-    public void addVerifyRowsListener(VerifyRowsListener listener) {
-        listeners.addListener(listener);
-    }
-
-    public void removeVerifyRowsListener(VerifyRowsListener listener) {
-        listeners.removeListener(listener);
-    }
-    
     @SuppressWarnings("unchecked")
     @Override
     public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
@@ -74,17 +64,5 @@ public class VerifyRowsCommand extends AbstractCommand {
             resultRecorder.record(Result.FAILURE);
             announceMissingRow(detailRow.getElement());
         }
-    }
-    
-    private void announceExpressionEvaluated(Element element) {
-        listeners.announce().expressionEvaluated(new ExpressionEvaluatedEvent(element));
-    }
-
-    private void announceMissingRow(Element element) {
-        listeners.announce().missingRow(new MissingRowEvent(element));
-    }
-
-    private void announceSurplusRow(Element element) {
-        listeners.announce().surplusRow(new SurplusRowEvent(element));
     }
 }

@@ -2,10 +2,7 @@ package test.concordion.extension;
 
 import java.io.PrintStream;
 
-import org.concordion.api.Command;
-import org.concordion.api.CommandCall;
-import org.concordion.api.Evaluator;
-import org.concordion.api.ResultRecorder;
+import org.concordion.api.*;
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 
@@ -29,6 +26,10 @@ public class CommandExtension implements ConcordionExtension {
             
             public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
                 stream.println(commandCall.getElement().getText());
+            }
+
+            public Result verifyInBackground(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+                return null;
             }
         });
     }

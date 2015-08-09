@@ -33,6 +33,10 @@ public class CommandCall {
         command.verify(this, evaluator, resultRecorder);
     }
 
+    public Result verifyInBackground(Evaluator evaluator, ResultRecorder resultRecorder) {
+        return command.verifyInBackground(this, evaluator, resultRecorder);
+    }
+
     public void appendChild(CommandCall commandNode) {
         children.append(commandNode);
     }
