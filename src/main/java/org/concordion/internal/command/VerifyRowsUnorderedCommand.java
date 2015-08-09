@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 public class VerifyRowsUnorderedCommand extends AbstractVerifyRowsCommand {
 
+    @SuppressWarnings("unchecked")
     @Override
     public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
         Pattern pattern = Pattern.compile("(#.+?) *: *(.+)");
