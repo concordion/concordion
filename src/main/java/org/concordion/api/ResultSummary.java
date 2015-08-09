@@ -4,7 +4,7 @@ import java.io.PrintStream;
 
 public interface ResultSummary {
 
-    void assertIsSatisfied(Object fixture, String example);
+    void assertIsSatisfied(Object fixture);
 
     boolean hasExceptions();
 
@@ -16,9 +16,9 @@ public interface ResultSummary {
 
     long getIgnoredCount();
 
-    void print(PrintStream out, Object fixture, String example);
+    void print(PrintStream out, Object fixture);
 
-    String printCountsToString(Object fixture, String example);
+    String printCountsToString(Object fixture);
 
     String getSpecificationDescription();
 

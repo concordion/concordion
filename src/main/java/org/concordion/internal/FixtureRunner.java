@@ -81,8 +81,8 @@ public class FixtureRunner {
             if (additionalInformation != null) {
                 System.out.print(additionalInformation);
             }
-            resultSummary.print(System.out, fixture, example);
-            resultSummary.assertIsSatisfied(fixture, example);
+            resultSummary.print(System.out, fixture);
+            resultSummary.assertIsSatisfied(fixture);
         }
     }
 

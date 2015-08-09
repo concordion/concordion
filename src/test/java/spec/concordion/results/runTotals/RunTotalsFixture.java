@@ -67,7 +67,7 @@ public class RunTotalsFixture {
 		result.put("ignoredCount", Long.toString(recorder.getIgnoredCount()));
 		result.put("exceptionCount", Long.toString(recorder.getExceptionCount()));
 
-		String counts = recorder.printCountsToString(recorder, null);
+		String counts = recorder.printCountsToString(recorder);
 
 		result.put("totalsString", counts);
 		return result;

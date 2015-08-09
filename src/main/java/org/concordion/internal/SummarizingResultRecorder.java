@@ -24,7 +24,7 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
     }
 
 
-    public void record( Result result) {
+    public void record(Result result) {
         recordedResults.add(result);
     }
 
@@ -34,39 +34,27 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
 		}
     }
 
-	public void record( ResultSummary result) {
+	public void record(ResultSummary result) {
 		recordMultipleResults(result.getSuccessCount(), Result.SUCCESS);
 		recordMultipleResults(result.getFailureCount(), Result.FAILURE);
 		recordMultipleResults(result.getIgnoredCount(), Result.IGNORED);
 		recordMultipleResults(result.getExceptionCount(), Result.EXCEPTION);
 	}
 
-
-    public void assertIsSatisfied(Object fixture, String example) {
-        // only pass the example name through if this is an actual example - not any stray tests in the
-        // spec
+    @Override
+    public void assertIsSatisfied(Object fixture) {
         FixtureState state = FixtureState.getFixtureState(
                 fixture.getClass(),
                 isForExample() ? this.getResultModifier() : null);
         state.assertIsSatisfied(this, failFastException);
     }
 
-    private ResultSummary getMeaningfulResultSummary(Object fixture, String example) {
-        // we pass null for the example if this is not an example. That lets the fixture state
-        // use class annotations instead of the example tags.
-        FixtureState state = FixtureState.getFixtureState(
-                fixture.getClass(),
-                isForExample() ? this.getResultModifier() : null);
-
-    	return state.getMeaningfulResultSummary(this, failFastException);
-    }
-
-
+    @Override
 	public boolean hasExceptions() {
         return getExceptionCount() > 0;
     }
 
-    public long getCount(Result result) {
+    private long getCount(Result result) {
         int count = 0;
         for ( Result candidate : recordedResults) {
             if (candidate == result) {
@@ -76,32 +64,37 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
         return count;
     }
 
+    @Override
 	public long getExceptionCount() {
         return getCount(Result.EXCEPTION);
     }
 
+    @Override
 	public long getFailureCount() {
         return getCount(Result.FAILURE);
     }
 
+    @Override
 	public long getSuccessCount() {
         return getCount(Result.SUCCESS);
     }
 
+    @Override
 	public long getIgnoredCount() {
         return getCount(Result.IGNORED);
     }
 
-    public void print(PrintStream out, Object fixture, String example) {
-        out.print(printToString(fixture, example));
+    @Override
+    public void print(PrintStream out, Object fixture) {
+        out.print(printToString(fixture));
     }
 
-    public String printToString(Object fixture, String example) {
+    public String printToString(Object fixture) {
         StringBuilder builder = new StringBuilder();
         builder.append("\n");
         builder.append(specificationDescription);
         builder.append("\n");
-        String counts = printCountsToString(fixture, null);
+        String counts = printCountsToString(fixture);
     	if (counts != null) {
             builder.append(counts).append("\n");
         }
@@ -109,7 +102,7 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
         return builder.toString();
     }
 
-    public String printCountsToString(Object fixture, String example) {
+    public String printCountsToString(Object fixture) {
     	StringBuilder builder = new StringBuilder();
 
         builder.append("Successes: ");

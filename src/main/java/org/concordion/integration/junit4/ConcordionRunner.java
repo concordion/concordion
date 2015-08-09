@@ -114,7 +114,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
             // we only print meta-results when the spec has multiple examples.
             if (concordionFrameworkMethods.size() > 1) {
                 synchronized (System.out) {
-                    results.getActualResultSummary().print(System.out, fixture, null);
+                    results.getActualResultSummary().print(System.out, fixture);
                 }
             }
         }
@@ -167,7 +167,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 //                    accumulatedResultSummary.printToString(fixture));
 
 
-            result.assertIsSatisfied(fixture, example);
+            result.assertIsSatisfied(fixture);
 
 
         } catch (ConcordionAssertionError e) {

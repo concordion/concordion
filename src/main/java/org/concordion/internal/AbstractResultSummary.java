@@ -10,20 +10,22 @@ public abstract class AbstractResultSummary implements ResultSummary {
     private String specificationDescription = "";
     private ResultModifier resultModifier;
 
+    @Override
     public boolean isForExample() {
         return false;
     }
 
-    public void print(PrintStream out, Object fixture, String example) {
-        out.print(printToString(fixture, example));
+    @Override
+    public void print(PrintStream out, Object fixture) {
+        out.print(printToString(fixture));
     }
 
-    public String printToString(Object fixture, String example) {
+    private String printToString(Object fixture) {
         StringBuilder builder = new StringBuilder();
         builder.append("\n");
         builder.append(specificationDescription);
         builder.append("\n");
-        String counts = printCountsToString(fixture, null);
+        String counts = printCountsToString(fixture);
         if (counts != null) {
             builder.append(counts).append("\n");
         }
@@ -31,7 +33,8 @@ public abstract class AbstractResultSummary implements ResultSummary {
         return builder.toString();
     }
 
-    public String printCountsToString(Object fixture, String example) {
+    @Override
+    public String printCountsToString(Object fixture) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("Successes: ");
@@ -54,16 +57,16 @@ public abstract class AbstractResultSummary implements ResultSummary {
         return builder.toString();
     }
 
-
-
     public void setSpecificationDescription(String specificationDescription) {
         this.specificationDescription = specificationDescription;
     }
 
+    @Override
     public String getSpecificationDescription() {
         return specificationDescription;
     }
 
+    @Override
     public ResultModifier getResultModifier() {
         return resultModifier;
     }

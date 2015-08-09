@@ -44,7 +44,7 @@ public class XMLSpecification implements SpecificationByExample {
                 beforeResultRecorder.setSpecificationDescription("Running before for example " + node.getExpression());
                 String errorText = String.format("Before example performed tests in %s %s",
                         testDescription,
-                        beforeResultRecorder.printToString(null, "before")
+                        beforeResultRecorder.printToString(null)
                 );
 
                 throw new ConcordionAssertionError(errorText, beforeResultRecorder);

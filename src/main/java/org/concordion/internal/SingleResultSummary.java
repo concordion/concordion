@@ -60,31 +60,34 @@ public class SingleResultSummary extends AbstractResultSummary implements Result
         return result.hashCode();
     }
 
-
-    public void assertIsSatisfied(Object fixture, String example) {
+    @Override
+    public void assertIsSatisfied(Object fixture) {
         FixtureState state = FixtureState.getFixtureState(fixture.getClass(), getResultModifier());
         state.assertIsSatisfied(this, null);
     }
 
+    @Override
     public boolean hasExceptions() {
         return result == Result.EXCEPTION;
     }
 
+    @Override
     public long getSuccessCount() {
         return result == Result.SUCCESS ? 1 : 0;
     }
 
+    @Override
     public long getFailureCount() {
         return result == Result.FAILURE ? 1 : 0;
     }
 
+    @Override
     public long getExceptionCount() {
         return result == Result.EXCEPTION ? 1 : 0;
     }
 
+    @Override
     public long getIgnoredCount() {
         return result == Result.IGNORED ? 1 : 0;
     }
-
-
 }
