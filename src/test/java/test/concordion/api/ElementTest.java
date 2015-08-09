@@ -1,16 +1,17 @@
 package test.concordion.api;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.io.StringReader;
 
-import junit.framework.TestCase;
 import nu.xom.Builder;
 import nu.xom.Document;
 
 import org.concordion.api.Element;
 import org.concordion.internal.XMLParser;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class ElementTest {
 

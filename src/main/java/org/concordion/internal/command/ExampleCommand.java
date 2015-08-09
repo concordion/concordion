@@ -44,11 +44,9 @@ public class ExampleCommand extends AbstractCommand {
                 String note;
                 if (fixtureState != null) {
                     note = fixtureState.printNoteToString();
-                } else if (fixtureState == null) {
-                    note = "Invalid state expression " + params;
                 } else {
-                    note = "";
-                }
+                    note = "Invalid state expression " + params;
+                } 
                 Element fixtureNode = new Element("p");
                 fixtureNode.appendText(note);
                 node.getElement().prependChild(fixtureNode);

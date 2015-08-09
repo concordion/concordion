@@ -17,7 +17,7 @@ public class CommandCall {
     private final String expression;
     private final Resource resource;
     private Element element;
-    private Map<String, String> parameters = Collections.EMPTY_MAP;
+    private Map<String, String> parameters = Collections.emptyMap();
 
     public CommandCall(Command command, Element element, String expression, Resource resource) {
         this.command = command;

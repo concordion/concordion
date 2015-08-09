@@ -1,6 +1,5 @@
 package org.concordion.integration.junit4;
 
-import org.concordion.Concordion;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.FrameworkMethod;
 

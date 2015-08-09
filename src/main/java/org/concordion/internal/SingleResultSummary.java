@@ -6,10 +6,7 @@ package org.concordion.internal;
  * @author TimW5
  */
 import org.concordion.api.Result;
-import org.concordion.api.ResultModifier;
 import org.concordion.api.ResultSummary;
-
-import java.io.PrintStream;
 
 public class SingleResultSummary extends AbstractResultSummary implements ResultSummary {
     private final Result result;

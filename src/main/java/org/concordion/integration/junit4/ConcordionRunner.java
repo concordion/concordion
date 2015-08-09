@@ -1,26 +1,27 @@
 package org.concordion.integration.junit4;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.concordion.Concordion;
 import org.concordion.api.FailFast;
 import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
-import org.concordion.internal.*;
-import org.concordion.internal.cache.RunResultsCache;
+import org.concordion.internal.ConcordionAssertionError;
+import org.concordion.internal.FailFastException;
+import org.concordion.internal.FixtureRunner;
+import org.concordion.internal.SummarizingResultRecorder;
+import org.concordion.internal.UnableToBuildConcordionException;
 import org.concordion.internal.cache.ConcordionRunOutput;
+import org.concordion.internal.cache.RunResultsCache;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
-
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
@@ -184,33 +185,8 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         }
     }
 
-    private void invokeMethodsWithAnnotation(Class<?> fixtureClass, Object fixture, Class<? extends Annotation> annotation) throws InvocationTargetException, IllegalAccessException {
-        List<Method> methods = getMethodsWithAnnotation(fixtureClass, annotation);
-        for (Method m: methods) {
-            m.invoke(fixture, new Object[] {});
-        }
-    }
-
-    private static List<Method> getMethodsWithAnnotation( Class<?> type, Class<? extends Annotation> annotation) {
-        List<Method> foundMethods = new ArrayList<Method>();
-        Class<?> currentClass = type;
-        while (currentClass != Object.class) {
-            // We iterate up through the class heirarchy ensuring we get all the annotated methods.
-            Method[] allMethods = currentClass.getDeclaredMethods();
-            for ( Method method : allMethods) {
-                if (method.isAnnotationPresent(annotation)) {
-                    foundMethods.add(method);
-                }
-            }
-            // move up oner class in the hierarchy to search for more methods
-            currentClass = currentClass.getSuperclass();
-        }
-        return foundMethods;
-    }
-
     @Override @Deprecated
     protected void validateInstanceMethods(List<Throwable> errors) {
 
     }
-
 }

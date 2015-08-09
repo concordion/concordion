@@ -8,7 +8,6 @@ import java.util.List;
 
 public class Concordion {
 
-    private final SpecificationLocator specificationLocator;
     private final EvaluatorFactory evaluatorFactory;
     private final SpecificationReader specificationReader;
     private Object fixture;
@@ -16,7 +15,6 @@ public class Concordion {
     private final SpecificationByExample specification;
 
     public Concordion(SpecificationLocator specificationLocator, SpecificationReader specificationReader, EvaluatorFactory evaluatorFactory, Object fixture) throws IOException {
-        this.specificationLocator = specificationLocator;
         this.specificationReader = specificationReader;
         this.evaluatorFactory = evaluatorFactory;
         this.fixture = fixture;
@@ -71,17 +69,6 @@ public class Concordion {
 //        	throw e;
 ////        	throw new ConcordionAssertionError("Could not parse resource " + resource.getPath(), new SingleResultSummary(Result.EXCEPTION));
 //       }
-    }
-
-
-    /**
-     * Loads the specification for the specified fixture.
-     *
-     * @return
-     * @throws IOException if the fixture's specification cannot be loaded
-     */
-    private SpecificationByExample loadSpecificationFromFixture() throws IOException {
-        return loadSpecificationFromResource(resource);
     }
 
     /**

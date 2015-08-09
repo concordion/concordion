@@ -4,7 +4,6 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.concordion.api.ResultModifier;
 import org.concordion.api.Result;
 import org.concordion.api.ResultRecorder;
 import org.concordion.api.ResultSummary;
