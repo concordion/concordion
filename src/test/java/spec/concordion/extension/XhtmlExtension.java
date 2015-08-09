@@ -7,7 +7,6 @@ import org.concordion.internal.FileTargetWithSuffix;
 
 public class XhtmlExtension implements ConcordionExtension {
 
-    @Override
     public void addTo(ConcordionExtender concordionExtender) {
         concordionExtender
             .withSpecificationLocator(new ClassNameBasedSpecificationLocator("xhtml"))

@@ -1,57 +1,96 @@
 package org.concordion.internal;
 
-import java.io.IOException;
-
+import org.concordion.Concordion;
 import org.concordion.api.ResultSummary;
+import org.concordion.internal.cache.RunResultsCache;
+import org.concordion.internal.cache.ConcordionRunOutput;
 import org.concordion.internal.extension.FixtureExtensionLoader;
 
-public class FixtureRunner {
-	private static CachedRunResults cachedRunResults = CachedRunResults.SINGLETON;
-	
-    private final FixtureExtensionLoader fixtureExtensionLoader = new FixtureExtensionLoader();
+import java.io.IOException;
 
-    public ResultSummary run(Object fixture) throws IOException {
+public class FixtureRunner {
+    private static RunResultsCache runResultsCache = RunResultsCache.SINGLETON;
+    private final Object fixture;
+
+    public FixtureRunner(Object fixture) throws UnableToBuildConcordionException {
+        this.fixture = fixture;
+
+        ConcordionBuilder concordionBuilder = new ConcordionBuilder()
+                .withFixture(fixture);
+        fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
+        concordion = concordionBuilder.build();
+
+    }
+
+    private final FixtureExtensionLoader fixtureExtensionLoader = new FixtureExtensionLoader();
+    private Concordion concordion;
+
+    public ResultSummary run(String example) throws IOException {
     	
-        ResultSummary actualResultSummary = null; 
+    	ConcordionRunOutput runOutput = runResultsCache.startRun(fixture.getClass(), example);
+        ResultSummary actualResultSummary = runOutput==null?
+                null:
+                runOutput.getActualResultSummary();
+
+        ResultSummary postProcessedResultSummary = runOutput==null?
+                null:
+                runOutput.getModifiedResultSummary();
+
+
         String additionalInformation = null;
-        ConcordionRunOutput cachedRunOutput = cachedRunResults.startRun(fixture.getClass());
-        
-    	if (cachedRunOutput == null) {
-            ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture);
-            fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
+    	if (runOutput == null) {
 
             try {
-                actualResultSummary = concordionBuilder.build().process(fixture);
+                if (example != null) {
+                    actualResultSummary = concordion.processExample(example);
+                } else {
+                    actualResultSummary = concordion.process();
+                }
                 // we want to make sure all the annotations are considered when storing the result summary
-                ResultSummary postProcessedResultSummary = cachedRunResults.convertForCache(actualResultSummary, fixture.getClass());
 
-                cachedRunResults.finishRun(fixture.getClass(),
+                // converting for the cache doesn't need the example - it just does annotation based conversions
+
+                FixtureState state = FixtureState.getFixtureState(
+                        fixture.getClass(),
+                        actualResultSummary.isForExample() ? actualResultSummary.getResultModifier() : null);
+                postProcessedResultSummary=  state.convertForCache(actualResultSummary);
+
+
+                runResultsCache.finishRun(fixture.getClass(),
+                        example,
                         actualResultSummary,
                         postProcessedResultSummary);
 
             } catch (RuntimeException e) {
                 // the run failed miserably. Tell the cache that the run failed
-                cachedRunResults.failRun(fixture.getClass());
+                runResultsCache.failRun(fixture.getClass(), example);
                 throw e;
             }
 
         } else {
-            actualResultSummary = cachedRunOutput.getActualResultSummary();
-            additionalInformation = "From cache: ";
+            additionalInformation = "\nFrom cache: ";
         }
 
-        printResultSummary(fixture, actualResultSummary, additionalInformation);
+        printResultSummary(fixture, example, actualResultSummary, additionalInformation);
 
-        return actualResultSummary.getMeaningfulResultSummary(fixture);
+        return actualResultSummary;
     }
 
-    private void printResultSummary(Object fixture, ResultSummary resultSummary, String additionalInformation) {
+    private void printResultSummary(Object fixture, String example, ResultSummary resultSummary, String additionalInformation) {
         synchronized (System.out) {
             if (additionalInformation != null) {
                 System.out.print(additionalInformation);
             }
-            resultSummary.print(System.out, fixture);
-            resultSummary.assertIsSatisfied(fixture);
+            resultSummary.print(System.out, fixture, example);
+            resultSummary.assertIsSatisfied(fixture, example);
         }
+    }
+
+    public synchronized Concordion getConcordion() {
+            return concordion;
+    }
+
+    public ResultSummary run() throws IOException {
+        return run(null);
     }
 }

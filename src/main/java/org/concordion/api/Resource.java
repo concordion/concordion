@@ -45,11 +45,12 @@ public final class Resource {
         if (getPath().equals("/")) {
             return null;
         }
-        String parentPath = "/";
+        StringBuilder parentPath = new StringBuilder();
+        parentPath.append("/");
         for (int i = 1; i < parts.length - 1; i++) {
-            parentPath += parts[i] + "/";
+            parentPath .append(parts[i]).append("/");
         }
-        return new Resource(parentPath);
+        return new Resource(parentPath.toString());
     }
 
     public String getRelativePath(Resource resource) {
@@ -76,20 +77,21 @@ public final class Resource {
             }
         }
 
-        String r = "";
+        StringBuilder r = new StringBuilder();
+        r.append("");
 
         for (int i = sharedPiecesCount; i < herePieces.length; i++) {
-            r += "../";
+            r.append("../");
         }
 
         for (int i = sharedPiecesCount; i < therePieces.length; i++) {
-            r += therePieces[i] + "/";
+            r.append(therePieces[i]).append("/");
         }
 
         if (resource.isPackage()) {
-            return r;
+            return r.toString();
         }
-        return r + resource.getName();
+        return r.append(resource.getName()).toString();
     }
 
     private String[] getPathPieces() {

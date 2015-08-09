@@ -27,7 +27,7 @@ public final class Element {
     /**
      * For internal use only.
      *
-     * @param xomElement the xomElement
+     * @param xomElement the xom element to initialise
      */
     public Element(nu.xom.Element xomElement) {
         this.xomElement = xomElement;
@@ -234,8 +234,8 @@ public final class Element {
      * Returns the first child Element with the specified "id" attribute, or null,
      * if no matching element is found.
      *
-     * @param id the id of the element to find
-     * @return Element
+     * @param id the id of the element to get
+     * @return the element - or null if not found
      */
     public Element getElementById(String id) {
         String query = ".//*[@id='" + id + "']";

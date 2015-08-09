@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.concordion.api.FullOGNL;
-import org.concordion.api.extension.Extension;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 

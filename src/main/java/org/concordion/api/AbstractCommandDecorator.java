@@ -1,6 +1,8 @@
 package org.concordion.api;
 
 
+import java.util.List;
+
 public abstract class AbstractCommandDecorator implements Command {
 
     private final Command command;
@@ -8,6 +10,23 @@ public abstract class AbstractCommandDecorator implements Command {
     public AbstractCommandDecorator(Command command) {
         this.command = command;
     }
+
+    public List<CommandCall> getExamples(CommandCall commandCall) {
+        return command.getExamples(commandCall);
+    }
+
+    public boolean isExample() {
+        return command.isExample();
+    }
+
+    public void executeAsExample(final CommandCall commandCall, final Evaluator evaluator, final ResultRecorder resultRecorder) {
+        process(commandCall, evaluator, resultRecorder, new Runnable() {
+            public void run() {
+                command.executeAsExample(commandCall, evaluator, resultRecorder);
+            }
+        });
+    }
+
 
     public void setUp(final CommandCall commandCall, final Evaluator evaluator, final ResultRecorder resultRecorder) {
         process(commandCall, evaluator, resultRecorder, new Runnable() {
@@ -44,4 +63,8 @@ public abstract class AbstractCommandDecorator implements Command {
     }
 
     protected abstract void process(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Runnable runnable);
+
+    public void finish(CommandCall commandCall) {
+        this.command.finish(commandCall);
+    }
 }

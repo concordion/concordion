@@ -10,7 +10,6 @@ import org.concordion.internal.FailFastException;
 
 public class SequentialRunStrategy implements RunStrategy {
 
-    @Override
 	public void call(Runner runner, Resource resource, String href, ResultAnnouncer announcer, ResultRecorder resultRecorder) {
         try {
         	ResultSummary result = runner.execute(resource, href);

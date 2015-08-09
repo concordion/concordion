@@ -1,0 +1,26 @@
+<html xmlns:c="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+<h1>Examples</h1>
+
+<div class="example">
+    <h3>Outside Example</h3>
+    <ul>
+        <li><span c:assertTrue="isTrue()">Success</span></li>
+        <li><span c:assertFalse="isTrue()">Success</span></li>
+    </ul>
+</div>
+
+<div class="example" c:example="passingExample">
+    <h3>Example 1</h3>
+    <p>This example performs two successes - but the example will only return 1 success to the spec as a whole.</p>
+    <ul>
+        <li><span c:assertTrue="isTrue()">Success</span></li>
+        <li><span c:assertTrue="isTrue()">Success</span></li>
+    </ul>
+
+</div>
+
+</body>
+</html>

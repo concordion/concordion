@@ -1,138 +1,192 @@
 package org.concordion.integration.junit4;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.concordion.Concordion;
+import org.concordion.api.FailFast;
+import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
+import org.concordion.internal.ConcordionAssertionError;
+import org.concordion.internal.FailFastException;
 import org.concordion.internal.FixtureRunner;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.concordion.internal.SummarizingResultRecorder;
+import org.concordion.internal.UnableToBuildConcordionException;
+import org.concordion.internal.cache.ConcordionRunOutput;
+import org.concordion.internal.cache.RunResultsCache;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
-import org.junit.runners.model.Statement;
 
 public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
-    private final Description fixtureDescription;
-    private final FrameworkMethod fakeMethod;
-    private ResultSummary result;
+    // this sort of thing is so much easier with Java 8!
+    public ConcordionFrameworkMethod.ConcordionRunnerInterface concordionRunnerInterface = new ConcordionFrameworkMethod.ConcordionRunnerInterface() {
+        public void invoke(ConcordionFrameworkMethod concordionFrameworkMethod) {
+            ConcordionRunner.this.invoke(concordionFrameworkMethod);
+        }
+    };
 
-    /*
-     * The standard JUnit runner (BlockJUnit4ClassRunner) requires at least 
-     * one method marked with the annotation @Test. We don't want this
-     * restriction because Concordion tests shouldn't need any methods marked 
-     * with @Test. 
-     *
-     * Unfortunately, if we want to use the rest of the functionality in 
-     * BlockJUnit4ClassRunner (processing of @Before, @After, @Test and other
-     * annotations), we are either going to have to create a new subclass of 
-     * ParentRunner and duplicate a lot of code from BlockJUnitClassRunner  
-     * or subclass BlockJUnitClassRunner and (ahem) fine tune it.
-     * 
-     * I've decided to go with the latter course of action, and:
-     * 
-     * - Append a FakeFrameworkMethod into the list of test methods.
-     * 
-     * - Perform different behaviour for that method (i.e. don't call it,
-     *   but call our Concordion processing instead).
-     *   
-     * - Remove the validation that requires at least one @Test method. 
-     */
+    private final Class<?> fixtureClass;
+    private final FixtureRunner fixtureRunner;
+    private final Concordion concordion;
+    private final List<ConcordionFrameworkMethod> concordionFrameworkMethods;
+    private final Object fixture;
+    private SummarizingResultRecorder accumulatedResultSummary;
+
+
+    private FailFastException failFastException = null;
+
     public ConcordionRunner(Class<?> fixtureClass) throws InitializationError {
         super(fixtureClass);
-        String testDescription = ("[Concordion Specification for '" + fixtureClass.getSimpleName()).replaceAll("Test$", "']"); // Based on suggestion by Danny Guerrier
-        fixtureDescription = Description.createTestDescription(fixtureClass, testDescription);
-        try {
-            fakeMethod = new FakeFrameworkMethod(getClass().getMethod("fakeMethod", (Class<?>[]) null));
-        } catch (Exception e) {
-            throw new InitializationError("Failed to initialize ConcordionRunner");
-        }
-    }
-    
-    public void fakeMethod() {
-    }
-    
-    static class FakeFrameworkMethod extends FrameworkMethod {
+        this.fixtureClass = fixtureClass;
+        this.accumulatedResultSummary = new SummarizingResultRecorder();
+        accumulatedResultSummary.setSpecificationDescription(Concordion.getDefaultFixtureClassName(fixtureClass));
 
-        public FakeFrameworkMethod(Method method) {
-            super(method);
+        try {
+            fixture = fixtureClass.newInstance();
+        } catch (InstantiationException e) {
+            throw new InitializationError(e);
+        } catch (IllegalAccessException e) {
+            throw new InitializationError(e);
         }
-        
-        @Override
-		public String getName() {
-            return "[Concordion Specification]";
+
+        try {
+            fixtureRunner = new FixtureRunner(fixture);
+        } catch (UnableToBuildConcordionException e) {
+            throw new InitializationError(e);
         }
-        
-        @Override
-		public Annotation[] getAnnotations() {
-            return new Annotation[0];
+        concordion = fixtureRunner.getConcordion();
+
+        try {
+            List<String> examples = concordion.getExampleNames();
+
+            verifyUniqueExampleMethods(examples);
+
+            concordionFrameworkMethods = new ArrayList<ConcordionFrameworkMethod>(examples.size());
+            for (String example: examples) {
+                concordionFrameworkMethods.add(new ConcordionFrameworkMethod(concordionRunnerInterface, example));
+            }
+        } catch (IOException e) {
+            throw new InitializationError(e);
         }
-        
-        @Override
-		public <T extends Annotation> T getAnnotation(Class<T> annotationType) {
-            return null;
+
+
+    }
+
+    private void verifyUniqueExampleMethods(List<String> exampleNames) throws InitializationError {
+        // use a hash set to store examples - gives us quick lookup and add.
+        Set<String> setOfExamples = new HashSet<String>();
+
+        for (String example: exampleNames) {
+            int questionPlace = example.indexOf('?');
+
+            if (questionPlace >=0 ) {
+                example = example.substring(0, questionPlace);
+            }
+
+            if (setOfExamples.contains(example)) {
+                throw new InitializationError("Specification has duplicate example " + example);
+            }
+            setOfExamples.add(example);
         }
-        
-        @Override
-		public int hashCode() {
-            return 1;
+    }
+
+    // This is important or else jUnit will create lots of different instances of the class under test.
+    @Override
+    protected Object createTest() throws Exception {
+        return fixture;
+    }
+
+    @Override
+    public void run(RunNotifier notifier) {
+        super.run(notifier);
+
+        concordion.finish();
+
+        ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
+        if (results != null) {
+            // we only print meta-results when the spec has multiple examples.
+            if (concordionFrameworkMethods.size() > 1) {
+                synchronized (System.out) {
+                    results.getActualResultSummary().print(System.out, fixture, null);
+                }
+            }
+        }
+
+        if (failFastException != null) {
+            if (fixtureClass.getAnnotation(FailFast.class) != null) {
+                throw new FailFastException("Failing Fast", failFastException);
+            }
         }
     }
 
     @Override
     protected List<FrameworkMethod> getChildren() {
-        List<FrameworkMethod> children = new ArrayList<FrameworkMethod>();
-        children.addAll(super.getChildren());
-        children.add(fakeMethod);
-        return children;
+        // downcast from ConcordionFrameworkMethod to FrameworkMethod
+        ArrayList<FrameworkMethod> frameworkMethods = new ArrayList<FrameworkMethod>(concordionFrameworkMethods);
+        return frameworkMethods;
     }
 
     @Override
-	protected Statement methodInvoker(FrameworkMethod method, Object test) {
-        if (method == fakeMethod) {
-            return specExecStatement(test);
-        }
-        return super.methodInvoker(method, test);
-    }
-    
-    @Override
-    protected Description describeChild(FrameworkMethod method) {
-        if (method == fakeMethod) {
-            return fixtureDescription;
-        }
-        return super.describeChild(method);
+    protected Description describeChild(FrameworkMethod frameworkMethod) {
+        ConcordionFrameworkMethod concordionFrameworkMethod = (ConcordionFrameworkMethod) frameworkMethod;
+        return Description.createTestDescription(fixtureClass, concordionFrameworkMethod.getExampleName());
     }
 
     @Override
     protected void runChild(FrameworkMethod method, RunNotifier notifier) {
+        ((ConcordionFrameworkMethod) method).setNotifier(notifier);
         super.runChild(method, notifier);
-        if (result != null && result.getIgnoredCount() > 0) {
-            notifier.fireTestIgnored(fixtureDescription);
+    }
+
+    void invoke(ConcordionFrameworkMethod concordionFrameworkMethod) {
+
+        String example = concordionFrameworkMethod.getExampleName();
+
+        // check the fail fast condition
+        if (failFastException != null) {
+            throw failFastException;
+        }
+
+        try {
+
+            // The ParentRunner class invokes the @BeforeClass and @AfterClass methods so we don't need
+            // to worry about them. But it doesn't invoke the @Before and @After methods. So we explicitly
+            // invoke them here.
+
+            ResultSummary result = fixtureRunner.run(example);
+
+//            System.err.printf("Accumulated %s into %s\n",
+//                    result.printToString(fixture),
+//                    accumulatedResultSummary.printToString(fixture));
+
+
+            result.assertIsSatisfied(fixture, example);
+
+
+        } catch (ConcordionAssertionError e) {
+            accumulatedResultSummary.record(e.getResultSummary());
+            throw e;
+        } catch (FailFastException e){
+            accumulatedResultSummary.record(Result.EXCEPTION);
+            failFastException = e;
+            throw e;
+
+        }catch (Throwable e) {
+            // if *anything* goes wrong, we fire a test failure notification.
+            e.printStackTrace(System.err);
+
         }
     }
 
-    protected Statement specExecStatement(final Object fixture) {
-        return new Statement() {
-            @Override
-			public void evaluate() throws Throwable {
-                result = new FixtureRunner().run(fixture);
-            }
-        };
-    }
-
-    @Override
+    @Override @Deprecated
     protected void validateInstanceMethods(List<Throwable> errors) {
-    	validatePublicVoidNoArgMethods(BeforeClass.class, true, errors);
-    	validatePublicVoidNoArgMethods(AfterClass.class, true, errors);
-        validatePublicVoidNoArgMethods(After.class, false, errors);
-        validatePublicVoidNoArgMethods(Before.class, false, errors);
-        validateTestMethods(errors);
+
     }
 }

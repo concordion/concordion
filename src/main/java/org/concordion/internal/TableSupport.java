@@ -30,7 +30,7 @@ public class TableSupport {
     public void copyCommandCallsTo(Row detailRow) {
         int columnIndex = 0;
         for (Element cell : detailRow.getCells()) {
-            CommandCall cellCall = commandCallByColumn.get(new Integer(columnIndex));
+            CommandCall cellCall = commandCallByColumn.get(columnIndex);
             if (cellCall != null) {
                 cellCall.setElement(cell);
             }
@@ -47,7 +47,7 @@ public class TableSupport {
             if (columnIndex == -1) {
                 throw new RuntimeException("Commands must be placed on <th> elements when using 'execute' or 'verifyRows' commands on a <table>.");
             }
-            commandCallByColumn.put(new Integer(columnIndex), childCall);
+            commandCallByColumn.put(columnIndex, childCall);
         }
     }
 

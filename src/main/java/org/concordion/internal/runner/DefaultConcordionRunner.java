@@ -1,29 +1,22 @@
 package org.concordion.internal.runner;
 
+import org.concordion.api.*;
+import org.concordion.internal.cache.RunResultsCache;
+import org.concordion.internal.FailFastException;
+import org.concordion.internal.SummarizingResultRecorder;
+import org.concordion.internal.cache.ConcordionRunOutput;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.notification.Failure;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.concordion.api.ExpectedToFail;
-import org.concordion.api.Resource;
-import org.concordion.api.Result;
-import org.concordion.api.ResultSummary;
-import org.concordion.api.Runner;
-import org.concordion.api.Unimplemented;
-import org.concordion.internal.CachedRunResults;
-import org.concordion.internal.ConcordionRunOutput;
-import org.concordion.internal.FailFastException;
-import org.concordion.internal.SummarizingResultRecorder;
-import org.junit.runner.JUnitCore;
-import org.junit.runner.notification.Failure;
 
 public class DefaultConcordionRunner implements Runner {
 
     private static Logger logger = Logger.getLogger(DefaultConcordionRunner.class.getName());
 
-
-    @Override
-	public ResultSummary execute(Resource resource, String href) throws Exception {
+    public ResultSummary execute(Resource resource, String href) throws Exception {
         Class<?> concordionClass = findTestClass(resource, href);
         return runTestClass(concordionClass);
     }
@@ -55,7 +48,7 @@ public class DefaultConcordionRunner implements Runner {
     }
 
     protected ResultSummary runTestClass(Class<?> concordionClass) throws Exception {
-        CachedRunResults cache = CachedRunResults.SINGLETON;
+        RunResultsCache cache = RunResultsCache.SINGLETON;
 
         // first check the cache.
         ResultSummary summary = null;
@@ -69,14 +62,14 @@ public class DefaultConcordionRunner implements Runner {
         ResultSummary jUnitSummary = decodeJUnitResult(concordionClass, jUnitResult);
 
         // check the cache - if the test was a concordion test, it will have stuck the results
-        // in the cache
-        ConcordionRunOutput concordionRunOutput = cache.getFromCache(concordionClass);
+        // in the cache. Use "null" for the example to get the accumulated values from all examples
+        ConcordionRunOutput concordionRunOutput = cache.getFromCache(concordionClass, null);
 
         // check the test actually put something in the cache
         if (concordionRunOutput == null) {
             summary = jUnitSummary;
         } else {
-            summary = concordionRunOutput.getPostProcessedResultSummary();
+            summary = concordionRunOutput.getModifiedResultSummary();
         }
 
         // throw an exception if we're failing fast...

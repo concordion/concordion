@@ -11,4 +11,9 @@ public interface ResultRecorder {
     void setSpecificationDescription(String description);
 
     void record(ResultSummary result);
+
+    void setForExample(boolean isForExample);
+
+    void setResultModifier(ResultModifier state);
+    ResultModifier getResultModifier();
 }

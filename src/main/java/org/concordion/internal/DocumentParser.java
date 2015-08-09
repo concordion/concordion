@@ -14,6 +14,9 @@ import org.concordion.api.listener.DocumentParsingListener;
 import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class DocumentParser {
 
     private final CommandFactory commandFactory;
@@ -45,24 +48,45 @@ public class DocumentParser {
 
     private void generateCommandCallTree(nu.xom.Element xomElement, CommandCall parentCommandCall, Resource resource) {
         boolean commandIsAssigned = false;
+
+        Command command = null;
+        CommandCall commandCall = null;
+        String namespaceURI = null;
+
         for (int i = 0; i < xomElement.getAttributeCount(); i++) {
             Attribute attribute = xomElement.getAttribute(i);
-            String namespaceURI = attribute.getNamespaceURI();
-            
+            namespaceURI = attribute.getNamespaceURI();
+
             if (!namespaceURI.equals("")) {
                 String commandName = attribute.getLocalName();
-                Command command = createCommand(namespaceURI, commandName);
+                command = createCommand(namespaceURI, commandName);
                 if (command != null) {
                     Check.isFalse(commandIsAssigned, "Multiple commands per element is currently not supported.");
-                    commandIsAssigned = true;
                     String expression = attribute.getValue();
-                    CommandCall commandCall = new CommandCall(command, new Element(xomElement), expression, resource);
-                    parentCommandCall.appendChild(commandCall);
-                    parentCommandCall = commandCall;
+                    commandCall = new CommandCall(command, new Element(xomElement), expression, resource);
+                    break;
                 }
             }
         }
-        
+
+        if (commandCall != null) {
+            Map<String, String> params = new HashMap<String, String>();
+
+            // assume that because the commandCall is not null that the namespaceURI has also been set
+            for (int i = 0; i < xomElement.getAttributeCount(); i++) {
+                Attribute attribute = xomElement.getAttribute(i);
+                if (namespaceURI.equals(attribute.getNamespaceURI())) {
+                    // something in the same namespace. Assume it is a parameter of some
+                    // description
+                    params.put(attribute.getLocalName(), attribute.getValue());
+                }
+            }
+
+            parentCommandCall.appendChild(commandCall);
+            parentCommandCall = commandCall;
+            commandCall.setParameters(params);
+        }
+
         Elements children = xomElement.getChildElements();
         for (int i = 0; i < children.size(); i++) {
             generateCommandCallTree(children.get(i), parentCommandCall, resource);

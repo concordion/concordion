@@ -2,6 +2,10 @@ package org.concordion.api;
 
 import org.concordion.internal.util.Check;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Nested CommandCalls form an abstract syntax tree. (The XML is the concrete
  * syntax tree.)
@@ -13,7 +17,8 @@ public class CommandCall {
     private final String expression;
     private final Resource resource;
     private Element element;
-    
+    private Map<String, String> parameters = Collections.emptyMap();
+
     public CommandCall(Command command, Element element, String expression, Resource resource) {
         this.command = command;
         this.element = element;
@@ -68,5 +73,14 @@ public class CommandCall {
     public void setElement(Element element) {
         Check.notNull(element, "element is null");
         this.element = element;
+    }
+
+
+    public void setParameters(Map<String, String> parameters) {
+        this.parameters = new HashMap<String, String>(parameters);
+    }
+
+    public String getParameter(String parameter) {
+        return parameters.get(parameter);
     }
 }

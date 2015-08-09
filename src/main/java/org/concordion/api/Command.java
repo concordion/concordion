@@ -1,5 +1,6 @@
 package org.concordion.api;
 
+import java.util.List;
 
 public interface Command {
 
@@ -10,4 +11,13 @@ public interface Command {
     void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder);
 
     Result verifyInBackground(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder);
+
+    void finish(CommandCall commandCall);
+
+    List<CommandCall> getExamples(CommandCall command);
+
+    boolean isExample();
+
+    void executeAsExample(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder);
+
 }

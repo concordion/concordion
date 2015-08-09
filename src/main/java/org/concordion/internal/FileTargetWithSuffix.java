@@ -28,32 +28,26 @@ public class FileTargetWithSuffix implements Target {
     }
 
     
-    @Override
     public void write(Resource resource, String s) throws IOException {
         target.write(rename(resource), s);
     }
 
-    @Override
     public void copyTo(Resource resource, InputStream inputStream) throws IOException {
         target.copyTo(rename(resource), inputStream);
     }
 
-    @Override
     public OutputStream getOutputStream(Resource resource) throws IOException {
         return target.getOutputStream(rename(resource));
     }
 
-    @Override
     public void delete(Resource resource) throws IOException {
         target.delete(rename(resource));
     }
 
-    @Override
     public boolean exists(Resource resource) {
         return target.exists(rename(resource));
     }
     
-    @Override
     public String resolvedPathFor(Resource resource) {
         return target.resolvedPathFor(rename(resource));
     }

@@ -1,5 +1,6 @@
 package org.concordion.internal;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,17 +12,19 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
 
     private List<Result> recordedResults = new ArrayList<Result>();
     private FailFastException failFastException;
+    private String specificationDescription = "";
+    boolean forExample = false;
+
     public SummarizingResultRecorder() {
-
+        this(null);
     }
 
-    public SummarizingResultRecorder(ResultSummary initialSummary) {
-        this();
-        record(initialSummary);
+    public SummarizingResultRecorder(String specificationDescription) {
+        this.specificationDescription = specificationDescription;
     }
 
-    @Override
-	public void record( Result result) {
+
+    public void record( Result result) {
         recordedResults.add(result);
     }
 
@@ -31,7 +34,6 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
 		}
     }
 
-	@Override
 	public void record( ResultSummary result) {
 		recordMultipleResults(result.getSuccessCount(), Result.SUCCESS);
 		recordMultipleResults(result.getFailureCount(), Result.FAILURE);
@@ -39,25 +41,27 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
 		recordMultipleResults(result.getExceptionCount(), Result.EXCEPTION);
 	}
 
-    @Override @Deprecated
-	public void assertIsSatisfied() {
-        assertIsSatisfied(this);
-    }
 
-    @Override
-	public void assertIsSatisfied(Object fixture) {
-        FixtureState state = FixtureState.getFixtureState(fixture.getClass());
+    public void assertIsSatisfied(Object fixture, String example) {
+        // only pass the example name through if this is an actual example - not any stray tests in the
+        // spec
+        FixtureState state = FixtureState.getFixtureState(
+                fixture.getClass(),
+                isForExample() ? this.getResultModifier() : null);
         state.assertIsSatisfied(this, failFastException);
     }
-    
-    @Override
-    public ResultSummary getMeaningfulResultSummary(Object fixture) {
-        FixtureState state = FixtureState.getFixtureState(fixture.getClass());
+
+    private ResultSummary getMeaningfulResultSummary(Object fixture, String example) {
+        // we pass null for the example if this is not an example. That lets the fixture state
+        // use class annotations instead of the example tags.
+        FixtureState state = FixtureState.getFixtureState(
+                fixture.getClass(),
+                isForExample() ? this.getResultModifier() : null);
+
     	return state.getMeaningfulResultSummary(this, failFastException);
     }
 
 
-    @Override
 	public boolean hasExceptions() {
         return getExceptionCount() > 0;
     }
@@ -72,27 +76,63 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
         return count;
     }
 
-    @Override
 	public long getExceptionCount() {
         return getCount(Result.EXCEPTION);
     }
 
-    @Override
 	public long getFailureCount() {
         return getCount(Result.FAILURE);
     }
 
-    @Override
 	public long getSuccessCount() {
         return getCount(Result.SUCCESS);
     }
 
-    @Override
 	public long getIgnoredCount() {
         return getCount(Result.IGNORED);
     }
 
-    @Override
+    public void print(PrintStream out, Object fixture, String example) {
+        out.print(printToString(fixture, example));
+    }
+
+    public String printToString(Object fixture, String example) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("\n");
+        builder.append(specificationDescription);
+        builder.append("\n");
+        String counts = printCountsToString(fixture, null);
+    	if (counts != null) {
+            builder.append(counts).append("\n");
+        }
+//        builder.append("\n");
+        return builder.toString();
+    }
+
+    public String printCountsToString(Object fixture, String example) {
+    	StringBuilder builder = new StringBuilder();
+
+        builder.append("Successes: ");
+        builder.append(getSuccessCount());
+        builder.append(", Failures: ");
+        builder.append(getFailureCount());
+        if (getIgnoredCount() > 0) {
+        	builder.append(", Ignored: ");
+        	builder.append(getIgnoredCount());
+        }
+        if (hasExceptions()) {
+        	builder.append(", Exceptions: ");
+        	builder.append(getExceptionCount());
+        }
+
+        if (fixture != null) {
+            builder.append(FixtureState.getFixtureState(fixture.getClass(), this.getResultModifier()).printNoteToString());
+        }
+
+        return builder.toString();
+    }
+
+
     public void recordFailFastException( FailFastException exception) {
         this.setFailFastException(exception);
     }
@@ -104,4 +144,25 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
     public void setFailFastException( FailFastException exception) {
         this.failFastException = exception;
     }
+
+    public void setSpecificationDescription( String specificationDescription) {
+        this.specificationDescription = specificationDescription;
+    }
+
+    public String getSpecificationDescription() {
+        return specificationDescription;
+    }
+
+    public void setForExample(boolean isForExample) {
+        this.forExample = isForExample;
+    }
+
+    public boolean isForExample() {
+        return forExample;
+    }
+
+    public long getTotalCount() {
+        return getSuccessCount() + getFailureCount() + getExceptionCount() + getIgnoredCount();
+    }
+
 }

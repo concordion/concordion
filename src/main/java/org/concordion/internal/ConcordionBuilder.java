@@ -1,58 +1,22 @@
 package org.concordion.internal;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map.Entry;
-
 import org.concordion.Concordion;
-import org.concordion.api.Command;
-import org.concordion.api.EvaluatorFactory;
-import org.concordion.api.FailFast;
-import org.concordion.api.FullOGNL;
-import org.concordion.api.Resource;
-import org.concordion.api.RunStrategy;
-import org.concordion.api.Source;
-import org.concordion.api.SpecificationLocator;
-import org.concordion.api.SpecificationReader;
-import org.concordion.api.Target;
+import org.concordion.api.*;
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.api.extension.ConcordionExtensionFactory;
-import org.concordion.api.listener.AssertEqualsListener;
-import org.concordion.api.listener.AssertFalseListener;
-import org.concordion.api.listener.AssertTrueListener;
-import org.concordion.api.listener.ConcordionBuildEvent;
-import org.concordion.api.listener.ConcordionBuildListener;
-import org.concordion.api.listener.DocumentParsingListener;
-import org.concordion.api.listener.ExecuteListener;
-import org.concordion.api.listener.RunListener;
-import org.concordion.api.listener.SetListener;
-import org.concordion.api.listener.SpecificationProcessingListener;
-import org.concordion.api.listener.ThrowableCaughtListener;
-import org.concordion.api.listener.VerifyRowsListener;
+import org.concordion.api.listener.*;
 import org.concordion.internal.command.*;
-import org.concordion.internal.listener.AssertResultRenderer;
-import org.concordion.internal.listener.BreadcrumbRenderer;
-import org.concordion.internal.listener.DocumentStructureImprover;
-import org.concordion.internal.listener.JavaScriptEmbedder;
-import org.concordion.internal.listener.JavaScriptLinker;
-import org.concordion.internal.listener.MetadataCreator;
-import org.concordion.internal.listener.PageFooterRenderer;
-import org.concordion.internal.listener.RunResultRenderer;
-import org.concordion.internal.listener.SpecificationExporter;
-import org.concordion.internal.listener.StylesheetEmbedder;
-import org.concordion.internal.listener.StylesheetLinker;
-import org.concordion.internal.listener.ThrowableRenderer;
-import org.concordion.internal.listener.VerifyRowsResultRenderer;
+import org.concordion.internal.listener.*;
 import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 import org.concordion.internal.util.IOUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class ConcordionBuilder implements ConcordionExtender {
 
@@ -81,11 +45,13 @@ public class ConcordionBuilder implements ConcordionExtender {
     private VerifyRowsCommand verifyRowsCommand = new VerifyRowsCommand();
     private VerifyRowsUnorderedCommand verifyRowsUnorderedCommand = new VerifyRowsUnorderedCommand();
     private EchoCommand echoCommand = new EchoCommand();
+    private ExampleCommand exampleCommand = new ExampleCommand();
     private ThrowableCaughtPublisher throwableListenerPublisher = new ThrowableCaughtPublisher();
     private LinkedHashMap<String, Resource> resourceToCopyMap = new LinkedHashMap<String, Resource>();
     private List<SpecificationProcessingListener> specificationProcessingListeners = new ArrayList<SpecificationProcessingListener>();
     private List<Class<? extends Throwable>> failFastExceptions = Collections.<Class<? extends Throwable>>emptyList();
     private boolean builtAlready;
+    private Object fixture;
 
     {
         withThrowableListener(new ThrowableRenderer());
@@ -160,7 +126,6 @@ public class ConcordionBuilder implements ConcordionExtender {
         return this;
     }
     
-    @Override
     public ConcordionExtender withRunStrategy(RunStrategy runStrategy) {
         runCommand.setRunStrategy(runStrategy);
         return this;
@@ -205,7 +170,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         Check.notNull(command, "Command is null");
         Check.isFalse(namespaceURI.contains("concordion.org"),
                 "The namespace URI for user-contributed command '" + commandName + "' "
-              + "must not contain 'concordion.org'. Use your own domain name instead.");
+                        + "must not contain 'concordion.org'. Use your own domain name instead.");
         return withApprovedCommand(namespaceURI, commandName, command);
     }
     
@@ -242,14 +207,15 @@ public class ConcordionBuilder implements ConcordionExtender {
         return this;
     }
     
-    public Concordion build() {
+    public Concordion build() throws UnableToBuildConcordionException {
         Check.isFalse(builtAlready, "ConcordionBuilder currently does not support calling build() twice");
         builtAlready = true;
         
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "run", runCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "execute", executeCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "set", setCommand);
-        
+        withApprovedCommand(NAMESPACE_CONCORDION_2007, "example", exampleCommand);
+
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "assert-equals", assertEqualsCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "assertEquals", assertEqualsCommand);
 
@@ -285,10 +251,16 @@ public class ConcordionBuilder implements ConcordionExtender {
         SpecificationExporter exporter = new SpecificationExporter(target);
         specificationCommand.addSpecificationListener(exporter);
         specificationCommand.setSpecificationDescriber(exporter);
+
+        exampleCommand.setSpecificationDescriber(exporter);
         
         listeners.announce().concordionBuilt(new ConcordionBuildEvent(target));
-        
-        return new Concordion(specificationLocator, specificationReader, evaluatorFactory);
+
+        try {
+            return new Concordion(specificationLocator, specificationReader, evaluatorFactory, fixture);
+        } catch (IOException e) {
+            throw new UnableToBuildConcordionException(e);
+        }
     }
 
     private void addSpecificationListeners() {
@@ -370,6 +342,15 @@ public class ConcordionBuilder implements ConcordionExtender {
     }
 
     public ConcordionBuilder withFixture(Object fixture) {
+        this.fixture = fixture;
+        return withFixtureForAnnotationsOnly(fixture);
+    }
+
+    public ConcordionBuilder withFixtureForAnnotationsOnly(Object fixture) {
+        if (fixture == null) {
+            return this;
+        }
+
         if (fixture.getClass().isAnnotationPresent(FailFast.class)) {
             FailFast failFastAnnotation = fixture.getClass().getAnnotation(FailFast.class);
             Class<? extends Throwable>[] failFastExceptions = failFastAnnotation.onExceptionType();

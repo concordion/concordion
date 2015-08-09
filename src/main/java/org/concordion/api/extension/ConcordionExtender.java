@@ -42,7 +42,7 @@ public interface ConcordionExtender {
 
     /**
      * Adds a listener to <code>concordion:assertTrue</code> commands.
-     * @param listener  the listener
+     * @param listener the listener
      * @return this
      */
     ConcordionExtender withAssertTrueListener(AssertTrueListener listener);
@@ -70,14 +70,14 @@ public interface ConcordionExtender {
 
     /**
      * Adds a listener to <code>concordion:run</code> commands.
-     * @param listener  the listener
+     * @param listener the listener
      * @return this
      */
     ConcordionExtender withRunListener(RunListener listener);
     
     /**
      * Adds a listener to <code>concordion:verifyRows</code> commands.
-     * @param listener  the listener
+     * @param listener the listener
      * @return this
      */
     ConcordionExtender withVerifyRowsListener(VerifyRowsListener listener);
@@ -92,7 +92,7 @@ public interface ConcordionExtender {
     /**
      * Adds a listener that is invoked when an uncaught {@link Throwable} is thrown by a command,
      * including commands that have been added using {@link #withCommand(String, String, Command)}.
-     * @param throwableListener  the listener
+     * @param throwableListener the listener
      * @return this
      */
     ConcordionExtender withThrowableListener(ThrowableCaughtListener throwableListener);
@@ -100,7 +100,7 @@ public interface ConcordionExtender {
     /**
      * Adds a listener that is invoked when Concordion parses the specification document, providing 
      * access to the parsed document.
-     * @param listener  the listener
+     * @param listener the listener
      * @return this
      */
     ConcordionExtender withDocumentParsingListener(DocumentParsingListener listener);
@@ -123,30 +123,30 @@ public interface ConcordionExtender {
     
     /**
      * Copies a resource to the Concordion output.
-     * @param sourcePath Path to source
-     * @param targetResource target resource
+     * @param sourcePath Storage Path
+     * @param targetResource Target Resource
      * @return this
      */
     ConcordionExtender withResource(String sourcePath, Resource targetResource);
     
     /**
      * Embeds the given CSS in the Concordion output.
-     * @param css The CSS
+     * @param css CSS
      * @return this
      */
     ConcordionExtender withEmbeddedCSS(String css);
     
     /**
      * Copies the given CSS file to the Concordion output folder, and adds a link to the CSS in the &lt;head&gt; section of the Concordion HTML.  
-     * @param cssPath Path to CSS
-     * @param targetResource Target resource
+     * @param cssPath CSS Path
+     * @param targetResource Target Resource
      * @return this
      */
     ConcordionExtender withLinkedCSS(String cssPath, Resource targetResource);
     
     /**
      * Embeds the given JavaScript in the Concordion output.
-     * @param javaScript JavaScript to embedd
+     * @param javaScript javaScript
      * @return this
      */
     ConcordionExtender withEmbeddedJavaScript(String javaScript);

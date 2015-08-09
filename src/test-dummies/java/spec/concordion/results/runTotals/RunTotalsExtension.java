@@ -10,35 +10,30 @@ import org.concordion.api.listener.*;
  */
 public class RunTotalsExtension implements ConcordionExtension, RunListener {
 
-    @Override
     public void addTo(ConcordionExtender concordionExtender) {
         concordionExtender.withRunListener(this);
     }
 
-    @Override
     public void throwableCaught(ThrowableCaughtEvent event) {
         writeText(event.getElement(), "threw exception");
     }
 
 
-    @Override
     public void successReported(RunSuccessEvent event) {
         writeText(event);
     }
 
 
-    @Override
     public void failureReported(RunFailureEvent event) {
         writeText(event);
     }
 
-    @Override
     public void ignoredReported(RunIgnoreEvent event) {
         writeText(event);
     }
 
     private void writeText(AbstractRunEvent event) {
-        writeText(event.getElement(), event.getResultSummary().printCountsToString(event.getResultSummary()));
+        writeText(event.getElement(), event.getResultSummary().printCountsToString(event.getResultSummary(), null));
     }
 
     private void writeText(Element element, String text) {

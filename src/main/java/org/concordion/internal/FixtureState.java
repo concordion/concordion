@@ -4,13 +4,10 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.concordion.api.ExpectedToFail;
-import org.concordion.api.Result;
-import org.concordion.api.ResultSummary;
-import org.concordion.api.Unimplemented;
+import org.concordion.api.*;
 
 public enum FixtureState {
-    UNIMPLEMENTED {
+    UNIMPLEMENTED(ResultModifier.UNIMPLEMENTED) {
 
         private void addToList(List<String> list, long x, String singular, String plural) {
             if (x == 1) {
@@ -27,12 +24,13 @@ public enum FixtureState {
             addToList(list, rs.getFailureCount(), "a failure", "some failures");
             addToList(list, rs.getExceptionCount(), "an exception", "some exceptions");
             if (list.size() > 0) {
-                String s = list.get(0);
+                StringBuilder s = new StringBuilder();
+                s.append(list.get(0));
                 if (list.size() > 1) {
                     for (int i = 1; i < (list.size() - 1); i++) {
-                        s += ", " + list.get(i);
+                        s.append(", ").append(list.get(i));
                     }
-                    s += ", and " + list.get(list.size() - 1);
+                    s.append(", and ").append(list.get(list.size() - 1));
                 }
                 throw new ConcordionAssertionError("Specification is supposed to be unimplemented, but is reporting " + s + ".", rs);
                 
@@ -53,7 +51,7 @@ public enum FixtureState {
 		public ResultSummary getMeaningfulResultSummary(
 				ResultSummary rs, FailFastException ffe) {
 			assertIsSatisfied(rs, ffe);
-			return new SingleResultSummary(Result.IGNORED, rs.getSpecificationDescription());
+			return new SingleResultSummary(Result.IGNORED);
 		}
 
        @Override
@@ -62,7 +60,7 @@ public enum FixtureState {
        }
 
     },
-    EXPECTED_TO_FAIL {
+    EXPECTED_TO_FAIL(ResultModifier.EXPECTED_TO_FAIL) {
 
         @Override
         public void assertIsSatisfied(ResultSummary rs, FailFastException ffe) {
@@ -76,7 +74,7 @@ public enum FixtureState {
 		public ResultSummary getMeaningfulResultSummary(
 				ResultSummary rs, FailFastException ffe) {
 			assertIsSatisfied(rs, ffe);
-			return new SingleResultSummary(Result.IGNORED, rs.getSpecificationDescription());
+			return new SingleResultSummary(Result.IGNORED);
 		}
 
         @Override
@@ -94,7 +92,7 @@ public enum FixtureState {
         	return "   <-- Note: This test has been marked as EXPECTED_TO_FAIL";
        }
     },
-    EXPECTED_TO_PASS {
+    EXPECTED_TO_PASS(ResultModifier.EXPECTED_TO_PASS) {
 
         @Override
         public void assertIsSatisfied(ResultSummary rs, FailFastException ffe) {
@@ -128,6 +126,13 @@ public enum FixtureState {
         }
     };
 
+
+    private final ResultModifier resultModifier;
+
+    FixtureState(ResultModifier resultModifier) {
+        this.resultModifier = resultModifier;
+    }
+
     public abstract void assertIsSatisfied(ResultSummary rs, FailFastException ffe);
 
     public void printNote(PrintStream out) {
@@ -141,15 +146,35 @@ public enum FixtureState {
     public abstract ResultSummary convertForCache(ResultSummary rs);
 
 
-    public static FixtureState getFixtureState(Class<?> fixtureClass) {
-        FixtureState state = FixtureState.EXPECTED_TO_PASS;
-        if (fixtureClass.getAnnotation(ExpectedToFail.class) != null) {
-            state = FixtureState.EXPECTED_TO_FAIL;
+    public static FixtureState getFixtureState(Class<?> fixtureClass, ResultModifier resultModifier) {
+        // examples have precedence
+        if (resultModifier != null) {
+            for (FixtureState state: values()) {
+                if (state.getResultModifier() ==  resultModifier) {
+                    return state;
+                }
+            }
         }
-        if (fixtureClass.getAnnotation(Unimplemented.class) != null) {
-            state = FixtureState.UNIMPLEMENTED;
+
+        // loop through the states
+        if (fixtureClass != null) {
+            for (FixtureState state : values()) {
+                // if we found a match, then return the state
+                if (fixtureClass.getAnnotation(state.resultModifier.getAnnotation()) != null) {
+                    return state;
+                }
+            }
         }
-        return state;
+
+        return EXPECTED_TO_PASS;
     }
 
+    public String getAnnotationTag() {
+        return resultModifier.getTag();
+    }
+
+    public ResultModifier getResultModifier() {
+        return resultModifier;
+    }
 }
+

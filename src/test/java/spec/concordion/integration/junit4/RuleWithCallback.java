@@ -14,7 +14,6 @@ class RuleWithCallback implements TestRule {
         this.callback = callback;
     }
 
-    @Override
     public Statement apply(Statement base, Description description) {
         // pass the callback object first.
         return new CompoundStatement(callback, base);
