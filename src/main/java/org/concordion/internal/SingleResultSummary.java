@@ -38,18 +38,9 @@ public class SingleResultSummary extends AbstractResultSummary implements Result
         setResultModifier(resultSummary.getResultModifier());
     }
 
-//    public ResultSummary getMeaningfulResultSummary(Object fixture, String example) {
-//        return super.getMeaningfulResultSummary(fixture, example);
-//    }
-
     public SingleResultSummary(final Result result, String specificationDescription) {
         this.result = result;
         this.setSpecificationDescription(specificationDescription);
-    }
-    
-    public ResultSummary getMeaningfulResultSummary(Object fixture) {
-        FixtureState state = FixtureState.getFixtureState(fixture.getClass(), getResultModifier());
-        return state.getMeaningfulResultSummary(this, null);
     }
 
     public Result getResult() {
@@ -67,14 +58,6 @@ public class SingleResultSummary extends AbstractResultSummary implements Result
     @Override
     public int hashCode() {
         return result.hashCode();
-    }
-
-    public void assertIsSatisfied() {
-        assertIsSatisfied(this);
-    }
-
-    public void assertIsSatisfied(Object fixture) {
-        assertIsSatisfied(fixture, null);
     }
 
 

@@ -42,16 +42,6 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
 	}
 
 
-    @Deprecated
-	public void assertIsSatisfied() {
-        assertIsSatisfied(this);
-    }
-
-    @Deprecated
-    public void assertIsSatisfied(Object fixture) {
-        assertIsSatisfied(fixture, null);
-    }
-
     public void assertIsSatisfied(Object fixture, String example) {
         // only pass the example name through if this is an actual example - not any stray tests in the
         // spec
@@ -59,11 +49,6 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
                 fixture.getClass(),
                 isForExample() ? this.getResultModifier() : null);
         state.assertIsSatisfied(this, failFastException);
-    }
-
-    @Deprecated
-    public ResultSummary getMeaningfulResultSummary(Object fixture) {
-        return getMeaningfulResultSummary(fixture, null);
     }
 
     private ResultSummary getMeaningfulResultSummary(Object fixture, String example) {
@@ -107,23 +92,8 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
         return getCount(Result.IGNORED);
     }
 
-    @Deprecated
-	public void print( PrintStream out) {
-        print(out, this);
-    }
-
-    @Deprecated
-	public void print(PrintStream out, Object fixture) {
-        print(out, fixture, null);
-    }
-
     public void print(PrintStream out, Object fixture, String example) {
         out.print(printToString(fixture, example));
-    }
-
-    @Deprecated
-    public String printToString(Object fixture) {
-        return printToString(fixture, null);
     }
 
     public String printToString(Object fixture, String example) {
@@ -131,17 +101,12 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
         builder.append("\n");
         builder.append(specificationDescription);
         builder.append("\n");
-        String counts = printCountsToString(fixture);
+        String counts = printCountsToString(fixture, null);
     	if (counts != null) {
             builder.append(counts).append("\n");
         }
 //        builder.append("\n");
         return builder.toString();
-    }
-
-    @Deprecated
-    public String printCountsToString(Object fixture) {
-        return printCountsToString(fixture, null);
     }
 
     public String printCountsToString(Object fixture, String example) {

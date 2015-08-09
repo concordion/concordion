@@ -14,23 +14,8 @@ public abstract class AbstractResultSummary implements ResultSummary {
         return false;
     }
 
-    @Deprecated
-    public void print( PrintStream out) {
-        print(out, this);
-    }
-
-    @Deprecated
-    public void print(PrintStream out, Object fixture) {
-        print(out, fixture, null);
-    }
-
     public void print(PrintStream out, Object fixture, String example) {
         out.print(printToString(fixture, example));
-    }
-
-    @Deprecated
-    public String printToString(Object fixture) {
-        return printToString(fixture, null);
     }
 
     public String printToString(Object fixture, String example) {
@@ -38,17 +23,12 @@ public abstract class AbstractResultSummary implements ResultSummary {
         builder.append("\n");
         builder.append(specificationDescription);
         builder.append("\n");
-        String counts = printCountsToString(fixture);
+        String counts = printCountsToString(fixture, null);
         if (counts != null) {
             builder.append(counts).append("\n");
         }
 //        builder.append("\n");
         return builder.toString();
-    }
-
-    @Deprecated
-    public String printCountsToString(Object fixture) {
-        return printCountsToString(fixture, null);
     }
 
     public String printCountsToString(Object fixture, String example) {
