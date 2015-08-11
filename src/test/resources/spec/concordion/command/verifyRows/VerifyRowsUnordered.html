@@ -32,6 +32,9 @@
     &lt;tr&gt;
         &lt;td&gt;jspratt&lt;/td&gt; 
     &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;jspratt&lt;/td&gt;
+    &lt;/tr&gt;
 &lt;/table&gt;
 </pre>
 
@@ -41,36 +44,48 @@
                 <th concordion:assertEquals="#result">Results in</th>
             </tr>
             <tr>
+                <td><code>bpeep, jspratt, jspratt</code></td>
+                <td>bpeep->SUCCESS, jspratt->SUCCESS, jspratt->SUCCESS</td>
+            </tr>
+            <tr>
+                <td><code>jspratt, bpeep, jspratt</code></td>
+                <td>bpeep->SUCCESS, jspratt->SUCCESS, jspratt->SUCCESS</td>
+            </tr>
+            <tr>
                 <td><code>bpeep, jspratt</code></td>
-                <td>bpeep->SUCCESS, jspratt->SUCCESS</td>
+                <td>bpeep->SUCCESS, jspratt->SUCCESS, jspratt->MISSING</td>
             </tr>
             <tr>
                 <td><code>jspratt, bpeep</code></td>
-                <td>bpeep->SUCCESS, jspratt->SUCCESS</td>
+                <td>bpeep->SUCCESS, jspratt->SUCCESS, jspratt->MISSING</td>
+            </tr>
+            <tr>
+                <td><code>jspratt, bpeep, bpeep</code></td>
+                <td>bpeep->SUCCESS, jspratt->SUCCESS, jspratt->MISSING, bpeep->SURPLUS</td>
+            </tr>
+            <tr>
+                <td><code>bpeep, jspratt, jspratt, jspratt</code></td>
+                <td>bpeep->SUCCESS, jspratt->SUCCESS, jspratt->SUCCESS, jspratt->SURPLUS</td>
             </tr>
             <tr>            
-                <td><code>hdumpty, jspratt</code></td>
-                <td>bpeep->MISSING, jspratt->SUCCESS, hdumpty->SURPLUS</td>
+                <td><code>hdumpty, jspratt, jspratt</code></td>
+                <td>bpeep->MISSING, jspratt->SUCCESS, jspratt->SUCCESS, hdumpty->SURPLUS</td>
             </tr>
             <tr>            
                 <td><code>bpeep</code></td>
-                <td>bpeep->SUCCESS, jspratt->MISSING</td>
+                <td>bpeep->SUCCESS, jspratt->MISSING, jspratt->MISSING</td>
             </tr>
-            <tr>            
-                <td><code>bpeep, jspratt, ppan</code></td>
-                <td>bpeep->SUCCESS, jspratt->SUCCESS, ppan->SURPLUS</td>
+            <tr>
+                <td><code>jspratt</code></td>
+                <td>bpeep->MISSING, jspratt->SUCCESS, jspratt->MISSING</td>
             </tr>
             <tr>
                 <td><code>ppan, bpeep, jspratt</code></td>
-                <td>bpeep->SUCCESS, jspratt->SUCCESS, ppan->SURPLUS</td>
+                <td>bpeep->SUCCESS, jspratt->SUCCESS, jspratt->MISSING, ppan->SURPLUS</td>
             </tr>
             <tr>
                 <td><code>rhood, jspratt, ppan, mdaw</code></td>
-                <td>bpeep->MISSING, jspratt->SUCCESS, rhood->SURPLUS, ppan->SURPLUS, mdaw->SURPLUS</td>
-            </tr>
-            <tr>
-                <td><code>rhood, jspratt, ppan, mdaw, bpeep</code></td>
-                <td>bpeep->SUCCESS, jspratt->SUCCESS, rhood->SURPLUS, ppan->SURPLUS, mdaw->SURPLUS</td>
+                <td>bpeep->MISSING, jspratt->SUCCESS, jspratt->MISSING, rhood->SURPLUS, ppan->SURPLUS, mdaw->SURPLUS</td>
             </tr>
         </table>
 
