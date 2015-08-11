@@ -8,7 +8,11 @@ import org.concordion.api.listener.SurplusRowEvent;
 import org.concordion.api.listener.VerifyRowsListener;
 import org.concordion.internal.util.Announcer;
 
+import java.util.regex.Pattern;
+
 public class AbstractVerifyRowsCommand extends AbstractCommand {
+
+    protected static final Pattern COMMAND_PATTERN = Pattern.compile("(#.+?) *: *(.+)");
 
     private Announcer<VerifyRowsListener> listeners = Announcer.to(VerifyRowsListener.class);
 

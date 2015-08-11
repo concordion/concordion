@@ -10,59 +10,87 @@ import org.concordion.internal.util.Check;
 
 import java.util.*;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class VerifyRowsUnorderedCommand extends AbstractVerifyRowsCommand {
 
     @SuppressWarnings("unchecked")
     @Override
     public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
-        Pattern pattern = Pattern.compile("(#.+?) *: *(.+)");
-        Matcher matcher = pattern.matcher(commandCall.getExpression());
+        Matcher matcher = COMMAND_PATTERN.matcher(commandCall.getExpression());
         if (!matcher.matches()) {
             throw new RuntimeException("The expression for a \"verifyRowsUnordered\" should be of the form: #var : collectionExpr");
         }
         String loopVariableName = matcher.group(1);
         String iterableExpression = matcher.group(2);
 
-        Object obj = evaluator.evaluate(iterableExpression);
-        Check.notNull(obj, "Expression returned null (should be an Iterable).");
-        Check.isTrue(obj instanceof Iterable, obj.getClass().getCanonicalName() + " is not Iterable");
-        Iterable<Object> iterable = (Iterable<Object>) obj;
+        Object actualData = evaluator.evaluate(iterableExpression);
+        Check.notNull(actualData, "Expression returned null (should be an Iterable).");
+        Check.isTrue(actualData instanceof Iterable, actualData.getClass().getCanonicalName() + " is not Iterable");
 
-        List<Object> evaluationResults = new ArrayList<Object>();
-        for (Object o : iterable) {
-            evaluationResults.add(o);
+        new RowVerificationTable(commandCall, evaluator, resultRecorder, loopVariableName, (Iterable<Object>) actualData).verify();
+    }
+
+    private final class RowVerificationTable {
+
+        private final CommandCall commandCall;
+        private final Evaluator evaluator;
+        private final ResultRecorder resultRecorder;
+        private final String loopVariableName;
+        private final TableSupport tableSupport;
+        private final Row[] expectedRows;
+        private final List<Object> actualRows;
+
+        public RowVerificationTable(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, String loopVariableName, Iterable<Object> actualRows) {
+            this.commandCall = commandCall;
+            this.evaluator = evaluator;
+            this.resultRecorder = resultRecorder;
+            this.loopVariableName = loopVariableName;
+            this.tableSupport = new TableSupport(commandCall);
+            this.expectedRows = tableSupport.getDetailRows();
+            this.actualRows = copy(actualRows);
         }
 
-        TableSupport tableSupport = new TableSupport(commandCall);
-        Row[] detailRows = tableSupport.getDetailRows();
-
-        announceExpressionEvaluated(commandCall.getElement());
-
-        for (Row detailRow : detailRows) {
-            tableSupport.copyCommandCallsTo(detailRow);
-            boolean found = false;
-            for (Object evaluationResult : evaluationResults) {
-                evaluator.setVariable(loopVariableName, evaluationResult);
-                if (commandCall.getChildren().verifyInBackground(evaluator, resultRecorder) == Result.SUCCESS) {
+        public void verify() {
+            announceExpressionEvaluated(commandCall.getElement());
+            for (Row expectedRow : expectedRows) {
+                tableSupport.copyCommandCallsTo(expectedRow);
+                Object row = findRow();
+                if (row != null) {
                     commandCall.getChildren().verify(evaluator, resultRecorder);
-                    evaluationResults.remove(evaluationResult);
-                    found = true;
-                    break;
+                    actualRows.remove(row);
+                } else {
+                    announceMissingRow(expectedRow.getElement());
                 }
             }
-            if (!found) {
-                announceMissingRow(detailRow.getElement());
+            reportSurpulusRows();
+        }
+
+        private Object findRow() {
+            for (Object row : actualRows) {
+                evaluator.setVariable(loopVariableName, row);
+                if (commandCall.getChildren().verifyInBackground(evaluator, resultRecorder) == Result.SUCCESS) {
+                    return row;
+                }
+            }
+            return null;
+        }
+
+        private void reportSurpulusRows() {
+            for (Object surpulusRow : actualRows) {
+                evaluator.setVariable(loopVariableName, surpulusRow);
+                Row detailRow = tableSupport.addDetailRow();
+                announceSurplusRow(detailRow.getElement());
+                tableSupport.copyCommandCallsTo(detailRow);
+                commandCall.getChildren().verify(evaluator, resultRecorder);
             }
         }
 
-        for (Object evaluationResult : evaluationResults) {
-            evaluator.setVariable(loopVariableName, evaluationResult);
-            Row detailRow = tableSupport.addDetailRow();
-            announceSurplusRow(detailRow.getElement());
-            tableSupport.copyCommandCallsTo(detailRow);
-            commandCall.getChildren().verify(evaluator, resultRecorder);
+        private List<Object> copy(Iterable<Object> iterable) {
+            List<Object> copy = new ArrayList<Object>();
+            for (Object o : iterable) {
+                copy.add(o);
+            }
+            return copy;
         }
     }
 }
