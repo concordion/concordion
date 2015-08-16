@@ -16,7 +16,7 @@ import org.concordion.api.listener.RunListener;
 import org.concordion.api.listener.SetListener;
 import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.api.listener.ThrowableCaughtListener;
-import org.concordion.api.listener.VerifyRowsListener;
+import org.concordion.api.listener.RowsListener;
 import org.concordion.internal.command.RunCommand;
 
 /**
@@ -80,7 +80,14 @@ public interface ConcordionExtender {
      * @param listener the listener
      * @return this
      */
-    ConcordionExtender withVerifyRowsListener(VerifyRowsListener listener);
+    ConcordionExtender withVerifyRowsListener(RowsListener listener);
+
+    /**
+     * Adds a listener to <code>concordion:verifyRows</code> commands.
+     * @param listener the listener
+     * @return this
+     */
+    ConcordionExtender withMatchRowsListener(RowsListener listener);
 
     /**
      * Adds a listener that is invoked when an uncaught {@link Throwable} is thrown by a command,

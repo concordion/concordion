@@ -4,9 +4,9 @@ import org.concordion.api.Element;
 import org.concordion.api.listener.ExpressionEvaluatedEvent;
 import org.concordion.api.listener.MissingRowEvent;
 import org.concordion.api.listener.SurplusRowEvent;
-import org.concordion.api.listener.VerifyRowsListener;
+import org.concordion.api.listener.RowsListener;
 
-public class VerifyRowsResultRenderer implements VerifyRowsListener {
+public class RowsResultRenderer implements RowsListener {
 
     public void expressionEvaluated(ExpressionEvaluatedEvent event) {
     }

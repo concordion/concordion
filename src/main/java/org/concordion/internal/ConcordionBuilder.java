@@ -43,6 +43,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private SetCommand setCommand = new SetCommand();
     private RunCommand runCommand = new RunCommand();
     private VerifyRowsCommand verifyRowsCommand = new VerifyRowsCommand();
+    private MatchRowsCommand matchRowsCommand = new MatchRowsCommand();
     private EchoCommand echoCommand = new EchoCommand();
     private ExampleCommand exampleCommand = new ExampleCommand();
     private ThrowableCaughtPublisher throwableListenerPublisher = new ThrowableCaughtPublisher();
@@ -61,7 +62,8 @@ public class ConcordionBuilder implements ConcordionExtender {
         withAssertEqualsListener(assertRenderer);
         withAssertTrueListener(assertRenderer);
         withAssertFalseListener(assertRenderer);
-        withVerifyRowsListener(new VerifyRowsResultRenderer());
+        withVerifyRowsListener(new RowsResultRenderer());
+        withMatchRowsListener(new RowsResultRenderer());
         withRunListener(new RunResultRenderer());
         withDocumentParsingListener(new DocumentStructureImprover());
         withDocumentParsingListener(new MetadataCreator());
@@ -109,8 +111,13 @@ public class ConcordionBuilder implements ConcordionExtender {
         return this;
     }
     
-    public ConcordionBuilder withVerifyRowsListener(VerifyRowsListener listener) {
+    public ConcordionBuilder withVerifyRowsListener(RowsListener listener) {
         verifyRowsCommand.addVerifyRowsListener(listener);
+        return this;
+    }
+
+    public ConcordionBuilder withMatchRowsListener(RowsListener listener) {
+        matchRowsCommand.addVerifyRowsListener(listener);
         return this;
     }
     
