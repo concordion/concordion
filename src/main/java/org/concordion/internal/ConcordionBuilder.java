@@ -227,6 +227,9 @@ public class ConcordionBuilder implements ConcordionExtender {
         
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "verify-rows", verifyRowsCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "verifyRows", verifyRowsCommand);
+
+        withApprovedCommand(NAMESPACE_CONCORDION_2007, "match-rows", matchRowsCommand);
+        withApprovedCommand(NAMESPACE_CONCORDION_2007, "matchRows", matchRowsCommand);
         
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "echo", echoCommand);
 
