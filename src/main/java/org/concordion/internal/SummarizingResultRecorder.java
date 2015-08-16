@@ -102,6 +102,7 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
         return builder.toString();
     }
 
+    @Override
     public String printCountsToString(Object fixture) {
     	StringBuilder builder = new StringBuilder();
 
@@ -125,7 +126,7 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
         return builder.toString();
     }
 
-
+    @Override
     public void recordFailFastException( FailFastException exception) {
         this.setFailFastException(exception);
     }
@@ -138,18 +139,22 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
         this.failFastException = exception;
     }
 
+    @Override
     public void setSpecificationDescription( String specificationDescription) {
         this.specificationDescription = specificationDescription;
     }
 
+    @Override
     public String getSpecificationDescription() {
         return specificationDescription;
     }
 
+    @Override
     public void setForExample(boolean isForExample) {
         this.forExample = isForExample;
     }
 
+    @Override
     public boolean isForExample() {
         return forExample;
     }
@@ -157,5 +162,4 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
     public long getTotalCount() {
         return getSuccessCount() + getFailureCount() + getExceptionCount() + getIgnoredCount();
     }
-
 }
