@@ -59,7 +59,7 @@ public class MatchRowsCommand extends AbstractRowsCommand {
             announceExpressionEvaluated(commandCall.getElement());
             for (Row expectedRow : expectedRows) {
                 tableSupport.copyCommandCallsTo(expectedRow);
-                Object row = findRow();
+                Object row = findBestMatchingRow();
                 if (row != null) {
                     commandCall.getChildren().verify(evaluator, resultRecorder);
                     actualRows.remove(row);
@@ -70,19 +70,39 @@ public class MatchRowsCommand extends AbstractRowsCommand {
             reportSurpulusRows();
         }
 
-        private Object findRow() {
+        private Object findBestMatchingRow() {
             try {
+                long bestResult = Integer.MIN_VALUE;
+                Object bestMatchingRow = null;
+
                 ElementUpdating.instance().restrict();
                 SummarizingResultRecorder backgroundResultRecorder = new SummarizingResultRecorder();
                 for (Object row : actualRows) {
                     evaluator.setVariable(loopVariableName, row);
                     commandCall.getChildren().verify(evaluator, backgroundResultRecorder);
-                    if (backgroundResultRecorder.isAllSuccessful()) {
+
+                    long total = backgroundResultRecorder.getTotalCount();
+                    long success = backgroundResultRecorder.getSuccessCount();
+
+                    //fully matched
+                    if (total == success) {
                         return row;
                     }
+
+                    //this row has same number of successful/failed fields as other one so that we do not know for sure what is matching candidate
+                    if (success == bestResult) {
+                        bestMatchingRow = null;
+                    }
+
+                    //next most promising row
+                    if (success > 0 && success > bestResult) {
+                        bestMatchingRow = row;
+                        bestResult = success;
+                    }
+
                     backgroundResultRecorder.reset();
                 }
-                return null;
+                return bestMatchingRow;
             } finally {
                 ElementUpdating.instance().allow();
             }
