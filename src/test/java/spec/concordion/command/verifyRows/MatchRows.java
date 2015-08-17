@@ -45,7 +45,7 @@ public class MatchRows {
         }
         Check.notNull(cssClass, "cssClass is null");
         Check.notNull(value, "value is null");
-        return value + "->" + cssClass.toUpperCase();
+        return cleanWhitespace(value) + "->" + cssClass.toUpperCase();
     }
 
     private static Collection<String> csvToCollection(String csv) {
@@ -54,5 +54,9 @@ public class MatchRows {
             c.add(s);
         }
         return c;
+    }
+
+    private String cleanWhitespace(String value) {
+        return value.replace('\n', ' ').replace((char)160, ' ').trim();
     }
 }
