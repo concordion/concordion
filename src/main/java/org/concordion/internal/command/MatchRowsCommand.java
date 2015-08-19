@@ -61,6 +61,7 @@ public class MatchRowsCommand extends AbstractRowsCommand {
                 tableSupport.copyCommandCallsTo(expectedRow);
                 Object row = findBestMatchingRow();
                 if (row != null) {
+                    evaluator.setVariable(loopVariableName, row);
                     commandCall.getChildren().verify(evaluator, resultRecorder);
                     actualRows.remove(row);
                 } else {

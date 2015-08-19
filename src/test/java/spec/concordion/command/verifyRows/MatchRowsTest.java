@@ -9,10 +9,12 @@ import org.junit.runner.RunWith;
 import test.concordion.TestRig;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 @RunWith(ConcordionRunner.class)
-public class MatchRows {
+public class MatchRowsTest {
     public Collection<String> usernames;
 
     public String processFragment(String fragment, String csv) throws Exception {
@@ -49,11 +51,7 @@ public class MatchRows {
     }
 
     private static Collection<String> csvToCollection(String csv) {
-        Collection<String> c = new ArrayList<String>();
-        for (String s : csv.split(", ?")) {
-            c.add(s);
-        }
-        return c;
+        return Arrays.asList(csv.split(", ?"));
     }
 
     private String cleanWhitespace(String value) {
