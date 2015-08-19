@@ -1,4 +1,4 @@
-package spec.concordion.command.verifyRows;
+package spec.concordion.command.matchRows;
 
 import nu.xom.Document;
 import nu.xom.Element;
