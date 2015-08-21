@@ -9,9 +9,9 @@ import org.concordion.internal.Row;
 import org.concordion.internal.command.VerifyRowsCommand;
 import org.concordion.internal.util.Announcer;
 
-public class DefaultStrategy extends VerifyRowsCommand.VerificationStrategy {
-    public DefaultStrategy(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder,
-                           Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows) {
+public class Default extends VerifyRowsCommand.VerificationStrategy {
+    public Default(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder,
+                   Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows) {
         super(commandCall, evaluator, resultRecorder, listeners, loopVariableName, actualRows);
     }
 

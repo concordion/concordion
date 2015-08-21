@@ -19,7 +19,7 @@ import org.concordion.api.listener.VerifyRowsListener;
 import org.concordion.internal.ConcordionBuilder;
 import org.concordion.internal.Row;
 import org.concordion.internal.TableSupport;
-import org.concordion.internal.command.strategies.DefaultStrategy;
+import org.concordion.internal.command.strategies.Default;
 import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 
@@ -72,22 +72,14 @@ public class VerifyRowsCommand extends AbstractCommand {
     private static final String DEFAULT_STRATEGIES_PACKAGE = "org.concordion.internal.command.strategies.";
 
     private Class<? extends VerificationStrategy> detectStrategyClass(CommandCall commandCall) {
-        String strategy = findAnyAttributeValue(commandCall, "verificationStrategy", "verification-strategy");
+        String strategy = findFirstExistingAttributeValue(commandCall, "verificationStrategy", "verification-strategy");
         if (strategy == null) {
-            return DefaultStrategy.class;
+            return Default.class;
         }
-        Class<? extends VerificationStrategy> clazz = findClass(DEFAULT_STRATEGIES_PACKAGE + strategy);
-        if (clazz != null) {
-            return clazz;
-        }
-        clazz = findClass(strategy);
-        if (clazz != null) {
-            return clazz;
-        }
-        return DefaultStrategy.class;
+        return findFirstExistingClassOrDefault(DEFAULT_STRATEGIES_PACKAGE + strategy, strategy);
     }
 
-    private String findAnyAttributeValue(CommandCall commandCall, String... attributeNames) {
+    private String findFirstExistingAttributeValue(CommandCall commandCall, String... attributeNames) {
         for (String attributeName : attributeNames) {
             String value = commandCall.getElement().getAttributeValue(attributeName, ConcordionBuilder.NAMESPACE_CONCORDION_2007);
             if (value != null) {
@@ -97,16 +89,16 @@ public class VerifyRowsCommand extends AbstractCommand {
         return null;
     }
 
-    private Class<? extends VerificationStrategy> findClass(String name) {
-        try {
-            Class<?> aClass = Class.forName(name);
-            if (VerificationStrategy.class.isAssignableFrom(aClass)) {
-                return (Class<? extends VerificationStrategy>) aClass;
-            }
-            return null;
-        } catch (ClassNotFoundException e) {
-            return null;
+    private Class<? extends VerificationStrategy> findFirstExistingClassOrDefault(String... names) {
+        for (String name : names) {
+            try {
+                Class<?> aClass = Class.forName(name);
+                if (VerificationStrategy.class.isAssignableFrom(aClass)) {
+                    return (Class<? extends VerificationStrategy>) aClass;
+                }
+            } catch (ClassNotFoundException e) {}
         }
+        return Default.class;
     }
 
     public static abstract class VerificationStrategy {

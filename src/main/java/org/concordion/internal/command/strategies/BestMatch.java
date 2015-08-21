@@ -10,10 +10,10 @@ import org.concordion.internal.SummarizingResultRecorder;
 import org.concordion.internal.command.VerifyRowsCommand;
 import org.concordion.internal.util.Announcer;
 
-public class MatchRowsStrategy extends VerifyRowsCommand.VerificationStrategy {
+public class BestMatch extends VerifyRowsCommand.VerificationStrategy {
 
-    public MatchRowsStrategy(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder,
-                             Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows) {
+    public BestMatch(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder,
+                     Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows) {
         super(commandCall, evaluator, resultRecorder, listeners, loopVariableName, actualRows);
     }
 
