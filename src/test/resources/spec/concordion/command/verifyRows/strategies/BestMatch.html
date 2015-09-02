@@ -9,8 +9,7 @@
 
 <p>
     <br /> This file provides examples of behaviour of <code>concordion:verifyRows</code> command with <code>concordion:verificationStrategy="BestMatch"</code>.
-    <br /> This feature is still in development state so your suggestions and comments are welcome.
-    <br /> <code>concordion:matchRows</code> command tries to match actual collection of data to the expected in the table.
+    <br /> The command tries to match actual collection of data to the expected in the table.
     <br /><br /> Matching algorithm is:
     <ul>
         <li>
@@ -259,7 +258,7 @@
         </tr>
 
         <tr>
-            <td>One surpulus row</td>
+            <td>One surplus row</td>
             <td>
                 <pre class="html">
 &lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="BestMatch"&gt;
@@ -352,7 +351,7 @@
         </tr>
 
         <tr>
-            <td>One surpulus duplicate</td>
+            <td>One surplus duplicate</td>
             <td>
                 <pre class="html">
 &lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="BestMatch"&gt;
@@ -396,7 +395,7 @@
         </tr>
 
         <tr>
-            <td>One field is incorect</td>
+            <td>One field is incorrect</td>
             <td>
                 <pre class="html">
 &lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="BestMatch"&gt;
@@ -680,7 +679,7 @@
         </tr>
 
         <tr>
-            <td>First row is surpulus, second obe with incorrect field</td>
+            <td>First row is surplus, second one with incorrect field</td>
             <td>
                 <pre class="html">
 &lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="BestMatch"&gt;
@@ -724,7 +723,7 @@
         </tr>
 
         <tr>
-            <td>Expected one row, got two, each with one field different. Report both surpulus as matching ambiguous</td>
+            <td>Expected one row, got two, each with one field different. Report both surplus as matching ambiguous</td>
             <td>
                 <pre class="html">
 &lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="BestMatch"&gt;

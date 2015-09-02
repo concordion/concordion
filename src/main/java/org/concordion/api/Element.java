@@ -10,6 +10,7 @@ import nu.xom.Node;
 import nu.xom.Nodes;
 import nu.xom.ParentNode;
 import nu.xom.XPathContext;
+import org.concordion.internal.ConcordionBuilder;
 
 public final class Element {
 
@@ -111,6 +112,16 @@ public final class Element {
     
     public String getAttributeValue(String localName, String namespaceURI) {
         return xomElement.getAttributeValue(localName, namespaceURI);
+    }
+
+    public String getConcordionAttributeValue(String... nameVariants) {
+        for (String nameVariant : nameVariants) {
+            String value = getAttributeValue(nameVariant, ConcordionBuilder.NAMESPACE_CONCORDION_2007);
+            if (value != null) {
+                return value;
+            }
+        }
+        return null;
     }
 
     public void removeAttribute(String name) {

@@ -164,10 +164,6 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
         return recordedResults.size();
     }
 
-    public final boolean isAllSuccessful() {
-        return getTotalCount() == getSuccessCount();
-    }
-
     public final void reset() {
         recordedResults.clear();
         failFastException = null;

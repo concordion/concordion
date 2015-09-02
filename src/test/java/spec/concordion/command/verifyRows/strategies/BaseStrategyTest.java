@@ -23,13 +23,7 @@ public class BaseStrategyTest {
 
         String fragmentExecuted = document.getRootElement().query("//table").get(0).toXML();
 
-        boolean equals = clearFormatting(fragmentExecuted).equals(clearFormatting(fragmentAfterExecution));
-        if (!equals) {
-            System.out.println(fragmentExecuted);
-            System.out.println(fragmentAfterExecution);
-            System.out.println("----------------");
-        }
-        return equals;
+        return clearFormatting(fragmentExecuted).equals(clearFormatting(fragmentAfterExecution));
     }
 
     private String clearFormatting(String formatted) {

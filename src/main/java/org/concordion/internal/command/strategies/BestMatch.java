@@ -3,13 +3,13 @@ package org.concordion.internal.command.strategies;
 import org.concordion.api.CommandCall;
 import org.concordion.api.Evaluator;
 import org.concordion.api.ResultRecorder;
+import org.concordion.api.VerifyRowsStrategy;
 import org.concordion.api.listener.VerifyRowsListener;
 import org.concordion.internal.Row;
 import org.concordion.internal.SummarizingResultRecorder;
-import org.concordion.internal.command.VerifyRowsCommand;
 import org.concordion.internal.util.Announcer;
 
-public class BestMatch extends VerifyRowsCommand.VerificationStrategy {
+public class BestMatch extends VerifyRowsStrategy {
 
     public BestMatch(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder,
                      Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows) {
@@ -30,7 +30,7 @@ public class BestMatch extends VerifyRowsCommand.VerificationStrategy {
                 announceMissingRow(expectedRow.getElement());
             }
         }
-        reportSurpulusRows();
+        reportSurplusRows();
     }
 
     private Object findBestMatchingRow(Row expectedRow) {
@@ -70,9 +70,9 @@ public class BestMatch extends VerifyRowsCommand.VerificationStrategy {
         return bestMatchingRow;
     }
 
-    private void reportSurpulusRows() {
-        for (Object surpulusRow : actualRows) {
-            evaluator.setVariable(loopVariableName, surpulusRow);
+    private void reportSurplusRows() {
+        for (Object surplusRow : actualRows) {
+            evaluator.setVariable(loopVariableName, surplusRow);
             Row detailRow = tableSupport.addDetailRow();
             announceSurplusRow(detailRow.getElement());
             tableSupport.copyCommandCallsTo(detailRow);
