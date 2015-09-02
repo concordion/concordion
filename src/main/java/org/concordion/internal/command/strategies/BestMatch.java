@@ -1,7 +1,6 @@
 package org.concordion.internal.command.strategies;
 
 import org.concordion.api.CommandCall;
-import org.concordion.api.ElementUpdating;
 import org.concordion.api.Evaluator;
 import org.concordion.api.ResultRecorder;
 import org.concordion.api.listener.VerifyRowsListener;
@@ -21,8 +20,8 @@ public class BestMatch extends VerifyRowsCommand.VerificationStrategy {
     public void verify() {
         announceExpressionEvaluated(commandCall.getElement());
         for (Row expectedRow : expectedRows) {
+            Object row = findBestMatchingRow(expectedRow);
             tableSupport.copyCommandCallsTo(expectedRow);
-            Object row = findBestMatchingRow();
             if (row != null) {
                 evaluator.setVariable(loopVariableName, row);
                 commandCall.getChildren().verify(evaluator, resultRecorder);
@@ -34,42 +33,41 @@ public class BestMatch extends VerifyRowsCommand.VerificationStrategy {
         reportSurpulusRows();
     }
 
-    private Object findBestMatchingRow() {
-        try {
-            long bestResult = Integer.MIN_VALUE;
-            Object bestMatchingRow = null;
+    private Object findBestMatchingRow(Row expectedRow) {
+        long bestResult = Integer.MIN_VALUE;
+        Object bestMatchingRow = null;
 
-            ElementUpdating.instance().restrict();
-            SummarizingResultRecorder backgroundResultRecorder = new SummarizingResultRecorder();
-            for (Object row : actualRows) {
-                evaluator.setVariable(loopVariableName, row);
-                commandCall.getChildren().verify(evaluator, backgroundResultRecorder);
+        SummarizingResultRecorder backgroundResultRecorder = new SummarizingResultRecorder();
+        for (Object row : actualRows) {
 
-                long total = backgroundResultRecorder.getTotalCount();
-                long success = backgroundResultRecorder.getSuccessCount();
+            Row clone = expectedRow.deepClone();
+            tableSupport.copyCommandCallsTo(clone);
 
-                //fully matched
-                if (total == success) {
-                    return row;
-                }
+            evaluator.setVariable(loopVariableName, row);
+            commandCall.getChildren().verify(evaluator, backgroundResultRecorder);
 
-                //this row has same number of successful/failed fields as other one so that we do not know for sure what is matching candidate
-                if (success == bestResult) {
-                    bestMatchingRow = null;
-                }
+            long total = backgroundResultRecorder.getTotalCount();
+            long success = backgroundResultRecorder.getSuccessCount();
 
-                //next most promising row
-                if (success > 0 && success > bestResult) {
-                    bestMatchingRow = row;
-                    bestResult = success;
-                }
-
-                backgroundResultRecorder.reset();
+            //fully matched
+            if (total == success) {
+                return row;
             }
-            return bestMatchingRow;
-        } finally {
-            ElementUpdating.instance().allow();
+
+            //this row has same number of successful/failed fields as other one so that we do not know for sure what is matching candidate
+            if (success == bestResult) {
+                bestMatchingRow = null;
+            }
+
+            //next most promising row
+            if (success > 0 && success > bestResult) {
+                bestMatchingRow = row;
+                bestResult = success;
+            }
+
+            backgroundResultRecorder.reset();
         }
+        return bestMatchingRow;
     }
 
     private void reportSurpulusRows() {

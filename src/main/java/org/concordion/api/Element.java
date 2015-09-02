@@ -38,9 +38,6 @@ public final class Element {
     }
 
     public Element addStyleClass(String styleClass) {
-        if (ElementUpdating.instance().isUpdatesRestricted()) {
-            return this;
-        }
         String currentClass = getAttributeValue("class");
         if (currentClass != null) {
             styleClass = currentClass + " " + styleClass;
@@ -50,24 +47,15 @@ public final class Element {
     }
 
     public Element appendNonBreakingSpace() {
-        if (ElementUpdating.instance().isUpdatesRestricted()) {
-            return this;
-        }
         return appendText("\u00A0");
     }
 
     public Element appendText(String text) {
-        if (ElementUpdating.instance().isUpdatesRestricted()) {
-            return this;
-        }
         xomElement.appendChild(new nu.xom.Text(text));
         return this;
     }
 
     public Element appendNonBreakingSpaceIfBlank() {
-        if (ElementUpdating.instance().isUpdatesRestricted()) {
-            return this;
-        }
         if (isBlank()) {
             appendNonBreakingSpace();
         }
@@ -75,32 +63,20 @@ public final class Element {
     }
 
     public Element prependText(String text) {
-        if (ElementUpdating.instance().isUpdatesRestricted()) {
-            return this;
-        }
         xomElement.insertChild(new nu.xom.Text(text), 0);
         return this;
     }
 
     public Element prependChild(Element element) {
-        if (ElementUpdating.instance().isUpdatesRestricted()) {
-            return this;
-        }
         xomElement.insertChild(element.xomElement, 0);
         return this;
     }
 
     public void appendChild(Element element) {
-        if (ElementUpdating.instance().isUpdatesRestricted()) {
-            return;
-        }
         xomElement.appendChild(element.xomElement);
     }
 
     public void removeChild(Element element) {
-        if (ElementUpdating.instance().isUpdatesRestricted()) {
-            return;
-        }
         xomElement.removeChild(element.xomElement);
     }
     
@@ -113,9 +89,6 @@ public final class Element {
     }
     
     public void moveChildrenTo(Element element) {
-        if (ElementUpdating.instance().isUpdatesRestricted()) {
-            return;
-        }
         for (Node childNode : getChildNodes()) {
             childNode.detach();
             element.xomElement.appendChild(childNode);
@@ -123,17 +96,11 @@ public final class Element {
     }
 
     public Element setId(String id) {
-        if (ElementUpdating.instance().isUpdatesRestricted()) {
-            return this;
-        }
         addAttribute("id", id);
         return this;
     }
 
     public Element addAttribute(String localName, String value) {
-        if (ElementUpdating.instance().isUpdatesRestricted()) {
-            return this;
-        }
         xomElement.addAttribute(new Attribute(localName, value));
         return this;
     }
@@ -147,23 +114,14 @@ public final class Element {
     }
 
     public void removeAttribute(String name) {
-        if (ElementUpdating.instance().isUpdatesRestricted()) {
-            return;
-        }
         xomElement.removeAttribute(xomElement.getAttribute(name));
     }
     
     public void removeAttribute(String localName, String namespaceURI) {
-        if (ElementUpdating.instance().isUpdatesRestricted()) {
-            return;
-        }
         xomElement.removeAttribute(xomElement.getAttribute(localName, namespaceURI));
     }
     
     public void moveAttributesTo(Element element) {
-        if (ElementUpdating.instance().isUpdatesRestricted()) {
-            return;
-        }
         for (int i=0; i<xomElement.getAttributeCount(); i++) {
             Attribute attribute = xomElement.getAttribute(i);
             xomElement.removeAttribute(attribute);
@@ -267,9 +225,6 @@ public final class Element {
     }
 
     public void appendSister(Element element) {
-        if (ElementUpdating.instance().isUpdatesRestricted()) {
-            return;
-        }
         nu.xom.Element xomParentElement = (nu.xom.Element) xomElement.getParent();
         int elementIndex = xomParentElement.indexOf(xomElement);
         xomParentElement.insertChild(element.xomElement, elementIndex + 1);
@@ -303,5 +258,9 @@ public final class Element {
             return null;
         }
         return new Element((nu.xom.Element) parent);
+    }
+
+    public Element deepClone() {
+        return new Element((nu.xom.Element) xomElement.copy());
     }
 }
