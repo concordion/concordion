@@ -9,7 +9,7 @@ import org.concordion.internal.Row;
 import org.concordion.internal.SummarizingResultRecorder;
 import org.concordion.internal.util.Announcer;
 
-public class BestMatch extends VerifyRowsStrategy {
+public class BestMatch extends AbstractChangingOrderVerifyRowsStrategy {
 
     public BestMatch(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder,
                      Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows) {
@@ -17,33 +17,16 @@ public class BestMatch extends VerifyRowsStrategy {
     }
 
     @Override
-    public void verify() {
-        announceExpressionEvaluated(commandCall.getElement());
-        for (Row expectedRow : expectedRows) {
-            Object row = findBestMatchingRow(expectedRow);
-            tableSupport.copyCommandCallsTo(expectedRow);
-            if (row != null) {
-                evaluator.setVariable(loopVariableName, row);
-                commandCall.getChildren().verify(evaluator, resultRecorder);
-                actualRows.remove(row);
-            } else {
-                announceMissingRow(expectedRow.getElement());
-            }
-        }
-        reportSurplusRows();
-    }
-
-    private Object findBestMatchingRow(Row expectedRow) {
+    protected Object findMatchingRow(Row expectedRow) {
         long bestResult = Integer.MIN_VALUE;
         Object bestMatchingRow = null;
 
         SummarizingResultRecorder backgroundResultRecorder = new SummarizingResultRecorder();
         for (Object row : actualRows) {
 
-            Row clone = expectedRow.deepClone();
-            tableSupport.copyCommandCallsTo(clone);
-
+            tableSupport.copyCommandCallsTo(expectedRow.deepClone());
             evaluator.setVariable(loopVariableName, row);
+
             commandCall.getChildren().verify(evaluator, backgroundResultRecorder);
 
             long total = backgroundResultRecorder.getTotalCount();
@@ -68,15 +51,5 @@ public class BestMatch extends VerifyRowsStrategy {
             backgroundResultRecorder.reset();
         }
         return bestMatchingRow;
-    }
-
-    private void reportSurplusRows() {
-        for (Object surplusRow : actualRows) {
-            evaluator.setVariable(loopVariableName, surplusRow);
-            Row detailRow = tableSupport.addDetailRow();
-            announceSurplusRow(detailRow.getElement());
-            tableSupport.copyCommandCallsTo(detailRow);
-            commandCall.getChildren().verify(evaluator, resultRecorder);
-        }
     }
 }
