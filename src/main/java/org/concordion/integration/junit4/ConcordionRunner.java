@@ -105,11 +105,18 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
     @Override
     public void run(RunNotifier notifier) {
-        super.run(notifier);
-
-        concordion.finish();
 
         ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
+
+        super.run(notifier);
+
+        // only actually finish the specification if it has not already been run.
+        if (results == null) {
+            concordion.finish();
+        }
+
+        results = RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
+
         if (results != null) {
             // we only print meta-results when the spec has multiple examples.
             if (concordionFrameworkMethods.size() > 1) {
