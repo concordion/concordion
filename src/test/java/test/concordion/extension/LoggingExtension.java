@@ -10,7 +10,7 @@ public class LoggingExtension implements ConcordionExtension {
     private AssertLogger assertLogger = new AssertLogger();
     private ExecuteLogger executeLogger = new ExecuteLogger();
     private SetLogger setLogger = new SetLogger();
-    private VerifyRowsLogger verifyRowsLogger = new VerifyRowsLogger();
+    private RowsLogger verifyRowsLogger = new RowsLogger();
 
     public void addTo(ConcordionExtender concordionExtender) {
         concordionExtender.withAssertEqualsListener(assertLogger);
