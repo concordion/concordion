@@ -24,6 +24,15 @@ public class CommandCallList {
         for(CommandCall call : commandCalls) call.verify(evaluator, resultRecorder);
     }
 
+    public Result verifyInBackground(Evaluator evaluator, ResultRecorder resultRecorder) {
+        for(CommandCall call : commandCalls) {
+            if (call.verifyInBackground(evaluator, resultRecorder) != Result.SUCCESS) {
+                return Result.FAILURE;
+            }
+        }
+        return Result.SUCCESS;
+    }
+
     public void processSequentially(Evaluator evaluator, ResultRecorder resultRecorder) {
         for(CommandCall call : commandCalls) {
             call.setUp(evaluator, resultRecorder);

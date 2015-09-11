@@ -43,6 +43,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private SetCommand setCommand = new SetCommand();
     private RunCommand runCommand = new RunCommand();
     private VerifyRowsCommand verifyRowsCommand = new VerifyRowsCommand();
+    private VerifyRowsUnorderedCommand verifyRowsUnorderedCommand = new VerifyRowsUnorderedCommand();
     private EchoCommand echoCommand = new EchoCommand();
     private ExampleCommand exampleCommand = new ExampleCommand();
     private ThrowableCaughtPublisher throwableListenerPublisher = new ThrowableCaughtPublisher();
@@ -62,6 +63,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         withAssertTrueListener(assertRenderer);
         withAssertFalseListener(assertRenderer);
         withVerifyRowsListener(new VerifyRowsResultRenderer());
+        withVerifyRowsUnorderedListener(new VerifyRowsResultRenderer());
         withRunListener(new RunResultRenderer());
         withDocumentParsingListener(new DocumentStructureImprover());
         withDocumentParsingListener(new MetadataCreator());
@@ -111,6 +113,11 @@ public class ConcordionBuilder implements ConcordionExtender {
     
     public ConcordionBuilder withVerifyRowsListener(VerifyRowsListener listener) {
         verifyRowsCommand.addVerifyRowsListener(listener);
+        return this;
+    }
+
+    public ConcordionBuilder withVerifyRowsUnorderedListener(VerifyRowsListener listener) {
+        verifyRowsUnorderedCommand.addVerifyRowsListener(listener);
         return this;
     }
     
@@ -220,7 +227,10 @@ public class ConcordionBuilder implements ConcordionExtender {
         
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "verify-rows", verifyRowsCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "verifyRows", verifyRowsCommand);
-        
+
+        withApprovedCommand(NAMESPACE_CONCORDION_2007, "verify-rows-unordered", verifyRowsUnorderedCommand);
+        withApprovedCommand(NAMESPACE_CONCORDION_2007, "verifyRowsUnordered", verifyRowsUnorderedCommand);
+
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "echo", echoCommand);
 
         if (target == null) {

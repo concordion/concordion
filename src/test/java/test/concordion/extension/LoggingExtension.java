@@ -19,6 +19,7 @@ public class LoggingExtension implements ConcordionExtension {
         concordionExtender.withExecuteListener(executeLogger);
         concordionExtender.withSetListener(setLogger);
         concordionExtender.withVerifyRowsListener(verifyRowsLogger);
+        concordionExtender.withVerifyRowsUnorderedListener(verifyRowsLogger);
     }
     
     public LoggingExtension withStream(PrintStream stream) {

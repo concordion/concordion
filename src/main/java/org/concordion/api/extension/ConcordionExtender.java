@@ -83,6 +83,13 @@ public interface ConcordionExtender {
     ConcordionExtender withVerifyRowsListener(VerifyRowsListener listener);
 
     /**
+     * Adds a listener to <code>concordion:verifyRowsUnordered</code> commands.
+     * @param listener  the listener
+     * @return this
+     */
+    ConcordionExtender withVerifyRowsUnorderedListener(VerifyRowsListener listener);
+
+    /**
      * Adds a listener that is invoked when an uncaught {@link Throwable} is thrown by a command,
      * including commands that have been added using {@link #withCommand(String, String, Command)}.
      * @param throwableListener the listener

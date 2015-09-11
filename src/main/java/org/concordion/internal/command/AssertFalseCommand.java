@@ -1,6 +1,7 @@
 package org.concordion.internal.command;
 
 import org.concordion.api.CommandCall;
+import org.concordion.api.Evaluator;
 import org.concordion.api.Result;
 import org.concordion.api.ResultRecorder;
 
@@ -19,4 +20,10 @@ public class AssertFalseCommand extends BooleanCommand {
         announceFailure(commandCall.getElement(), expected, "== true");
     }
 
+    @Override
+    public Result verifyInBackground(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+        return doVerify(commandCall, evaluator, resultRecorder)
+                ? Result.FAILURE
+                : Result.SUCCESS;
+    }
 }

@@ -52,6 +52,16 @@ public abstract class AbstractCommandDecorator implements Command {
         });
     }
 
+    public Result verifyInBackground(final CommandCall commandCall, final Evaluator evaluator, final ResultRecorder resultRecorder) {
+        final Result[] resultHolder = {Result.EXCEPTION};
+        process(commandCall, evaluator, resultRecorder, new Runnable() {
+            public void run() {
+                resultHolder[0] = command.verifyInBackground(commandCall, evaluator, resultRecorder);
+            }
+        });
+        return resultHolder[0];
+    }
+
     protected abstract void process(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Runnable runnable);
 
     public void finish(CommandCall commandCall) {
