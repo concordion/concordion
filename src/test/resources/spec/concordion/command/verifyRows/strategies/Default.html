@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<head>
+    <link href="../../../../../concordion.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<h1>Default verification strategy</h1>
+
+<p>
+    <br /> This file provides examples of behaviour of <code>concordion:verifyRows</code> command with <code>concordion:verificationStrategy="Default"</code>.
+    <br /> This commands verify rows top to bottom without modifying order of actual rows.
+</p>
+
+<div class="example">
+
+    <h3>Examples</h3>
+
+    <table concordion:execute="#result = processFragment(#fragment, #actualData, #fragmentAfterExecution)">
+        <thead>
+        <tr>
+            <th concordion:assertTrue="#result">Scenario</th>
+            <th concordion:set="#fragment">Expected</th>
+            <th concordion:set="#actualData">Actual</th>
+            <th concordion:set="#fragmentAfterExecution">Result</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>All match in same order</td>
+            <td>
+                <pre class="html">
+&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+    &lt;tr&gt;
+        &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Jane&lt;/td&gt;
+        &lt;td&gt;Dou&lt;/td&gt;
+        &lt;td&gt;22&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+                </pre>
+            </td>
+            <td>
+                {John,Smith,17};{Jane,Dou,22}
+            </td>
+            <td>
+                <pre class="html">
+&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+    &lt;tr&gt;
+        &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="success"&gt;John&lt;/td&gt;
+        &lt;td class="success"&gt;Smith&lt;/td&gt;
+        &lt;td class="success"&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="success"&gt;Jane&lt;/td&gt;
+        &lt;td class="success"&gt;Dou&lt;/td&gt;
+        &lt;td class="success"&gt;22&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+                </pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Does not match in different order</td>
+            <td>
+                <pre class="html">
+&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+    &lt;tr&gt;
+        &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Jane&lt;/td&gt;
+        &lt;td&gt;Dou&lt;/td&gt;
+        &lt;td&gt;22&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+                </pre>
+            </td>
+            <td>
+                {Jane,Dou,22};{John,Smith,17}
+            </td>
+            <td>
+                <pre class="html">
+&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+    &lt;tr&gt;
+        &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;John&lt;/del&gt;&lt;ins class="actual"&gt;Jane&lt;/ins&gt;&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;Smith&lt;/del&gt;&lt;ins class="actual"&gt;Dou&lt;/ins&gt;&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;17&lt;/del&gt;&lt;ins class="actual"&gt;22&lt;/ins&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;Jane&lt;/del&gt;&lt;ins class="actual"&gt;John&lt;/ins&gt;&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;Dou&lt;/del&gt;&lt;ins class="actual"&gt;Smith&lt;/ins&gt;&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;22&lt;/del&gt;&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+                </pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>One row missing</td>
+            <td>
+                <pre class="html">
+&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+    &lt;tr&gt;
+        &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Jane&lt;/td&gt;
+        &lt;td&gt;Dou&lt;/td&gt;
+        &lt;td&gt;22&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+                </pre>
+            </td>
+            <td>
+                {John,Smith,17}
+            </td>
+            <td>
+                <pre class="html">
+&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+    &lt;tr&gt;
+        &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="success"&gt;John&lt;/td&gt;
+        &lt;td class="success"&gt;Smith&lt;/td&gt;
+        &lt;td class="success"&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr class="missing"&gt;
+        &lt;td&gt;Jane&lt;/td&gt;
+        &lt;td&gt;Dou&lt;/td&gt;
+        &lt;td&gt;22&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+                </pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>One surpulus row</td>
+            <td>
+                <pre class="html">
+&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+    &lt;tr&gt;
+        &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+                </pre>
+            </td>
+            <td>
+                {John,Smith,17};{Jane,Dou,22}
+            </td>
+            <td>
+                <pre class="html">
+&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+    &lt;tr&gt;
+        &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="success"&gt;John&lt;/td&gt;
+        &lt;td class="success"&gt;Smith&lt;/td&gt;
+        &lt;td class="success"&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr class="surplus"&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;&lt;ins class="actual"&gt;Jane&lt;/ins&gt;&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;&lt;ins class="actual"&gt;Dou&lt;/ins&gt;&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;&lt;ins class="actual"&gt;22&lt;/ins&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+                </pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>One field is incorect</td>
+            <td>
+                <pre class="html">
+&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+    &lt;tr&gt;
+        &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+                </pre>
+            </td>
+            <td>
+                {John,Smith,22}
+            </td>
+            <td>
+                <pre class="html">
+&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+    &lt;tr&gt;
+        &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="success"&gt;John&lt;/td&gt;
+        &lt;td class="success"&gt;Smith&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;17&lt;/del&gt;&lt;ins class="actual"&gt;22&lt;/ins&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+                </pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Two rows, each with incorrect field</td>
+            <td>
+                <pre class="html">
+&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+    &lt;tr&gt;
+        &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Jane&lt;/td&gt;
+        &lt;td&gt;Dou&lt;/td&gt;
+        &lt;td&gt;22&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+                </pre>
+            </td>
+            <td>
+                {John,Smith,22};{Jane,Dou,17}
+            </td>
+            <td>
+                <pre class="html">
+&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+    &lt;tr&gt;
+        &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="success"&gt;John&lt;/td&gt;
+        &lt;td class="success"&gt;Smith&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;17&lt;/del&gt;&lt;ins class="actual"&gt;22&lt;/ins&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="success"&gt;Jane&lt;/td&gt;
+        &lt;td class="success"&gt;Dou&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;22&lt;/del&gt;&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+                </pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Two rows, each with different incorrect field</td>
+            <td>
+                <pre class="html">
+&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+    &lt;tr&gt;
+        &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Jane&lt;/td&gt;
+        &lt;td&gt;Dou&lt;/td&gt;
+        &lt;td&gt;22&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+                </pre>
+            </td>
+            <td>
+                {John,Smither,17};{Jane,Dou,17}
+            </td>
+            <td>
+                <pre class="html">
+&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+    &lt;tr&gt;
+        &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="success"&gt;John&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;Smith&lt;/del&gt;&lt;ins class="actual"&gt;Smither&lt;/ins&gt;&lt;/td&gt;
+        &lt;td class="success"&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="success"&gt;Jane&lt;/td&gt;
+        &lt;td class="success"&gt;Dou&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;22&lt;/del&gt;&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+                </pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Two rows, first with one incorrect field, second with two</td>
+            <td>
+                <pre class="html">
+&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+    &lt;tr&gt;
+        &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Jane&lt;/td&gt;
+        &lt;td&gt;Dou&lt;/td&gt;
+        &lt;td&gt;22&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+                </pre>
+            </td>
+            <td>
+                {John,Smither,23};{Jane,Dou,18}
+            </td>
+            <td>
+                <pre class="html">
+&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+    &lt;tr&gt;
+        &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="success"&gt;John&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;Smith&lt;/del&gt;&lt;ins class="actual"&gt;Smither&lt;/ins&gt;&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;17&lt;/del&gt;&lt;ins class="actual"&gt;23&lt;/ins&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="success"&gt;Jane&lt;/td&gt;
+        &lt;td class="success"&gt;Dou&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;22&lt;/del&gt;&lt;ins class="actual"&gt;18&lt;/ins&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+                </pre>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

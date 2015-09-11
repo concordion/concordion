@@ -1,7 +1,9 @@
 package org.concordion.internal.command;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,14 +11,15 @@ import org.concordion.api.AbstractCommand;
 import org.concordion.api.CommandCall;
 import org.concordion.api.Element;
 import org.concordion.api.Evaluator;
-import org.concordion.api.Result;
 import org.concordion.api.ResultRecorder;
 import org.concordion.api.listener.ExpressionEvaluatedEvent;
 import org.concordion.api.listener.MissingRowEvent;
 import org.concordion.api.listener.SurplusRowEvent;
 import org.concordion.api.listener.VerifyRowsListener;
+import org.concordion.internal.ConcordionBuilder;
 import org.concordion.internal.Row;
 import org.concordion.internal.TableSupport;
+import org.concordion.internal.command.strategies.Default;
 import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 
@@ -49,42 +52,98 @@ public class VerifyRowsCommand extends AbstractCommand {
         Check.isTrue(!(obj instanceof HashSet) || (obj instanceof LinkedHashSet), obj.getClass().getCanonicalName() + " does not have a predictable iteration order");
         Iterable<Object> iterable = (Iterable<Object>) obj;
         
-        TableSupport tableSupport = new TableSupport(commandCall);
-        Row[] detailRows = tableSupport.getDetailRows();
+        Class<? extends VerificationStrategy> clazz = detectStrategyClass(commandCall);
+        try {
+            clazz.getConstructor(
+                    CommandCall.class,
+                    Evaluator.class,
+                    ResultRecorder.class,
+                    Announcer.class,
+                    String.class,
+                    Iterable.class
+            ).newInstance(commandCall, evaluator, resultRecorder, listeners, loopVariableName, iterable).verify();
+        } catch (Exception e) {
+            throw new RuntimeException("Verification strategy must declare constructor with arguments: " +
+                    "CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder,\n" +
+                    "Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows");
+        }
+    }
 
-        announceExpressionEvaluated(commandCall.getElement());
-        
-        int index = 0;
-        for (Object loopVar : iterable) {
-            evaluator.setVariable(loopVariableName, loopVar);
-            Row detailRow;
-            if (detailRows.length > index) {
-                detailRow = detailRows[index];
-            } else {
-                detailRow = tableSupport.addDetailRow();
-                announceSurplusRow(detailRow.getElement());
+    private static final String DEFAULT_STRATEGIES_PACKAGE = "org.concordion.internal.command.strategies.";
+
+    private Class<? extends VerificationStrategy> detectStrategyClass(CommandCall commandCall) {
+        String strategy = findFirstExistingAttributeValue(commandCall, "verificationStrategy", "verification-strategy");
+        if (strategy == null) {
+            return Default.class;
+        }
+        return findFirstExistingClassOrDefault(DEFAULT_STRATEGIES_PACKAGE + strategy, strategy);
+    }
+
+    private String findFirstExistingAttributeValue(CommandCall commandCall, String... attributeNames) {
+        for (String attributeName : attributeNames) {
+            String value = commandCall.getElement().getAttributeValue(attributeName, ConcordionBuilder.NAMESPACE_CONCORDION_2007);
+            if (value != null) {
+                return value;
             }
-            tableSupport.copyCommandCallsTo(detailRow);
-            commandCall.getChildren().verify(evaluator, resultRecorder);
-            index++;
         }
-        
-        for (; index < detailRows.length; index++) {
-            Row detailRow = detailRows[index];
-            resultRecorder.record(Result.FAILURE);
-            announceMissingRow(detailRow.getElement());
-        }
-    }
-    
-    private void announceExpressionEvaluated(Element element) {
-        listeners.announce().expressionEvaluated(new ExpressionEvaluatedEvent(element));
+        return null;
     }
 
-    private void announceMissingRow(Element element) {
-        listeners.announce().missingRow(new MissingRowEvent(element));
+    private Class<? extends VerificationStrategy> findFirstExistingClassOrDefault(String... names) {
+        for (String name : names) {
+            try {
+                Class<?> aClass = Class.forName(name);
+                if (VerificationStrategy.class.isAssignableFrom(aClass)) {
+                    return (Class<? extends VerificationStrategy>) aClass;
+                }
+            } catch (ClassNotFoundException e) {}
+        }
+        return Default.class;
     }
 
-    private void announceSurplusRow(Element element) {
-        listeners.announce().surplusRow(new SurplusRowEvent(element));
+    public static abstract class VerificationStrategy {
+
+        protected final CommandCall commandCall;
+        protected final Evaluator evaluator;
+        protected final ResultRecorder resultRecorder;
+        protected final Announcer<VerifyRowsListener> listeners;
+        protected final String loopVariableName;
+        protected final TableSupport tableSupport;
+        protected final Row[] expectedRows;
+        protected final List<Object> actualRows;
+
+        public VerificationStrategy(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder,
+                                    Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows) {
+            this.commandCall = commandCall;
+            this.evaluator = evaluator;
+            this.resultRecorder = resultRecorder;
+            this.listeners = listeners;
+            this.loopVariableName = loopVariableName;
+            this.tableSupport = new TableSupport(commandCall);
+            this.expectedRows = tableSupport.getDetailRows();
+            this.actualRows = copy(actualRows);
+        }
+
+        public abstract void verify();
+
+        protected void announceExpressionEvaluated(Element element) {
+            listeners.announce().expressionEvaluated(new ExpressionEvaluatedEvent(element));
+        }
+
+        protected void announceMissingRow(Element element) {
+            listeners.announce().missingRow(new MissingRowEvent(element));
+        }
+
+        protected void announceSurplusRow(Element element) {
+            listeners.announce().surplusRow(new SurplusRowEvent(element));
+        }
+
+        protected List<Object> copy(Iterable<Object> iterable) {
+            List<Object> copy = new ArrayList<Object>();
+            for (Object o : iterable) {
+                copy.add(o);
+            }
+            return copy;
+        }
     }
 }
