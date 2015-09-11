@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.concordion.api.MultiValueResult.multiValueResult;
 
-public class BaseStrategyTest {
+public class BaseMatchStrategyTest {
 
     public List<MultiValueResult> users;
 

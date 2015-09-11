@@ -79,4 +79,14 @@ public class CommandCall {
     public String getParameter(String parameter) {
         return parameters.get(parameter);
     }
+
+    public String getParameterWithVariants(String... parameterVariants) {
+        for (String parameterVariant : parameterVariants) {
+            String value = getParameter(parameterVariant);
+            if (value != null) {
+                return value;
+            }
+        }
+        return null;
+    }
 }

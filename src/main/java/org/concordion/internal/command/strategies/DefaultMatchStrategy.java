@@ -5,9 +5,9 @@ import org.concordion.api.listener.VerifyRowsListener;
 import org.concordion.internal.Row;
 import org.concordion.internal.util.Announcer;
 
-public class Default extends VerifyRowsStrategy {
-    public Default(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder,
-                   Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows) {
+public class DefaultMatchStrategy extends RowsMatchStrategy {
+    public DefaultMatchStrategy(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder,
+                                Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows) {
         super(commandCall, evaluator, resultRecorder, listeners, loopVariableName, actualRows);
     }
 

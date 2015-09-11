@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 import org.concordion.api.*;
 import org.concordion.api.listener.VerifyRowsListener;
-import org.concordion.internal.command.strategies.Default;
+import org.concordion.internal.command.strategies.DefaultMatchStrategy;
 import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 
@@ -40,10 +40,10 @@ public class VerifyRowsCommand extends AbstractCommand {
         Check.isTrue(!(obj instanceof HashSet) || (obj instanceof LinkedHashSet), obj.getClass().getCanonicalName() + " does not have a predictable iteration order");
         Iterable<Object> iterable = (Iterable<Object>) obj;
 
-        VerifyRowsStrategy verifyRowsStrategy;
+        RowsMatchStrategy rowsMatchStrategy;
 
         try {
-            verifyRowsStrategy = detectStrategyClass(commandCall)
+            rowsMatchStrategy = detectStrategyClass(commandCall)
                     .getConstructor(CommandCall.class, Evaluator.class, ResultRecorder.class, Announcer.class, String.class, Iterable.class)
                     .newInstance(commandCall, evaluator, resultRecorder, listeners, loopVariableName, iterable);
         } catch (Exception e) {
@@ -52,28 +52,30 @@ public class VerifyRowsCommand extends AbstractCommand {
                     "Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows");
         }
 
-        verifyRowsStrategy.verify();
+        rowsMatchStrategy.verify();
     }
 
-    private static final String DEFAULT_STRATEGIES_PACKAGE = "org.concordion.internal.command.strategies.";
+    private static final String DEFAULT_STRATEGIES_PACKAGE = DefaultMatchStrategy.class.getPackage().getName() + '.';
+    private static final String DEFAULT_STRATEGIES_SUFFIX = "Strategy";
 
-    private Class<? extends VerifyRowsStrategy> detectStrategyClass(CommandCall commandCall) {
-        String strategy = commandCall.getElement().getConcordionAttributeValue("verificationStrategy", "verification-strategy");
+    private Class<? extends RowsMatchStrategy> detectStrategyClass(CommandCall commandCall) {
+        String strategy = commandCall.getParameterWithVariants("matchStrategy", "match-strategy");
         if (strategy == null) {
-            return Default.class;
+            return DefaultMatchStrategy.class;
         }
-        return findFirstExistingClassOrDefault(DEFAULT_STRATEGIES_PACKAGE + strategy, strategy);
+        return findFirstExistingClassOrDefault(DEFAULT_STRATEGIES_PACKAGE + strategy + DEFAULT_STRATEGIES_SUFFIX, strategy);
     }
 
-    private Class<? extends VerifyRowsStrategy> findFirstExistingClassOrDefault(String... names) {
+    @SuppressWarnings("unchecked")
+    private Class<? extends RowsMatchStrategy> findFirstExistingClassOrDefault(String... names) {
         for (String name : names) {
             try {
                 Class<?> aClass = Class.forName(name);
-                if (VerifyRowsStrategy.class.isAssignableFrom(aClass)) {
-                    return (Class<? extends VerifyRowsStrategy>) aClass;
+                if (RowsMatchStrategy.class.isAssignableFrom(aClass)) {
+                    return (Class<? extends RowsMatchStrategy>) aClass;
                 }
             } catch (ClassNotFoundException ignored) {}
         }
-        return Default.class;
+        return DefaultMatchStrategy.class;
     }
 }

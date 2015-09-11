@@ -3,15 +3,15 @@ package org.concordion.internal.command.strategies;
 import org.concordion.api.CommandCall;
 import org.concordion.api.Evaluator;
 import org.concordion.api.ResultRecorder;
-import org.concordion.api.VerifyRowsStrategy;
+import org.concordion.api.RowsMatchStrategy;
 import org.concordion.api.listener.VerifyRowsListener;
 import org.concordion.internal.Row;
 import org.concordion.internal.util.Announcer;
 
-public abstract class AbstractChangingOrderVerifyRowsStrategy extends VerifyRowsStrategy {
+public abstract class AbstractChangingOrderRowsMatchStrategy extends RowsMatchStrategy {
 
-    public AbstractChangingOrderVerifyRowsStrategy(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder,
-                                                   Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows) {
+    public AbstractChangingOrderRowsMatchStrategy(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder,
+                                                  Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows) {
         super(commandCall, evaluator, resultRecorder, listeners, loopVariableName, actualRows);
     }
 

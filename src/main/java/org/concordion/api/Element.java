@@ -114,16 +114,6 @@ public final class Element {
         return xomElement.getAttributeValue(localName, namespaceURI);
     }
 
-    public String getConcordionAttributeValue(String... nameVariants) {
-        for (String nameVariant : nameVariants) {
-            String value = getAttributeValue(nameVariant, ConcordionBuilder.NAMESPACE_CONCORDION_2007);
-            if (value != null) {
-                return value;
-            }
-        }
-        return null;
-    }
-
     public void removeAttribute(String name) {
         xomElement.removeAttribute(xomElement.getAttribute(name));
     }

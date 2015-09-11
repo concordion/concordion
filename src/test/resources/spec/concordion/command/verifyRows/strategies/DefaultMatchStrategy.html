@@ -8,7 +8,7 @@
 <h1>Default verification strategy</h1>
 
 <p>
-    <br /> This file provides examples of behaviour of <code>concordion:verifyRows</code> command with <code>concordion:verificationStrategy="Default"</code>.
+    <br /> This file provides examples of behaviour of <code>concordion:verifyRows</code> command with <code>concordion:matchStrategy="Default"</code>.
     <br /> This commands verify rows top to bottom without modifying order of actual rows.
 </p>
 
@@ -30,7 +30,7 @@
             <td>All match in same order</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="Default"&gt;
     &lt;tr&gt;
         &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
         &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
@@ -54,7 +54,7 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="Default"&gt;
     &lt;tr&gt;
         &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
         &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
@@ -79,7 +79,7 @@
             <td>Does not match in different order</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="Default"&gt;
     &lt;tr&gt;
         &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
         &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
@@ -103,7 +103,7 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="Default"&gt;
     &lt;tr&gt;
         &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
         &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
@@ -128,7 +128,7 @@
             <td>One row missing</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="Default"&gt;
     &lt;tr&gt;
         &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
         &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
@@ -152,7 +152,7 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="Default"&gt;
     &lt;tr&gt;
         &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
         &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
@@ -177,7 +177,7 @@
             <td>One surplus row</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="Default"&gt;
     &lt;tr&gt;
         &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
         &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
@@ -196,7 +196,7 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="Default"&gt;
     &lt;tr&gt;
         &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
         &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
@@ -221,7 +221,7 @@
             <td>One field is incorect</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="Default"&gt;
     &lt;tr&gt;
         &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
         &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
@@ -240,7 +240,7 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="Default"&gt;
     &lt;tr&gt;
         &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
         &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
@@ -260,7 +260,7 @@
             <td>Two rows, each with incorrect field</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="Default"&gt;
     &lt;tr&gt;
         &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
         &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
@@ -284,7 +284,7 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="Default"&gt;
     &lt;tr&gt;
         &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
         &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
@@ -309,7 +309,7 @@
             <td>Two rows, each with different incorrect field</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="Default"&gt;
     &lt;tr&gt;
         &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
         &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
@@ -333,7 +333,7 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="Default"&gt;
     &lt;tr&gt;
         &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
         &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
@@ -358,7 +358,7 @@
             <td>Two rows, first with one incorrect field, second with two</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="Default"&gt;
     &lt;tr&gt;
         &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
         &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;
@@ -382,7 +382,7 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:verificationStrategy="Default"&gt;
+&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="Default"&gt;
     &lt;tr&gt;
         &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
         &lt;th concordion:assertEquals="#user.lastName"&gt;Last Name&lt;/th&gt;

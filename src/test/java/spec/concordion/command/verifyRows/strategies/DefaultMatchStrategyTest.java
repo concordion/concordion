@@ -5,6 +5,5 @@ import org.junit.runner.RunWith;
 
 
 @RunWith(ConcordionRunner.class)
-public class KeyValueTest extends BaseStrategyTest {
-
+public class DefaultMatchStrategyTest extends BaseMatchStrategyTest {
 }

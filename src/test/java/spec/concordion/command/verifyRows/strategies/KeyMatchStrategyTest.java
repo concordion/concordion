@@ -5,6 +5,6 @@ import org.junit.runner.RunWith;
 
 
 @RunWith(ConcordionRunner.class)
-public class BestMatchTest extends BaseStrategyTest {
+public class KeyMatchStrategyTest extends BaseMatchStrategyTest {
 
 }

@@ -11,7 +11,7 @@ import org.concordion.internal.util.Announcer;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class VerifyRowsStrategy {
+public abstract class RowsMatchStrategy {
 
     protected final CommandCall commandCall;
     protected final Evaluator evaluator;
@@ -22,8 +22,8 @@ public abstract class VerifyRowsStrategy {
     protected final Row[] expectedRows;
     protected final List<Object> actualRows;
 
-    public VerifyRowsStrategy(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder,
-                              Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows) {
+    public RowsMatchStrategy(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder,
+                             Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows) {
         this.commandCall = commandCall;
         this.evaluator = evaluator;
         this.resultRecorder = resultRecorder;
