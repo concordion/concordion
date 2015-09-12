@@ -1,13 +1,13 @@
 package org.concordion.api;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
 
 import static java.util.Collections.unmodifiableList;
 
 
-public class CommandCallList implements Iterable<CommandCall> {
+public class CommandCallList {
 
     private List<CommandCall> commandCalls = new ArrayList<CommandCall>();
     
@@ -47,8 +47,7 @@ public class CommandCallList implements Iterable<CommandCall> {
         return commandCalls.get(index);
     }
 
-    @Override
-    public Iterator<CommandCall> iterator() {
-        return unmodifiableList(commandCalls).iterator();
+    public Collection<CommandCall> asCollection() {
+        return unmodifiableList(commandCalls);
     }
 }

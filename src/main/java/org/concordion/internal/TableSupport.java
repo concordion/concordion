@@ -39,7 +39,7 @@ public class TableSupport {
 
     private void populateCommandCallByColumnMap() {
         Row headerRow = getLastHeaderRow();
-        for (CommandCall childCall : tableCommandCall.getChildren()) {
+        for (CommandCall childCall : tableCommandCall.getChildren().asCollection()) {
             int columnIndex = headerRow.getIndexOfCell(childCall.getElement());
             if (columnIndex == -1) {
                 throw new RuntimeException("Commands must be placed on <th> elements when using 'execute' or 'verifyRows' commands on a <table>.");

@@ -109,7 +109,7 @@ public class XMLSpecification implements SpecificationByExample {
         }
 
         if (node.hasChildCommands()) {
-            for (CommandCall child : node.getChildren()) {
+            for (CommandCall child : node.getChildren().asCollection()) {
                 commands.addAll(findExamples(child));
             }
         }
