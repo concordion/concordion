@@ -5,18 +5,16 @@
 </head>
 <body>
 
-<h1>Default verification strategy</h1>
+<h1>Default match strategy</h1>
 
-<p>
-    <br /> This file provides examples of behaviour of <code>concordion:verifyRows</code> command with <code>concordion:matchStrategy="Default"</code>.
-    <br /> This commands verify rows top to bottom without modifying order of actual rows.
-</p>
+<p>This file provides examples of using the <code>concordion:verifyRows</code> command with <code>concordion:matchStrategy="<b>Default</b>"</code>.</p>
+<p>This command verifies rows top to bottom without modifying the order of the rows.</p>
 
 <div class="example">
 
     <h3>Examples</h3>
     
-    <p>Each of the following examples is run as part of the command:</p>
+    <p>Each of the following scenarios uses the command:</p>
     <pre class="html" concordion:set="#template">&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="Default"&gt;
    &lt;tr&gt;
        &lt;th concordion:assertEquals="#user.firstName"&gt;First Name&lt;/th&gt;
@@ -25,7 +23,7 @@
    &lt;/tr&gt;
    <b>[ROWS]</b>
 &lt;/table&gt;</pre>
-
+<p>with <b>[ROWS]</b> replaced by the <b>Expected [ROWS]</b> and <b>Result [ROWS]</b>.</p>
     <table concordion:execute="#resultRows = processRows(#template, #expectedRows, #actualData)">
         <thead>
         <tr>
