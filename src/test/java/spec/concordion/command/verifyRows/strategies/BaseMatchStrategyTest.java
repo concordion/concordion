@@ -13,7 +13,7 @@ public class BaseMatchStrategyTest {
 
     public List<MultiValueResult> users;
 
-    public boolean processFragment(String fragment, String actualData, String fragmentAfterExecution) throws Exception {
+    public String processFragment(String fragment, String actualData) throws Exception {
         users = parse(actualData);
 
         Document document = new TestRig()
@@ -21,21 +21,7 @@ public class BaseMatchStrategyTest {
                 .processFragment(fragment)
                 .getXOMDocument();
 
-        String fragmentExecuted = document.getRootElement().query("//table").get(0).toXML();
-
-        return clearFormatting(fragmentExecuted).equals(clearFormatting(fragmentAfterExecution));
-    }
-
-    private String clearFormatting(String formatted) {
-        StringBuilder unformatted = new StringBuilder(1024);
-        int length = formatted.length();
-        for (int i = 0; i < length; i++) {
-            char c = formatted.charAt(i);
-            if (!Character.isWhitespace(c)) {
-                unformatted.append(c);
-            }
-        }
-        return unformatted.toString();
+        return document.getRootElement().query("//table").get(0).toXML();
     }
 
     private List<MultiValueResult> parse(String actual) {
@@ -47,7 +33,7 @@ public class BaseMatchStrategyTest {
     }
 
     private MultiValueResult parseSingle(String single) {
-        String[] words = single.substring(1, single.length()-1).split(",");
+        String[] words = single.substring(1, single.length() - 1).split(",");
         return multiValueResult()
                 .with("firstName", words[0])
                 .with("lastName", words[1])

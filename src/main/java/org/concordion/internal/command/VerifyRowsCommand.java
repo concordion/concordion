@@ -47,7 +47,7 @@ public class VerifyRowsCommand extends AbstractCommand {
                     .getConstructor(CommandCall.class, Evaluator.class, ResultRecorder.class, Announcer.class, String.class, Iterable.class)
                     .newInstance(commandCall, evaluator, resultRecorder, listeners, loopVariableName, iterable);
         } catch (Exception e) {
-            throw new RuntimeException("Verification strategy must declare constructor with arguments: " +
+            throw new RuntimeException(RowsMatchStrategy.class.getName() + " must declare constructor with arguments: " +
                     "CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder,\n" +
                     "Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows");
         }

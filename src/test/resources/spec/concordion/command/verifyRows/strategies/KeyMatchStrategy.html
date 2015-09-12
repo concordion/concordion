@@ -17,13 +17,13 @@
 
     <h3>Examples</h3>
 
-    <table concordion:execute="#result = processFragment(#fragment, #actualData, #fragmentAfterExecution)">
+    <table concordion:execute="#result = processFragment(#fragment, #actualData)">
         <thead>
         <tr>
-            <th concordion:assertTrue="#result">Scenario</th>
+            <th>Scenario</th>
             <th concordion:set="#fragment">Expected</th>
             <th concordion:set="#actualData">Actual</th>
-            <th concordion:set="#fragmentAfterExecution">Result</th>
+            <th concordion:assertEquals="#result">Result</th>
         </tr>
         </thead>
         <tbody>
@@ -267,12 +267,10 @@
         &lt;td class="success"&gt;Smith&lt;/td&gt;
         &lt;td class="success"&gt;17&lt;/td&gt;
     &lt;/tr&gt;
-    &lt;tr class="surplus"&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;&lt;ins class="actual"&gt;Jane&lt;/ins&gt;&lt;/td&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;&lt;ins class="actual"&gt;Dou&lt;/ins&gt;&lt;/td&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;&lt;ins class="actual"&gt;22&lt;/ins&gt;&lt;/td&gt;
-    &lt;/tr&gt;
-&lt;/table&gt;
+    &lt;tr class="surplus"&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+        &lt;ins class="actual"&gt;Jane&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+        &lt;ins class="actual"&gt;Dou&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+        &lt;ins class="actual"&gt;22&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
                 </pre>
             </td>
         </tr>
@@ -360,12 +358,10 @@
         &lt;td class="success"&gt;Smith&lt;/td&gt;
         &lt;td class="success"&gt;17&lt;/td&gt;
     &lt;/tr&gt;
-    &lt;tr class="surplus"&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;&lt;ins class="actual"&gt;John&lt;/ins&gt;&lt;/td&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;&lt;ins class="actual"&gt;Smith&lt;/ins&gt;&lt;/td&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;
-    &lt;/tr&gt;
-&lt;/table&gt;
+&lt;tr class="surplus"&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;John&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;Smith&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
                 </pre>
             </td>
         </tr>
@@ -402,7 +398,8 @@
     &lt;tr&gt;
         &lt;td class="success"&gt;John&lt;/td&gt;
         &lt;td class="success"&gt;Smith&lt;/td&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt;17&lt;/del&gt;&lt;ins class="actual"&gt;22&lt;/ins&gt;&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;17&lt;/del&gt;
+&lt;ins class="actual"&gt;22&lt;/ins&gt;&lt;/td&gt;
     &lt;/tr&gt;
 &lt;/table&gt;
                 </pre>
@@ -443,12 +440,10 @@
         &lt;td&gt;Smith&lt;/td&gt;
         &lt;td&gt;17&lt;/td&gt;
     &lt;/tr&gt;
-    &lt;tr class="surplus"&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;&lt;ins class="actual"&gt;Jane&lt;/ins&gt;&lt;/td&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;&lt;ins class="actual"&gt;Smith&lt;/ins&gt;&lt;/td&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;
-    &lt;/tr&gt;
-&lt;/table&gt;
+&lt;tr class="surplus"&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;Jane&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;Smith&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
                 </pre>
             </td>
         </tr>
@@ -490,12 +485,14 @@
     &lt;tr&gt;
         &lt;td class="success"&gt;John&lt;/td&gt;
         &lt;td class="success"&gt;Smith&lt;/td&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt;17&lt;/del&gt;&lt;ins class="actual"&gt;22&lt;/ins&gt;&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;17&lt;/del&gt;
+&lt;ins class="actual"&gt;22&lt;/ins&gt;&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td class="success"&gt;Jane&lt;/td&gt;
         &lt;td class="success"&gt;Dou&lt;/td&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt;22&lt;/del&gt;&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;22&lt;/del&gt;
+&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;
     &lt;/tr&gt;
 &lt;/table&gt;
                 </pre>
@@ -539,12 +536,14 @@
     &lt;tr&gt;
         &lt;td class="success"&gt;John&lt;/td&gt;
         &lt;td class="success"&gt;Smith&lt;/td&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt;17&lt;/del&gt;&lt;ins class="actual"&gt;22&lt;/ins&gt;&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;17&lt;/del&gt;
+&lt;ins class="actual"&gt;22&lt;/ins&gt;&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td class="success"&gt;Jane&lt;/td&gt;
         &lt;td class="success"&gt;Dou&lt;/td&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt;22&lt;/del&gt;&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;22&lt;/del&gt;
+&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;
     &lt;/tr&gt;
 &lt;/table&gt;
                 </pre>
@@ -593,14 +592,13 @@
     &lt;tr&gt;
         &lt;td class="success"&gt;Jane&lt;/td&gt;
         &lt;td class="success"&gt;Dou&lt;/td&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt;22&lt;/del&gt;&lt;ins class="actual"&gt;18&lt;/ins&gt;&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;22&lt;/del&gt;
+&lt;ins class="actual"&gt;18&lt;/ins&gt;&lt;/td&gt;
     &lt;/tr&gt;
-    &lt;tr class="surplus"&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;&lt;ins class="actual"&gt;John&lt;/ins&gt;&lt;/td&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;&lt;ins class="actual"&gt;Smither&lt;/ins&gt;&lt;/td&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;
-    &lt;/tr&gt;
-&lt;/table&gt;
+&lt;tr class="surplus"&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;John&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;Smither&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
                 </pre>
             </td>
         </tr>
@@ -637,14 +635,13 @@
     &lt;tr&gt;
         &lt;td class="success"&gt;John&lt;/td&gt;
         &lt;td class="success"&gt;Smith&lt;/td&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt;17&lt;/del&gt;&lt;ins class="actual"&gt;23&lt;/ins&gt;&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;17&lt;/del&gt;
+&lt;ins class="actual"&gt;23&lt;/ins&gt;&lt;/td&gt;
     &lt;/tr&gt;
-    &lt;tr class="surplus"&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;&lt;ins class="actual"&gt;Jane&lt;/ins&gt;&lt;/td&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;&lt;ins class="actual"&gt;Smith&lt;/ins&gt;&lt;/td&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;
-    &lt;/tr&gt;
-&lt;/table&gt;
+&lt;tr class="surplus"&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;Jane&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;Smith&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
                 </pre>
             </td>
         </tr>
@@ -681,14 +678,13 @@
     &lt;tr&gt;
         &lt;td class="success"&gt;John&lt;/td&gt;
         &lt;td class="success"&gt;Smith&lt;/td&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt;17&lt;/del&gt;&lt;ins class="actual"&gt;18&lt;/ins&gt;&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;17&lt;/del&gt;
+&lt;ins class="actual"&gt;18&lt;/ins&gt;&lt;/td&gt;
     &lt;/tr&gt;
-    &lt;tr class="surplus"&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;&lt;ins class="actual"&gt;Jane&lt;/ins&gt;&lt;/td&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;&lt;ins class="actual"&gt;Smith&lt;/ins&gt;&lt;/td&gt;
-        &lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;
-    &lt;/tr&gt;
-&lt;/table&gt;
+&lt;tr class="surplus"&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;Jane&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;Smith&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
                 </pre>
             </td>
         </tr>
