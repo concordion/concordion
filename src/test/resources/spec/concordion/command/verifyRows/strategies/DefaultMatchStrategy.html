@@ -1,7 +1,55 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<html xmlns:concordion="http://www.concordion.org/2007/concordion" xmlns:ext="urn:concordion-extensions:2010">
 <head>
     <link href="../../../../../concordion.css" rel="stylesheet" type="text/css" />
+    <style>
+    .toggleCol.hide {display: none; }
+    .toggleCol.show {display: table-cell; }
+    </style>
+    <script type='text/javascript'>
+    function toggle(b) {
+      var elements = document.getElementsByClassName('toggleCol');
+      if (b.value == 'View rendered') {
+        b.value='View source';
+        for (index in elements) {
+          var element = elements[index];
+          // Uncomment the embedded elements which were commented out so as not to interfere with execution of the Concordion commands
+          uncomment(element);
+          if (hasClass(element, "rendered")) {
+            show(element)
+          } else {
+            hide(element)
+          }
+        }
+      } else {
+        b.value='View rendered';
+        for (index in elements) {
+          var element = elements[index];
+          if (hasClass(element, "rendered")) {
+            hide(element)
+          } else {
+            show(element)
+          }
+        }
+      }
+    }    
+    function hasClass(element, cls) {
+        return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') != -1;
+    }
+    function uncomment(element) {
+      var text = element.innerHTML;
+      newText = text.replace('<!--', '').replace('-->', '');
+      element.innerHTML = newText;
+    }
+    function show(element) {
+      element.className = element.className.replace("hide", "");
+      element.className += " show";
+    }
+    function hide(element) {
+      element.className = element.className.replace("show", "");
+      element.className += " hide";
+    }
+    </script>
 </head>
 <body>
 
@@ -24,19 +72,24 @@
    <b>[ROWS]</b>
 &lt;/table&gt;</pre>
 <p>with <b>[ROWS]</b> replaced by the <b>Expected [ROWS]</b> and <b>Result [ROWS]</b>.</p>
-    <table concordion:execute="#resultRows = processRows(#template, #expectedRows, #actualData)">
+
+    <input type="button" value="View rendered" onclick="toggle(this)"/>
+    
+    <table concordion:execute="#result = processRows(#template, #expectedRows, #actualData)">
         <thead>
         <tr>
             <th>Scenario</th>
-            <th concordion:set="#expectedRows">Expected [ROWS]</th>
+            <th class="toggleCol" concordion:set="#expectedRows">Expected [ROWS]</th>
+            <th class="rendered toggleCol hide" ext:embed="#result.expectedTableCommented">Expected (as rendered)</th>
             <th concordion:set="#actualData">Actual</th>
-            <th concordion:assertEquals="#resultRows">Result [ROWS]</th>
+            <th class="toggleCol" concordion:assertEquals="#result.resultRows">Result [ROWS]</th>
+            <th class="rendered toggleCol hide" ext:embed="#result.resultTableCommented">Result (as rendered)</th>
         </tr>
         </thead>
         <tbody>
         <tr>
             <td>All match in same order</td>
-            <td>
+            <td class="toggleCol">
                 <pre class="html">&lt;tr&gt;
     &lt;td&gt;John&lt;/td&gt;
     &lt;td&gt;Smith&lt;/td&gt;
@@ -48,10 +101,11 @@
     &lt;td&gt;22&lt;/td&gt;
 &lt;/tr&gt;</pre>
             </td>
+            <td class="rendered toggleCol hide"></td>
             <td>
-                {John,Smith,17};{Jane,Dou,22}
+                {John,Smith,17};<br/>{Jane,Dou,22}
             </td>
-            <td>
+            <td class="toggleCol">
                 <pre class="html">&lt;tr&gt;
     &lt;td class="success"&gt;John&lt;/td&gt;
     &lt;td class="success"&gt;Smith&lt;/td&gt;
@@ -63,11 +117,12 @@
     &lt;td class="success"&gt;22&lt;/td&gt;
 &lt;/tr&gt;</pre>
             </td>
+            <td class="rendered toggleCol hide"></td>
         </tr>
 
         <tr>
             <td>Does not match in different order</td>
-            <td>
+            <td class="toggleCol">
                 <pre class="html">&lt;tr&gt;
   &lt;td&gt;John&lt;/td&gt;
   &lt;td&gt;Smith&lt;/td&gt;
@@ -79,10 +134,11 @@
   &lt;td&gt;22&lt;/td&gt;
 &lt;/tr&gt;</pre>
             </td>
+            <td class="rendered toggleCol hide"></td>
             <td>
-                {Jane,Dou,22};{John,Smith,17}
+                {Jane,Dou,22};<br/>{John,Smith,17}
             </td>
-            <td>
+            <td class="toggleCol">
                 <pre class="html">    &lt;tr&gt;
         &lt;td class="failure"&gt;&lt;del class="expected"&gt;John&lt;/del&gt;
 &lt;ins class="actual"&gt;Jane&lt;/ins&gt;&lt;/td&gt;
@@ -100,11 +156,12 @@
 &lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;
     &lt;/tr&gt;</pre>
             </td>
+            <td class="rendered toggleCol hide"></td>
         </tr>
 
         <tr>
             <td>One row missing</td>
-            <td>
+            <td class="toggleCol">
                 <pre class="html">&lt;tr&gt;
     &lt;td&gt;John&lt;/td&gt;
     &lt;td&gt;Smith&lt;/td&gt;
@@ -116,10 +173,11 @@
     &lt;td&gt;22&lt;/td&gt;
 &lt;/tr&gt;</pre>
             </td>
+            <td class="rendered toggleCol hide"></td>
             <td>
                 {John,Smith,17}
             </td>
-            <td>
+            <td class="toggleCol">
                 <pre class="html">&lt;tr&gt;
     &lt;td class="success"&gt;John&lt;/td&gt;
     &lt;td class="success"&gt;Smith&lt;/td&gt;
@@ -131,21 +189,23 @@
     &lt;td&gt;22&lt;/td&gt;
 &lt;/tr&gt;</pre>
             </td>
+            <td class="rendered toggleCol hide"></td>
         </tr>
 
         <tr>
             <td>One surplus row</td>
-            <td>
+            <td class="toggleCol">
                 <pre class="html">&lt;tr&gt;
     &lt;td&gt;John&lt;/td&gt;
     &lt;td&gt;Smith&lt;/td&gt;
     &lt;td&gt;17&lt;/td&gt;
 &lt;/tr&gt;</pre>
             </td>
+            <td class="rendered toggleCol hide"></td>
             <td>
-                {John,Smith,17};{Jane,Dou,22}
+                {John,Smith,17};<br/>{Jane,Dou,22}
             </td>
-            <td>
+            <td class="toggleCol">
                 <pre class="html">&lt;tr&gt;
     &lt;td class="success"&gt;John&lt;/td&gt;
     &lt;td class="success"&gt;Smith&lt;/td&gt;
@@ -156,21 +216,23 @@
 &lt;ins class="actual"&gt;Dou&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
 &lt;ins class="actual"&gt;22&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;</pre>
             </td>
+            <td class="rendered toggleCol hide"></td>
         </tr>
 
         <tr>
             <td>One field is incorect</td>
-            <td>
+            <td class="toggleCol">
                 <pre class="html">&lt;tr&gt;
     &lt;td&gt;John&lt;/td&gt;
     &lt;td&gt;Smith&lt;/td&gt;
     &lt;td&gt;17&lt;/td&gt;
 &lt;/tr&gt;</pre>
             </td>
+            <td class="rendered toggleCol hide"></td>
             <td>
                 {John,Smith,22}
             </td>
-            <td>
+            <td class="toggleCol">
                 <pre class="html">&lt;tr&gt;
     &lt;td class="success"&gt;John&lt;/td&gt;
     &lt;td class="success"&gt;Smith&lt;/td&gt;
@@ -178,11 +240,12 @@
 &lt;ins class="actual"&gt;22&lt;/ins&gt;&lt;/td&gt;
     &lt;/tr&gt;</pre>
             </td>
+            <td class="rendered toggleCol hide"></td>
         </tr>
 
         <tr>
             <td>Two rows, each with incorrect field</td>
-            <td>
+            <td class="toggleCol">
                 <pre class="html">&lt;tr&gt;
     &lt;td&gt;John&lt;/td&gt;
     &lt;td&gt;Smith&lt;/td&gt;
@@ -194,10 +257,11 @@
     &lt;td&gt;22&lt;/td&gt;
 &lt;/tr&gt;</pre>
             </td>
+            <td class="rendered toggleCol hide"></td>
             <td>
-                {John,Smith,22};{Jane,Dou,17}
+                {John,Smith,22};<br/>{Jane,Dou,17}
             </td>
-            <td>
+            <td class="toggleCol">
                 <pre class="html">&lt;tr&gt;
     &lt;td class="success"&gt;John&lt;/td&gt;
     &lt;td class="success"&gt;Smith&lt;/td&gt;
@@ -211,11 +275,12 @@
 &lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;
 &lt;/tr&gt;</pre>
             </td>
+            <td class="rendered toggleCol hide"></td>
         </tr>
 
         <tr>
             <td>Two rows, each with different incorrect field</td>
-            <td>
+            <td class="toggleCol">
                 <pre class="html">&lt;tr&gt;
     &lt;td&gt;John&lt;/td&gt;
     &lt;td&gt;Smith&lt;/td&gt;
@@ -227,10 +292,11 @@
     &lt;td&gt;22&lt;/td&gt;
 &lt;/tr&gt;</pre>
             </td>
+            <td class="rendered toggleCol hide"></td>
             <td>
-                {John,Smither,17};{Jane,Dou,17}
+                {John,Smither,17};<br/>{Jane,Dou,17}
             </td>
-            <td>
+            <td class="toggleCol">
                 <pre class="html">&lt;tr&gt;
     &lt;td class="success"&gt;John&lt;/td&gt;
     &lt;td class="failure"&gt;&lt;del class="expected"&gt;Smith&lt;/del&gt;
@@ -244,11 +310,12 @@
 &lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;
 &lt;/tr&gt;</pre>
             </td>
+            <td class="rendered toggleCol hide"></td>
         </tr>
 
         <tr>
             <td>Two rows, first with one incorrect field, second with two</td>
-            <td>
+            <td class="toggleCol">
                 <pre class="html">&lt;tr&gt;
     &lt;td&gt;John&lt;/td&gt;
     &lt;td&gt;Smith&lt;/td&gt;
@@ -260,10 +327,11 @@
     &lt;td&gt;22&lt;/td&gt;
 &lt;/tr&gt;</pre>
             </td>
+            <td class="rendered toggleCol hide"></td>
             <td>
-                {John,Smither,23};{Jane,Dou,18}
+                {John,Smither,23};<br/>{Jane,Dou,18}
             </td>
-            <td>
+            <td class="toggleCol">
                 <pre class="html">&lt;tr&gt;
     &lt;td class="success"&gt;John&lt;/td&gt;
     &lt;td class="failure"&gt;&lt;del class="expected"&gt;Smith&lt;/del&gt;
@@ -278,6 +346,7 @@
 &lt;ins class="actual"&gt;18&lt;/ins&gt;&lt;/td&gt;
 &lt;/tr&gt;</pre>
             </td>
+            <td class="rendered toggleCol hide"></td>
         </tr>
         </tbody>
     </table>
