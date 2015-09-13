@@ -80,12 +80,13 @@ public class CommandCall {
         return parameters.get(parameter);
     }
 
-    public String getParameterWithVariants(String... parameterVariants) {
-        for (String parameterVariant : parameterVariants) {
-            String value = getParameter(parameterVariant);
-            if (value != null) {
-                return value;
-            }
+    public String getParameter(String camelCaseParameterName, String spinalCaseParameterName) {
+        String camelCaseParameter = parameters.get(camelCaseParameterName);
+        if (camelCaseParameter != null) {
+            return camelCaseParameter;
+        }        String spinalCaseParameter = parameters.get(spinalCaseParameterName);
+        if (spinalCaseParameter != null) {
+            return spinalCaseParameter;
         }
         return null;
     }

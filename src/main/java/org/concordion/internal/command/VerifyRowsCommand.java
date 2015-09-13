@@ -59,7 +59,7 @@ public class VerifyRowsCommand extends AbstractCommand {
     private static final String DEFAULT_STRATEGIES_SUFFIX = "Strategy";
 
     private Class<? extends RowsMatchStrategy> detectStrategyClass(CommandCall commandCall) {
-        String strategy = commandCall.getParameterWithVariants("matchStrategy", "match-strategy");
+        String strategy = commandCall.getParameter("matchStrategy", "match-strategy");
         if (strategy == null) {
             return DefaultMatchStrategy.class;
         }

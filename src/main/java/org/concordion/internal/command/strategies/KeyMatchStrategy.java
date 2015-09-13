@@ -33,7 +33,7 @@ public class KeyMatchStrategy extends AbstractChangingOrderRowsMatchStrategy {
             for (CommandCall columnCommand : childrenCalls.asCollection()) {
                 columnCommand.verify(evaluator, backgroundResultRecorder);
 
-                String matchingRole = columnCommand.getParameterWithVariants("matchingRole", "matching-role");
+                String matchingRole = columnCommand.getParameter("matchingRole", "matching-role");
                 if (matchingRole != null && matchingRole.equalsIgnoreCase("key")) {
                     total += backgroundResultRecorder.getTotalCount();
                     success += backgroundResultRecorder.getSuccessCount();
