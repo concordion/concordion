@@ -6,6 +6,9 @@ import org.concordion.internal.Row;
 import org.concordion.internal.util.Announcer;
 
 public class DefaultMatchStrategy extends RowsMatchStrategy {
+
+    public static final String DEFAULT_STRATEGY_NAME = "Default";
+
     public DefaultMatchStrategy(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder,
                                 Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows) {
         super(commandCall, evaluator, resultRecorder, listeners, loopVariableName, actualRows);

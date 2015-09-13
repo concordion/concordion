@@ -40,10 +40,16 @@ public class VerifyRowsCommand extends AbstractCommand {
         Check.isTrue(!(obj instanceof HashSet) || (obj instanceof LinkedHashSet), obj.getClass().getCanonicalName() + " does not have a predictable iteration order");
         Iterable<Object> iterable = (Iterable<Object>) obj;
 
-        RowsMatchStrategy rowsMatchStrategy;
+        newStrategyInstance(detectStrategyClass(commandCall), commandCall, evaluator, resultRecorder, loopVariableName, iterable).verify();
+    }
 
+    private static final String DEFAULT_STRATEGIES_PACKAGE = DefaultMatchStrategy.class.getPackage().getName() + '.';
+    private static final String DEFAULT_STRATEGIES_SUFFIX = "Strategy";
+
+    private RowsMatchStrategy newStrategyInstance(Class<? extends RowsMatchStrategy> strategyClass,
+                CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, String loopVariableName, Iterable<Object> iterable) {
         try {
-            rowsMatchStrategy = detectStrategyClass(commandCall)
+            return strategyClass
                     .getConstructor(CommandCall.class, Evaluator.class, ResultRecorder.class, Announcer.class, String.class, Iterable.class)
                     .newInstance(commandCall, evaluator, resultRecorder, listeners, loopVariableName, iterable);
         } catch (Exception e) {
@@ -51,23 +57,23 @@ public class VerifyRowsCommand extends AbstractCommand {
                     "CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder,\n" +
                     "Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows");
         }
-
-        rowsMatchStrategy.verify();
     }
-
-    private static final String DEFAULT_STRATEGIES_PACKAGE = DefaultMatchStrategy.class.getPackage().getName() + '.';
-    private static final String DEFAULT_STRATEGIES_SUFFIX = "Strategy";
 
     private Class<? extends RowsMatchStrategy> detectStrategyClass(CommandCall commandCall) {
         String strategy = commandCall.getParameter("matchStrategy", "match-strategy");
-        if (strategy == null) {
+        if (strategy == null || DefaultMatchStrategy.DEFAULT_STRATEGY_NAME.equalsIgnoreCase(strategy)) {
             return DefaultMatchStrategy.class;
         }
-        return findFirstExistingClassOrDefault(DEFAULT_STRATEGIES_PACKAGE + strategy + DEFAULT_STRATEGIES_SUFFIX, strategy);
+        Class<? extends RowsMatchStrategy> strategyClass =
+                findFirstExistingClass(DEFAULT_STRATEGIES_PACKAGE + strategy + DEFAULT_STRATEGIES_SUFFIX, strategy);
+        if (strategyClass == null) {
+            throw new IllegalArgumentException("MatchStrategy '" + strategy + "' is not found");
+        }
+        return strategyClass;
     }
 
     @SuppressWarnings("unchecked")
-    private Class<? extends RowsMatchStrategy> findFirstExistingClassOrDefault(String... names) {
+    private Class<? extends RowsMatchStrategy> findFirstExistingClass(String... names) {
         for (String name : names) {
             try {
                 Class<?> aClass = Class.forName(name);
@@ -76,6 +82,6 @@ public class VerifyRowsCommand extends AbstractCommand {
                 }
             } catch (ClassNotFoundException ignored) {}
         }
-        return DefaultMatchStrategy.class;
+        return null;
     }
 }
