@@ -8,5 +8,5 @@ public interface ExampleListener extends EventListener {
 
     void beforeExample(ExampleEvent event);
 
-    void afterExample(ExampleEvent event, ResultRecorder resultRecorder);
+    void afterExample(ExampleEvent event);
 }
