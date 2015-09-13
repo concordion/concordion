@@ -1,5 +1,11 @@
 package spec.concordion.command.verifyRows.strategies;
 
+import static org.concordion.api.MultiValueResult.multiValueResult;
+
+import org.concordion.api.MultiValueResult;
+import org.concordion.api.extension.ConcordionExtension;
+import org.concordion.api.extension.Extension;
+import org.concordion.ext.EmbedExtension;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
@@ -7,12 +13,18 @@ import org.junit.runner.RunWith;
 public class DefaultMatchStrategyTest extends BaseMatchStrategyTest {
     
     private static final String ROWS_PLACEHOLDER = "\n   [ROWS]\n";
+    @Extension
+    public ConcordionExtension extension =
+        new EmbedExtension().withNamespace("concordion", "http://www.concordion.org/2007/concordion");
 
-    public String processRows(String template, String expectedRows, String actualData) throws Exception {
+    public MultiValueResult processRows(String template, String expectedRows, String actualData) throws Exception {
         String expectedTable = wrapRows(template, expectedRows);
-        String resulTable = processFragment(expectedTable, actualData);
-        String resultRows = unwrapRows(template, resulTable);
-        return resultRows;
+        String resultTable = processFragment(expectedTable, actualData);
+        String resultRows = unwrapRows(template, resultTable);
+        return multiValueResult()
+                .with("expectedTableCommented", "<!--" + expectedTable + "-->")
+                .with("resultTableCommented", "<!--" + resultTable + "-->")
+                .with("resultRows", resultRows);
     }
 
     private String wrapRows(String template, String fragment) {
