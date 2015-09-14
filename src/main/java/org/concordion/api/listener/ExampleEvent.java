@@ -1,25 +1,23 @@
 package org.concordion.api.listener;
 
 import org.concordion.api.CommandCall;
-import org.concordion.api.Element;
-import org.concordion.api.Resource;
-import org.concordion.api.ResultRecorder;
+import org.concordion.api.ResultSummary;
 
 public class ExampleEvent {
 
     private final CommandCall node;
-    private final ResultRecorder resultRecorder;
+    private final ResultSummary resultSummary;
 
-    public ExampleEvent(CommandCall node, ResultRecorder resultRecorder) {
+    public ExampleEvent(CommandCall node, ResultSummary resultSummary) {
         this.node = node;
-        this.resultRecorder = resultRecorder;
+        this.resultSummary = resultSummary;
     }
 
     public CommandCall getNode() {
         return node;
     }
     
-    public ResultRecorder getResultRecorder() {
-        return resultRecorder;
+    public ResultSummary getResultSummary() {
+        return resultSummary;
     }
 }

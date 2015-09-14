@@ -1,0 +1,45 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Example Listener</h1>
+
+    <p>
+       The execution of the example command can be observed using the example listener. The example listener has access to the HTML element with which the command is associated,
+       and the example results. 
+    </p>
+
+    <div class="example">
+
+        <h3>Example</h3>
+        
+        <p>An <span concordion:execute="addExampleExtension()">extension is installed</span> that listens to the example command. When the following instrumentation:</p> 
+<pre concordion:set="#result = process(#TEXT)">
+
+ANDREW-TODO - INSERT MY EXAMPLE HERE 
+
+</pre>
+
+        <p>is run with a fixture that performs the arithmetical operations, the logged events are:
+        </p>
+        <table concordion:verifyRows="#event : getEventLog()">
+        <tr><th concordion:assertEquals="#event">Event</th></tr>
+        <tr><td>Set #num = '4.0'</td></tr>
+        <tr><td>Execute 'The square root of 4.0 is 2.0'</td></tr>
+        <tr><td>Success '2.0'</td></tr>
+        <tr><td>Set #num = '16.0'</td></tr>
+        <tr><td>Execute 'The square root of 16.0 is 3.0'</td></tr>
+        <tr><td>Failure expected:'3.0' actual:'4.0'</td></tr>
+        <tr><td>Set #num = '3'</td></tr>
+        <tr><td>Success 'is positive'</td></tr>
+        <tr><td>Set #num = '-4'</td></tr>
+        <tr><td>Failure expected:'is positive' actual:'== false'</td></tr>
+        <tr><td>Set #num = '-5'</td></tr>
+        <tr><td>Success 'is not positive'</td></tr>
+        <tr><td>Set #num = '6'</td></tr>
+        <tr><td>Failure expected:'is not positive' actual:'== true'</td></tr>
+        </table>
+
+    </div>
+</body>
+</html>
