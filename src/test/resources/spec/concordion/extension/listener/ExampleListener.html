@@ -10,36 +10,21 @@
     </p>
 
     <div class="example">
-
-        <h3>Example</h3>
-        
-        <p>An <span concordion:execute="addExampleExtension()">extension is installed</span> that listens to the example command. When the following instrumentation:</p> 
-<pre concordion:set="#result = process(#TEXT)">
-
-ANDREW-TODO - INSERT MY EXAMPLE HERE 
-
-</pre>
-
-        <p>is run with a fixture that performs the arithmetical operations, the logged events are:
-        </p>
+		<h3>Before and after events are captured</h3>
+		
+		<div concordion:example="example1">
+            <p>An extension is installed that listens to the example command and the following instrumentation is run:</p> 
+			
+			<p>The square root of <span concordion:set="#num">4.0</span> is <span concordion:assertEquals="sqrt(#num)">2.0</span></p>
+		</div>
+	
+        <p>The logged events for this example are:</p>
         <table concordion:verifyRows="#event : getEventLog()">
         <tr><th concordion:assertEquals="#event">Event</th></tr>
-        <tr><td>Set #num = '4.0'</td></tr>
-        <tr><td>Execute 'The square root of 4.0 is 2.0'</td></tr>
-        <tr><td>Success '2.0'</td></tr>
-        <tr><td>Set #num = '16.0'</td></tr>
-        <tr><td>Execute 'The square root of 16.0 is 3.0'</td></tr>
-        <tr><td>Failure expected:'3.0' actual:'4.0'</td></tr>
-        <tr><td>Set #num = '3'</td></tr>
-        <tr><td>Success 'is positive'</td></tr>
-        <tr><td>Set #num = '-4'</td></tr>
-        <tr><td>Failure expected:'is positive' actual:'== false'</td></tr>
-        <tr><td>Set #num = '-5'</td></tr>
-        <tr><td>Success 'is not positive'</td></tr>
-        <tr><td>Set #num = '6'</td></tr>
-        <tr><td>Failure expected:'is not positive' actual:'== true'</td></tr>
+        <tr><td>Before Example</td></tr>
+        <tr><td>After Example - passed: 1, failed: 0, exceptions: 0</td></tr>
         </table>
-
+ 
     </div>
 </body>
 </html>

@@ -1,24 +1,25 @@
 package spec.concordion.extension.listener;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.concordion.api.extension.Extension;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 import spec.concordion.extension.AbstractExtensionTestCase;
-import test.concordion.extension.LoggingExtension;
+import test.concordion.extension.ExampleTestExtension;
 
 @RunWith(ConcordionRunner.class)
 public class ExampleListenerTest extends AbstractExtensionTestCase {
-
-    public void addExampleExtension() {
-    	//ANDREW-TODO - need the example command listener here
-        setExtension(new LoggingExtension().withStream(getLogStream()));
-    }
-    
+	@Extension
+	public ExampleTestExtension extension = new ExampleTestExtension().withStream(getLogStream());
+	
+//    public void addExampleExtension() {
+//        setExtension(new ExampleTestExtension().withStream(getLogStream()));
+//    }
+        
     public double sqrt(double num) {
         return Math.sqrt(num);
-    }
-    
-    public boolean isPositive(int num) {
-        return num > 0;
     }
 }
