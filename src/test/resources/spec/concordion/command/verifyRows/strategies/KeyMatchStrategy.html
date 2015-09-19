@@ -17,13 +17,23 @@
 
     <h3>Examples</h3>
 
-    <table concordion:execute="#result = processFragment(#fragment, #actualData)">
+    <p>Each of the following scenarios uses the command:</p>
+    <pre class="html" concordion:set="#template">&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
+   &lt;tr&gt;
+       &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
+       &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
+       &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
+   &lt;/tr&gt;
+   <b>[ROWS]</b>
+&lt;/table&gt;</pre>
+    <p>with <b>[ROWS]</b> replaced by the <b>Expected [ROWS]</b> and <b>Result [ROWS]</b>.</p>
+    <table concordion:execute="#resultRows = processRows(#template, #expectedRows, #actualData)">
         <thead>
         <tr>
             <th>Scenario</th>
-            <th concordion:set="#fragment">Expected</th>
+            <th concordion:set="#expectedRows">Expected [ROWS]</th>
             <th concordion:set="#actualData">Actual</th>
-            <th concordion:assertEquals="#result">Result</th>
+            <th concordion:assertEquals="#resultRows">Result [ROWS]</th>
         </tr>
         </thead>
         <tbody>
@@ -31,12 +41,6 @@
             <td>All match in same order</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td&gt;John&lt;/td&gt;
         &lt;td&gt;Smith&lt;/td&gt;
@@ -47,7 +51,6 @@
         &lt;td&gt;Dou&lt;/td&gt;
         &lt;td&gt;22&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
             <td>
@@ -55,12 +58,6 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td class="success"&gt;John&lt;/td&gt;
         &lt;td class="success"&gt;Smith&lt;/td&gt;
@@ -71,7 +68,6 @@
         &lt;td class="success"&gt;Dou&lt;/td&gt;
         &lt;td class="success"&gt;22&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
         </tr>
@@ -80,12 +76,6 @@
             <td>All match in different order</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td&gt;John&lt;/td&gt;
         &lt;td&gt;Smith&lt;/td&gt;
@@ -96,7 +86,6 @@
         &lt;td&gt;Dou&lt;/td&gt;
         &lt;td&gt;22&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
             <td>
@@ -104,12 +93,6 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td class="success"&gt;John&lt;/td&gt;
         &lt;td class="success"&gt;Smith&lt;/td&gt;
@@ -120,7 +103,6 @@
         &lt;td class="success"&gt;Dou&lt;/td&gt;
         &lt;td class="success"&gt;22&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
         </tr>
@@ -129,12 +111,6 @@
             <td>All match in different order with duplicates</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td&gt;John&lt;/td&gt;
         &lt;td&gt;Smith&lt;/td&gt;
@@ -150,7 +126,6 @@
         &lt;td&gt;Dou&lt;/td&gt;
         &lt;td&gt;22&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
             <td>
@@ -158,12 +133,6 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td class="success"&gt;John&lt;/td&gt;
         &lt;td class="success"&gt;Smith&lt;/td&gt;
@@ -179,7 +148,6 @@
         &lt;td class="success"&gt;Dou&lt;/td&gt;
         &lt;td class="success"&gt;22&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
         </tr>
@@ -188,12 +156,6 @@
             <td>One row missing</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td&gt;John&lt;/td&gt;
         &lt;td&gt;Smith&lt;/td&gt;
@@ -204,7 +166,6 @@
         &lt;td&gt;Dou&lt;/td&gt;
         &lt;td&gt;22&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
             <td>
@@ -212,12 +173,6 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td class="success"&gt;John&lt;/td&gt;
         &lt;td class="success"&gt;Smith&lt;/td&gt;
@@ -228,7 +183,6 @@
         &lt;td&gt;Dou&lt;/td&gt;
         &lt;td&gt;22&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
         </tr>
@@ -237,18 +191,11 @@
             <td>One surplus row</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td&gt;John&lt;/td&gt;
         &lt;td&gt;Smith&lt;/td&gt;
         &lt;td&gt;17&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
             <td>
@@ -256,12 +203,6 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td class="success"&gt;John&lt;/td&gt;
         &lt;td class="success"&gt;Smith&lt;/td&gt;
@@ -270,7 +211,7 @@
     &lt;tr class="surplus"&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
         &lt;ins class="actual"&gt;Jane&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
         &lt;ins class="actual"&gt;Dou&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
-        &lt;ins class="actual"&gt;22&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+        &lt;ins class="actual"&gt;22&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;
                 </pre>
             </td>
         </tr>
@@ -279,12 +220,6 @@
             <td>One of the duplicated rows missing</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td&gt;John&lt;/td&gt;
         &lt;td&gt;Smith&lt;/td&gt;
@@ -295,7 +230,6 @@
         &lt;td&gt;Smith&lt;/td&gt;
         &lt;td&gt;17&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
             <td>
@@ -303,12 +237,6 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td class="success"&gt;John&lt;/td&gt;
         &lt;td class="success"&gt;Smith&lt;/td&gt;
@@ -319,7 +247,6 @@
         &lt;td&gt;Smith&lt;/td&gt;
         &lt;td&gt;17&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
         </tr>
@@ -328,18 +255,11 @@
             <td>One surplus duplicate</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td&gt;John&lt;/td&gt;
         &lt;td&gt;Smith&lt;/td&gt;
         &lt;td&gt;17&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
             <td>
@@ -347,12 +267,6 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td class="success"&gt;John&lt;/td&gt;
         &lt;td class="success"&gt;Smith&lt;/td&gt;
@@ -361,7 +275,7 @@
 &lt;tr class="surplus"&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
 &lt;ins class="actual"&gt;John&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
 &lt;ins class="actual"&gt;Smith&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
-&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;
                 </pre>
             </td>
         </tr>
@@ -370,18 +284,11 @@
             <td>One non key field is incorrect</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td&gt;John&lt;/td&gt;
         &lt;td&gt;Smith&lt;/td&gt;
         &lt;td&gt;17&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
             <td>
@@ -389,19 +296,12 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td class="success"&gt;John&lt;/td&gt;
         &lt;td class="success"&gt;Smith&lt;/td&gt;
         &lt;td class="failure"&gt;&lt;del class="expected"&gt;17&lt;/del&gt;
 &lt;ins class="actual"&gt;22&lt;/ins&gt;&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
         </tr>
@@ -410,18 +310,11 @@
             <td>One key field is incorrect</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td&gt;John&lt;/td&gt;
         &lt;td&gt;Smith&lt;/td&gt;
         &lt;td&gt;17&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
             <td>
@@ -429,12 +322,6 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr class="missing"&gt;
         &lt;td&gt;John&lt;/td&gt;
         &lt;td&gt;Smith&lt;/td&gt;
@@ -443,7 +330,7 @@
 &lt;tr class="surplus"&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
 &lt;ins class="actual"&gt;Jane&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
 &lt;ins class="actual"&gt;Smith&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
-&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;
                 </pre>
             </td>
         </tr>
@@ -452,12 +339,6 @@
             <td>Two rows, each with incorrect field</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td&gt;John&lt;/td&gt;
         &lt;td&gt;Smith&lt;/td&gt;
@@ -468,7 +349,6 @@
         &lt;td&gt;Dou&lt;/td&gt;
         &lt;td&gt;22&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
             <td>
@@ -476,12 +356,6 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td class="success"&gt;John&lt;/td&gt;
         &lt;td class="success"&gt;Smith&lt;/td&gt;
@@ -494,7 +368,6 @@
         &lt;td class="failure"&gt;&lt;del class="expected"&gt;22&lt;/del&gt;
 &lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
         </tr>
@@ -503,12 +376,6 @@
             <td>Two rows in different order, each with incorrect field</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td&gt;John&lt;/td&gt;
         &lt;td&gt;Smith&lt;/td&gt;
@@ -519,7 +386,6 @@
         &lt;td&gt;Dou&lt;/td&gt;
         &lt;td&gt;22&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
             <td>
@@ -527,12 +393,6 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td class="success"&gt;John&lt;/td&gt;
         &lt;td class="success"&gt;Smith&lt;/td&gt;
@@ -545,7 +405,6 @@
         &lt;td class="failure"&gt;&lt;del class="expected"&gt;22&lt;/del&gt;
 &lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
         </tr>
@@ -554,12 +413,6 @@
             <td>Two rows, first with incorrect key, second with incorrect value</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td&gt;John&lt;/td&gt;
         &lt;td&gt;Smith&lt;/td&gt;
@@ -570,7 +423,6 @@
         &lt;td&gt;Dou&lt;/td&gt;
         &lt;td&gt;22&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
             <td>
@@ -578,12 +430,6 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr class="missing"&gt;
         &lt;td&gt;John&lt;/td&gt;
         &lt;td&gt;Smith&lt;/td&gt;
@@ -598,7 +444,7 @@
 &lt;tr class="surplus"&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
 &lt;ins class="actual"&gt;John&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
 &lt;ins class="actual"&gt;Smither&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
-&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;
                 </pre>
             </td>
         </tr>
@@ -607,18 +453,11 @@
             <td>Duplicated key in actual data</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td&gt;John&lt;/td&gt;
         &lt;td&gt;Smith&lt;/td&gt;
         &lt;td&gt;17&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
             <td>
@@ -626,12 +465,6 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td class="success"&gt;John&lt;/td&gt;
         &lt;td class="success"&gt;Smith&lt;/td&gt;
@@ -641,7 +474,7 @@
 &lt;tr class="surplus"&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
 &lt;ins class="actual"&gt;Jane&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
 &lt;ins class="actual"&gt;Smith&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
-&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;
                 </pre>
             </td>
         </tr>
@@ -650,18 +483,11 @@
             <td>Expected one row, got two, each with one field different. Find matching by key</td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td&gt;John&lt;/td&gt;
         &lt;td&gt;Smith&lt;/td&gt;
         &lt;td&gt;17&lt;/td&gt;
     &lt;/tr&gt;
-&lt;/table&gt;
                 </pre>
             </td>
             <td>
@@ -669,12 +495,6 @@
             </td>
             <td>
                 <pre class="html">
-&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
-    &lt;tr&gt;
-        &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
-        &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
-    &lt;/tr&gt;
     &lt;tr&gt;
         &lt;td class="success"&gt;John&lt;/td&gt;
         &lt;td class="success"&gt;Smith&lt;/td&gt;
@@ -684,7 +504,7 @@
 &lt;tr class="surplus"&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
 &lt;ins class="actual"&gt;Jane&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
 &lt;ins class="actual"&gt;Smith&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
-&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;
                 </pre>
             </td>
         </tr>
