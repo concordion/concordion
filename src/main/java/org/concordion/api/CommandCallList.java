@@ -1,7 +1,10 @@
 package org.concordion.api;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import static java.util.Collections.unmodifiableList;
 
 
 public class CommandCallList {
@@ -42,5 +45,9 @@ public class CommandCallList {
     
     public CommandCall get(int index) {
         return commandCalls.get(index);
+    }
+
+    public Collection<CommandCall> asCollection() {
+        return unmodifiableList(commandCalls);
     }
 }

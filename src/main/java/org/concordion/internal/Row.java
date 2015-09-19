@@ -45,4 +45,8 @@ public class Row {
         }
         return -1;
     }
+
+    public Row deepClone() {
+        return new Row(rowElement.deepClone());
+    }
 }

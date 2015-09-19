@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<head>
+    <link href="../../../../../concordion.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<h1>KeyMatch verification strategy</h1>
+
+<p>
+    <br /> This file provides examples of behaviour of <code>concordion:verifyRows</code> command with <code>concordion:matchStrategy="KeyMatch"</code>.
+    <br /> The command tries to find expected row by fields marked as a key (it must be unique). If key is found then the rest of the fields is asserted else row is reported missing.
+    <br /> Please note that commands are being evaluated on a copy of the rows multiple times. This means commands has to be idempotent and lightweight.
+</p>
+
+<div class="example">
+
+    <h3>Examples</h3>
+
+    <p>Each of the following scenarios uses the command:</p>
+    <pre class="html" concordion:set="#template">&lt;table concordion:verifyRows="#user : users" concordion:matchStrategy="KeyMatch"&gt;
+   &lt;tr&gt;
+       &lt;th concordion:assertEquals="#user.firstName" concordion:matchingRole="key"&gt;First Name&lt;/th&gt;
+       &lt;th concordion:assertEquals="#user.lastName" concordion:matchingRole="key"&gt;Last Name&lt;/th&gt;
+       &lt;th concordion:assertEquals="#user.age"&gt;Age&lt;/th&gt;
+   &lt;/tr&gt;
+   <b>[ROWS]</b>
+&lt;/table&gt;</pre>
+    <p>with <b>[ROWS]</b> replaced by the <b>Expected [ROWS]</b> and <b>Result [ROWS]</b>.</p>
+    <table concordion:execute="#resultRows = processRows(#template, #expectedRows, #actualData)">
+        <thead>
+        <tr>
+            <th>Scenario</th>
+            <th concordion:set="#expectedRows">Expected [ROWS]</th>
+            <th concordion:set="#actualData">Actual</th>
+            <th concordion:assertEquals="#resultRows">Result [ROWS]</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>All match in same order</td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Jane&lt;/td&gt;
+        &lt;td&gt;Dou&lt;/td&gt;
+        &lt;td&gt;22&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+            <td>
+                {John,Smith,17};{Jane,Dou,22}
+            </td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td class="success"&gt;John&lt;/td&gt;
+        &lt;td class="success"&gt;Smith&lt;/td&gt;
+        &lt;td class="success"&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="success"&gt;Jane&lt;/td&gt;
+        &lt;td class="success"&gt;Dou&lt;/td&gt;
+        &lt;td class="success"&gt;22&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>All match in different order</td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Jane&lt;/td&gt;
+        &lt;td&gt;Dou&lt;/td&gt;
+        &lt;td&gt;22&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+            <td>
+                {Jane,Dou,22};{John,Smith,17}
+            </td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td class="success"&gt;John&lt;/td&gt;
+        &lt;td class="success"&gt;Smith&lt;/td&gt;
+        &lt;td class="success"&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="success"&gt;Jane&lt;/td&gt;
+        &lt;td class="success"&gt;Dou&lt;/td&gt;
+        &lt;td class="success"&gt;22&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>All match in different order with duplicates</td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Jane&lt;/td&gt;
+        &lt;td&gt;Dou&lt;/td&gt;
+        &lt;td&gt;22&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Jane&lt;/td&gt;
+        &lt;td&gt;Dou&lt;/td&gt;
+        &lt;td&gt;22&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+            <td>
+                {Jane,Dou,22};{John,Smith,17};{Jane,Dou,22}
+            </td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td class="success"&gt;John&lt;/td&gt;
+        &lt;td class="success"&gt;Smith&lt;/td&gt;
+        &lt;td class="success"&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="success"&gt;Jane&lt;/td&gt;
+        &lt;td class="success"&gt;Dou&lt;/td&gt;
+        &lt;td class="success"&gt;22&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="success"&gt;Jane&lt;/td&gt;
+        &lt;td class="success"&gt;Dou&lt;/td&gt;
+        &lt;td class="success"&gt;22&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>One row missing</td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Jane&lt;/td&gt;
+        &lt;td&gt;Dou&lt;/td&gt;
+        &lt;td&gt;22&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+            <td>
+                {John,Smith,17}
+            </td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td class="success"&gt;John&lt;/td&gt;
+        &lt;td class="success"&gt;Smith&lt;/td&gt;
+        &lt;td class="success"&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr class="missing"&gt;
+        &lt;td&gt;Jane&lt;/td&gt;
+        &lt;td&gt;Dou&lt;/td&gt;
+        &lt;td&gt;22&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>One surplus row</td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+            <td>
+                {Jane,Dou,22};{John,Smith,17}
+            </td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td class="success"&gt;John&lt;/td&gt;
+        &lt;td class="success"&gt;Smith&lt;/td&gt;
+        &lt;td class="success"&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr class="surplus"&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+        &lt;ins class="actual"&gt;Jane&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+        &lt;ins class="actual"&gt;Dou&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+        &lt;ins class="actual"&gt;22&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;
+                </pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>One of the duplicated rows missing</td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+            <td>
+                {John,Smith,17}
+            </td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td class="success"&gt;John&lt;/td&gt;
+        &lt;td class="success"&gt;Smith&lt;/td&gt;
+        &lt;td class="success"&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr class="missing"&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>One surplus duplicate</td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+            <td>
+                {John,Smith,17};{John,Smith,17}
+            </td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td class="success"&gt;John&lt;/td&gt;
+        &lt;td class="success"&gt;Smith&lt;/td&gt;
+        &lt;td class="success"&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;tr class="surplus"&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;John&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;Smith&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;
+                </pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>One non key field is incorrect</td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+            <td>
+                {John,Smith,22}
+            </td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td class="success"&gt;John&lt;/td&gt;
+        &lt;td class="success"&gt;Smith&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;17&lt;/del&gt;
+&lt;ins class="actual"&gt;22&lt;/ins&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>One key field is incorrect</td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+            <td>
+                {Jane,Smith,17}
+            </td>
+            <td>
+                <pre class="html">
+    &lt;tr class="missing"&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;tr class="surplus"&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;Jane&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;Smith&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;
+                </pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Two rows, each with incorrect field</td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Jane&lt;/td&gt;
+        &lt;td&gt;Dou&lt;/td&gt;
+        &lt;td&gt;22&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+            <td>
+                {John,Smith,22};{Jane,Dou,17}
+            </td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td class="success"&gt;John&lt;/td&gt;
+        &lt;td class="success"&gt;Smith&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;17&lt;/del&gt;
+&lt;ins class="actual"&gt;22&lt;/ins&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="success"&gt;Jane&lt;/td&gt;
+        &lt;td class="success"&gt;Dou&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;22&lt;/del&gt;
+&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Two rows in different order, each with incorrect field</td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Jane&lt;/td&gt;
+        &lt;td&gt;Dou&lt;/td&gt;
+        &lt;td&gt;22&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+            <td>
+                {Jane,Dou,17};{John,Smith,22}
+            </td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td class="success"&gt;John&lt;/td&gt;
+        &lt;td class="success"&gt;Smith&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;17&lt;/del&gt;
+&lt;ins class="actual"&gt;22&lt;/ins&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="success"&gt;Jane&lt;/td&gt;
+        &lt;td class="success"&gt;Dou&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;22&lt;/del&gt;
+&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Two rows, first with incorrect key, second with incorrect value</td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Jane&lt;/td&gt;
+        &lt;td&gt;Dou&lt;/td&gt;
+        &lt;td&gt;22&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+            <td>
+                {Jane,Dou,18};{John,Smither,17}
+            </td>
+            <td>
+                <pre class="html">
+    &lt;tr class="missing"&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="success"&gt;Jane&lt;/td&gt;
+        &lt;td class="success"&gt;Dou&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;22&lt;/del&gt;
+&lt;ins class="actual"&gt;18&lt;/ins&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;tr class="surplus"&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;John&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;Smither&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;
+                </pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Duplicated key in actual data</td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+            <td>
+                {John,Smith,23};{Jane,Smith,17}
+            </td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td class="success"&gt;John&lt;/td&gt;
+        &lt;td class="success"&gt;Smith&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;17&lt;/del&gt;
+&lt;ins class="actual"&gt;23&lt;/ins&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;tr class="surplus"&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;Jane&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;Smith&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;
+                </pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Expected one row, got two, each with one field different. Find matching by key</td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Smith&lt;/td&gt;
+        &lt;td&gt;17&lt;/td&gt;
+    &lt;/tr&gt;
+                </pre>
+            </td>
+            <td>
+                {John,Smith,18};{Jane,Smith,17}
+            </td>
+            <td>
+                <pre class="html">
+    &lt;tr&gt;
+        &lt;td class="success"&gt;John&lt;/td&gt;
+        &lt;td class="success"&gt;Smith&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;17&lt;/del&gt;
+&lt;ins class="actual"&gt;18&lt;/ins&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;tr class="surplus"&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;Jane&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;Smith&lt;/ins&gt;&lt;/td&gt;&lt;td class="failure"&gt;&lt;del class="expected"&gt; &lt;/del&gt;
+&lt;ins class="actual"&gt;17&lt;/ins&gt;&lt;/td&gt;&lt;/tr&gt;
+                </pre>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
