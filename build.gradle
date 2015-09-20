@@ -104,8 +104,8 @@ modifyPom {
         }
 
         issueManagement{
-            system 'GoogleCode'
-            url 'http://code.google.com/p/concordion/issues/list'
+            system 'github'
+            url 'https://github.com/concordion/concordion/issues'
         }
 
         developers {
