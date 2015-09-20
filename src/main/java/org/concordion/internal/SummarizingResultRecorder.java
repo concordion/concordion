@@ -10,10 +10,10 @@ import org.concordion.api.ResultSummary;
 
 public class SummarizingResultRecorder extends AbstractResultSummary implements ResultRecorder, ResultSummary {
 
-    private List<Result> recordedResults = new ArrayList<Result>();
+    private final List<Result> recordedResults = new ArrayList<Result>();
     private FailFastException failFastException;
-    private String specificationDescription = "";
-    boolean forExample = false;
+    private String specificationDescription;
+    boolean forExample;
 
     public SummarizingResultRecorder() {
         this(null);
@@ -21,9 +21,10 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
 
     public SummarizingResultRecorder(String specificationDescription) {
         this.specificationDescription = specificationDescription;
+        reset();
     }
 
-
+    @Override
     public void record(Result result) {
         recordedResults.add(result);
     }
@@ -34,6 +35,7 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
 		}
     }
 
+    @Override
 	public void record(ResultSummary result) {
 		recordMultipleResults(result.getSuccessCount(), Result.SUCCESS);
 		recordMultipleResults(result.getFailureCount(), Result.FAILURE);
@@ -56,7 +58,7 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
 
     private long getCount(Result result) {
         int count = 0;
-        for ( Result candidate : recordedResults) {
+        for (Result candidate : recordedResults) {
             if (candidate == result) {
                 count++;
             }
@@ -98,7 +100,6 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
     	if (counts != null) {
             builder.append(counts).append("\n");
         }
-//        builder.append("\n");
         return builder.toString();
     }
 
@@ -160,6 +161,12 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
     }
 
     public long getTotalCount() {
-        return getSuccessCount() + getFailureCount() + getExceptionCount() + getIgnoredCount();
+        return recordedResults.size();
+    }
+
+    public final void reset() {
+        recordedResults.clear();
+        failFastException = null;
+        forExample = false;
     }
 }

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.concordion.api.CommandCall;
-import org.concordion.api.CommandCallList;
 import org.concordion.api.Element;
 
 public class TableSupport {
@@ -40,9 +39,7 @@ public class TableSupport {
 
     private void populateCommandCallByColumnMap() {
         Row headerRow = getLastHeaderRow();
-        CommandCallList children = tableCommandCall.getChildren();
-        for (int i = 0; i < children.size(); i++) {
-            CommandCall childCall = children.get(i);
+        for (CommandCall childCall : tableCommandCall.getChildren().asCollection()) {
             int columnIndex = headerRow.getIndexOfCell(childCall.getElement());
             if (columnIndex == -1) {
                 throw new RuntimeException("Commands must be placed on <th> elements when using 'execute' or 'verifyRows' commands on a <table>.");

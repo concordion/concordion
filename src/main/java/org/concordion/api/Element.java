@@ -10,6 +10,7 @@ import nu.xom.Node;
 import nu.xom.Nodes;
 import nu.xom.ParentNode;
 import nu.xom.XPathContext;
+import org.concordion.internal.ConcordionBuilder;
 
 public final class Element {
 
@@ -258,5 +259,9 @@ public final class Element {
             return null;
         }
         return new Element((nu.xom.Element) parent);
+    }
+
+    public Element deepClone() {
+        return new Element((nu.xom.Element) xomElement.copy());
     }
 }

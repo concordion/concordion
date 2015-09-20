@@ -5,18 +5,9 @@ import java.util.LinkedHashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.concordion.api.AbstractCommand;
-import org.concordion.api.CommandCall;
-import org.concordion.api.Element;
-import org.concordion.api.Evaluator;
-import org.concordion.api.Result;
-import org.concordion.api.ResultRecorder;
-import org.concordion.api.listener.ExpressionEvaluatedEvent;
-import org.concordion.api.listener.MissingRowEvent;
-import org.concordion.api.listener.SurplusRowEvent;
+import org.concordion.api.*;
 import org.concordion.api.listener.VerifyRowsListener;
-import org.concordion.internal.Row;
-import org.concordion.internal.TableSupport;
+import org.concordion.internal.command.strategies.DefaultMatchStrategy;
 import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 
@@ -48,43 +39,49 @@ public class VerifyRowsCommand extends AbstractCommand {
         Check.isTrue(obj instanceof Iterable, obj.getClass().getCanonicalName() + " is not Iterable");
         Check.isTrue(!(obj instanceof HashSet) || (obj instanceof LinkedHashSet), obj.getClass().getCanonicalName() + " does not have a predictable iteration order");
         Iterable<Object> iterable = (Iterable<Object>) obj;
-        
-        TableSupport tableSupport = new TableSupport(commandCall);
-        Row[] detailRows = tableSupport.getDetailRows();
 
-        announceExpressionEvaluated(commandCall.getElement());
-        
-        int index = 0;
-        for (Object loopVar : iterable) {
-            evaluator.setVariable(loopVariableName, loopVar);
-            Row detailRow;
-            if (detailRows.length > index) {
-                detailRow = detailRows[index];
-            } else {
-                detailRow = tableSupport.addDetailRow();
-                announceSurplusRow(detailRow.getElement());
-            }
-            tableSupport.copyCommandCallsTo(detailRow);
-            commandCall.getChildren().verify(evaluator, resultRecorder);
-            index++;
-        }
-        
-        for (; index < detailRows.length; index++) {
-            Row detailRow = detailRows[index];
-            resultRecorder.record(Result.FAILURE);
-            announceMissingRow(detailRow.getElement());
+        newStrategyInstance(detectStrategyClass(commandCall), commandCall, evaluator, resultRecorder, loopVariableName, iterable).verify();
+    }
+
+    private static final String DEFAULT_STRATEGIES_PACKAGE = DefaultMatchStrategy.class.getPackage().getName() + '.';
+    private static final String DEFAULT_STRATEGIES_SUFFIX = "Strategy";
+
+    private RowsMatchStrategy newStrategyInstance(Class<? extends RowsMatchStrategy> strategyClass,
+                CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, String loopVariableName, Iterable<Object> iterable) {
+        try {
+            return strategyClass
+                    .getConstructor(CommandCall.class, Evaluator.class, ResultRecorder.class, Announcer.class, String.class, Iterable.class)
+                    .newInstance(commandCall, evaluator, resultRecorder, listeners, loopVariableName, iterable);
+        } catch (Exception e) {
+            throw new RuntimeException(RowsMatchStrategy.class.getName() + " must declare constructor with arguments: " +
+                    "CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder,\n" +
+                    "Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows");
         }
     }
-    
-    private void announceExpressionEvaluated(Element element) {
-        listeners.announce().expressionEvaluated(new ExpressionEvaluatedEvent(element));
+
+    private Class<? extends RowsMatchStrategy> detectStrategyClass(CommandCall commandCall) {
+        String strategy = commandCall.getParameter("matchStrategy", "match-strategy");
+        if (strategy == null || DefaultMatchStrategy.DEFAULT_STRATEGY_NAME.equalsIgnoreCase(strategy)) {
+            return DefaultMatchStrategy.class;
+        }
+        Class<? extends RowsMatchStrategy> strategyClass =
+                findFirstExistingClass(DEFAULT_STRATEGIES_PACKAGE + strategy + DEFAULT_STRATEGIES_SUFFIX, strategy);
+        if (strategyClass == null) {
+            throw new IllegalArgumentException("MatchStrategy '" + strategy + "' is not found");
+        }
+        return strategyClass;
     }
 
-    private void announceMissingRow(Element element) {
-        listeners.announce().missingRow(new MissingRowEvent(element));
-    }
-
-    private void announceSurplusRow(Element element) {
-        listeners.announce().surplusRow(new SurplusRowEvent(element));
+    @SuppressWarnings("unchecked")
+    private Class<? extends RowsMatchStrategy> findFirstExistingClass(String... names) {
+        for (String name : names) {
+            try {
+                Class<?> aClass = Class.forName(name);
+                if (RowsMatchStrategy.class.isAssignableFrom(aClass)) {
+                    return (Class<? extends RowsMatchStrategy>) aClass;
+                }
+            } catch (ClassNotFoundException ignored) {}
+        }
+        return null;
     }
 }
