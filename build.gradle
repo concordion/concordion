@@ -34,6 +34,8 @@ dependencies {
         exclude group: 'xerces', module: 'xercesImpl'
         exclude group: 'xml-apis', module: 'xml-apis'
     }
+    
+    testCompile 'org.concordion:concordion-embed-extension:1.1.2'
 }
 
 sourceSets {
