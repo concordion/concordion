@@ -14,8 +14,9 @@
     </p>
 
     <p>
-        The expression must return something Iterable (e.g. a Collection)
-        and the contents of the table must be in the same order as the collection.
+        The expression must return something Iterable (e.g. a Collection). 
+        By default, the contents of the table must be in the same order as the collection, 
+        but this can be overridden with different <a hef="strategies/Strategies.html">strategies</a> for matching rows.
     </p>
 
     <div class="example">
@@ -77,12 +78,7 @@
             <a concordion:run="concordion" href="results/SurplusRows.html">surplus rows</a>  represented in HTML?</li>
         <li><a concordion:run="concordion" href="TableBodySupport.html">Are "tbody" and "thead" supported?</a></li>
         <li>Are "colspan" or "rowspan" supported? [ANSWER: Not yet]</li>
-        <li>What are the strategies of verifyRows:
-            <a concordion:run="concordion" href="strategies/UnspecifiedMatchStrategy.html"><i>Unspecified acts as default</i></a>,
-            <a concordion:run="concordion" href="strategies/DefaultMatchStrategy.html">Default</a>,
-            <a concordion:run="concordion" href="strategies/BestMatchStrategy.html">BestMatch</a>
-            <a concordion:run="concordion" href="strategies/KeyMatchStrategy.html">KeyMatch</a>
-        </li>
+        <li>What <a concordion:run="concordion" href="strategies/Strategies.html">strategies</a> are available to modify the behaviour of verifyRows?</li>
     </ul>
 
 
