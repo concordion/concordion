@@ -28,6 +28,21 @@
         <li concordion:assertEquals="0.0">0.0</li>
         <li concordion:assertEquals="'string literal'">string literal</li>
     </ul>
+    Operators
+    <ul>
+        <li concordion:assertTrue="1 lt 2">1 lt 2</li>
+        <li concordion:assertTrue="1 lte 2">1 lte 2</li>
+        <li concordion:assertTrue="2 gt 1">2 gt 1</li>
+        <li concordion:assertTrue="2 gte 1">2 gte 1</li>
+        <li concordion:assertTrue="1 eq 1">1 eq 1</li>
+        <li concordion:assertTrue="1 neq 2">1 neq 2</li>
+        <li concordion:assertTrue="true or true">true or true</li>
+        <li concordion:assertTrue="true and true">true and true</li>
+    </ul>
+    Ternary
+    <ul>
+        <li concordion:assertTrue="2 gt 1 ? true : false">2 gt 1 ? true : false</li>
+    </ul>
     Variables:
     <ul>
         <li concordion:assertEquals="#variable">#variable</li>
