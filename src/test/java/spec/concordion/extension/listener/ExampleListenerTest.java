@@ -1,8 +1,5 @@
 package spec.concordion.extension.listener;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.concordion.api.extension.Extension;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
