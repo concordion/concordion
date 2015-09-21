@@ -1,0 +1,90 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+<h1>Possible OGNL expressions</h1>
+
+<p>
+    OGNL (Object Graph Notation Language) is the expressions used to reference properties, methods and variables inside of the concordion test.
+    <br />Concordion supports complex expressions, but they should be used with caution and follow KISS principle as this is a testing code.
+    <br />Listed below expressions are valid with concordion.
+</p>
+
+<div class="example">
+
+    <h3>Examples</h3>
+
+    <span concordion:set="#variable=createVariable()"></span>
+    <span concordion:set="#arrayVariable=createArrayVariable()"></span>
+    <span concordion:set="#mapVariable=createMapVariable()"></span>
+    <span concordion:set="#complexVariable=createComplexVariable()"></span>
+    <span concordion:set="#complexChainViaPropertyVariable=createComplexChainViaPropertyVariable()"></span>
+    <span concordion:set="#complexChainViaMethodVariable=createComplexChainViaMethodVariable()"></span>
+    <span concordion:set="#var=createMixedExample()"></span>
+
+    Literals:
+    <ul>
+        <li concordion:assertEquals="0">0</li>
+        <li concordion:assertEquals="0.0">0.0</li>
+        <li concordion:assertEquals="'string literal'">string literal</li>
+    </ul>
+    Operators
+    <ul>
+        <li concordion:assertTrue="1 lt 2">1 lt 2</li>
+        <li concordion:assertTrue="1 lte 2">1 lte 2</li>
+        <li concordion:assertTrue="2 gt 1">2 gt 1</li>
+        <li concordion:assertTrue="2 gte 1">2 gte 1</li>
+        <li concordion:assertTrue="1 eq 1">1 eq 1</li>
+        <li concordion:assertTrue="1 neq 2">1 neq 2</li>
+        <li concordion:assertTrue="true or true">true or true</li>
+        <li concordion:assertTrue="true and true">true and true</li>
+    </ul>
+    Ternary
+    <ul>
+        <li concordion:assertTrue="2 gt 1 ? true : false">2 gt 1 ? true : false</li>
+    </ul>
+    Variables:
+    <ul>
+        <li concordion:assertEquals="#variable">#variable</li>
+        <li concordion:assertEquals="#arrayVariable[0]">#arrayVariable[0]</li>
+        <li concordion:assertEquals="#mapVariable['value']">#mapVariable['value']</li>
+        <li concordion:assertEquals="#complexVariable.subProperty">#complexVariable.subProperty</li>
+        <li concordion:assertEquals="#complexVariable.subMethod()">#complexVariable.subMethod()</li>
+        <li concordion:assertEquals="#complexChainViaPropertyVariable.next.subProperty">#complexChainViaPropertyVariable.next.subProperty</li>
+        <li concordion:assertEquals="#complexChainViaPropertyVariable.next.subMethod()">#complexChainViaPropertyVariable.next.subMethod()</li>
+        <li concordion:assertEquals="#complexChainViaMethodVariable.next().subProperty">#complexChainViaMethodVariable.next().subProperty</li>
+        <li concordion:assertEquals="#complexChainViaMethodVariable.next().subMethod()">#complexChainViaMethodVariable.next().subMethod()</li>
+    </ul>
+    Properties:
+    <ul>
+        <li concordion:assertEquals="property">property</li>
+        <li concordion:assertEquals="arrayProperty[0]">arrayProperty[0]</li>
+        <li concordion:assertEquals="mapProperty['value']">mapProperty['value']</li>
+        <li concordion:assertEquals="complexProperty.subProperty">complexProperty.subProperty</li>
+        <li concordion:assertEquals="complexProperty.subMethod()">complexProperty.subMethod()</li>
+        <li concordion:assertEquals="complexChainPropertyViaProperty.next.subProperty">complexChainPropertyViaProperty.next.subProperty</li>
+        <li concordion:assertEquals="complexChainPropertyViaProperty.next.subMethod()">complexChainPropertyViaProperty.next.subMethod()</li>
+        <li concordion:assertEquals="complexChainPropertyViaMethod.next().subProperty">complexChainPropertyViaMethod.next().subProperty</li>
+        <li concordion:assertEquals="complexChainPropertyViaMethod.next().subMethod()">complexChainPropertyViaMethod.next().subMethod()</li>
+    </ul>
+    Methods:
+    <ul>
+        <li concordion:assertEquals="method()">method()</li>
+        <li concordion:assertEquals="methodWithArguments('methodWithArguments()')">methodWithArguments()</li>
+        <li concordion:assertEquals="methodReturningArray()[0]">methodReturningArray()[0]</li>
+        <li concordion:assertEquals="methodReturningMap()['value']">methodReturningMap()['value']</li>
+        <li concordion:assertEquals="methodReturningComplexType().subProperty">methodReturningComplexType().subProperty</li>
+        <li concordion:assertEquals="methodReturningComplexType().subMethod()">methodReturningComplexType().subMethod()</li>
+        <li concordion:assertEquals="methodReturningComplexChainViaProperty().next.subProperty">methodReturningComplexChainViaProperty().next.subProperty</li>
+        <li concordion:assertEquals="methodReturningComplexChainViaProperty().next.subMethod()">methodReturningComplexChainViaProperty().next.subMethod()</li>
+        <li concordion:assertEquals="methodReturningComplexChainViaMethod().next().subProperty">methodReturningComplexChainViaMethod().next().subProperty</li>
+        <li concordion:assertEquals="methodReturningComplexChainViaMethod().next().subMethod()">methodReturningComplexChainViaMethod().next().subMethod()</li>
+    </ul>
+    Mixed:
+    <ul>
+        <li concordion:assertEquals="createMixedExample().createProperties('app').map['system_file'][0]">#var.createProperties('app').map['system_file'][0]</li>
+    </ul>
+
+</div>
+</body>
+</html>
