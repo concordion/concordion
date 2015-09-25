@@ -134,6 +134,11 @@ modifyPom {
                 roles  { role 'Developer' }
             }
             developer {
+                id 'gmandnepr'
+                name 'Ievgen Degtiarenko'
+                roles  { role 'Developer' }
+            }
+            developer {
                 id 'habuma'
                 roles  { role 'Developer' }
             }
