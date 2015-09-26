@@ -127,7 +127,7 @@ public enum ExpectedState {
     };
 
 
-    final ResultModifier resultModifier;
+    private final ResultModifier resultModifier;
 
     ExpectedState(ResultModifier resultModifier) {
         this.resultModifier = resultModifier;

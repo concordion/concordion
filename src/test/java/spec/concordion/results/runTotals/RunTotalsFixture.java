@@ -4,13 +4,12 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.concordion.api.*;
+import org.concordion.api.CommandCall;
+import org.concordion.api.Element;
+import org.concordion.api.Resource;
+import org.concordion.api.ResultSummary;
 import org.concordion.integration.junit4.ConcordionRunner;
-import org.concordion.internal.ConcordionBuilder;
-import org.concordion.internal.FailFastException;
-import org.concordion.internal.FileTarget;
-import org.concordion.internal.Fixture;
-import org.concordion.internal.SummarizingResultRecorder;
+import org.concordion.internal.*;
 import org.concordion.internal.command.RunCommand;
 import org.junit.runner.RunWith;
 
@@ -68,7 +67,7 @@ public class RunTotalsFixture {
 		result.put("ignoredCount", Long.toString(recorder.getIgnoredCount()));
 		result.put("exceptionCount", Long.toString(recorder.getExceptionCount()));
 
-		String counts = recorder.printCountsToString(null);
+		String counts = recorder.printCountsToString(new Fixture(new Object()));
 
 		result.put("totalsString", counts);
 		return result;

@@ -83,7 +83,7 @@ public enum RunResultsCache {
     /**
      * Updates the cache with the results of a run
      *
-     * @param fixture the class to update
+     * @param fixture the fixture to update
      * @param example the name of the example that is being finished (null ok)
      * @param actualSummary the results as reported from the spec
      * @param postProcessedResultSummary the results as post processed by any fixture annotations

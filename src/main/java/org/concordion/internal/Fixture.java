@@ -27,7 +27,7 @@ public class Fixture {
     }
     
     public boolean declaresState(ExpectedState state) {
-        return fixtureClass.isAnnotationPresent(state.resultModifier.getAnnotation());
+        return fixtureClass.isAnnotationPresent(state.getResultModifier().getAnnotation());
     }
     
     public boolean declaresFullOGNL() {
