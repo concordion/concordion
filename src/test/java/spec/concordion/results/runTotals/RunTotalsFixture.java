@@ -9,6 +9,7 @@ import org.concordion.integration.junit4.ConcordionRunner;
 import org.concordion.internal.ConcordionBuilder;
 import org.concordion.internal.FailFastException;
 import org.concordion.internal.FileTarget;
+import org.concordion.internal.Fixture;
 import org.concordion.internal.SummarizingResultRecorder;
 import org.concordion.internal.command.RunCommand;
 import org.junit.runner.RunWith;
@@ -67,7 +68,7 @@ public class RunTotalsFixture {
 		result.put("ignoredCount", Long.toString(recorder.getIgnoredCount()));
 		result.put("exceptionCount", Long.toString(recorder.getExceptionCount()));
 
-		String counts = recorder.printCountsToString(recorder);
+		String counts = recorder.printCountsToString(null);
 
 		result.put("totalsString", counts);
 		return result;

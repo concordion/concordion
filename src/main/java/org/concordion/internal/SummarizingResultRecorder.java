@@ -44,10 +44,10 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
 	}
 
     @Override
-    public void assertIsSatisfied(Object fixture) {
-        FixtureState state = FixtureState.getFixtureState(
-                fixture.getClass(),
-                isForExample() ? this.getResultModifier() : null);
+    public void assertIsSatisfied(Fixture fixture) {
+        FixtureState state = Fixture.getFixtureState(
+                isForExample() ? this.getResultModifier() : null,
+                fixture);
         state.assertIsSatisfied(this, failFastException);
     }
 
@@ -87,11 +87,11 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
     }
 
     @Override
-    public void print(PrintStream out, Object fixture) {
+    public void print(PrintStream out, Fixture fixture) {
         out.print(printToString(fixture));
     }
 
-    public String printToString(Object fixture) {
+    public String printToString(Fixture fixture) {
         StringBuilder builder = new StringBuilder();
         builder.append("\n");
         builder.append(specificationDescription);
@@ -104,7 +104,7 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
     }
 
     @Override
-    public String printCountsToString(Object fixture) {
+    public String printCountsToString(Fixture fixture) {
     	StringBuilder builder = new StringBuilder();
 
         builder.append("Successes: ");
@@ -121,7 +121,7 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
         }
 
         if (fixture != null) {
-            builder.append(FixtureState.getFixtureState(fixture.getClass(), this.getResultModifier()).printNoteToString());
+            builder.append(Fixture.getFixtureState(this.getResultModifier(), fixture).printNoteToString());
         }
 
         return builder.toString();

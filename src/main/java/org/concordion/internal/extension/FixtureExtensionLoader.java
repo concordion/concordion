@@ -12,20 +12,20 @@ import org.concordion.api.extension.ConcordionExtensionFactory;
 import org.concordion.api.extension.Extension;
 import org.concordion.api.extension.Extensions;
 import org.concordion.internal.ConcordionBuilder;
+import org.concordion.internal.Fixture;
 
 public class FixtureExtensionLoader {
     
-    public void addExtensions(final Object fixture, ConcordionBuilder concordionBuilder) {
+    public void addExtensions(Fixture fixture, ConcordionBuilder concordionBuilder) {
         for (ConcordionExtension concordionExtension : getExtensionsForFixture(fixture)) {
             concordionExtension.addTo(concordionBuilder);
         }
     }
 
-    public List<ConcordionExtension> getExtensionsForFixture(Object fixture) {
+    public List<ConcordionExtension> getExtensionsForFixture(Fixture fixture) {
         final List<ConcordionExtension> extensions = new ArrayList<ConcordionExtension>();
 
-
-        List<Class<?>> classes = getClassHierarchyParentFirst(fixture.getClass());
+        List<Class<?>> classes = getClassHierarchyParentFirst(fixture.getFixtureClass());
         for (Class<?> class1 : classes) {
             extensions.addAll(getExtensionsFromClassAnnotation(class1));
             extensions.addAll(getExtensionsFromAnnotatedFields(fixture, class1));
@@ -73,7 +73,7 @@ public class FixtureExtensionLoader {
         return object;
     }
 
-    private List<ConcordionExtension> getExtensionsFromAnnotatedFields(Object fixture, Class<?> class1) {
+    private List<ConcordionExtension> getExtensionsFromAnnotatedFields(Fixture fixture, Class<?> class1) {
         List<ConcordionExtension> extensions = new ArrayList<ConcordionExtension>();
         Field[] declaredFields = class1.getDeclaredFields();      
         for (Field field : declaredFields) {
@@ -102,9 +102,9 @@ public class FixtureExtensionLoader {
         return classes;
     }
     
-    private ConcordionExtension getExtensionField(Object fixture, Field field) {
+    private ConcordionExtension getExtensionField(Fixture fixture, Field field) {
         try {
-            return (ConcordionExtension) field.get(fixture);
+            return (ConcordionExtension) field.get(fixture.getFixtureObject());
         } catch (ClassCastException e) {
             throw new ExtensionInitialisationException("Extension field '" + field.getName() + "' must implement org.concordion.api.extension.ConcordionExtension");
         } catch (IllegalArgumentException e) {

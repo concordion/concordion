@@ -2,6 +2,8 @@ package org.concordion.api;
 
 import java.util.List;
 
+import org.concordion.internal.Fixture;
+
 /**
  *
  * This interface changed in concordion 2.0 - several new methods were implemented. Default versions of these methods
@@ -15,7 +17,7 @@ public interface SpecificationByExample extends Specification {
 	 * Sets the fixture class. Will be called before the other methods are called so that
 	 * the class can process the fixture to determine examples, etc.
 	 */
-    void setFixtureClass(Class<?> fixture);
+    void setFixtureClass(Fixture fixture);
 
 
     /**

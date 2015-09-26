@@ -16,11 +16,11 @@ public abstract class AbstractResultSummary implements ResultSummary {
     }
 
     @Override
-    public void print(PrintStream out, Object fixture) {
+    public void print(PrintStream out, Fixture fixture) {
         out.print(printToString(fixture));
     }
 
-    private String printToString(Object fixture) {
+    private String printToString(Fixture fixture) {
         StringBuilder builder = new StringBuilder();
         builder.append("\n");
         builder.append(specificationDescription);
@@ -34,7 +34,7 @@ public abstract class AbstractResultSummary implements ResultSummary {
     }
 
     @Override
-    public String printCountsToString(Object fixture) {
+    public String printCountsToString(Fixture fixture) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("Successes: ");
@@ -51,7 +51,7 @@ public abstract class AbstractResultSummary implements ResultSummary {
         }
 
         if (fixture != null) {
-            builder.append(FixtureState.getFixtureState(fixture.getClass(), this.getResultModifier()).printNoteToString());
+            builder.append(Fixture.getFixtureState(this.getResultModifier(), fixture).printNoteToString());
         }
 
         return builder.toString();

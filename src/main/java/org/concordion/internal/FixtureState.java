@@ -127,7 +127,7 @@ public enum FixtureState {
     };
 
 
-    private final ResultModifier resultModifier;
+    final ResultModifier resultModifier;
 
     FixtureState(ResultModifier resultModifier) {
         this.resultModifier = resultModifier;
@@ -144,30 +144,6 @@ public enum FixtureState {
 	public abstract ResultSummary getMeaningfulResultSummary(ResultSummary rs, FailFastException ffe);
 
     public abstract ResultSummary convertForCache(ResultSummary rs);
-
-
-    public static FixtureState getFixtureState(Class<?> fixtureClass, ResultModifier resultModifier) {
-        // examples have precedence
-        if (resultModifier != null) {
-            for (FixtureState state: values()) {
-                if (state.getResultModifier() ==  resultModifier) {
-                    return state;
-                }
-            }
-        }
-
-        // loop through the states
-        if (fixtureClass != null) {
-            for (FixtureState state : values()) {
-                // if we found a match, then return the state
-                if (fixtureClass.getAnnotation(state.resultModifier.getAnnotation()) != null) {
-                    return state;
-                }
-            }
-        }
-
-        return EXPECTED_TO_PASS;
-    }
 
     public String getAnnotationTag() {
         return resultModifier.getTag();

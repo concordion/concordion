@@ -1,6 +1,5 @@
 package org.concordion.internal;
 
-import org.concordion.Concordion;
 import org.concordion.api.CommandCall;
 import org.concordion.api.Evaluator;
 import org.concordion.api.ResultRecorder;
@@ -16,7 +15,6 @@ public class XMLSpecification implements SpecificationByExample {
     private final CommandCall rootCommandNode;
     private final List<CommandCall> examples;
     private final List<CommandCall> beforeExamples;
-    private Class<?> fixtureClass;
 
     public XMLSpecification(CommandCall rootCommandNode) {
         this.rootCommandNode = rootCommandNode;
@@ -32,7 +30,6 @@ public class XMLSpecification implements SpecificationByExample {
                 examples.add(call);
             }
         }
-
     }
 
     public void processNode(CommandCall node, Evaluator evaluator, ResultRecorder resultRecorder) {
@@ -62,9 +59,8 @@ public class XMLSpecification implements SpecificationByExample {
         processNode(rootCommandNode, evaluator, resultRecorder);
     }
 
-    public void setFixtureClass(Class<?> fixture) {
-        fixtureClass = fixture;
-        testDescription = Concordion.getDefaultFixtureClassName(fixture);
+    public void setFixtureClass(Fixture fixture) {
+        testDescription = fixture.getDefaultFixtureClassName();
     }
 
     public void processExample(Evaluator evaluator, String example, ResultRecorder resultRecorder) {
@@ -74,7 +70,7 @@ public class XMLSpecification implements SpecificationByExample {
         }
 
         for (CommandCall commandCall: examples) {
-            if (makeJunitTestName(commandCall, fixtureClass).equals(example)) {
+            if (makeJunitTestName(commandCall).equals(example)) {
                 resultRecorder.setForExample(true);
                 processNode(commandCall, evaluator, resultRecorder);
             }
@@ -86,7 +82,7 @@ public class XMLSpecification implements SpecificationByExample {
         List<String> commands = new ArrayList<String>();
 
         for (CommandCall exampleCall: examples) {
-            commands.add(makeJunitTestName(exampleCall, fixtureClass));
+            commands.add(makeJunitTestName(exampleCall));
         }
 
         // always add the main spec last. Helps with junit test ordering
@@ -95,7 +91,7 @@ public class XMLSpecification implements SpecificationByExample {
         return commands;
     }
 
-    private String makeJunitTestName(CommandCall exampleCall, Class<?> fixtureClass) {
+    private String makeJunitTestName(CommandCall exampleCall) {
         return exampleCall.getExpression();
     }
 

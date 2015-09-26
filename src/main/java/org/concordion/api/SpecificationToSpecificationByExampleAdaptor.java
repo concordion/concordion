@@ -1,14 +1,11 @@
 package org.concordion.api;
 
-import org.concordion.Concordion;
+import org.concordion.internal.Fixture;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- *
- *
  * Created by tim on 9/01/15.
  */
 public class SpecificationToSpecificationByExampleAdaptor implements SpecificationByExample {
@@ -27,8 +24,8 @@ public class SpecificationToSpecificationByExampleAdaptor implements Specificati
         specification.process(evaluator, resultRecorder);
     }
 
-    public void setFixtureClass(Class<?> fixture) {
-        testDescription = Concordion.getDefaultFixtureClassName(fixture);
+    public void setFixtureClass(Fixture fixture) {
+        testDescription = fixture.getDefaultFixtureClassName();
     }
 
     public void processExample(Evaluator evaluator, String example, ResultRecorder resultRecorder) {
