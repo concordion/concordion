@@ -50,9 +50,7 @@ public abstract class AbstractResultSummary implements ResultSummary {
             builder.append(getExceptionCount());
         }
 
-        if (fixture != null) {
-            builder.append(Fixture.getFixtureState(this.getResultModifier(), fixture).printNoteToString());
-        }
+        builder.append(getExpectedState(fixture).printNoteToString());
 
         return builder.toString();
     }
@@ -73,5 +71,15 @@ public abstract class AbstractResultSummary implements ResultSummary {
 
     public void setResultModifier(ResultModifier resultModifier) {
         this.resultModifier = resultModifier;
+    }
+    
+    public ExpectedState getExpectedState(Fixture fixture) {
+        ExpectedState state;
+        if (isForExample()) {
+            state = ExpectedState.getExpectedStateFor(getResultModifier());
+        } else {
+            state = fixture.getExpectedState();
+        }
+        return state;
     }
 }

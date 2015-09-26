@@ -40,20 +40,17 @@ public class FixtureRunner {
     	if (runOutput == null) {
 
             try {
+                ExpectedState state;
                 if (example != null) {
                     actualResultSummary = concordion.processExample(example);
+                    state = ExpectedState.getExpectedStateFor(actualResultSummary.getResultModifier());
                 } else {
                     actualResultSummary = concordion.process();
+                    state = fixture.getExpectedState();
                 }
                 // we want to make sure all the annotations are considered when storing the result summary
-
                 // converting for the cache doesn't need the example - it just does annotation based conversions
-
-                FixtureState state = Fixture.getFixtureState(
-                        actualResultSummary.isForExample() ? actualResultSummary.getResultModifier() : null,
-                        fixture);
                 postProcessedResultSummary=  state.convertForCache(actualResultSummary);
-
 
                 runResultsCache.finishRun(fixture,
                         example,

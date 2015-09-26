@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.concordion.api.*;
 
-public enum FixtureState {
+public enum ExpectedState {
     UNIMPLEMENTED(ResultModifier.UNIMPLEMENTED) {
 
         private void addToList(List<String> list, long x, String singular, String plural) {
@@ -129,7 +129,7 @@ public enum FixtureState {
 
     final ResultModifier resultModifier;
 
-    FixtureState(ResultModifier resultModifier) {
+    ExpectedState(ResultModifier resultModifier) {
         this.resultModifier = resultModifier;
     }
 
@@ -151,6 +151,15 @@ public enum FixtureState {
 
     public ResultModifier getResultModifier() {
         return resultModifier;
+    }
+
+    public static ExpectedState getExpectedStateFor(ResultModifier resultModifier) {
+        for (ExpectedState state: values()) {
+            if (state.getResultModifier() ==  resultModifier) {
+                return state;
+            }
+        }
+        throw new IllegalStateException("Unknown ResultModifier in ExpectedState");
     }
 }
 

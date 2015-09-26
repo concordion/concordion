@@ -3,7 +3,7 @@ package org.concordion.internal.command;
 import org.concordion.api.*;
 import org.concordion.internal.FailFastException;
 import org.concordion.internal.Fixture;
-import org.concordion.internal.FixtureState;
+import org.concordion.internal.ExpectedState;
 import org.concordion.internal.SpecificationDescriber;
 
 import java.util.Arrays;
@@ -40,11 +40,11 @@ public class ExampleCommand extends AbstractCommand {
                 ResultModifier resultModifier = ResultModifier.getModifier(params);
                 resultRecorder.setResultModifier(resultModifier);
                 // let's be really nice and add the fixture state text into the element itself.
-                FixtureState fixtureState = Fixture.getFixtureState(resultModifier, null);
+                ExpectedState expectedState = ExpectedState.getExpectedStateFor(resultModifier);
 
                 String note;
-                if (fixtureState != null) {
-                    note = fixtureState.printNoteToString();
+                if (expectedState != null) {
+                    note = expectedState.printNoteToString();
                 } else {
                     note = "Invalid state expression " + params;
                 } 

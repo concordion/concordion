@@ -41,7 +41,7 @@ public class Concordion {
  
     private ResultSummary process(SpecificationByExample specification, Fixture fixture) {
         SummarizingResultRecorder resultRecorder = new SummarizingResultRecorder();
-        resultRecorder.setSpecificationDescription(getDefaultFixtureName(fixture));
+        resultRecorder.setSpecificationDescription(fixture.getDescription());
         specification.process(evaluatorFactory.createEvaluator(fixture.getFixtureObject()), resultRecorder);
         return resultRecorder;
     }
@@ -75,14 +75,6 @@ public class Concordion {
         }
         specificationByExample.setFixtureClass(fixture);
         return specificationByExample;
-    }
-
-    public String getDefaultFixtureName(Fixture fixture) {
-        return fixture.getDefaultFixtureClassName();
-    }
-
-    public static String formatName(String name) {
-        return String.format("[Concordion Specification for '%s']", name);
     }
 
     public void finish() {

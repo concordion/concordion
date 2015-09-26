@@ -25,7 +25,7 @@ public class SpecificationToSpecificationByExampleAdaptor implements Specificati
     }
 
     public void setFixtureClass(Fixture fixture) {
-        testDescription = fixture.getDefaultFixtureClassName();
+        testDescription = fixture.getDescription();
     }
 
     public void processExample(Evaluator evaluator, String example, ResultRecorder resultRecorder) {

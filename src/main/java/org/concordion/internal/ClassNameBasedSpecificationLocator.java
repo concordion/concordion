@@ -18,9 +18,8 @@ public class ClassNameBasedSpecificationLocator implements SpecificationLocator 
     
     public Resource locateSpecification(Fixture fixture) {
         Check.notNull(fixture, "Fixture is null");
-        
-        String specificationName = fixture.getShortenedFixtureName();
-        String resourcePath = "/" + specificationName + "." + specificationSuffix;
+        String fixturePath = fixture.getFixturePathWithoutSuffix();
+        String resourcePath = "/" + fixturePath + "." + specificationSuffix;
         
         return new Resource(resourcePath);
     }

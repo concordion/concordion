@@ -45,9 +45,7 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
 
     @Override
     public void assertIsSatisfied(Fixture fixture) {
-        FixtureState state = Fixture.getFixtureState(
-                isForExample() ? this.getResultModifier() : null,
-                fixture);
+        ExpectedState state = getExpectedState(fixture);
         state.assertIsSatisfied(this, failFastException);
     }
 
@@ -104,30 +102,6 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
     }
 
     @Override
-    public String printCountsToString(Fixture fixture) {
-    	StringBuilder builder = new StringBuilder();
-
-        builder.append("Successes: ");
-        builder.append(getSuccessCount());
-        builder.append(", Failures: ");
-        builder.append(getFailureCount());
-        if (getIgnoredCount() > 0) {
-        	builder.append(", Ignored: ");
-        	builder.append(getIgnoredCount());
-        }
-        if (hasExceptions()) {
-        	builder.append(", Exceptions: ");
-        	builder.append(getExceptionCount());
-        }
-
-        if (fixture != null) {
-            builder.append(Fixture.getFixtureState(this.getResultModifier(), fixture).printNoteToString());
-        }
-
-        return builder.toString();
-    }
-
-    @Override
     public void recordFailFastException( FailFastException exception) {
         this.setFailFastException(exception);
     }
@@ -170,3 +144,4 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
         forExample = false;
     }
 }
+

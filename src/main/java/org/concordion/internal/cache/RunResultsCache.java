@@ -109,7 +109,7 @@ public enum RunResultsCache {
         runSummary.setActualResultSummary(actualSummary);
         runSummary.setModifiedResultSummary(postProcessedResultSummary);
 
-        String specificationDescription = fixture.getDefaultFixtureClassName();
+        String specificationDescription = fixture.getDescription();
 
 
         // now accumulate into the parent

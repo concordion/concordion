@@ -55,7 +55,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         } catch (IllegalAccessException e) {
             throw new InitializationError(e);
         }
-        accumulatedResultSummary.setSpecificationDescription(fixture.getDefaultFixtureClassName());
+        accumulatedResultSummary.setSpecificationDescription(fixture.getDescription());
 
         try {
             fixtureRunner = new FixtureRunner(fixture);

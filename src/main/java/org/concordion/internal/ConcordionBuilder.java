@@ -379,10 +379,10 @@ public class ConcordionBuilder implements ConcordionExtender {
 
     public ConcordionBuilder withFixture(Fixture fixture) {
         this.fixture = fixture;
-        if (fixture.requiresFailFast()) {
+        if (fixture.declaresFailFast()) {
             withFailFast(fixture.getFailFastExceptions());
         }
-        if (fixture.requiresFullOGNL()) {
+        if (fixture.declaresFullOGNL()) {
             withEvaluatorFactory(new OgnlEvaluatorFactory());
         }
         return this;
