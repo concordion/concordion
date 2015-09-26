@@ -3,14 +3,7 @@ package org.concordion;
 import java.io.IOException;
 import java.util.List;
 
-import org.concordion.api.EvaluatorFactory;
-import org.concordion.api.Resource;
-import org.concordion.api.ResultSummary;
-import org.concordion.api.Specification;
-import org.concordion.api.SpecificationByExample;
-import org.concordion.api.SpecificationLocator;
-import org.concordion.api.SpecificationReader;
-import org.concordion.api.SpecificationToSpecificationByExampleAdaptor;
+import org.concordion.api.*;
 import org.concordion.internal.Fixture;
 import org.concordion.internal.SummarizingResultRecorder;
 

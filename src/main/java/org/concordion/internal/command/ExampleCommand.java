@@ -39,7 +39,7 @@ public class ExampleCommand extends AbstractCommand {
             if (params != null) {
                 ResultModifier resultModifier = ResultModifier.getModifier(params);
                 resultRecorder.setResultModifier(resultModifier);
-                // let's be really nice and add the fixture state text into the element itself.
+                // let's be really nice and add the expected state text into the element itself.
                 ExpectedState expectedState = ExpectedState.getExpectedStateFor(resultModifier);
 
                 String note;
