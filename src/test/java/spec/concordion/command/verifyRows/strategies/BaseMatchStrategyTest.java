@@ -1,27 +1,35 @@
 package spec.concordion.command.verifyRows.strategies;
 
-import nu.xom.Document;
-import org.concordion.api.MultiValueResult;
-import test.concordion.TestRig;
+import static org.concordion.api.MultiValueResult.multiValueResult;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.concordion.api.MultiValueResult.multiValueResult;
+import nu.xom.Document;
 
+import org.concordion.api.MultiValueResult;
+import org.concordion.api.Resource;
+import org.concordion.api.extension.Extensions;
+import org.concordion.ext.EmbedExtension;
+
+import test.concordion.TestRig;
+import extension.SpecificationToggle.SpecificationToggleExtension;
+
+@Extensions({EmbedExtension.class, SpecificationToggleExtension.class})
 public class BaseMatchStrategyTest {
 
     public List<MultiValueResult> users;
 
     private static final String ROWS_PLACEHOLDER = "\n   [ROWS]\n";
 
-    public String processRows(String template, String expectedRows, String actualData) throws Exception {
-        return unwrapRows(template,
-                processFragment(
-                        wrapRows(template, expectedRows),
-                        actualData
-                )
-        );
+    public MultiValueResult processRows(String template, String expectedRows, String actualData) throws Exception {
+        String expectedTable = wrapRows(template, expectedRows);
+        String resultTable = processFragment(expectedTable, actualData);
+        String resultRows = unwrapRows(template, resultTable);
+        return multiValueResult()
+                .with("expectedTableCommented", "<!--" + expectedTable + "-->")
+                .with("resultTableCommented", "<!--" + resultTable + "-->")
+                .with("resultRows", resultRows);
     }
 
     private String wrapRows(String template, String fragment) {
@@ -36,13 +44,15 @@ public class BaseMatchStrategyTest {
 
     public String processFragment(String fragment, String actualData) throws Exception {
         users = parse(actualData);
-
         Document document = new TestRig()
                 .withFixture(this)
+                .withResource(new Resource("/toggle_html.js"), "")
+                .withResource(new Resource("/toggle_html.css"), "")
                 .processFragment(fragment)
                 .getXOMDocument();
 
-        return document.getRootElement().query("//table").get(0).toXML();
+        String xml = document.getRootElement().query("//table").get(0).toXML();
+        return xml;
     }
 
     private List<MultiValueResult> parse(String actual) {

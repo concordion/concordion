@@ -1,28 +1,12 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
-        classpath 'net.researchgate:gradle-release:2.0.2'
-    }
-}
-
 apply plugin: 'java'
-apply plugin: 'java-library-distribution'
-apply plugin: 'com.bmuschko.nexus'
-apply plugin: 'net.researchgate.release'
 apply plugin: 'wrapper'
 
 wrapper {
-    gradleVersion = "2.4"
+    gradleVersion = "2.7"
 }
 
 repositories {
     mavenCentral()
-    mavenLocal()
 }
 
 dependencies {
@@ -34,6 +18,8 @@ dependencies {
         exclude group: 'xerces', module: 'xercesImpl'
         exclude group: 'xml-apis', module: 'xml-apis'
     }
+    
+    testCompile 'org.concordion:concordion-embed-extension:1.1.2'
 }
 
 sourceSets {
@@ -60,87 +46,3 @@ test {
 }
 
 compileTestJava.dependsOn compileTestDummiesJava
-
-distributions {
-    version = version - "-SNAPSHOT"
-    main {
-        contents {
-            from ('.') { include '*.txt','build.gradle','src/**' }
-            into ('lib') {
-                from 'licenses'
-            }
-        }
-    }
-}
-
-// 'gradle release' will also upload release to Nexus
-createReleaseTag.dependsOn uploadArchives
-release.dependsOn clean
-
-extraArchive {
-    tests = true    // create tests jar file and upload
-}
-
-modifyPom {
-    project {
-        name 'Concordion'
-        description 'Concordion is an open source framework for Java that lets you turn a plain English description of a requirement into an automated test.'
-        url 'http://www.concordion.org'
-        packaging 'jar'
-        inceptionYear '2008'
-
-        scm {
-            url 'https://github.com/concordion/concordion.git'
-            connection 'scm:git:git://github.com/concordion/concordion.git'
-            developerConnection 'scm:git:git@github.com:concordion/concordion.git'
-        }
-
-        licenses {
-            license {
-                name 'The Apache Software License, Version 2.0'
-                url 'http://www.apache.org/licenses/LICENSE-2.0.html'
-                distribution 'repo'
-            }
-        }
-
-        issueManagement{
-            system 'github'
-            url 'https://github.com/concordion/concordion/issues'
-        }
-
-        developers {
-            developer {
-                id 'peterson3'
-                name 'David Peterson'
-                roles { role 'Project Creator' }
-            }
-            developer {
-                id 'nigel.charman.nz'
-                name 'Nigel Charman'
-                roles  { role 'Project Lead' }
-            }
-            developer {
-                id 'drtimwright'
-                name 'Tim Wright'
-                roles  { role 'Developer' }
-            }
-            developer {
-                id 'jose.m.beas'
-                name 'Jose M Beas'
-                roles  { role 'Developer' }
-            }
-            developer {
-                id 'habuma'
-                roles  { role 'Developer' }
-            }
-            developer {
-                id 'pinfieldharm'
-                roles  { role 'Developer' }
-            }
-            developer {
-                id 'wangyizhuo'
-                roles  { role 'Developer' }
-            }
-        }
-    }
-}

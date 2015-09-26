@@ -10,7 +10,6 @@ import nu.xom.Node;
 import nu.xom.Nodes;
 import nu.xom.ParentNode;
 import nu.xom.XPathContext;
-import org.concordion.internal.ConcordionBuilder;
 
 public final class Element {
 
