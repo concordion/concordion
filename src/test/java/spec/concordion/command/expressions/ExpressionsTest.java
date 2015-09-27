@@ -1,11 +1,11 @@
-package spec.concordion.command;
+package spec.concordion.command.expressions;
 
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.concordion.internal.SimpleEvaluator;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
-public class ConcordionExpressionsTest {
+public class ExpressionsTest {
 
     public boolean isValidEvaluationExpression(String evaluateExpression) {
         try {

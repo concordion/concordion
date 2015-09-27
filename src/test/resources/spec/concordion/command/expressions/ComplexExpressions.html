@@ -2,24 +2,28 @@
 <link href="../../../concordion.css" rel="stylesheet" type="text/css" />
 <body>
 
-<h1>Advanced concordion expressions</h1>
+<h1>Complex Expressions</h1>
 
-<p>
-    OGNL (Object Graph Notation Language) is the expressions used to reference properties, methods and variables inside of the concordion test.
-    <br/>To enable using of OGNL expressions annotate your test fixture with @FullOGNL.
-    <br />Concordion supports complex expressions, but they should be used with caution and follow KISS principle as this is a testing code.
-    <br />Listed below expressions are valid with concordion.
-</p>
+<p>Concordion uses <a href="https://commons.apache.org/proper/commons-ognl/">OGNL</a> (Object Graph Notation Language) to reference fields and call methods of the corresponding test fixture and to set specification variables.</p>
+<p>By default, Concordion <a href="Expressions.html">deliberately restricts</a> the expression format that is allowed.</p>
+<p>However, if you really want to remove this restriction you can apply the annotation <code>@FullOGNL</code> to your fixture class to allow 
+complex expressions. 
+This would allow you to do things like
+<a href="http://stackoverflow.com/questions/23658633/use-result-object-of-first-concordion-call-as-arg-in-secound-concordion-call">pass property values of Java beans into methods</a>
+, or <a href="http://stackoverflow.com/questions/19681470/sending-a-constant-parameter-to-concoridion-execute-call">use constant values in concordion:execute commands</a>.</p> 
+<p>Complex expressions should be used with caution in order to keep your specifications simple.</p>
 
 <div class="example">
 
     <h3>Examples</h3>
     
+    <p>The Default column shows whether the Expression is valid by default in Concordion. The @FullOGNL column checks that the Expression is valid when you apply the annotation
+    <code>@FullOGNL</code> to your fixture class.</p>
 
     <table concordion:execute="#result = checkExpression(#expr)">
         <tr>
             <th concordion:set="#expr">Expression</th>
-            <th concordion:assertEquals="#result.simple">Simple</th>
+            <th concordion:assertEquals="#result.simple">Default</th>
             <th concordion:assertEquals="#result.ognl">@FullOGNL</th>
         </tr>
         <!--Variables-->

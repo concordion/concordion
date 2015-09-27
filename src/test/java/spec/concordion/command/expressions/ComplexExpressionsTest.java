@@ -1,4 +1,4 @@
-package spec.concordion.command;
+package spec.concordion.command.expressions;
 
 import org.concordion.api.Evaluator;
 import org.concordion.api.FullOGNL;
@@ -13,12 +13,12 @@ import java.util.Map;
 import static java.util.Collections.singletonMap;
 
 @RunWith(ConcordionRunner.class)
-public class AdvancedConcordionExpressionsTest {
+public class ComplexExpressionsTest {
 
     private final Evaluator simple = new SimpleEvaluator(new SimpleTestFixture());
     private final Evaluator ognl = new OgnlEvaluator(new OgnlTestFixture());
 
-    public AdvancedConcordionExpressionsTest() {
+    public ComplexExpressionsTest() {
         initTestVariables(simple);
         initTestVariables(ognl);
     }
