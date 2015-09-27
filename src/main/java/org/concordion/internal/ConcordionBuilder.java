@@ -341,4 +341,9 @@ public class ConcordionBuilder implements ConcordionExtender {
         }
         return this;
     }
+    
+	public ConcordionExtender withExampleListener(ExampleListener listener) {
+		exampleCommand.addExampleListener(listener);
+		return this;
+	}
 }

@@ -1,10 +1,14 @@
 package org.concordion.internal.command;
 
 import org.concordion.api.*;
+import org.concordion.api.listener.ExampleEvent;
+import org.concordion.api.listener.ExampleListener;
 import org.concordion.internal.FailFastException;
 import org.concordion.internal.Fixture;
 import org.concordion.internal.ExpectedState;
 import org.concordion.internal.SpecificationDescriber;
+import org.concordion.internal.SummarizingResultRecorder;
+import org.concordion.internal.util.Announcer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,12 +18,21 @@ import java.util.List;
  */
 public class ExampleCommand extends AbstractCommand {
 
+	private Announcer<ExampleListener> listeners = Announcer.to(ExampleListener.class);
     private SpecificationDescriber specificationDescriber;
 
     public List<CommandCall> getExamples(CommandCall command) {
         return Arrays.asList(command);
     }
 
+    public void addExampleListener(ExampleListener exampleListener) {
+        listeners.addListener(exampleListener);
+    }
+
+    public void removeExampleListener(ExampleListener exampleListener) {
+        listeners.removeListener(exampleListener);
+    }
+    
     public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
     }
 
@@ -28,6 +41,8 @@ public class ExampleCommand extends AbstractCommand {
         resultRecorder.setSpecificationDescription(
                 specificationDescriber.getDescription(node.getResource(), node.getExpression()));
 
+        listeners.announce().beforeExample(new ExampleEvent(node.getElement(), (SummarizingResultRecorder)resultRecorder));
+        
         try {
             node.getChildren().processSequentially(evaluator, resultRecorder);
             Element aName = new Element("a");
@@ -52,10 +67,11 @@ public class ExampleCommand extends AbstractCommand {
                 fixtureNode.appendText(note);
                 node.getElement().prependChild(fixtureNode);
             }
-
+            
+            listeners.announce().afterExample(new ExampleEvent(node.getElement(), (SummarizingResultRecorder)resultRecorder));
         } catch (FailFastException e) {
             // Ignore - it'll be re-thrown later if necessary.
-        }
+        } 
     }
 
     public boolean isExample() {

@@ -11,6 +11,7 @@ import org.concordion.api.listener.AssertFalseListener;
 import org.concordion.api.listener.AssertTrueListener;
 import org.concordion.api.listener.ConcordionBuildListener;
 import org.concordion.api.listener.DocumentParsingListener;
+import org.concordion.api.listener.ExampleListener;
 import org.concordion.api.listener.ExecuteListener;
 import org.concordion.api.listener.RunListener;
 import org.concordion.api.listener.SetListener;
@@ -106,6 +107,14 @@ public interface ConcordionExtender {
      */
     ConcordionExtender withSpecificationProcessingListener(SpecificationProcessingListener listener);
 
+    /**
+     * Adds a listener that is invoked before and after Concordion has processed the example,
+     * providing access to the example node. 
+     * @param listener the listener
+     * @return this
+     */
+    ConcordionExtender withExampleListener(ExampleListener listener);
+    
     /**
      * Adds a listener that is invoked when a Concordion instance is built, providing access to the {@link Target}
      * to which resources can be written.  
