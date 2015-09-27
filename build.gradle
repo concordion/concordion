@@ -11,7 +11,7 @@ repositories {
 
 dependencies {
     compile 'junit:junit:4.12',
-            'ognl:ognl:2.6.9'
+            'ognl:ognl:3.1'
 
     compile ('xom:xom:1.2.5') {
         exclude group: 'xalan', module: 'xalan'

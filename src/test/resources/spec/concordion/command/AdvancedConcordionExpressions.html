@@ -1,0 +1,402 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+<h1>Advanced concordion expressions</h1>
+
+<p>
+    OGNL (Object Graph Notation Language) is the expressions used to reference properties, methods and variables inside of the concordion test.
+    <br/>To enable using of OGNL expressions annotate your test fixture with @FullOGNL.
+    <br />Concordion supports complex expressions, but they should be used with caution and follow KISS principle as this is a testing code.
+    <br />Listed below expressions are valid with concordion.
+</p>
+
+<div class="example">
+
+    <h3>Examples</h3>
+    
+
+    <table concordion:execute="#result = checkExpression(#expr)">
+        <tr>
+            <th concordion:set="#expr">Expression</th>
+            <th concordion:assertEquals="#result.simple">Simple</th>
+            <th concordion:assertEquals="#result.ognl">@FullOGNL</th>
+        </tr>
+        <!--Variables-->
+        <tr>
+            <td>#variable</td>
+            <td>yes</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#arrayVariable[0]</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#mapVariable['key']</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#mapVariable.key</td>
+            <td>yes</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#complexVariable.nestedProperty</td>
+            <td>yes</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#complexVariable.nestedMethod()</td>
+            <td>yes</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#complexVariable.nestedMethodWithArg(#arg1)</td>
+            <td>yes</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#complexVariable.nestedMethodWithArgs(#arg1, #arg2)</td>
+            <td>yes</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#chainVariable.chain.nestedProperty</td>
+            <td>yes</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#chainVariable.chain.nestedMethod()</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#chainVariable.chain.nestedMethodWithArg(#arg1)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#chainVariable.chain.nestedMethodWithArgs(#arg1, #arg2)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#chainVariable.chain().nestedProperty</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#chainVariable.chain().nestedMethod()</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#chainVariable.chain().nestedMethodWithArg(#arg1)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#chainVariable.chain().nestedMethodWithArgs(#arg1, #arg2)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#chainVariable.chainWithArg(#arg1).nestedProperty</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#chainVariable.chainWithArg(#arg1).nestedMethod()</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#chainVariable.chainWithArg(#arg1).nestedMethodWithArg(#arg1)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#chainVariable.chainWithArg(#arg1).nestedMethodWithArgs(#arg1, #arg2)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#chainVariable.chainWithArgs(#arg1, #arg2).nestedProperty</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#chainVariable.chainWithArgs(#arg1, #arg2).nestedMethod()</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#chainVariable.chainWithArgs(#arg1, #arg2).nestedMethodWithArg(#arg1)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>#chainVariable.chainWithArgs(#arg1, #arg2).nestedMethodWithArgs(#arg1, #arg2)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <!--Properties-->
+        <tr>
+            <td>property</td>
+            <td>yes</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>arrayProperty[0]</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>mapProperty['key']</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>mapProperty.key</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>complexProperty.nestedProperty</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>complexProperty.nestedMethod()</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>complexProperty.nestedMethodWithArg(#arg1)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>complexProperty.nestedMethodWithArgs(#arg1, #arg2)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>chainProperty.chain.nestedProperty</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>chainProperty.chain.nestedMethod()</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>chainProperty.chain.nestedMethodWithArg(#arg1)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>chainProperty.chain.nestedMethodWithArgs(#arg1, #arg2)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>chainProperty.chain().nestedProperty</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>chainProperty.chain().nestedMethod()</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>chainProperty.chain().nestedMethodWithArg(#arg1)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>chainProperty.chain().nestedMethodWithArgs(#arg1, #arg2)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>chainProperty.chainWithArg(#arg1).nestedProperty</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>chainProperty.chainWithArg(#arg1).nestedMethod()</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>chainProperty.chainWithArg(#arg1).nestedMethodWithArg(#arg1)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>chainProperty.chainWithArg(#arg1).nestedMethodWithArgs(#arg1, #arg2)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>chainProperty.chainWithArgs(#arg1, #arg2).nestedProperty</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>chainProperty.chainWithArgs(#arg1, #arg2).nestedMethod()</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>chainProperty.chainWithArgs(#arg1, #arg2).nestedMethodWithArg(#arg1)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>chainProperty.chainWithArgs(#arg1, #arg2).nestedMethodWithArgs(#arg1, #arg2)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <!--methods-->
+        <tr>
+            <td>method()</td>
+            <td>yes</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodWithArg(#arg1)</td>
+            <td>yes</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodWithArgs(#arg1, #arg2)</td>
+            <td>yes</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningArray()[0]</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningMap()['key']</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningMap().key</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningComplex().nestedProperty</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningComplex().nestedMethod()</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningComplex().nestedMethodWithArg(#arg1)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningComplex().nestedMethodWithArgs(#arg1, #arg2)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningChain().chain.nestedProperty</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningChain().chain.nestedMethod()</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningChain().chain.nestedMethodWithArg(#arg1)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningChain().chain.nestedMethodWithArgs(#arg1, #arg2)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningChain().chain().nestedProperty</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningChain().chain().nestedMethod()</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningChain().chain().nestedMethodWithArg(#arg1)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningChain().chain().nestedMethodWithArgs(#arg1, #arg2)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningChain().chainWithArg(#arg1).nestedProperty</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningChain().chainWithArg(#arg1).nestedMethod()</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningChain().chainWithArg(#arg1).nestedMethodWithArg(#arg1)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningChain().chainWithArg(#arg1).nestedMethodWithArgs(#arg1, #arg2)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningChain().chainWithArgs(#arg1, #arg2).nestedProperty</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningChain().chainWithArgs(#arg1, #arg2).nestedMethod()</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningChain().chainWithArgs(#arg1, #arg2).nestedMethodWithArg(#arg1)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>methodReturningChain().chainWithArgs(#arg1, #arg2).nestedMethodWithArgs(#arg1, #arg2)</td>
+            <td>no</td>
+            <td>yes</td>
+        </tr>
+    </table>
+
+</div>
+</body>
+</html>

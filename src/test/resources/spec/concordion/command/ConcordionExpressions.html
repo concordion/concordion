@@ -1,0 +1,56 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+<h1>Concordion expressions</h1>
+
+<p>
+    Concordion uses simple expressions to reference fields and methods from corresponding test fixture and to create spec level variables.
+    <br />The following expressions are available within concordion commands:
+</p>
+
+
+<div class="example">
+
+    <h3>Examples</h3>
+
+    Evaluation expressions
+    <ol>
+        <li concordion:assertTrue="isValidEvaluationExpression(#TEXT)">myProp</li>
+        <li concordion:assertTrue="isValidEvaluationExpression(#TEXT)">myMethod()</li>
+        <li concordion:assertTrue="isValidEvaluationExpression(#TEXT)">myMethod(#var1)</li>
+        <li concordion:assertTrue="isValidEvaluationExpression(#TEXT)">myMethod(#var1, #var2)</li>
+        <li concordion:assertTrue="isValidEvaluationExpression(#TEXT)">#var</li>
+        <li concordion:assertTrue="isValidEvaluationExpression(#TEXT)">#var.myProp</li>
+        <li concordion:assertTrue="isValidEvaluationExpression(#TEXT)">#var.myProp.myProp</li>
+        <li concordion:assertTrue="isValidEvaluationExpression(#TEXT)">#var = myProp</li>
+        <li concordion:assertTrue="isValidEvaluationExpression(#TEXT)">#var = myMethod()</li>
+        <li concordion:assertTrue="isValidEvaluationExpression(#TEXT)">#var = myMethod(#var1)</li>
+        <li concordion:assertTrue="isValidEvaluationExpression(#TEXT)">#var = myMethod(#var1, #var2)</li>
+        <li concordion:assertTrue="isValidEvaluationExpression(#TEXT)">#var ? 's1' : 's2'</li>
+        <li concordion:assertTrue="isValidEvaluationExpression(#TEXT)">myProp ? 's1' : 's2'</li>
+        <li concordion:assertTrue="isValidEvaluationExpression(#TEXT)">myMethod() ? 's1' : 's2'</li>
+        <li concordion:assertTrue="isValidEvaluationExpression(#TEXT)">myMethod(#var1) ? 's1' : 's2'</li>
+        <li concordion:assertTrue="isValidEvaluationExpression(#TEXT)">myMethod(#var1, #var2) ? 's1' : 's2'</li>
+        <li concordion:assertTrue="isValidEvaluationExpression(#TEXT)">#var.myProp</li>
+        <li concordion:assertTrue="isValidEvaluationExpression(#TEXT)">#var.myMethod()</li>
+        <li concordion:assertTrue="isValidEvaluationExpression(#TEXT)">#var.myMethod(#var1)</li>
+        <li concordion:assertTrue="isValidEvaluationExpression(#TEXT)">#var.myMethod(#var1, #var2)</li>
+    </ol>
+    Set expressions
+    <ul>
+        <li concordion:assertTrue="isValidSetVariableExpression(#TEXT)">#var = myProp</li>
+        <li concordion:assertTrue="isValidSetVariableExpression(#TEXT)">#var = myMethod()</li>
+        <li concordion:assertTrue="isValidSetVariableExpression(#TEXT)">#var = myMethod(#var1)</li>
+        <li concordion:assertTrue="isValidSetVariableExpression(#TEXT)">#var = myMethod(#var1, #var2)</li>
+    </ul>
+</div>
+
+<h2>Further Details</h2>
+<ul>
+    <li>Also it is possible to use <a concordion:run="concordion" href="AdvancedConcordionExpressions.html">advanced expressions</a>.</li>
+</ul>
+
+
+</body>
+</html>
