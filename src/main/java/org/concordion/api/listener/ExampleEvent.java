@@ -1,6 +1,5 @@
 package org.concordion.api.listener;
 
-import org.concordion.api.CommandCall;
 import org.concordion.api.Element;
 import org.concordion.api.ResultSummary;
 
