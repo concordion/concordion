@@ -1,17 +1,16 @@
 package org.concordion.internal.command;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.concordion.api.*;
 import org.concordion.api.listener.ExampleEvent;
 import org.concordion.api.listener.ExampleListener;
-import org.concordion.internal.FailFastException;
-import org.concordion.internal.Fixture;
 import org.concordion.internal.ExpectedState;
+import org.concordion.internal.FailFastException;
 import org.concordion.internal.SpecificationDescriber;
 import org.concordion.internal.SummarizingResultRecorder;
 import org.concordion.internal.util.Announcer;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by tim on 2/07/15.
