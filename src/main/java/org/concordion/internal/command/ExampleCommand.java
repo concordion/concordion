@@ -40,7 +40,7 @@ public class ExampleCommand extends AbstractCommand {
         resultRecorder.setSpecificationDescription(
                 specificationDescriber.getDescription(node.getResource(), node.getExpression()));
 
-        listeners.announce().beforeExample(new ExampleEvent(node, (SummarizingResultRecorder)resultRecorder));
+        listeners.announce().beforeExample(new ExampleEvent(node.getElement(), (SummarizingResultRecorder)resultRecorder));
         
         try {
             node.getChildren().processSequentially(evaluator, resultRecorder);
@@ -67,7 +67,7 @@ public class ExampleCommand extends AbstractCommand {
                 node.getElement().prependChild(fixtureNode);
             }
             
-            listeners.announce().afterExample(new ExampleEvent(node, (SummarizingResultRecorder)resultRecorder));
+            listeners.announce().afterExample(new ExampleEvent(node.getElement(), (SummarizingResultRecorder)resultRecorder));
         } catch (FailFastException e) {
             // Ignore - it'll be re-thrown later if necessary.
         } 
