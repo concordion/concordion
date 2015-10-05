@@ -65,8 +65,9 @@ public class ConcordionBuilder implements ConcordionExtender {
         withRunListener(new RunResultRenderer());
         withDocumentParsingListener(new DocumentStructureImprover());
         withDocumentParsingListener(new MetadataCreator());
-        String stylesheetContent = IOUtil.readResourceAsString(EMBEDDED_STYLESHEET_RESOURCE);
-        withEmbeddedCSS(stylesheetContent);
+        
+        //String stylesheetContent = IOUtil.readResourceAsString(EMBEDDED_STYLESHEET_RESOURCE);
+        //withEmbeddedCSS(stylesheetContent);
     }
 
     public ConcordionBuilder withSource(Source source) {
@@ -174,6 +175,12 @@ public class ConcordionBuilder implements ConcordionExtender {
 
     public ConcordionBuilder withEmbeddedCSS(String css) {
         StylesheetEmbedder embedder = new StylesheetEmbedder(css);
+        withDocumentParsingListener(embedder);
+        return this;
+    }
+    
+    public ConcordionBuilder withEmbeddedCSS(String css, boolean append) {
+        StylesheetEmbedder embedder = new StylesheetEmbedder(css, append);
         withDocumentParsingListener(embedder);
         return this;
     }
@@ -338,6 +345,7 @@ public class ConcordionBuilder implements ConcordionExtender {
 
     public ConcordionBuilder withFixtureForAnnotationsOnly(Object fixture) {
         if (fixture == null) {
+        	addDefaultStyling();
             return this;
         }
 
@@ -349,6 +357,26 @@ public class ConcordionBuilder implements ConcordionExtender {
         if (fixture.getClass().isAnnotationPresent(FullOGNL.class)) {
             withEvaluatorFactory(new OgnlEvaluatorFactory());
         }
+        
+        boolean addDefaultStyling = true;
+        
+        if (fixture.getClass().isAnnotationPresent(CopyResource.class)) {
+        	CopyResourceListener listener = new CopyResourceListener(this, fixture);
+        	
+        	addDefaultStyling = !listener.removeDefaultCSS();
+        			
+        	withDocumentParsingListener(listener);
+        } 
+        
+        if (addDefaultStyling) {
+        	addDefaultStyling();
+        }
+        
         return this;
+    }
+    
+    private void addDefaultStyling() {
+    	String stylesheetContent = IOUtil.readResourceAsString(EMBEDDED_STYLESHEET_RESOURCE);    
+    	withEmbeddedCSS(stylesheetContent);
     }
 }
