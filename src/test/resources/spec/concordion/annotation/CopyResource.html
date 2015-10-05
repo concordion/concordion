@@ -36,7 +36,7 @@
 	</tr>
 	
 	<tr>		
-		<th align="left">sourceFiles</th><td>One or more file to add to the generated specification
+		<th align="left">sourceFiles</th><td>One or more files to add to the generated specification:
 			<ul>
 				<li>File name starting with '/' is relative to the root folder</li>
 				<li>File not starting with '/' is relative to the class the annotation is applied to</li>
@@ -46,7 +46,7 @@
 				<li>CSS and JS files are treated a little differently than other files:
 					<ul>
 						<li>the specifications html will be updated with the correct link (if linked) or content (if embedded)</li>
-						<li>CSS is appended to the end of the head section so that any styling will override the default Concordion styles
+						<li>CSS is appended to the end of the head section so that any styling will override the default Concordion styles</li>
 						<li>any existing links to the resource file will be removed</li>
 					</ul>
 					All other file types must be added to the specification at design time by whomever is writing the specification.
