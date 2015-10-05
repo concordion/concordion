@@ -6,7 +6,7 @@ import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
-@CopyResource(sourceFiles = "/concordion.css", removeDefaultCSS = false, insertType = InsertType.EMBEDDED)
+@CopyResource(sourceFiles = "/concordion.css", removeDefaultCSS = true, insertType = InsertType.LINKED)
 public class DemoParent {
     
 }
