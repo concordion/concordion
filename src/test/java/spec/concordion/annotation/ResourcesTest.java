@@ -6,6 +6,6 @@ import org.junit.runner.RunWith;
 import test.concordion.TestRig;
 
 @RunWith(ConcordionRunner.class)
-public class CopyResourceTest {
+public class ResourcesTest {
 		
 }

@@ -1,12 +1,11 @@
 package spec.concordion.annotation;
 
-import org.concordion.api.CopyResource;
-import org.concordion.api.CopyResource.InsertType;
+import org.concordion.api.Resources;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
-@CopyResource(sourceFiles = "/concordion.css", removeDefaultCSS = true, insertType = InsertType.LINKED)
+@Resources(value = "/concordion.css", includeDefaultStyling = false)
 public class DemoParent {
     
 }

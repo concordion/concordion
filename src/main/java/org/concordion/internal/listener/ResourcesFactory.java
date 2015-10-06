@@ -1,51 +1,49 @@
 package org.concordion.internal.listener;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FilenameFilter;
 import java.net.URISyntaxException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
-import org.concordion.api.CopyResource;
-import org.concordion.api.CopyResource.InsertType;
+import org.concordion.api.Resources;
+import org.concordion.api.Resources.InsertType;
 import org.concordion.api.Resource;
 import org.concordion.api.extension.ConcordionExtender;
-import org.concordion.api.listener.DocumentParsingListener;
 import org.concordion.internal.util.IOUtil;
-
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Elements;
 
 /**
  * Adds custom CSS to the generated specifications
  * @author sumnera
  */
-public class CopyResourceListener implements DocumentParsingListener {
-	private boolean removeDefaultCSS = false;
+public class ResourcesFactory {
+	private static List<String> copiedFiles = new ArrayList<String>();
+	
+	private boolean includeDefaultStyling = true;
 	private List<ResourceToCopy> sourceFiles = new ArrayList<ResourceToCopy>();
 		
-	public boolean removeDefaultCSS() {
-		return this.removeDefaultCSS;
+	public boolean includeDefaultStyling() {
+		return this.includeDefaultStyling;
 	}
 	
-	public CopyResourceListener(ConcordionExtender builder, Object fixture) {
+	public List<ResourceToCopy> getFiles() {
+		return this.sourceFiles;
+	}
+	
+	public ResourcesFactory(ConcordionExtender builder, Object fixture) {
 		
 		File root = getRootPath(fixture.getClass());
 		List<Class<?>> classes = getClassHierarchyParentFirst(fixture.getClass());
 		
 		for (Class<?> class1 : classes) {
-			if (class1.isAnnotationPresent(CopyResource.class)) {
-	            CopyResource annotation = class1.getAnnotation(CopyResource.class);
+			if (class1.isAnnotationPresent(Resources.class)) {
+	            Resources annotation = class1.getAnnotation(Resources.class);
 	            
-	            if (annotation.removeDefaultCSS()) {
-    				removeDefaultCSS = true;
+	            if (!annotation.includeDefaultStyling()) {
+    				includeDefaultStyling = false;
     			}
     	
 	            sourceFiles.addAll(getResourcesToAdd(class1, annotation, root));
@@ -70,25 +68,21 @@ public class CopyResourceListener implements DocumentParsingListener {
 			}
 		}
 	}
-    
-	private Collection<? extends ResourceToCopy> getResourcesToAdd(Class<?> class1, CopyResource annotation, File root) {
+	
+	private Collection<? extends ResourceToCopy> getResourcesToAdd(Class<?> class1, Resources annotation, File root) {
 		List<ResourceToCopy> sourceFiles = new ArrayList<ResourceToCopy>();
 		
-		for (String sourceFile : annotation.sourceFiles()) {
+		for (String sourceFile : annotation.value()) {
 			File search = (sourceFile.startsWith("/")) ? new File(root, sourceFile) : new File(getClassPath(class1), sourceFile);
 			
-			DirectoryStream<Path> dirStream;
-			try {
-				dirStream = Files.newDirectoryStream(Paths.get(search.getParent()), search.getName());
-			} catch (IOException e) {
-				throw new RuntimeException(String.format("Unable to search '%s' for '%s'", search.getParent(), search.getName()), e);
-			}
+			String[] files = new File(search.getParent()).list(new WildcardFilter(search));
 			
 			boolean found = false;
 			
-			for (Path path : dirStream) {
+			for (String file : files) {
 				found = true;
-				String fileName = path.toString();
+				
+				String fileName = new File(search.getParent(), file).getPath();
 				
 				if (fileName.startsWith(root.getPath())) {
 					fileName = fileName.substring(root.getPath().length());
@@ -137,49 +131,7 @@ public class CopyResourceListener implements DocumentParsingListener {
         return classes;
     }
     
-
-
-	@Override
-	public void beforeParsing(Document document) {
-		Element head = document.getRootElement().getFirstChildElement("head");
-		
-		removeExistingStyling(head);
-	}
-	
-	private void removeExistingStyling(Element head) {
-		Elements links = head.getChildElements("link");
-				
-		for (int i = links.size() - 1; i >= 0; i--) {
-			Element link = links.get(i);
-		
-			String href = link.getAttributeValue("href");
-			
-			if (href == null) {
-				continue;
-			}
-			
-			href = href.toLowerCase();
-			
-			// Remove any links to concordion.css created by developers
-			if (href.contains("/concordion.css") || href.equals("concordion.css")) {
-				head.removeChild(link);
-				continue;
-			}
-			
-			// Remove any links to custom css created by developers
-			// TODO: Do we need to be able to turn this off?  There is a possibility that will delete something already added
-			for (ResourceToCopy source : sourceFiles) {
-				if (source.fileName.endsWith(".css") || source.fileName.endsWith(".js")) {
-					if (href.contains("/" + source.getName().toLowerCase()) || href.equals(source.getName().toLowerCase())) {
-						head.removeChild(link);
-						break;
-					}
-				}
-			}
-		}
-    }
-	
-	protected class ResourceToCopy {
+    protected class ResourceToCopy {
 		protected String fileName;
 		protected InsertType insertType;
 		
@@ -202,5 +154,37 @@ public class CopyResourceListener implements DocumentParsingListener {
 			return new File(fileName).getName();
 		}
 	}
+    
+    protected class WildcardFilter implements FilenameFilter {
+    	Pattern r;
+    	
+    	public WildcardFilter(File search) {
+    		r = Pattern.compile(createRegexFromGlob(search.getName()));
+    	}
+    	
+    	@Override
+    	public boolean accept(File dir, String name) {
+    		return r.matcher(name).matches();
+    	}
+    	
+    	private String createRegexFromGlob(String glob)
+    	{
+    	    StringBuilder sb = new StringBuilder();
+    	    
+    	    for(int i = 0; i < glob.length(); ++i) {
+    	        final char c = glob.charAt(i);
+    	        
+    	        switch(c) {
+    		        case '*': sb.append(".*"); break;
+    		        case '?': sb.append('.'); break;
+    		        case '.': sb.append("\\."); break;
+    		        case '\\': sb.append("\\\\"); break;
+    		        default: sb.append(c);
+    	        }
+    	    }
+    	    
+    	    return sb.toString();
+    	}
+    }
 }
 

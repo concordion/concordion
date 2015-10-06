@@ -1,10 +1,9 @@
 package spec.concordion.annotation;
 
-import org.concordion.api.CopyResource;
-import org.concordion.api.CopyResource.InsertType;
+import org.concordion.api.Resources;
 
 //@RunWith(ConcordionRunner.class)
-@CopyResource(sourceFiles = { "*.css", "demo.txt" }, insertType = InsertType.LINKED)
+@Resources( { "*.css", "*.js", "demo.txt" } )
 public class DemoTest extends DemoParent {
     
     public String greetingFor(String firstName) {

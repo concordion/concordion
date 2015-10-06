@@ -1,7 +1,7 @@
 <html xmlns:concordion="http://www.concordion.org/2007/concordion">
 <head>
     <link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
-    <title>CopyResource</title>
+    <title>Resources</title>
     <style>
 	    .annotationSummary td, .annotationSummary th {
 	      padding: 8px;
@@ -16,14 +16,14 @@
 </head>
 <body>
 
-    <h1>CopyResource Annotation</h1>
+    <h1>Resources Annotation</h1>
 
     <p>
-        The CopyResource annotation can be used to apply a new theme to your specifications, tweak the existing styling, or add 
+        The Resources annotation can be used to apply a new theme to your specifications, tweak the existing styling, or add 
         new css, javascript, images, or other resources.
     </p>
     <p>
-		The CopyResource annotation can be applied to all classes in the class hierarchy - each class will be inspected in turn (parent first) 
+		The Resources annotation can be applied to all classes in the class hierarchy - each class will be inspected in turn (parent first) 
 		for the annotation.  Each annotation will be processed in isolation to others so they will operate independently.  You will need to 
 		ensure that there are no conflicts.
 	</p>
@@ -31,12 +31,8 @@
     <p>The annotation has the following options:</p>
 	
 	<table class="annotationSummary">
-	<tr>
-		<th align="left">removeDefaultCSS</th><td>remove the default concordion css styling</td>
-	</tr>
-	
 	<tr>		
-		<th align="left">sourceFiles</th><td>One or more files to add to the generated specification:
+		<th align="left">value</th><td>One or more files to add to the generated specification:
 			<ul>
 				<li>File name starting with '/' is relative to the root folder</li>
 				<li>File not starting with '/' is relative to the class the annotation is applied to</li>
@@ -59,12 +55,18 @@
 	<tr>	
 		<th align="left">insertType</th><td>EMBEDDED or LINKED - applies to css and js files only</td>
 	</tr>
+	
+	<tr>
+		<th align="left">includeDefaultStyling</th><td>remove the default concordion css styling</td>
+	</tr>
+	
+	
 	</table>
 	
     <div class="example">
         <h3>Single Resource</h3>
 		
-		When the fixture is annotated with <code>@CopyResource(sourceFiles = "demo.txt")</code>
+		When the fixture is annotated with <code>@Resources(sourceFiles = "demo.txt")</code>
 		and the file demo.txt is located in the same folder as the specification, the resource is 
 		copied next to the specification.
     </div>
@@ -72,14 +74,14 @@
 	<div class="example">
         <h3>Multiple Resources</h3>
 
-        When the fixture is annotated with <code>@CopyResource(sourceFiles = { "*.css", "/spec/concordion/annotation/demo.txt" }, insertType = InsertType.LINKED)</code>
+        When the fixture is annotated with <code>@Resources(sourceFiles = { "*.css", "/spec/concordion/annotation/demo.txt" }, insertType = InsertType.LINKED)</code>
         and the files demo.css and demo.txt are located in the same folder as the specification, the resources are copied next to the specification.
     </div>
 
 	<div class="example">
         <h3>Delete existing links</h3>
 
-        When the fixture is annotated with <code>@CopyResource(sourceFiles = "demo.css", insertType = InsertType.LINKED)</code>
+        When the fixture is annotated with <code>@Resources(sourceFiles = "demo.css", insertType = InsertType.LINKED)</code>
         and the specification contains:<br />
         	<code>&lt;link href="../../../concordion.css" rel="stylesheet" type="text/css" /&gt;</code>
 			<code>&lt;link href="demo.css" rel="stylesheet" type="text/css" /&gt;</code>
@@ -89,8 +91,8 @@
 	<div class="example">
         <h3>Parent classes annotations are processed AND default concordion CSS can be removed</h3>
 
-        When the fixture is annotated with <code>@CopyResource(sourceFiles = "demo.css", insertType = InsertType.LINKED)</code>
-        and the fixtures parent is annotated with <code>@CopyResource(removeDefaultCSS = true)</code>
+        When the fixture is annotated with <code>@Resources(sourceFiles = "demo.css", insertType = InsertType.LINKED)</code>
+        and the fixtures parent is annotated with <code>@Resources(removeDefaultCSS = true)</code>
         and the specification contains:<br />
         	<code>&lt;link href="../../../concordion.css" rel="stylesheet" type="text/css" /&gt;</code>
 			<code>&lt;link href="demo.css" rel="stylesheet" type="text/css" /&gt;</code>
@@ -100,7 +102,7 @@
 	<div class="example">
         <h3>File not exists</h3>
 
-        When the fixture is annotated with <code>@CopyResource(sourceFiles = "im-not-here.txt")</code>
+        When the fixture is annotated with <code>@Resources(sourceFiles = "im-not-here.txt")</code>
         an exception is thrown. 
     </div>
 

@@ -358,17 +358,17 @@ public class ConcordionBuilder implements ConcordionExtender {
             withEvaluatorFactory(new OgnlEvaluatorFactory());
         }
         
-        boolean addDefaultStyling = true;
+        boolean includeDefaultStyling = true;
         
-        if (fixture.getClass().isAnnotationPresent(CopyResource.class)) {
-        	CopyResourceListener listener = new CopyResourceListener(this, fixture);
-        	
-        	addDefaultStyling = !listener.removeDefaultCSS();
+        if (fixture.getClass().isAnnotationPresent(Resources.class)) {
+        	ResourcesFactory resources = new ResourcesFactory(this, fixture);
         			
-        	withDocumentParsingListener(listener);
+        	includeDefaultStyling = resources.includeDefaultStyling();
+        	
+        	withDocumentParsingListener(new ResourcesListener(resources.getFiles()));
         } 
         
-        if (addDefaultStyling) {
+        if (includeDefaultStyling) {
         	addDefaultStyling();
         }
         
