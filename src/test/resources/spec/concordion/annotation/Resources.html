@@ -64,12 +64,22 @@
 	</table>
 	
     <div class="example">
-        <h3>Single Resource</h3>
+        <h3>Example: Single Resource</h3>
 		
-		When the fixture is annotated with <code>@Resources(sourceFiles = "demo.txt")</code>
-		and the file demo.txt is located in the same folder as the specification, the resource is 
-		copied next to the specification.
-    </div>
+		<p>Executing the following fixture:</p>
+    <pre class="java" concordion:set="#javaFragment">
+import org.concordion.api.Resources;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
+
+@RunWith(ConcordionRunner.class)
+@Resources( "demo.css" )
+public class ResourcesDemoTest {
+    
+}
+    </pre>
+    <p concordion:execute="#result1 = process(#javaFragment)">will copy the resource <span concordion:assertEquals="getResource(#TEXT)">demo.css</span> to the same folder as the specification.</p>
+    </div> 
 
 	<div class="example">
         <h3>Multiple Resources</h3>
