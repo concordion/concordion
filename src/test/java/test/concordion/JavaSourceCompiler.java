@@ -17,4 +17,16 @@ public class JavaSourceCompiler {
         
         return compiler.forName(className);
     }
+    
+    public Class<?> compile(String className, String sourceCode, String classNameParent, String sourceCodeParent) throws Exception {
+        
+    	try {
+            compiler.compile(new Source(sourceCode, className + ".java"), new Source(sourceCodeParent, classNameParent + ".java"));
+        } catch (CompilationFailedException e) {
+            e.printDiagnosticsTo(System.out);
+        }
+        
+        return compiler.forName(className);
+    }
+
 }

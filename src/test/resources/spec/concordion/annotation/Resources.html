@@ -60,14 +60,16 @@
 		<th align="left">includeDefaultStyling</th><td>remove the default concordion css styling</td>
 	</tr>
 	
-	
 	</table>
+	<br />
 	
+	<!-- ============================================= -->
     <div class="example">
-        <h3>Example: Single Resource</h3>
+        <h3>Example: Single Linked Resource</h3>
 		
 		<p>Executing the following fixture:</p>
-    <pre class="java" concordion:set="#javaFragment">
+		
+		<pre class="java" concordion:set="#javaFragment">
 import org.concordion.api.Resources;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
@@ -77,44 +79,140 @@ import org.junit.runner.RunWith;
 public class ResourcesDemoTest {
     
 }
-    </pre>
-    <p concordion:execute="#result1 = process(#javaFragment)">will copy the resource <span concordion:assertEquals="getResource(#TEXT)">demo.css</span> to the same folder as the specification.</p>
+		</pre>
+		
+		<p concordion:execute="#result1 = process(#javaFragment)">will include a link to the resource <span concordion:assertEquals="getLink(#TEXT)">demo.css</span> into the generated specification
+		and leave the <span concordion:assertTrue="isDefaultCssIncluded()">default CSS</span> in the generated specification.</p>
+	</div>
+
+	<!-- ============================================= -->
+    <div class="example">
+        <h3>Example: Single Embedded Resource</h3>
+		
+		<p>Executing the following fixture:</p>
+		
+		<pre class="java" concordion:set="#javaFragment">
+import org.concordion.api.Resources;
+import org.concordion.api.Resources.InsertType;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
+
+@RunWith(ConcordionRunner.class)
+@Resources( value = "demo.css", insertType = InsertType.EMBEDDED )
+public class ResourcesDemoTest {
+    
+}
+		</pre>
+	
+    	<p concordion:execute="#result1 = process(#javaFragment)">will embed the resource <span concordion:assertTrue="isCssIncluded(#TEXT)">demo.css</span> into the generated specification.</p>
     </div> 
 
+	<!-- ============================================= -->
 	<div class="example">
-        <h3>Multiple Resources</h3>
+        <h3>Example: Remove Default CSS</h3>
+		
+		<p>Executing the following fixture:</p>
+		
+		<pre class="java" concordion:set="#javaFragment">
+import org.concordion.api.Resources;
+import org.concordion.api.Resources.InsertType;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
-        When the fixture is annotated with <code>@Resources(sourceFiles = { "*.css", "/spec/concordion/annotation/demo.txt" }, insertType = InsertType.LINKED)</code>
-        and the files demo.css and demo.txt are located in the same folder as the specification, the resources are copied next to the specification.
-    </div>
-
+@RunWith(ConcordionRunner.class)
+@Resources( value = "demo.css", includeDefaultStyling = false )
+public class ResourcesDemoTest {
+    
+}
+		</pre>
+	
+    	<p concordion:execute="#result1 = process(#javaFragment)">will include a link to the resource <span concordion:assertEquals="getLink(#TEXT)">demo.css</span> 
+    		and remove the <span concordion:assertFalse="isDefaultCssIncluded()">default CSS</span> from the generated specification.
+    	</p>
+    </div> 
+    
+	<!-- ============================================= -->
 	<div class="example">
-        <h3>Delete existing links</h3>
+        <h3>Example: Multiple Resources, Types and Locations</h3>
+		
+		<p>Executing the following fixture:</p>
+		
+		<pre class="java" concordion:set="#javaFragment">
+import org.concordion.api.Resources;
+import org.concordion.api.Resources.InsertType;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
-        When the fixture is annotated with <code>@Resources(sourceFiles = "demo.css", insertType = InsertType.LINKED)</code>
-        and the specification contains:<br />
-        	<code>&lt;link href="../../../concordion.css" rel="stylesheet" type="text/css" /&gt;</code>
-			<code>&lt;link href="demo.css" rel="stylesheet" type="text/css" /&gt;</code>
-		The concordion.css link will be removed and the demo.css will be removed and replaced with a new one. 
-    </div>
-
+@RunWith(ConcordionRunner.class)
+@Resources( value = { "demo.css", "/spec/demo.js", "/spec/demo.txt" }, includeDefaultStyling = false )
+public class ResourcesDemoTest {
+    
+}
+		</pre>
+	
+    	<p concordion:execute="#result1 = process(#javaFragment)">will include 
+    		a link to the resource <span concordion:assertEquals="getLink(#TEXT)">demo.css</span>,
+    		a script link for <span concordion:assertEquals="getScript(#TEXT)">demo.js</span>,
+    		and will copy the resource <span concordion:assertTrue="isCopied(#TEXT)">spec/demo.txt</span>,
+    	</p>
+    </div> 
+    
+    <!-- ============================================= -->
 	<div class="example">
-        <h3>Parent classes annotations are processed AND default concordion CSS can be removed</h3>
+        <h3>Example: Missing Resource File Throws Exception</h3>
+		
+		<p>Executing the following fixture:</p>
+		
+		<pre class="java" concordion:set="#javaFragment">
+import org.concordion.api.Resources;
+import org.concordion.api.Resources.InsertType;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
 
-        When the fixture is annotated with <code>@Resources(sourceFiles = "demo.css", insertType = InsertType.LINKED)</code>
-        and the fixtures parent is annotated with <code>@Resources(removeDefaultCSS = true)</code>
-        and the specification contains:<br />
-        	<code>&lt;link href="../../../concordion.css" rel="stylesheet" type="text/css" /&gt;</code>
-			<code>&lt;link href="demo.css" rel="stylesheet" type="text/css" /&gt;</code>
-		The concordion.css link will be removed and the demo.css will be removed and replaced with a new one. 
-    </div>
-        
+@RunWith(ConcordionRunner.class)
+@Resources( value = "im-not-here.txt" )
+public class ResourcesDemoTest {
+    
+}
+		</pre>
+	
+    	<p>will throw an exception containing the text "<span concordion:assertTrue="processExpectingException(#javaFragment, #TEXT)">No file found</span>".</p>
+    </div> 
+
+    <!-- ============================================= -->
 	<div class="example">
-        <h3>File not exists</h3>
+        <h3>Example: Parent Annotations Are Processed</h3>
+		
+		<p>Executing the following fixture:</p>
+		
+		<pre class="java" concordion:set="#javaFragment">
+import org.concordion.api.Resources;
 
-        When the fixture is annotated with <code>@Resources(sourceFiles = "im-not-here.txt")</code>
-        an exception is thrown. 
-    </div>
+@Resources( "/spec/demo.js" )
+public class ResourcesDemoTest extends ResourcesDemoParent {
+    
+}
+		</pre>
+		
+		<p>And parent class:</p>
+		<pre class="java" concordion:set="#javaFragmentParent">		
+import org.concordion.api.Resources;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
+
+@RunWith(ConcordionRunner.class)
+@Resources( value = "demo.css", includeDefaultStyling = false )
+public class ResourcesDemoParent {
+    
+}
+		</pre>
+    	
+		<p concordion:execute="#result1 = process(#javaFragment, #javaFragmentParent)">will include 
+    		a link to the resource <span concordion:assertEquals="getLink(#TEXT)">demo.css</span>,
+    		a script link for <span concordion:assertEquals="getScript(#TEXT)">spec/demo.js</span>,
+    		and will copy the resource <span concordion:assertTrue="isCopied(#TEXT)">spec/demo.txt</span>,
+    	</p>
+    </div> 
 
 </body>
 </html>
