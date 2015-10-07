@@ -16,13 +16,10 @@ public class ClassNameBasedSpecificationLocator implements SpecificationLocator 
         this.specificationSuffix = specificationSuffix;
     }
     
-    public Resource locateSpecification(Object fixture) {
+    public Resource locateSpecification(Fixture fixture) {
         Check.notNull(fixture, "Fixture is null");
-        
-        String dottedClassName = fixture.getClass().getName();
-        String slashedClassName = dottedClassName.replaceAll("\\.", "/");
-        String specificationName = slashedClassName.replaceAll("(Fixture|Test)$", "");
-        String resourcePath = "/" + specificationName + "." + specificationSuffix;
+        String fixturePath = fixture.getFixturePathWithoutSuffix();
+        String resourcePath = "/" + fixturePath + "." + specificationSuffix;
         
         return new Resource(resourcePath);
     }

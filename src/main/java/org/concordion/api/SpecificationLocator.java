@@ -1,6 +1,8 @@
 package org.concordion.api;
 
+import org.concordion.internal.Fixture;
+
 public interface SpecificationLocator {
 
-    Resource locateSpecification(Object fixture);
+    Resource locateSpecification(Fixture fixture);
 }

@@ -1,16 +1,16 @@
 package org.concordion.internal.command;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.concordion.api.*;
 import org.concordion.api.listener.ExampleEvent;
 import org.concordion.api.listener.ExampleListener;
+import org.concordion.internal.ExpectedState;
 import org.concordion.internal.FailFastException;
-import org.concordion.internal.FixtureState;
 import org.concordion.internal.SpecificationDescriber;
 import org.concordion.internal.SummarizingResultRecorder;
 import org.concordion.internal.util.Announcer;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by tim on 2/07/15.
@@ -53,12 +53,12 @@ public class ExampleCommand extends AbstractCommand {
             if (params != null) {
                 ResultModifier resultModifier = ResultModifier.getModifier(params);
                 resultRecorder.setResultModifier(resultModifier);
-                // let's be really nice and add the fixture state text into the element itself.
-                FixtureState fixtureState = FixtureState.getFixtureState(null, resultModifier);
+                // let's be really nice and add the expected state text into the element itself.
+                ExpectedState expectedState = ExpectedState.getExpectedStateFor(resultModifier);
 
                 String note;
-                if (fixtureState != null) {
-                    note = fixtureState.printNoteToString();
+                if (expectedState != null) {
+                    note = expectedState.printNoteToString();
                 } else {
                     note = "Invalid state expression " + params;
                 } 

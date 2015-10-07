@@ -1,14 +1,15 @@
 package test.concordion.internal;
 
-import static org.junit.Assert.fail;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 
+import org.concordion.internal.Fixture;
 import org.concordion.internal.extension.ExtensionInitialisationException;
 import org.concordion.internal.extension.FixtureExtensionLoader;
 import org.junit.Test;
@@ -125,17 +126,17 @@ public class FixtureExtensionLoaderWithAnnotatedFieldsTest {
         }
     }
     
-    private Object withFieldDeclaration(String declaration) throws Exception, InstantiationException,
+    private Fixture withFieldDeclaration(String declaration) throws Exception, InstantiationException,
             IllegalAccessException {
         return withFieldDeclaration(declaration, null);
     }
 
-    private Object withFieldDeclaration(String declaration, String superClassName) throws Exception, InstantiationException,
+    private Fixture withFieldDeclaration(String declaration, String superClassName) throws Exception, InstantiationException,
             IllegalAccessException {
         String className = "ExampleFixture";
         Class<?> clazz = classWithFieldDeclaration(declaration, className, superClassName);
         Object fixture = clazz.newInstance();
-        return fixture;
+        return new Fixture(fixture);
     }
     
     private Class<?> classWithFieldDeclaration(String declaration, String className, String superClassName) throws Exception {

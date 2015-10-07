@@ -61,8 +61,8 @@ public class SingleResultSummary extends AbstractResultSummary implements Result
     }
 
     @Override
-    public void assertIsSatisfied(Object fixture) {
-        FixtureState state = FixtureState.getFixtureState(fixture.getClass(), getResultModifier());
+    public void assertIsSatisfied(Fixture fixture) {
+        ExpectedState state = getExpectedState(fixture);
         state.assertIsSatisfied(this, null);
     }
 

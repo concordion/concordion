@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.concordion.api.*;
 
-public enum FixtureState {
+public enum ExpectedState {
     UNIMPLEMENTED(ResultModifier.UNIMPLEMENTED) {
 
         private void addToList(List<String> list, long x, String singular, String plural) {
@@ -129,7 +129,7 @@ public enum FixtureState {
 
     private final ResultModifier resultModifier;
 
-    FixtureState(ResultModifier resultModifier) {
+    ExpectedState(ResultModifier resultModifier) {
         this.resultModifier = resultModifier;
     }
 
@@ -145,36 +145,21 @@ public enum FixtureState {
 
     public abstract ResultSummary convertForCache(ResultSummary rs);
 
-
-    public static FixtureState getFixtureState(Class<?> fixtureClass, ResultModifier resultModifier) {
-        // examples have precedence
-        if (resultModifier != null) {
-            for (FixtureState state: values()) {
-                if (state.getResultModifier() ==  resultModifier) {
-                    return state;
-                }
-            }
-        }
-
-        // loop through the states
-        if (fixtureClass != null) {
-            for (FixtureState state : values()) {
-                // if we found a match, then return the state
-                if (fixtureClass.getAnnotation(state.resultModifier.getAnnotation()) != null) {
-                    return state;
-                }
-            }
-        }
-
-        return EXPECTED_TO_PASS;
-    }
-
     public String getAnnotationTag() {
         return resultModifier.getTag();
     }
 
     public ResultModifier getResultModifier() {
         return resultModifier;
+    }
+
+    public static ExpectedState getExpectedStateFor(ResultModifier resultModifier) {
+        for (ExpectedState state: values()) {
+            if (state.getResultModifier() ==  resultModifier) {
+                return state;
+            }
+        }
+        throw new IllegalStateException("Unknown ResultModifier in ExpectedState");
     }
 }
 

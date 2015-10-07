@@ -10,13 +10,12 @@ import java.io.IOException;
 
 public class FixtureRunner {
     private static RunResultsCache runResultsCache = RunResultsCache.SINGLETON;
-    private final Object fixture;
+    private final Fixture fixture;
 
-    public FixtureRunner(Object fixture) throws UnableToBuildConcordionException {
+    public FixtureRunner(Fixture fixture) throws UnableToBuildConcordionException {
         this.fixture = fixture;
 
-        ConcordionBuilder concordionBuilder = new ConcordionBuilder()
-                .withFixture(fixture);
+        ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture);
         fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
         concordion = concordionBuilder.build();
 
@@ -27,7 +26,7 @@ public class FixtureRunner {
 
     public ResultSummary run(String example) throws IOException {
     	
-    	ConcordionRunOutput runOutput = runResultsCache.startRun(fixture.getClass(), example);
+    	ConcordionRunOutput runOutput = runResultsCache.startRun(fixture, example);
         ResultSummary actualResultSummary = runOutput==null?
                 null:
                 runOutput.getActualResultSummary();
@@ -41,29 +40,26 @@ public class FixtureRunner {
     	if (runOutput == null) {
 
             try {
+                ExpectedState state;
                 if (example != null) {
                     actualResultSummary = concordion.processExample(example);
+                    state = ExpectedState.getExpectedStateFor(actualResultSummary.getResultModifier());
                 } else {
                     actualResultSummary = concordion.process();
+                    state = fixture.getExpectedState();
                 }
                 // we want to make sure all the annotations are considered when storing the result summary
-
                 // converting for the cache doesn't need the example - it just does annotation based conversions
-
-                FixtureState state = FixtureState.getFixtureState(
-                        fixture.getClass(),
-                        actualResultSummary.isForExample() ? actualResultSummary.getResultModifier() : null);
                 postProcessedResultSummary=  state.convertForCache(actualResultSummary);
 
-
-                runResultsCache.finishRun(fixture.getClass(),
+                runResultsCache.finishRun(fixture,
                         example,
                         actualResultSummary,
                         postProcessedResultSummary);
 
             } catch (RuntimeException e) {
                 // the run failed miserably. Tell the cache that the run failed
-                runResultsCache.failRun(fixture.getClass(), example);
+                runResultsCache.failRun(fixture, example);
                 throw e;
             }
 
@@ -76,7 +72,7 @@ public class FixtureRunner {
         return actualResultSummary;
     }
 
-    private void printResultSummary(Object fixture, String example, ResultSummary resultSummary, String additionalInformation) {
+    private void printResultSummary(Fixture fixture, String example, ResultSummary resultSummary, String additionalInformation) {
         synchronized (System.out) {
             if (additionalInformation != null) {
                 System.out.print(additionalInformation);

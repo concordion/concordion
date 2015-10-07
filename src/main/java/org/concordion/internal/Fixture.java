@@ -5,45 +5,66 @@ import org.concordion.api.FullOGNL;
 import org.concordion.internal.util.Check;
 
 public class Fixture {
-
     private final Object fixtureObject;
     private Class<?> fixtureClass;
 
-    // TODO create NullFixture for tests (and find out why it's needed!)
     public Fixture(Object fixtureObject) {
+        Check.notNull(fixtureObject, "Fixture is null");
         this.fixtureObject = fixtureObject;
-        if (fixtureObject != null) {
-            this.fixtureClass = fixtureObject.getClass();
-        }
+        this.fixtureClass = fixtureObject.getClass();
     }
 
-    boolean requiresFullOGNL() {
+    public String getClassName() {
+        return fixtureClass.getName();
+    }
+    
+    public Object getFixtureObject() {
+        return fixtureObject;
+    }
+    
+    public Class<? extends Object> getFixtureClass() {
+        return fixtureClass;
+    }
+    
+    public boolean declaresState(ExpectedState state) {
+        return fixtureClass.isAnnotationPresent(state.getResultModifier().getAnnotation());
+    }
+    
+    public boolean declaresFullOGNL() {
         return fixtureClass.isAnnotationPresent(FullOGNL.class);
     }
 
-    boolean requiresFailFast() {
+    public boolean declaresFailFast() {
         return fixtureClass.isAnnotationPresent(FailFast.class);
     }
 
-    Class<? extends Throwable>[] getFailFastExceptions() {
+    public Class<? extends Throwable>[] getFailFastExceptions() {
         FailFast failFastAnnotation = fixtureClass.getAnnotation(FailFast.class);
         Class<? extends Throwable>[] failFastExceptions = failFastAnnotation.onExceptionType();
         return failFastExceptions;
     }
 
-    String getClassName() {
-        return fixtureClass.getName();
+    public String getDescription() {
+        String name = removeSuffix(fixtureClass.getSimpleName());
+        return String.format("[Concordion Specification for '%s']", name); // Based on suggestion by Danny Guerrier
     }
 
-    void checkNotNull() {
-        Check.notNull(getFixtureObject(), "Fixture is null");
+    public String getFixturePathWithoutSuffix() {
+        String slashedClassName = getClassName().replaceAll("\\.", "/");
+        return removeSuffix(slashedClassName);
     }
 
-    public Object getFixtureObject() {
-        return fixtureObject;
+    private String removeSuffix(String fixtureName) {
+        return fixtureName.replaceAll("(Fixture|Test)$", "");
     }
 
-    public Class<? extends Object> getFixtureClass() {
-        return fixtureClass;
+    public ExpectedState getExpectedState() {
+        for (ExpectedState state : ExpectedState.values()) {
+            if (declaresState(state)) {
+                return state;
+            }
+        }
+    
+        return ExpectedState.EXPECTED_TO_PASS;
     }
 }

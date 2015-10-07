@@ -10,6 +10,7 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
+import org.concordion.internal.Fixture;
 import org.concordion.internal.extension.ExtensionInitialisationException;
 import org.concordion.internal.extension.FixtureExtensionLoader;
 import org.junit.Test;
@@ -102,7 +103,7 @@ public class FixtureExtensionLoaderWithClassAnnotationTest {
         assertEquals(2, extensions.size());
     }
 
-    private Object withClassAnnotation(String annotation) throws Exception, InstantiationException,
+    private Fixture withClassAnnotation(String annotation) throws Exception, InstantiationException,
             IllegalAccessException {
         return withClassAnnotationAndSuperclass(annotation, null);
     }
@@ -114,12 +115,12 @@ public class FixtureExtensionLoaderWithClassAnnotationTest {
         return className;
     }
 
-    private Object withClassAnnotationAndSuperclass(String annotation, String superClassName) throws Exception, InstantiationException,
+    private Fixture withClassAnnotationAndSuperclass(String annotation, String superClassName) throws Exception, InstantiationException,
             IllegalAccessException {
         String className = "ExampleFixture";
         Class<?> clazz = classWithAnnotation(annotation, className, superClassName);
         Object fixture = clazz.newInstance();
-        return fixture;
+        return new Fixture(fixture);
     }
     
     private Class<?> classWithAnnotation(String annotation, String className, String superClassName) throws Exception {
