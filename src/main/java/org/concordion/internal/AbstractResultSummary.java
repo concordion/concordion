@@ -20,7 +20,7 @@ public abstract class AbstractResultSummary implements ResultSummary {
         out.print(printToString(fixture));
     }
 
-    private String printToString(Fixture fixture) {
+    String printToString(Fixture fixture) {
         StringBuilder builder = new StringBuilder();
         builder.append("\n");
         builder.append(specificationDescription);

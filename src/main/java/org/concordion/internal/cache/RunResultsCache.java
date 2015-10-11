@@ -58,7 +58,8 @@ public enum RunResultsCache {
      * @return the result summary from the cache
      */
     public synchronized ConcordionRunOutput startRun(Fixture fixture, String example) {
-        assert fixture != null;
+        assert fixture.getFixtureClass() != null;
+
 
         // check to see if there is a result in the cache
         ConcordionRunOutput runSummary = map.get(getID(fixture, example));
@@ -92,7 +93,7 @@ public enum RunResultsCache {
                                        String example,
                                        ResultSummary actualSummary,
                                        ResultSummary postProcessedResultSummary) {
-        assert fixture != null;
+        assert fixture.getFixtureClass() != null;
         assert actualSummary != null;
         assert postProcessedResultSummary != null;
 

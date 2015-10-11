@@ -1,6 +1,5 @@
 package org.concordion.internal;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +11,6 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
 
     private final List<Result> recordedResults = new ArrayList<Result>();
     private FailFastException failFastException;
-    private String specificationDescription;
     boolean forExample;
 
     public SummarizingResultRecorder() {
@@ -20,7 +18,7 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
     }
 
     public SummarizingResultRecorder(String specificationDescription) {
-        this.specificationDescription = specificationDescription;
+        this.setSpecificationDescription(specificationDescription);
         reset();
     }
 
@@ -83,24 +81,7 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
 	public long getIgnoredCount() {
         return getCount(Result.IGNORED);
     }
-
-    @Override
-    public void print(PrintStream out, Fixture fixture) {
-        out.print(printToString(fixture));
-    }
-
-    public String printToString(Fixture fixture) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("\n");
-        builder.append(specificationDescription);
-        builder.append("\n");
-        String counts = printCountsToString(fixture);
-    	if (counts != null) {
-            builder.append(counts).append("\n");
-        }
-        return builder.toString();
-    }
-
+    
     @Override
     public void recordFailFastException( FailFastException exception) {
         this.setFailFastException(exception);
@@ -112,16 +93,6 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
 
     public void setFailFastException( FailFastException exception) {
         this.failFastException = exception;
-    }
-
-    @Override
-    public void setSpecificationDescription( String specificationDescription) {
-        this.specificationDescription = specificationDescription;
-    }
-
-    @Override
-    public String getSpecificationDescription() {
-        return specificationDescription;
     }
 
     @Override
