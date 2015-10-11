@@ -165,6 +165,6 @@ public enum ImplementationStatusChecker {
             }
         }
 
-        throw new IllegalStateException("Unknown ImplementationStatus in ImplementationStatusChecker");
+        return EXPECTED_TO_PASS;
     }
 }
