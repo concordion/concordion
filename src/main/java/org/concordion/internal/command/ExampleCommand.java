@@ -45,8 +45,8 @@ public class ExampleCommand extends AbstractCommand {
         try {
             node.getChildren().processSequentially(evaluator, resultRecorder);
             Element aName = new Element("a");
-            aName.addAttribute("name", "#"+node.getExpression());
-            aName.addAttribute("id", "#" + node.getExpression()); // html5 version
+            aName.addAttribute("name", node.getExpression());
+            aName.addAttribute("id", node.getExpression()); // html5 version
             node.getElement().prependChild(aName);
 
             String params = node.getParameter("status");
