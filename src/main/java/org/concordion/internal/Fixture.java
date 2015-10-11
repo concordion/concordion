@@ -2,6 +2,7 @@ package org.concordion.internal;
 
 import org.concordion.api.FailFast;
 import org.concordion.api.FullOGNL;
+import org.concordion.api.ImplementationStatus;
 import org.concordion.internal.util.Check;
 
 public class Fixture {
@@ -26,8 +27,8 @@ public class Fixture {
         return fixtureClass;
     }
     
-    public boolean declaresState(ExpectedState state) {
-        return fixtureClass.isAnnotationPresent(state.getResultModifier().getAnnotation());
+    public boolean declaresStatus(ImplementationStatus status) {
+        return fixtureClass.isAnnotationPresent(status.getAnnotation());
     }
     
     public boolean declaresFullOGNL() {
@@ -58,13 +59,13 @@ public class Fixture {
         return fixtureName.replaceAll("(Fixture|Test)$", "");
     }
 
-    public ExpectedState getExpectedState() {
-        for (ExpectedState state : ExpectedState.values()) {
-            if (declaresState(state)) {
-                return state;
+    public ImplementationStatus getImplementationStatus() {
+        for (ImplementationStatus status : ImplementationStatus.values()) {
+            if (declaresStatus(status)) {
+                return status;
             }
         }
     
-        return ExpectedState.EXPECTED_TO_PASS;
+        return ImplementationStatus.EXPECTED_TO_PASS;
     }
 }

@@ -14,6 +14,6 @@ public interface ResultRecorder {
 
     void setForExample(boolean isForExample);
 
-    void setResultModifier(ResultModifier state);
-    ResultModifier getResultModifier();
+    void setImplementationStatus(ImplementationStatus implementationStatus);
+    ImplementationStatus getImplementationStatus();
 }

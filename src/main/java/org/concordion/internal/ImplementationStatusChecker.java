@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.concordion.api.*;
 
-public enum ExpectedState {
-    UNIMPLEMENTED(ResultModifier.UNIMPLEMENTED) {
+public enum ImplementationStatusChecker {
+    UNIMPLEMENTED(ImplementationStatus.UNIMPLEMENTED) {
 
         private void addToList(List<String> list, long x, String singular, String plural) {
             if (x == 1) {
@@ -59,7 +59,7 @@ public enum ExpectedState {
         }
 
     },
-    EXPECTED_TO_FAIL(ResultModifier.EXPECTED_TO_FAIL) {
+    EXPECTED_TO_FAIL(ImplementationStatus.EXPECTED_TO_FAIL) {
 
         @Override
         public void assertIsSatisfied(ResultSummary rs, FailFastException ffe) {
@@ -90,7 +90,7 @@ public enum ExpectedState {
             return "   <-- Note: This test has been marked as EXPECTED_TO_FAIL";
         }
     },
-    EXPECTED_TO_PASS(ResultModifier.EXPECTED_TO_PASS) {
+    EXPECTED_TO_PASS(ImplementationStatus.EXPECTED_TO_PASS) {
 
         @Override
         public void assertIsSatisfied(ResultSummary rs, FailFastException ffe) {
@@ -123,10 +123,10 @@ public enum ExpectedState {
         }
     };
 
-    private final ResultModifier resultModifier;
+    private final ImplementationStatus implementationStatus;
 
-    ExpectedState(ResultModifier resultModifier) {
-        this.resultModifier = resultModifier;
+    ImplementationStatusChecker(ImplementationStatus implementationStatus) {
+        this.implementationStatus = implementationStatus;
     }
 
     public abstract void assertIsSatisfied(ResultSummary rs, FailFastException ffe);
@@ -142,29 +142,29 @@ public enum ExpectedState {
     public abstract ResultSummary convertForCache(ResultSummary rs);
 
     public String getAnnotationTag() {
-        return resultModifier.getTag();
+        return implementationStatus.getTag();
     }
 
-    public ResultModifier getResultModifier() {
-        return resultModifier;
+    public ImplementationStatus getImplementationStatus() {
+        return implementationStatus;
     }
 
-    public static ExpectedState getExpectedState(Class<?> fixtureClass, Fixture fixture, ResultModifier resultModifier) {
+    public static ImplementationStatusChecker getImplementationStatusChecker(Class<?> fixtureClass, Fixture fixture, ImplementationStatus implementationStatus) {
         // examples have precedence
-        if (resultModifier != null) {
-            return getExpectedStateFor(resultModifier);
+        if (implementationStatus != null) {
+            return implementationStatusCheckerFor(implementationStatus);
         }
 
-        return fixture.getExpectedState();
+        return implementationStatusCheckerFor(fixture.getImplementationStatus());
     }
 
-    public static ExpectedState getExpectedStateFor(ResultModifier resultModifier) {
-        for (ExpectedState state : values()) {
-            if (state.getResultModifier() == resultModifier) {
-                return state;
+    public static ImplementationStatusChecker implementationStatusCheckerFor(ImplementationStatus implementationStatus) {
+        for (ImplementationStatusChecker checker : values()) {
+            if (checker.getImplementationStatus() == implementationStatus) {
+                return checker;
             }
         }
 
-        throw new IllegalStateException("Unknown ResultModifier in ExpectedState");
+        throw new IllegalStateException("Unknown ImplementationStatus in ImplementationStatusChecker");
     }
 }

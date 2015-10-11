@@ -43,8 +43,7 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
 
     @Override
     public void assertIsSatisfied(Fixture fixture) {
-        ExpectedState state = getExpectedState(fixture);
-        state.assertIsSatisfied(this, failFastException);
+        getImplementationStatusChecker(fixture).assertIsSatisfied(this, failFastException);
     }
 
     @Override

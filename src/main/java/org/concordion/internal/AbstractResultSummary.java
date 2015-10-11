@@ -2,13 +2,13 @@ package org.concordion.internal;
 
 import java.io.PrintStream;
 
-import org.concordion.api.ResultModifier;
+import org.concordion.api.ImplementationStatus;
 import org.concordion.api.ResultSummary;
 
 public abstract class AbstractResultSummary implements ResultSummary {
 
     private String specificationDescription = "";
-    private ResultModifier resultModifier;
+    private ImplementationStatus implementationStatus;
 
     @Override
     public boolean isForExample() {
@@ -50,7 +50,7 @@ public abstract class AbstractResultSummary implements ResultSummary {
             builder.append(getExceptionCount());
         }
 
-        builder.append(getExpectedState(fixture).printNoteToString());
+        builder.append(getImplementationStatusChecker(fixture).printNoteToString());
 
         return builder.toString();
     }
@@ -65,21 +65,21 @@ public abstract class AbstractResultSummary implements ResultSummary {
     }
 
     @Override
-    public ResultModifier getResultModifier() {
-        return resultModifier;
+    public ImplementationStatus getImplementationStatus() {
+        return implementationStatus;
     }
 
-    public void setResultModifier(ResultModifier resultModifier) {
-        this.resultModifier = resultModifier;
+    public void setImplementationStatus(ImplementationStatus implementationStatus) {
+        this.implementationStatus = implementationStatus;
     }
     
-    public ExpectedState getExpectedState(Fixture fixture) {
-        ExpectedState state;
+    public ImplementationStatusChecker getImplementationStatusChecker(Fixture fixture) {
+        ImplementationStatus implementationStatus;
         if (isForExample()) {
-            state = ExpectedState.getExpectedStateFor(getResultModifier());
+            implementationStatus = getImplementationStatus();
         } else {
-            state = fixture.getExpectedState();
+            implementationStatus = fixture.getImplementationStatus();
         }
-        return state;
+        return ImplementationStatusChecker.implementationStatusCheckerFor(implementationStatus);
     }
 }

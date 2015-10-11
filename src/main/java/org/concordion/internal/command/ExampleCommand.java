@@ -6,7 +6,7 @@ import java.util.List;
 import org.concordion.api.*;
 import org.concordion.api.listener.ExampleEvent;
 import org.concordion.api.listener.ExampleListener;
-import org.concordion.internal.ExpectedState;
+import org.concordion.internal.ImplementationStatusChecker;
 import org.concordion.internal.FailFastException;
 import org.concordion.internal.SpecificationDescriber;
 import org.concordion.internal.SummarizingResultRecorder;
@@ -49,18 +49,18 @@ public class ExampleCommand extends AbstractCommand {
             aName.addAttribute("id", "#" + node.getExpression()); // html5 version
             node.getElement().prependChild(aName);
 
-            String params = node.getParameter("state");
+            String params = node.getParameter("status");
             if (params != null) {
-                ResultModifier resultModifier = ResultModifier.getModifier(params);
-                resultRecorder.setResultModifier(resultModifier);
-                // let's be really nice and add the expected state text into the element itself.
-                ExpectedState expectedState = ExpectedState.getExpectedStateFor(resultModifier);
+                ImplementationStatus implementationStatus = ImplementationStatus.implementationStatusFor(params);
+                resultRecorder.setImplementationStatus(implementationStatus);
+                // let's be really nice and add the implementation status text into the element itself.
+                ImplementationStatusChecker checker = ImplementationStatusChecker.implementationStatusCheckerFor(implementationStatus);
 
                 String note;
-                if (expectedState != null) {
-                    note = expectedState.printNoteToString();
+                if (checker != null) {
+                    note = checker.printNoteToString();
                 } else {
-                    note = "Invalid state expression " + params;
+                    note = "Invalid status expression " + params;
                 } 
                 Element fixtureNode = new Element("p");
                 fixtureNode.appendText(note);

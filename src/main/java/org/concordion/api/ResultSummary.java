@@ -26,5 +26,5 @@ public interface ResultSummary {
 
     boolean isForExample();
 
-    ResultModifier getResultModifier();
+    ImplementationStatus getImplementationStatus();
 }

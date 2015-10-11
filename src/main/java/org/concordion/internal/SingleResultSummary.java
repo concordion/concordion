@@ -35,7 +35,7 @@ public class SingleResultSummary extends AbstractResultSummary implements Result
             // result summary has no tests in it.
             result = Result.SUCCESS;
         }
-        setResultModifier(resultSummary.getResultModifier());
+        setImplementationStatus(resultSummary.getImplementationStatus());
     }
 
     public SingleResultSummary(final Result result, String specificationDescription) {
@@ -62,8 +62,7 @@ public class SingleResultSummary extends AbstractResultSummary implements Result
 
     @Override
     public void assertIsSatisfied(Fixture fixture) {
-        ExpectedState state = getExpectedState(fixture);
-        state.assertIsSatisfied(this, null);
+        getImplementationStatusChecker(fixture).assertIsSatisfied(this, null);
     }
 
     @Override
