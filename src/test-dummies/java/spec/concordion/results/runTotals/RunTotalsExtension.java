@@ -1,6 +1,7 @@
 package spec.concordion.results.runTotals;
 
 import org.concordion.api.Element;
+import org.concordion.api.Fixture;
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.api.listener.AbstractRunEvent;
@@ -9,7 +10,6 @@ import org.concordion.api.listener.RunIgnoreEvent;
 import org.concordion.api.listener.RunListener;
 import org.concordion.api.listener.RunSuccessEvent;
 import org.concordion.api.listener.ThrowableCaughtEvent;
-import org.concordion.internal.Fixture;
 
 /**
  * Created by tim on 25/06/15.

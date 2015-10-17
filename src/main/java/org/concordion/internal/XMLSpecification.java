@@ -1,9 +1,6 @@
 package org.concordion.internal;
 
-import org.concordion.api.CommandCall;
-import org.concordion.api.Evaluator;
-import org.concordion.api.ResultRecorder;
-import org.concordion.api.SpecificationByExample;
+import org.concordion.api.*;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -7,12 +7,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.concordion.api.Fixture;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.api.extension.ConcordionExtensionFactory;
 import org.concordion.api.extension.Extension;
 import org.concordion.api.extension.Extensions;
 import org.concordion.internal.ConcordionBuilder;
-import org.concordion.internal.Fixture;
 
 public class FixtureExtensionLoader {
     

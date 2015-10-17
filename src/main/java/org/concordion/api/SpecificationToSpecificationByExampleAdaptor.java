@@ -1,7 +1,5 @@
 package org.concordion.api;
 
-import org.concordion.internal.Fixture;
-
 import java.util.ArrayList;
 import java.util.List;
 

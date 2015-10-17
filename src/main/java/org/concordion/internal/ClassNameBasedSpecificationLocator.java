@@ -1,5 +1,6 @@
 package org.concordion.internal;
 
+import org.concordion.api.Fixture;
 import org.concordion.api.Resource;
 import org.concordion.api.SpecificationLocator;
 import org.concordion.internal.util.Check;

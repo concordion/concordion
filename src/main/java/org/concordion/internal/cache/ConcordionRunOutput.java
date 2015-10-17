@@ -1,8 +1,8 @@
 package org.concordion.internal.cache;
 
+import org.concordion.api.Fixture;
 import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
-import org.concordion.internal.Fixture;
 import org.concordion.internal.SingleResultSummary;
 
 /**

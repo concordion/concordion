@@ -2,9 +2,9 @@ package test.concordion.internal;
 
 import junit.framework.TestCase;
 
+import org.concordion.api.Fixture;
 import org.concordion.api.SpecificationLocator;
 import org.concordion.internal.ClassNameBasedSpecificationLocator;
-import org.concordion.internal.Fixture;
 
 public class ClassNameBasedSpecificationLocatorTest extends TestCase {
 

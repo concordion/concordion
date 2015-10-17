@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
-import org.concordion.internal.Fixture;
+import org.concordion.api.Fixture;
 import org.concordion.internal.cache.ConcordionRunOutput;
 import org.concordion.internal.cache.RunResultsCache;
 import org.junit.Before;

@@ -3,8 +3,8 @@ package org.concordion.internal.cache;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.concordion.api.Fixture;
 import org.concordion.api.ResultSummary;
-import org.concordion.internal.Fixture;
 import org.concordion.internal.SingleResultSummary;
 import org.concordion.internal.SummarizingResultRecorder;
 

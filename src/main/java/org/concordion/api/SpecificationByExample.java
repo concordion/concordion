@@ -2,8 +2,6 @@ package org.concordion.api;
 
 import java.util.List;
 
-import org.concordion.internal.Fixture;
-
 /**
  *
  * This interface changed in concordion 2.0 - several new methods were implemented. Default versions of these methods

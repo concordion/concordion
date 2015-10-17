@@ -9,7 +9,7 @@ import static org.junit.Assert.fail;
 
 import java.util.List;
 
-import org.concordion.internal.Fixture;
+import org.concordion.api.Fixture;
 import org.concordion.internal.extension.ExtensionInitialisationException;
 import org.concordion.internal.extension.FixtureExtensionLoader;
 import org.junit.Test;

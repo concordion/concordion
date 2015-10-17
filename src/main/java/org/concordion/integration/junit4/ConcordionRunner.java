@@ -8,11 +8,11 @@ import java.util.Set;
 
 import org.concordion.Concordion;
 import org.concordion.api.FailFast;
+import org.concordion.api.Fixture;
 import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.ConcordionAssertionError;
 import org.concordion.internal.FailFastException;
-import org.concordion.internal.Fixture;
 import org.concordion.internal.FixtureRunner;
 import org.concordion.internal.SummarizingResultRecorder;
 import org.concordion.internal.UnableToBuildConcordionException;

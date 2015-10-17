@@ -4,10 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.concordion.api.CommandCall;
-import org.concordion.api.Element;
-import org.concordion.api.Resource;
-import org.concordion.api.ResultSummary;
+import org.concordion.api.*;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.concordion.internal.*;
 import org.concordion.internal.command.RunCommand;

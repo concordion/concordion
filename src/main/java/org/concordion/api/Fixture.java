@@ -1,8 +1,5 @@
-package org.concordion.internal;
+package org.concordion.api;
 
-import org.concordion.api.FailFast;
-import org.concordion.api.FullOGNL;
-import org.concordion.api.ImplementationStatus;
 import org.concordion.internal.util.Check;
 
 public class Fixture {

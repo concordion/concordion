@@ -2,6 +2,7 @@ package org.concordion.internal;
 
 import java.io.PrintStream;
 
+import org.concordion.api.Fixture;
 import org.concordion.api.ImplementationStatus;
 import org.concordion.api.ResultSummary;
 
@@ -13,6 +14,11 @@ public abstract class AbstractResultSummary implements ResultSummary {
     @Override
     public boolean isForExample() {
         return false;
+    }
+
+    @Override @Deprecated
+    public void print(PrintStream out, Object fixture) {
+        print(out, new Fixture(fixture));
     }
 
     @Override
@@ -31,6 +37,11 @@ public abstract class AbstractResultSummary implements ResultSummary {
         }
 //        builder.append("\n");
         return builder.toString();
+    }
+
+    @Override @Deprecated
+    public String printCountsToString(Object fixture) {
+        return printCountsToString(new Fixture(fixture));
     }
 
     @Override
@@ -81,5 +92,10 @@ public abstract class AbstractResultSummary implements ResultSummary {
             implementationStatus = fixture.getImplementationStatus();
         }
         return ImplementationStatusChecker.implementationStatusCheckerFor(implementationStatus);
+    }
+
+    @Override @Deprecated
+    public void assertIsSatisfied(Object fixture) {
+        assertIsSatisfied(new Fixture(fixture));
     }
 }

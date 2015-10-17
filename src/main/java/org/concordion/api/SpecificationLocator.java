@@ -1,6 +1,5 @@
 package org.concordion.api;
 
-import org.concordion.internal.Fixture;
 
 public interface SpecificationLocator {
 

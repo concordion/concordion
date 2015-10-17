@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.concordion.api.*;
-import org.concordion.internal.Fixture;
 import org.concordion.internal.SummarizingResultRecorder;
 
 public class Concordion {

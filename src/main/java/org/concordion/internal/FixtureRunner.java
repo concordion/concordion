@@ -1,6 +1,7 @@
 package org.concordion.internal;
 
 import org.concordion.Concordion;
+import org.concordion.api.Fixture;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.cache.RunResultsCache;
 import org.concordion.internal.cache.ConcordionRunOutput;
