@@ -87,6 +87,6 @@ public class FileTarget implements Target {
     }
     
     public String resolvedPathFor(Resource resource) {
-        return getFile(resource).getAbsolutePath();
+        return "file://" + getFile(resource).getAbsolutePath();
     }
 }
