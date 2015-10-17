@@ -1,12 +1,14 @@
 apply plugin: 'java'
 apply plugin: 'wrapper'
 
+description = 'Concordion is an open source framework for Java that lets you turn a plain English description of a requirement into an automated test'
+
 wrapper {
     gradleVersion = "2.7"
 }
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 dependencies {
