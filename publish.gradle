@@ -54,7 +54,7 @@ publishGhPages.dependsOn javadoc
 
 task publishDocs(dependsOn: ['publishGhPages'])
 
-task publishSnapshot(dependsOn: ['test', 'uploadArchives'])
+task publishSnapshot(dependsOn: ['test', 'publishMainPublicationToMavenRepository'])
 
 task publishRelease(dependsOn: ['publishDocs', 'release'])
 
@@ -78,6 +78,10 @@ publishing {
         maven {
             if (project.version.endsWith('-SNAPSHOT')) {
                 url "http://oss.jfrog.org/artifactory/simple/oss-snapshot-local/"
+                credentials {
+                    username bintrayUsername
+                    password bintrayApiKey
+                }
             }
         }        
     }
