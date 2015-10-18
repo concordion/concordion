@@ -24,4 +24,9 @@ public class ClassNameBasedSpecificationLocator implements SpecificationLocator 
         
         return new Resource(resourcePath);
     }
+
+    @Override @Deprecated
+    public Resource locateSpecification(Object fixture) {
+        return locateSpecification(new Fixture(fixture));
+    }
 }
