@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import org.concordion.api.Resources;
 import org.concordion.api.Resources.InsertType;
+import org.concordion.api.Fixture;
 import org.concordion.api.Resource;
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.internal.util.IOUtil;
@@ -33,10 +34,10 @@ public class ResourcesFactory {
 		return this.sourceFiles;
 	}
 	
-	public ResourcesFactory(ConcordionExtender builder, Object fixture) {
+	public ResourcesFactory(ConcordionExtender builder, Fixture fixture) {
 		
-		File root = getRootPath(fixture.getClass());
-		List<Class<?>> classes = getClassHierarchyParentFirst(fixture.getClass());
+		File root = getRootPath(fixture.getFixtureClass());
+		List<Class<?>> classes = getClassHierarchyParentFirst(fixture.getFixtureClass());
 		
 		for (Class<?> class1 : classes) {
 			if (class1.isAnnotationPresent(Resources.class)) {

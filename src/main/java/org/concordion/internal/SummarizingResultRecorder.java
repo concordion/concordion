@@ -1,29 +1,29 @@
 package org.concordion.internal;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.concordion.api.Fixture;
 import org.concordion.api.Result;
 import org.concordion.api.ResultRecorder;
 import org.concordion.api.ResultSummary;
 
 public class SummarizingResultRecorder extends AbstractResultSummary implements ResultRecorder, ResultSummary {
 
-    private List<Result> recordedResults = new ArrayList<Result>();
+    private final List<Result> recordedResults = new ArrayList<Result>();
     private FailFastException failFastException;
-    private String specificationDescription = "";
-    boolean forExample = false;
+    boolean forExample;
 
     public SummarizingResultRecorder() {
         this(null);
     }
 
     public SummarizingResultRecorder(String specificationDescription) {
-        this.specificationDescription = specificationDescription;
+        this.setSpecificationDescription(specificationDescription);
+        reset();
     }
 
-
+    @Override
     public void record(Result result) {
         recordedResults.add(result);
     }
@@ -34,6 +34,7 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
 		}
     }
 
+    @Override
 	public void record(ResultSummary result) {
 		recordMultipleResults(result.getSuccessCount(), Result.SUCCESS);
 		recordMultipleResults(result.getFailureCount(), Result.FAILURE);
@@ -42,11 +43,8 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
 	}
 
     @Override
-    public void assertIsSatisfied(Object fixture) {
-        FixtureState state = FixtureState.getFixtureState(
-                fixture.getClass(),
-                isForExample() ? this.getResultModifier() : null);
-        state.assertIsSatisfied(this, failFastException);
+    public void assertIsSatisfied(Fixture fixture) {
+        getImplementationStatusChecker(fixture).assertIsSatisfied(this, failFastException);
     }
 
     @Override
@@ -56,7 +54,7 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
 
     private long getCount(Result result) {
         int count = 0;
-        for ( Result candidate : recordedResults) {
+        for (Result candidate : recordedResults) {
             if (candidate == result) {
                 count++;
             }
@@ -83,49 +81,7 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
 	public long getIgnoredCount() {
         return getCount(Result.IGNORED);
     }
-
-    @Override
-    public void print(PrintStream out, Object fixture) {
-        out.print(printToString(fixture));
-    }
-
-    public String printToString(Object fixture) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("\n");
-        builder.append(specificationDescription);
-        builder.append("\n");
-        String counts = printCountsToString(fixture);
-    	if (counts != null) {
-            builder.append(counts).append("\n");
-        }
-//        builder.append("\n");
-        return builder.toString();
-    }
-
-    @Override
-    public String printCountsToString(Object fixture) {
-    	StringBuilder builder = new StringBuilder();
-
-        builder.append("Successes: ");
-        builder.append(getSuccessCount());
-        builder.append(", Failures: ");
-        builder.append(getFailureCount());
-        if (getIgnoredCount() > 0) {
-        	builder.append(", Ignored: ");
-        	builder.append(getIgnoredCount());
-        }
-        if (hasExceptions()) {
-        	builder.append(", Exceptions: ");
-        	builder.append(getExceptionCount());
-        }
-
-        if (fixture != null) {
-            builder.append(FixtureState.getFixtureState(fixture.getClass(), this.getResultModifier()).printNoteToString());
-        }
-
-        return builder.toString();
-    }
-
+    
     @Override
     public void recordFailFastException( FailFastException exception) {
         this.setFailFastException(exception);
@@ -140,16 +96,6 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
     }
 
     @Override
-    public void setSpecificationDescription( String specificationDescription) {
-        this.specificationDescription = specificationDescription;
-    }
-
-    @Override
-    public String getSpecificationDescription() {
-        return specificationDescription;
-    }
-
-    @Override
     public void setForExample(boolean isForExample) {
         this.forExample = isForExample;
     }
@@ -160,6 +106,13 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
     }
 
     public long getTotalCount() {
-        return getSuccessCount() + getFailureCount() + getExceptionCount() + getIgnoredCount();
+        return recordedResults.size();
+    }
+
+    public final void reset() {
+        recordedResults.clear();
+        failFastException = null;
+        forExample = false;
     }
 }
+

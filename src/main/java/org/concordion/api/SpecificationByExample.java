@@ -15,7 +15,7 @@ public interface SpecificationByExample extends Specification {
 	 * Sets the fixture class. Will be called before the other methods are called so that
 	 * the class can process the fixture to determine examples, etc.
 	 */
-    void setFixtureClass(Class<?> fixture);
+    void setFixtureClass(Fixture fixture);
 
 
     /**

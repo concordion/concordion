@@ -1,6 +1,12 @@
 package org.concordion.api;
 
+
 public interface SpecificationLocator {
 
-    Resource locateSpecification(Object fixture);
+    /**
+     * @deprecated  As of release 2.0, replaced by {@link #locateSpecification(Fixture)}
+     */
+    @Deprecated Resource locateSpecification(Object fixture);
+
+    Resource locateSpecification(Fixture fixture);
 }

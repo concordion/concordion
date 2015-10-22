@@ -259,4 +259,8 @@ public final class Element {
         }
         return new Element((nu.xom.Element) parent);
     }
+
+    public Element deepClone() {
+        return new Element((nu.xom.Element) xomElement.copy());
+    }
 }

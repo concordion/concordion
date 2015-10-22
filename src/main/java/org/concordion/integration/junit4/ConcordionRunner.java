@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.concordion.Concordion;
 import org.concordion.api.FailFast;
+import org.concordion.api.Fixture;
 import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.ConcordionAssertionError;
@@ -36,7 +37,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
     private final FixtureRunner fixtureRunner;
     private final Concordion concordion;
     private final List<ConcordionFrameworkMethod> concordionFrameworkMethods;
-    private final Object fixture;
+    private final Fixture fixture;
     private SummarizingResultRecorder accumulatedResultSummary;
 
 
@@ -46,15 +47,15 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         super(fixtureClass);
         this.fixtureClass = fixtureClass;
         this.accumulatedResultSummary = new SummarizingResultRecorder();
-        accumulatedResultSummary.setSpecificationDescription(Concordion.getDefaultFixtureClassName(fixtureClass));
 
         try {
-            fixture = fixtureClass.newInstance();
+            fixture = new Fixture(fixtureClass.newInstance());
         } catch (InstantiationException e) {
             throw new InitializationError(e);
         } catch (IllegalAccessException e) {
             throw new InitializationError(e);
         }
+        accumulatedResultSummary.setSpecificationDescription(fixture.getDescription());
 
         try {
             fixtureRunner = new FixtureRunner(fixture);
@@ -100,7 +101,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
     // This is important or else jUnit will create lots of different instances of the class under test.
     @Override
     protected Object createTest() throws Exception {
-        return fixture;
+        return fixture.getFixtureObject();
     }
 
     @Override

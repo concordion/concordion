@@ -6,6 +6,8 @@
 
 <p>Concordion has support for specifications containing examples. These are run as seperate jUnit tests.</p>
 
+<p>The example command also supports the <a c:run="concordion" href="../../extension/listener/ExampleListener.html">example listener</a>.</p>
+
 <div class="example" c:example="before">
     <h3>Before</h3>
     <p>To specify that a piece of HTML should be run before each example, annotate the enclosing
@@ -123,13 +125,13 @@
     </p>
 </div>
 
-<div class="example" c:example="expectedToFail" c:state="ExpectedToFail">
+<div class="example" c:example="expectedToFail" c:status="ExpectedToFail">
     <h3>Expected to Fail</h3>
 
     <p>Concordion examples can be marked as expected to <span c:assertFalse="isTrue()">fail</span>:</p>
 
     <code><pre>
-&lt;div class="example" concordion:example="example3" concordion:state="ExpectedToFail"&gt;
+&lt;div class="example" concordion:example="example3" concordion:status="ExpectedToFail"&gt;
         Example goes here
 &lt;/div&gt;</pre></code>
 
@@ -138,13 +140,13 @@ as a whole, but the specification will still pass.</p>
 
 </div>
 
-<div class="example" c:example="unimplemented" c:state="Unimplemented">
+<div class="example" c:example="unimplemented" c:status="Unimplemented">
     <h3>Unimplemented</h3>
 
     <p>Concordion examples can be marked as unimplemented.</p>
 
     <code><pre>
-&lt;div class="example" concordion:example="unimplemented" concordion:state="Unimplemented"&gt;
+&lt;div class="example" concordion:example="unimplemented" concordion:status="Unimplemented"&gt;
         Example goes here
 &lt;/div&gt;</pre></code>
 
