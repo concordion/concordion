@@ -1,21 +1,25 @@
 package test.concordion;
 
+import java.io.IOException;
+
 import org.concordion.Concordion;
 import org.concordion.api.EvaluatorFactory;
+import org.concordion.api.Fixture;
 import org.concordion.api.Resource;
 import org.concordion.api.ResultSummary;
 import org.concordion.api.extension.ConcordionExtension;
+import org.concordion.internal.ClassNameBasedSpecificationLocator;
 import org.concordion.internal.ConcordionBuilder;
 import org.concordion.internal.SimpleEvaluatorFactory;
 import org.concordion.internal.UnableToBuildConcordionException;
 import org.concordion.internal.extension.FixtureExtensionLoader;
 
-import java.io.IOException;
+import spec.concordion.DummyFixture;
 
 
 public class TestRig {
 
-    private Object fixture = null;
+    private Fixture fixture;
     private EvaluatorFactory evaluatorFactory = new SimpleEvaluatorFactory();
     private StubSource stubSource = new StubSource();
     private StubTarget stubTarget;
@@ -23,7 +27,7 @@ public class TestRig {
     private ConcordionExtension extension; 
 
     public TestRig withFixture(Object fixture) {
-        this.fixture = fixture;
+        this.fixture = new Fixture(fixture);
         return this;
     }
 
@@ -34,17 +38,21 @@ public class TestRig {
     public ProcessingResult process(Resource resource) {
         EventRecorder eventRecorder = new EventRecorder();
         stubTarget = new StubTarget();
+        if (fixture == null) {
+            fixture = new Fixture(new DummyFixture());
+            withResource(new Resource("/spec/concordion/Dummy.html"), "<html/>");
+        } else {
+            withResource(new ClassNameBasedSpecificationLocator("html").locateSpecification(fixture), "<html/>");
+        }
         ConcordionBuilder concordionBuilder = new ConcordionBuilder()
             .withAssertEqualsListener(eventRecorder)
             .withThrowableListener(eventRecorder)
             .withSource(stubSource)
             .withEvaluatorFactory(evaluatorFactory)
             .withTarget(stubTarget)
-            .withFixtureForAnnotationsOnly(fixture);
+            .withFixture(fixture);
         
-        if (fixture != null) {
-            fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
-        }
+        fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
         if (extension != null) {
             extension.addTo(concordionBuilder);
         }

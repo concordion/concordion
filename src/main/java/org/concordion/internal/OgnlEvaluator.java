@@ -13,15 +13,7 @@ public class OgnlEvaluator implements Evaluator {
     private Object rootObject;
     private final OgnlContext ognlContext = new OgnlContext();
 
-
-    public OgnlEvaluator() {
-    }
-
     public OgnlEvaluator(Object rootObject) {
-        this.rootObject = rootObject;
-    }
-
-    public void setRootObject(Object rootObject) {
         this.rootObject = rootObject;
     }
 

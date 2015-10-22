@@ -79,4 +79,15 @@ public class CommandCall {
     public String getParameter(String parameter) {
         return parameters.get(parameter);
     }
+
+    public String getParameter(String camelCaseParameterName, String spinalCaseParameterName) {
+        String camelCaseParameter = parameters.get(camelCaseParameterName);
+        if (camelCaseParameter != null) {
+            return camelCaseParameter;
+        }        String spinalCaseParameter = parameters.get(spinalCaseParameterName);
+        if (spinalCaseParameter != null) {
+            return spinalCaseParameter;
+        }
+        return null;
+    }
 }

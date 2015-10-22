@@ -4,7 +4,12 @@ import java.io.PrintStream;
 
 public interface ResultSummary {
 
-    void assertIsSatisfied(Object fixture);
+    /**
+     * @deprecated  As of release 2.0, replaced by {@link #assertIsSatisfied(Fixture fixture)}
+     */
+    @Deprecated void assertIsSatisfied(Object fixture);
+
+    void assertIsSatisfied(Fixture fixture);
 
     boolean hasExceptions();
 
@@ -16,13 +21,23 @@ public interface ResultSummary {
 
     long getIgnoredCount();
 
-    void print(PrintStream out, Object fixture);
+    /**
+     * @deprecated  As of release 2.0, replaced by {@link #print(PrintStream, Fixture)}
+     */
+    @Deprecated void print(PrintStream out, Object fixture);
 
-    String printCountsToString(Object fixture);
+    void print(PrintStream out, Fixture fixture);
+
+    /**
+     * @deprecated  As of release 2.0, replaced by {@link #printCountsToString(Fixture)}
+     */
+    @Deprecated String printCountsToString(Object fixture);
+
+    String printCountsToString(Fixture fixture);
 
     String getSpecificationDescription();
 
     boolean isForExample();
 
-    ResultModifier getResultModifier();
+    ImplementationStatus getImplementationStatus();
 }

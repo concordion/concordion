@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.concordion.api.*;
 
-public enum FixtureState {
-    UNIMPLEMENTED(ResultModifier.UNIMPLEMENTED) {
+public enum ImplementationStatusChecker {
+    UNIMPLEMENTED(ImplementationStatus.UNIMPLEMENTED) {
 
         private void addToList(List<String> list, long x, String singular, String plural) {
             if (x == 1) {
@@ -33,7 +33,7 @@ public enum FixtureState {
                     s.append(", and ").append(list.get(list.size() - 1));
                 }
                 throw new ConcordionAssertionError("Specification is supposed to be unimplemented, but is reporting " + s + ".", rs);
-                
+
             }
         }
 
@@ -48,34 +48,32 @@ public enum FixtureState {
         }
 
         @Override
-		public ResultSummary getMeaningfulResultSummary(
-				ResultSummary rs, FailFastException ffe) {
-			assertIsSatisfied(rs, ffe);
-			return new SingleResultSummary(Result.IGNORED);
-		}
+        public ResultSummary getMeaningfulResultSummary(ResultSummary rs, FailFastException ffe) {
+            assertIsSatisfied(rs, ffe);
+            return new SingleResultSummary(Result.IGNORED);
+        }
 
-       @Override
-       public String printNoteToString() {
-        	return "   <-- Note: This test has been marked as UNIMPLEMENTED";
-       }
+        @Override
+        public String printNoteToString() {
+            return "   <-- Note: This test has been marked as UNIMPLEMENTED";
+        }
 
     },
-    EXPECTED_TO_FAIL(ResultModifier.EXPECTED_TO_FAIL) {
+    EXPECTED_TO_FAIL(ImplementationStatus.EXPECTED_TO_FAIL) {
 
         @Override
         public void assertIsSatisfied(ResultSummary rs, FailFastException ffe) {
             if (rs.getFailureCount() + rs.getExceptionCount() == 0) {
                 throw new ConcordionAssertionError("Specification is expected to fail but has neither failures nor exceptions.", rs);
             }
-           
+
         }
 
-		@Override
-		public ResultSummary getMeaningfulResultSummary(
-				ResultSummary rs, FailFastException ffe) {
-			assertIsSatisfied(rs, ffe);
-			return new SingleResultSummary(Result.IGNORED);
-		}
+        @Override
+        public ResultSummary getMeaningfulResultSummary(ResultSummary rs, FailFastException ffe) {
+            assertIsSatisfied(rs, ffe);
+            return new SingleResultSummary(Result.IGNORED);
+        }
 
         @Override
         public ResultSummary convertForCache(ResultSummary rs) {
@@ -88,11 +86,11 @@ public enum FixtureState {
         }
 
         @Override
-       public String printNoteToString() {
-        	return "   <-- Note: This test has been marked as EXPECTED_TO_FAIL";
-       }
+        public String printNoteToString() {
+            return "   <-- Note: This test has been marked as EXPECTED_TO_FAIL";
+        }
     },
-    EXPECTED_TO_PASS(ResultModifier.EXPECTED_TO_PASS) {
+    EXPECTED_TO_PASS(ImplementationStatus.EXPECTED_TO_PASS) {
 
         @Override
         public void assertIsSatisfied(ResultSummary rs, FailFastException ffe) {
@@ -106,18 +104,17 @@ public enum FixtureState {
                 throw new ConcordionAssertionError("Specification has exception(s). See output HTML for details.", rs);
             }
         }
-        
+
         @Override
         public String printNoteToString() {
-        	return "";
+            return "";
         }
 
-		@Override
-		public ResultSummary getMeaningfulResultSummary(
-				ResultSummary rs, FailFastException ffe) {
-			assertIsSatisfied(rs, ffe);
-			return rs;
-		}
+        @Override
+        public ResultSummary getMeaningfulResultSummary(ResultSummary rs, FailFastException ffe) {
+            assertIsSatisfied(rs, ffe);
+            return rs;
+        }
 
         @Override
         public ResultSummary convertForCache(ResultSummary rs) {
@@ -126,55 +123,48 @@ public enum FixtureState {
         }
     };
 
+    private final ImplementationStatus implementationStatus;
 
-    private final ResultModifier resultModifier;
-
-    FixtureState(ResultModifier resultModifier) {
-        this.resultModifier = resultModifier;
+    ImplementationStatusChecker(ImplementationStatus implementationStatus) {
+        this.implementationStatus = implementationStatus;
     }
 
     public abstract void assertIsSatisfied(ResultSummary rs, FailFastException ffe);
 
     public void printNote(PrintStream out) {
-    	out.print(printNoteToString());
+        out.print(printNoteToString());
     }
-    
+
     public abstract String printNoteToString();
 
-	public abstract ResultSummary getMeaningfulResultSummary(ResultSummary rs, FailFastException ffe);
+    public abstract ResultSummary getMeaningfulResultSummary(ResultSummary rs, FailFastException ffe);
 
     public abstract ResultSummary convertForCache(ResultSummary rs);
 
+    public String getAnnotationTag() {
+        return implementationStatus.getTag();
+    }
 
-    public static FixtureState getFixtureState(Class<?> fixtureClass, ResultModifier resultModifier) {
+    public ImplementationStatus getImplementationStatus() {
+        return implementationStatus;
+    }
+
+    public static ImplementationStatusChecker getImplementationStatusChecker(Class<?> fixtureClass, Fixture fixture, ImplementationStatus implementationStatus) {
         // examples have precedence
-        if (resultModifier != null) {
-            for (FixtureState state: values()) {
-                if (state.getResultModifier() ==  resultModifier) {
-                    return state;
-                }
-            }
+        if (implementationStatus != null) {
+            return implementationStatusCheckerFor(implementationStatus);
         }
 
-        // loop through the states
-        if (fixtureClass != null) {
-            for (FixtureState state : values()) {
-                // if we found a match, then return the state
-                if (fixtureClass.getAnnotation(state.resultModifier.getAnnotation()) != null) {
-                    return state;
-                }
+        return implementationStatusCheckerFor(fixture.getImplementationStatus());
+    }
+
+    public static ImplementationStatusChecker implementationStatusCheckerFor(ImplementationStatus implementationStatus) {
+        for (ImplementationStatusChecker checker : values()) {
+            if (checker.getImplementationStatus() == implementationStatus) {
+                return checker;
             }
         }
 
         return EXPECTED_TO_PASS;
     }
-
-    public String getAnnotationTag() {
-        return resultModifier.getTag();
-    }
-
-    public ResultModifier getResultModifier() {
-        return resultModifier;
-    }
 }
-

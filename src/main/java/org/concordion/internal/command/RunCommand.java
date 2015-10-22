@@ -2,15 +2,7 @@ package org.concordion.internal.command;
 
 import java.lang.reflect.Method;
 
-import org.concordion.api.AbstractCommand;
-import org.concordion.api.CommandCall;
-import org.concordion.api.Element;
-import org.concordion.api.Evaluator;
-import org.concordion.api.Result;
-import org.concordion.api.ResultRecorder;
-import org.concordion.api.ResultSummary;
-import org.concordion.api.RunStrategy;
-import org.concordion.api.Runner;
+import org.concordion.api.*;
 import org.concordion.api.listener.RunFailureEvent;
 import org.concordion.api.listener.RunIgnoreEvent;
 import org.concordion.api.listener.RunListener;
@@ -55,7 +47,7 @@ public class RunCommand extends AbstractCommand {
         if (expression != null)
             evaluator.evaluate(expression);
 
-        ResultAnnouncer resultAnnouncer = newRunResultAnnouncer(element, expression);
+        ResultAnnouncer resultAnnouncer = newRunResultAnnouncer(commandCall.getResource(), element, expression);
 
         String concordionRunner = null;
 
@@ -114,20 +106,24 @@ public class RunCommand extends AbstractCommand {
 
     }
 
-    private ResultAnnouncer newRunResultAnnouncer(final Element element, final String expression) {
+    private ResultAnnouncer newRunResultAnnouncer(final Resource resource, final Element element, final String expression) {
         return new ResultAnnouncer() {
             public void announce(ResultSummary result) {
-            	if (result.getFailureCount() + result.getExceptionCount() > 0) {
-                    listeners.announce().failureReported(new RunFailureEvent(element, result));
-            	} else if (result.getIgnoredCount() > 0) {
-                    listeners.announce().ignoredReported(new RunIgnoreEvent(element, result));
-            	} else {
-                    listeners.announce().successReported(new RunSuccessEvent(element, result));
-              	}
+                synchronized(resource) {
+                    if (result.getFailureCount() + result.getExceptionCount() > 0) {
+                        listeners.announce().failureReported(new RunFailureEvent(element, result));
+                    } else if (result.getIgnoredCount() > 0) {
+                        listeners.announce().ignoredReported(new RunIgnoreEvent(element, result));
+                    } else {
+                        listeners.announce().successReported(new RunSuccessEvent(element, result));
+                    }
+                }
             }
 
             public void announceException(Throwable throwable) {
-                listeners.announce().throwableCaught(new ThrowableCaughtEvent(throwable, element, expression));
+                synchronized (resource) {
+                    listeners.announce().throwableCaught(new ThrowableCaughtEvent(throwable, element, expression));
+                }
             }
         };
     }

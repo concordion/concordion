@@ -5,6 +5,7 @@ package org.concordion.internal;
  *
  * @author TimW5
  */
+import org.concordion.api.Fixture;
 import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
 
@@ -35,7 +36,7 @@ public class SingleResultSummary extends AbstractResultSummary implements Result
             // result summary has no tests in it.
             result = Result.SUCCESS;
         }
-        setResultModifier(resultSummary.getResultModifier());
+        setImplementationStatus(resultSummary.getImplementationStatus());
     }
 
     public SingleResultSummary(final Result result, String specificationDescription) {
@@ -61,9 +62,8 @@ public class SingleResultSummary extends AbstractResultSummary implements Result
     }
 
     @Override
-    public void assertIsSatisfied(Object fixture) {
-        FixtureState state = FixtureState.getFixtureState(fixture.getClass(), getResultModifier());
-        state.assertIsSatisfied(this, null);
+    public void assertIsSatisfied(Fixture fixture) {
+        getImplementationStatusChecker(fixture).assertIsSatisfied(this, null);
     }
 
     @Override

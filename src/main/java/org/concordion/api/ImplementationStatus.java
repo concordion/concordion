@@ -5,7 +5,7 @@ import java.lang.annotation.Annotation;
 /**
  * Created by tim on 7/07/15.
  */
-public enum ResultModifier {
+public enum ImplementationStatus {
     UNIMPLEMENTED("Unimplemented", Unimplemented.class),
     EXPECTED_TO_FAIL("ExpectedToFail", ExpectedToFail.class),
     EXPECTED_TO_PASS("ExpectedToPass", ExpectedToPass.class);
@@ -13,7 +13,7 @@ public enum ResultModifier {
     private final Class<? extends Annotation> annotation;
     private final String tag;
 
-    ResultModifier(String tag, Class<? extends Annotation> annotation) {
+    ImplementationStatus(String tag, Class<? extends Annotation> annotation) {
         this.tag = tag;
         this.annotation = annotation;
     }
@@ -26,12 +26,13 @@ public enum ResultModifier {
         return tag;
     }
 
-    public static ResultModifier getModifier(String tag) {
-        for (ResultModifier resultModifier: values()) {
-            if (resultModifier.getTag().equalsIgnoreCase(tag)) {
-                return resultModifier;
+    public static ImplementationStatus implementationStatusFor(String tag) {
+        for (ImplementationStatus implementationStatus : values()) {
+            if (implementationStatus.getTag().equalsIgnoreCase(tag)) {
+                return implementationStatus;
             }
         }
-        throw new IllegalArgumentException("No result modifier for " + tag);
+
+        throw new IllegalArgumentException("No implementation status for " + tag);
     }
 }

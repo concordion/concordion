@@ -2,25 +2,31 @@ package org.concordion.internal;
 
 import java.io.PrintStream;
 
-import org.concordion.api.ResultModifier;
+import org.concordion.api.Fixture;
+import org.concordion.api.ImplementationStatus;
 import org.concordion.api.ResultSummary;
 
 public abstract class AbstractResultSummary implements ResultSummary {
 
     private String specificationDescription = "";
-    private ResultModifier resultModifier;
+    private ImplementationStatus implementationStatus;
 
     @Override
     public boolean isForExample() {
         return false;
     }
 
-    @Override
+    @Override @Deprecated
     public void print(PrintStream out, Object fixture) {
+        print(out, new Fixture(fixture));
+    }
+
+    @Override
+    public void print(PrintStream out, Fixture fixture) {
         out.print(printToString(fixture));
     }
 
-    private String printToString(Object fixture) {
+    String printToString(Fixture fixture) {
         StringBuilder builder = new StringBuilder();
         builder.append("\n");
         builder.append(specificationDescription);
@@ -33,8 +39,13 @@ public abstract class AbstractResultSummary implements ResultSummary {
         return builder.toString();
     }
 
-    @Override
+    @Override @Deprecated
     public String printCountsToString(Object fixture) {
+        return printCountsToString(new Fixture(fixture));
+    }
+
+    @Override
+    public String printCountsToString(Fixture fixture) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("Successes: ");
@@ -50,9 +61,7 @@ public abstract class AbstractResultSummary implements ResultSummary {
             builder.append(getExceptionCount());
         }
 
-        if (fixture != null) {
-            builder.append(FixtureState.getFixtureState(fixture.getClass(), this.getResultModifier()).printNoteToString());
-        }
+        builder.append(getImplementationStatusChecker(fixture).printNoteToString());
 
         return builder.toString();
     }
@@ -67,11 +76,26 @@ public abstract class AbstractResultSummary implements ResultSummary {
     }
 
     @Override
-    public ResultModifier getResultModifier() {
-        return resultModifier;
+    public ImplementationStatus getImplementationStatus() {
+        return implementationStatus;
     }
 
-    public void setResultModifier(ResultModifier resultModifier) {
-        this.resultModifier = resultModifier;
+    public void setImplementationStatus(ImplementationStatus implementationStatus) {
+        this.implementationStatus = implementationStatus;
+    }
+    
+    public ImplementationStatusChecker getImplementationStatusChecker(Fixture fixture) {
+        ImplementationStatus implementationStatus;
+        if (isForExample()) {
+            implementationStatus = getImplementationStatus();
+        } else {
+            implementationStatus = fixture.getImplementationStatus();
+        }
+        return ImplementationStatusChecker.implementationStatusCheckerFor(implementationStatus);
+    }
+
+    @Override @Deprecated
+    public void assertIsSatisfied(Object fixture) {
+        assertIsSatisfied(new Fixture(fixture));
     }
 }

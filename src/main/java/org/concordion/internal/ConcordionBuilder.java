@@ -1,5 +1,11 @@
 package org.concordion.internal;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+import java.util.Map.Entry;
+
 import org.concordion.Concordion;
 import org.concordion.api.*;
 import org.concordion.api.extension.ConcordionExtender;
@@ -11,12 +17,6 @@ import org.concordion.internal.listener.*;
 import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 import org.concordion.internal.util.IOUtil;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-import java.util.Map.Entry;
 
 public class ConcordionBuilder implements ConcordionExtender {
 
@@ -50,7 +50,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private List<SpecificationProcessingListener> specificationProcessingListeners = new ArrayList<SpecificationProcessingListener>();
     private List<Class<? extends Throwable>> failFastExceptions = Collections.<Class<? extends Throwable>>emptyList();
     private boolean builtAlready;
-    private Object fixture;
+    private Fixture fixture;
 
     {
         withThrowableListener(new ThrowableRenderer());
@@ -331,24 +331,19 @@ public class ConcordionBuilder implements ConcordionExtender {
         return this;
     }
 
-    public ConcordionBuilder withFixture(Object fixture) {
+    public ConcordionBuilder withFixture(Fixture fixture) {
         this.fixture = fixture;
-        return withFixtureForAnnotationsOnly(fixture);
-    }
-
-    public ConcordionBuilder withFixtureForAnnotationsOnly(Object fixture) {
-        if (fixture == null) {
-            return this;
+        if (fixture.declaresFailFast()) {
+            withFailFast(fixture.getFailFastExceptions());
         }
-
-        if (fixture.getClass().isAnnotationPresent(FailFast.class)) {
-            FailFast failFastAnnotation = fixture.getClass().getAnnotation(FailFast.class);
-            Class<? extends Throwable>[] failFastExceptions = failFastAnnotation.onExceptionType();
-            withFailFast(failFastExceptions);
-        }
-        if (fixture.getClass().isAnnotationPresent(FullOGNL.class)) {
+        if (fixture.declaresFullOGNL()) {
             withEvaluatorFactory(new OgnlEvaluatorFactory());
         }
         return this;
     }
+    
+	public ConcordionExtender withExampleListener(ExampleListener listener) {
+		exampleCommand.addExampleListener(listener);
+		return this;
+	}
 }
