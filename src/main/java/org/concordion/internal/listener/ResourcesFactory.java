@@ -17,12 +17,12 @@ import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.internal.util.IOUtil;
 
 /**
- * Adds custom CSS to the generated specifications
+ * Copy resources to the destination when specification is built.  Resources are copied to the same relative path as they are in the project.
+ * Currently only supports resources on the file path.  Support for resources in Jars may come at a later date but will require java 1.7.
+ * 
  * @author sumnera
  */
 public class ResourcesFactory {
-	private static List<String> copiedFiles = new ArrayList<String>();
-	
 	private boolean includeDefaultStyling = true;
 	private List<ResourceToCopy> sourceFiles = new ArrayList<ResourceToCopy>();
 		
