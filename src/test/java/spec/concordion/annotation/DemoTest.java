@@ -6,8 +6,8 @@ import org.junit.runner.RunWith;
 
 //TODO Delete me and other Demo files when happy with Resources annotation
 @RunWith(ConcordionRunner.class)
-@Resources(value = {"demo.css", "demo.js", "demo.txt"})
-public class DemoTest {
+@Resources( {"demo.css", "demo.js", "demo.txt"} )
+public class DemoTest extends DemoParent {
 	
     public String greetingFor(String firstName) {
         return String.format("Hello %s!", firstName);
