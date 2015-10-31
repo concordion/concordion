@@ -36,17 +36,19 @@ public class ExampleCommand extends AbstractCommand {
     }
 
     public void executeAsExample(CommandCall node, Evaluator evaluator, ResultRecorder resultRecorder) {
-
+        
+        String exampleName = node.getExpression();
+        
         resultRecorder.setSpecificationDescription(
-                specificationDescriber.getDescription(node.getResource(), node.getExpression()));
+                specificationDescriber.getDescription(node.getResource(), exampleName));
 
-        listeners.announce().beforeExample(new ExampleEvent(node.getElement(), (SummarizingResultRecorder)resultRecorder));
+        listeners.announce().beforeExample(new ExampleEvent(exampleName, node.getElement(), (SummarizingResultRecorder)resultRecorder));
         
         try {
             node.getChildren().processSequentially(evaluator, resultRecorder);
             Element aName = new Element("a");
-            aName.addAttribute("name", node.getExpression());
-            aName.addAttribute("id", node.getExpression()); // html5 version
+            aName.addAttribute("name", exampleName);
+            aName.addAttribute("id", exampleName); // html5 version
             node.getElement().prependChild(aName);
 
             String params = node.getParameter("status");
@@ -67,7 +69,7 @@ public class ExampleCommand extends AbstractCommand {
                 node.getElement().prependChild(fixtureNode);
             }
             
-            listeners.announce().afterExample(new ExampleEvent(node.getElement(), (SummarizingResultRecorder)resultRecorder));
+            listeners.announce().afterExample(new ExampleEvent(exampleName, node.getElement(), (SummarizingResultRecorder)resultRecorder));
         } catch (FailFastException e) {
             // Ignore - it'll be re-thrown later if necessary.
         } 
