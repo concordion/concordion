@@ -18,6 +18,9 @@
 
     <h1>Resources Annotation</h1>
 
+    <dl><dt><b>Since:</b></dt>
+    <dd>Concordion 2.0.0</dd></dl>
+
     <p>
         The Resources annotation can be used to apply a new theme to your specifications, tweak the existing styling, or add 
         new css, javascript, images, or other resources.
@@ -213,6 +216,30 @@ public class ResourcesDemoParent {
     		and will copy the resource <span concordion:assertTrue="isCopied(#TEXT)">spec/demo.txt</span>,
     	</p>
     </div> 
+    <!-- ============================================= -->
+    <div class="example">
+        <h3>Example: Relative resource with fixture class in a package</h3>
+
+        <p>Executing the following fixture:</p>
+
+        <pre class="java" concordion:set="#javaFragment">
+package resources.test;
+
+import org.concordion.api.Resources;
+import org.concordion.api.Resources.InsertType;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
+
+@RunWith(ConcordionRunner.class)
+@Resources( value = "demo.css" )
+public class ResourcesDemoTest {
+
+}
+        </pre>
+
+        <p concordion:execute="#result1 = process(#javaFragment)">will include a link to the resource <span concordion:assertEquals="getLink(#TEXT)">demo.css</span>.
+        </p>
+    </div>
 
 </body>
 </html>
