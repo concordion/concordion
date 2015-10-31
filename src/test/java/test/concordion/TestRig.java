@@ -75,6 +75,7 @@ public class TestRig {
                     resultSummary = concordion.processExample(example);
                 }
             }
+            concordion.finish();
 
             String xml = stubTarget.getWrittenString(resource);
             

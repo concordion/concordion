@@ -1,6 +1,7 @@
 package org.concordion.internal;
 
 import org.concordion.api.*;
+import org.concordion.internal.command.SpecificationCommand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,11 +11,18 @@ public class XMLSpecification implements SpecificationByExample {
     private String testDescription;
 
     private final CommandCall rootCommandNode;
+    private final SpecificationCommand specificationCommand;
     private final List<CommandCall> examples;
     private final List<CommandCall> beforeExamples;
 
     public XMLSpecification(CommandCall rootCommandNode) {
         this.rootCommandNode = rootCommandNode;
+        if (!(rootCommandNode.getCommand() instanceof SpecificationCommand)) {
+            throw new IllegalStateException("Expected root command to be a SpecificationCommand");
+        }
+        specificationCommand = (SpecificationCommand) rootCommandNode.getCommand();
+        specificationCommand.start(rootCommandNode);
+
         examples = new ArrayList<CommandCall>();
         beforeExamples = new ArrayList<CommandCall>();
 
@@ -111,6 +119,6 @@ public class XMLSpecification implements SpecificationByExample {
     }
     
     public void finish() {
-    	rootCommandNode.getCommand().finish(rootCommandNode);
+        specificationCommand.finish(rootCommandNode);
     }
 }
