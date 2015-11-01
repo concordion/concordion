@@ -8,6 +8,14 @@ import java.io.OutputStream;
 import org.concordion.api.Resource;
 import org.concordion.api.Target;
 
+/**
+ * @deprecated Since this is overzealous and renames other resources, eg screenshots when using ScreenshotExtension. 
+ * See <a href="https://github.com/concordion/concordion/issues/129">issue #129</a>.
+ * Users are encouraged to create their own implementations instead - eg. 
+ * <a href="https://github.com/concordion/concordion-excel-extension/blob/master/src/main/java/org/concordion/ext/excel/ExcelSuffixRenamingTarget.java">
+ * ExcelSuffixRenamingTarget</a>.
+ */
+@Deprecated
 public class FileTargetWithSuffix implements Target {
 
     private static final String PROPERTY_OUTPUT_DIR = "concordion.output.dir";
