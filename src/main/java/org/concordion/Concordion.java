@@ -19,7 +19,7 @@ public class Concordion {
         this.evaluatorFactory = evaluatorFactory;
         this.fixture = fixture;
 
-        resource = specificationLocator.locateSpecification(fixture);
+        resource = specificationLocator.locateSpecification(fixture.getFixtureObject());
     }
 
     public ResultSummary process() throws IOException {
