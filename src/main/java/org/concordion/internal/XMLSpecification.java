@@ -1,9 +1,11 @@
 package org.concordion.internal;
 
 import org.concordion.api.*;
+import org.concordion.internal.command.ExampleCommand;
 import org.concordion.internal.command.SpecificationCommand;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class XMLSpecification implements SpecificationByExample {
@@ -39,25 +41,37 @@ public class XMLSpecification implements SpecificationByExample {
 
     public void processNode(CommandCall node, Evaluator evaluator, ResultRecorder resultRecorder) {
 
-        for (CommandCall before: beforeExamples) {
-            SummarizingResultRecorder beforeResultRecorder = new SummarizingResultRecorder();
-            before.getCommand().executeAsExample(before, evaluator, beforeResultRecorder);
-            if (beforeResultRecorder.getTotalCount() > 0) {
-                beforeResultRecorder.setSpecificationDescription("Running before for example " + node.getExpression());
-                String errorText = String.format("Before example performed tests in %s %s",
-                        testDescription,
-                        beforeResultRecorder.printToString(null)
-                );
-
-                throw new ConcordionAssertionError(errorText, beforeResultRecorder);
+        if (hasNonExampleChildren(node)) {
+            for (CommandCall before: beforeExamples) {
+                SummarizingResultRecorder beforeResultRecorder = new SummarizingResultRecorder();
+                before.getCommand().executeAsExample(before, evaluator, beforeResultRecorder);
+                if (beforeResultRecorder.getTotalCount() > 0) {
+                    beforeResultRecorder.setSpecificationDescription("Running before for example " + node.getExpression());
+                    String errorText = String.format("Before example performed tests in %s %s",
+                            testDescription,
+                            beforeResultRecorder.printToString(null)
+                    );
+    
+                    throw new ConcordionAssertionError(errorText, beforeResultRecorder);
+                }
             }
         }
-
+        
         if (node.getCommand().isExample()) {
             node.getCommand().executeAsExample(node, evaluator, resultRecorder);
         } else {
             node.execute(evaluator, resultRecorder);
         }
+    }
+
+    private boolean hasNonExampleChildren(CommandCall node) {
+        Collection<CommandCall> children = node.getChildren().asCollection();
+        for (CommandCall child : children) {
+            if (!(child.getCommand().isExample())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void process(Evaluator evaluator, ResultRecorder resultRecorder) {
