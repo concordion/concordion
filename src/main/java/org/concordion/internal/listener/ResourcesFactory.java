@@ -2,10 +2,13 @@ package org.concordion.internal.listener;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -36,7 +39,7 @@ public class ResourcesFactory {
 	
 	public ResourcesFactory(ConcordionExtender builder, Fixture fixture) {
 		
-		File root = getRootPath(fixture.getFixtureClass());
+		List<File> rootPaths = getRootPaths(fixture.getFixtureClass());
 		List<Class<?>> classes = getClassHierarchyParentFirst(fixture.getFixtureClass());
 		
 		for (Class<?> class1 : classes) {
@@ -47,7 +50,7 @@ public class ResourcesFactory {
     				includeDefaultStyling = false;
     			}
     	
-	            sourceFiles.addAll(getResourcesToAdd(class1, annotation, root));
+	            sourceFiles.addAll(getResourcesToAdd(class1, annotation, rootPaths));
 	        }
         }
 		
@@ -70,50 +73,89 @@ public class ResourcesFactory {
 		}
 	}
 	
-	private Collection<? extends ResourceToCopy> getResourcesToAdd(Class<?> class1, Resources annotation, File root) {
+	private Collection<? extends ResourceToCopy> getResourcesToAdd(Class<?> class1, Resources annotation, List<File> rootPaths) {
 		List<ResourceToCopy> sourceFiles = new ArrayList<ResourceToCopy>();
 		
 		for (String sourceFile : annotation.value()) {
-			File search = (sourceFile.startsWith("/")) ? new File(root, sourceFile) : new File(getClassPath(class1), sourceFile);
-			
-			String[] files = new File(search.getParent()).list(new WildcardFilter(search));
-			
 			boolean found = false;
+			File search = null;
 			
-			for (String file : files) {
-				found = true;
-				
-				String fileName = new File(search.getParent(), file).getPath();
-				
-				if (fileName.startsWith(root.getPath())) {
-					fileName = fileName.substring(root.getPath().length());
+			for (File root : rootPaths) {
+				if (sourceFile.startsWith("/")) {
+					search = new File(root, sourceFile);
+				} else {
+					search = new File(root, getClassPath(class1, rootPaths));
+					search = new File(search, sourceFile);
 				}
 				
-				sourceFiles.add(new ResourceToCopy(fileName, annotation.insertType()));
+				String[] files = new File(search.getParent()).list(new WildcardFilter(search));
+				
+				if (files == null) {
+					continue;
+				}
+				
+				for (String file : files) {
+					found = true;
+					
+					String fileName = new File(search.getParent(), file).getPath();
+					
+					if (fileName.startsWith(root.getPath())) {
+						fileName = fileName.substring(root.getPath().length());
+					}
+					
+					sourceFiles.add(new ResourceToCopy(fileName, annotation.insertType()));
+				}
 			}
 			
 			if (!found) {
-				throw new RuntimeException(String.format("No file found in '%s' matching '%s'", search.getParent(), search.getName()));
+				StringBuilder msg = new StringBuilder();
+				msg.append(String.format("No file found matching '%s' in: \r\n", search.getName()));
+				for (File root : rootPaths) {
+					msg.append("\t* ").append(root.getPath()).append("\r\n");
+				}
+				throw new RuntimeException(msg.toString());
 			}
 		}
 		
 		return sourceFiles;
 	}
 
-	private File getRootPath(Class<?> class1) {
+	private List<File> getRootPaths(Class<?> class1) {
+		List<File> rootPaths = new ArrayList<File>();
+		
+		Enumeration<URL> resources;
 		try {
-			return new File(class1.getClassLoader().getResource("").toURI());
+			resources = class1.getClassLoader().getResources("");
+		
+			while (resources.hasMoreElements()) {
+                rootPaths.add(new File(resources.nextElement().toURI()));
+            }
+		} catch (IOException e) {
+			throw new RuntimeException("Unable to get root path", e);
 		} catch (URISyntaxException e) {
 			throw new RuntimeException("Unable to get root path", e);
 		}
+		
+		return rootPaths;
 	}
 	
-	private File getClassPath(Class<?> class1) {
+	private String getClassPath(Class<?> class1, List<File> rootPaths) {
+		String path;
+		
 		try {
-			return new File(class1.getResource("").toURI());
+			path = new File(class1.getResource("").toURI()).getAbsolutePath();
 		} catch (URISyntaxException e) {
 			throw new RuntimeException("Unable to get class path", e);
 		}
+		
+		for (File root : rootPaths) {
+			if (path.startsWith(root.getAbsolutePath())) {
+				path = path.substring(root.getAbsolutePath().length());
+				return path;
+			}
+		}
+		
+		return path;
 	}
 	 
 

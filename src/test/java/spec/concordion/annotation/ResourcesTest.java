@@ -1,7 +1,10 @@
 package spec.concordion.annotation;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -59,9 +62,9 @@ public class ResourcesTest {
 		testRig = new TestRig();
         ProcessingResult result = testRig
             .withFixture(fixture)
-            .withResource(new Resource("/demo.css"), "")
-            .withResource(new Resource("/spec/demo.js"), "")
-            .withResource(new Resource("/spec/demo.txt"), "")
+            .withResource(new Resource("/resources.css"), "")
+            .withResource(new Resource("/spec/resources.js"), "")
+            .withResource(new Resource("/spec/resources.txt"), "")
             .processFragment(htmlFragment);
         
         return result;
@@ -138,16 +141,26 @@ public class ResourcesTest {
     
     
     public boolean isCopied(String expectedResource) {
-    	File root = null;
-    	
     	try {
-			root = new File(this.getClass().getClassLoader().getResource("").toURI());
+			Enumeration<URL> resources;
+			
+			resources = this.getClass().getClassLoader().getResources("");
+			
+			while (resources.hasMoreElements()) {
+                File root = new File(resources.nextElement().toURI());
+                
+                File file = new File(root, expectedResource);
+    	    	
+        		if (file.exists()) {
+        			return true;
+        		};
+            }
+    	} catch (IOException e) {
+    		// Ignore
 		} catch (URISyntaxException e) {
 			// Ignore
 		}
     	
-    	File file = new File(root, expectedResource);
-    	    	
-		return file.exists();
+    	return false;
     }
 }

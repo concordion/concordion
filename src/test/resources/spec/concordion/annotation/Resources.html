@@ -75,13 +75,13 @@ import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
-@Resources( "demo.css" )
+@Resources( "resources.css" )
 public class ResourcesDemoTest {
     
 }
 		</pre>
 		
-		<p concordion:execute="#result1 = process(#javaFragment)">will include a link to the resource <span concordion:assertEquals="getLink(#TEXT)">demo.css</span> into the generated specification
+		<p concordion:execute="#result1 = process(#javaFragment)">will include a link to the resource <span concordion:assertEquals="getLink(#TEXT)">resources.css</span> into the generated specification
 		and leave the <span concordion:assertTrue="isDefaultCssIncluded()">default CSS</span> in the generated specification.</p>
 	</div>
 
@@ -98,13 +98,13 @@ import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
-@Resources( value = "demo.css", insertType = InsertType.EMBEDDED )
+@Resources( value = "resources.css", insertType = InsertType.EMBEDDED )
 public class ResourcesDemoTest {
     
 }
 		</pre>
 	
-    	<p concordion:execute="#result1 = process(#javaFragment)">will embed the resource <span concordion:assertTrue="isCssIncluded(#TEXT)">demo.css</span> into the generated specification.</p>
+    	<p concordion:execute="#result1 = process(#javaFragment)">will embed the resource <span concordion:assertTrue="isCssIncluded(#TEXT)">resources.css</span> into the generated specification.</p>
     </div> 
 
 	<!-- ============================================= -->
@@ -120,13 +120,13 @@ import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
-@Resources( value = "demo.css", includeDefaultStyling = false )
+@Resources( value = "resources.css", includeDefaultStyling = false )
 public class ResourcesDemoTest {
     
 }
 		</pre>
 	
-    	<p concordion:execute="#result1 = process(#javaFragment)">will include a link to the resource <span concordion:assertEquals="getLink(#TEXT)">demo.css</span> 
+    	<p concordion:execute="#result1 = process(#javaFragment)">will include a link to the resource <span concordion:assertEquals="getLink(#TEXT)">resources.css</span> 
     		and remove the <span concordion:assertFalse="isDefaultCssIncluded()">default CSS</span> from the generated specification.
     	</p>
     </div> 
@@ -144,16 +144,16 @@ import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
-@Resources( value = { "demo.css", "/spec/demo.js", "/spec/demo.txt" }, includeDefaultStyling = false )
+@Resources( value = { "resources.css", "/spec/resources.js", "/spec/resources.txt" }, includeDefaultStyling = false )
 public class ResourcesDemoTest {
     
 }
 		</pre>
 	
     	<p concordion:execute="#result1 = process(#javaFragment)">will include 
-    		a link to the resource <span concordion:assertEquals="getLink(#TEXT)">demo.css</span>,
-    		a script link for <span concordion:assertEquals="getScript(#TEXT)">demo.js</span>,
-    		and will copy the resource <span concordion:assertTrue="isCopied(#TEXT)">spec/demo.txt</span>,
+    		a link to the resource <span concordion:assertEquals="getLink(#TEXT)">resources.css</span>,
+    		a script link for <span concordion:assertEquals="getScript(#TEXT)">resources.js</span>,
+    		and will copy the resource <span concordion:assertTrue="isCopied(#TEXT)">spec/resources.txt</span>,
     	</p>
     </div> 
     
@@ -188,7 +188,7 @@ public class ResourcesDemoTest {
 		<pre class="java" concordion:set="#javaFragment">
 import org.concordion.api.Resources;
 
-@Resources( "/spec/demo.js" )
+@Resources( "/spec/resources.js" )
 public class ResourcesDemoTest extends ResourcesDemoParent {
     
 }
@@ -201,16 +201,16 @@ import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
-@Resources( value = "demo.css", includeDefaultStyling = false )
+@Resources( value = "resources.css", includeDefaultStyling = false )
 public class ResourcesDemoParent {
     
 }
 		</pre>
     	
 		<p concordion:execute="#result1 = process(#javaFragment, #javaFragmentParent)">will include 
-    		a link to the resource <span concordion:assertEquals="getLink(#TEXT)">demo.css</span>,
-    		a script link for <span concordion:assertEquals="getScript(#TEXT)">spec/demo.js</span>,
-    		and will copy the resource <span concordion:assertTrue="isCopied(#TEXT)">spec/demo.txt</span>,
+    		a link to the resource <span concordion:assertEquals="getLink(#TEXT)">resources.css</span>,
+    		a script link for <span concordion:assertEquals="getScript(#TEXT)">spec/resources.js</span>,
+    		and will copy the resource <span concordion:assertTrue="isCopied(#TEXT)">spec/resources.txt</span>,
     	</p>
     </div> 
 
