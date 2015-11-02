@@ -1,5 +1,6 @@
 [![Build Status](https://img.shields.io/travis/concordion/concordion.svg)](https://travis-ci.org/concordion/concordion)
 [![Maven Central](https://img.shields.io/maven-central/v/org.concordion/concordion.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.concordion%22%20AND%20a%3A%22concordion%22)
+[![Latest Beta Release](https://img.shields.io/badge/Pre--release-v2.0.0--SNAPSHOT-orange.svg)](https://github.com/concordion/concordion/releases/tag/2.0.0-SNAPSHOT)
 [![Apache License 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 [Concordion](http://www.concordion.org) is an open source framework for Java that lets you turn a plain English description of a requirement into an automated test.
