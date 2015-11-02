@@ -8,6 +8,7 @@ import java.lang.annotation.Target;
 
 /**
  * Inlcudes resource files such as css, javascript, images, etc along with the generated specification.
+ * @since Concordion 2.0.0
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

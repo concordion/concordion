@@ -8,12 +8,14 @@ import java.util.Map.Entry;
 
 import org.concordion.Concordion;
 import org.concordion.api.*;
+import org.concordion.api.Resources.InsertType;
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.api.extension.ConcordionExtensionFactory;
 import org.concordion.api.listener.*;
 import org.concordion.internal.command.*;
 import org.concordion.internal.listener.*;
+import org.concordion.internal.listener.ResourcesFactory.ResourceToCopy;
 import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 import org.concordion.internal.util.IOUtil;
@@ -362,11 +364,30 @@ public class ConcordionBuilder implements ConcordionExtender {
         boolean includeDefaultStyling = true;
         
         if (fixture.declaresResources()) {
-        	ResourcesFactory resources = new ResourcesFactory(this, fixture);
+        	ResourcesFactory resources = new ResourcesFactory(fixture);
+        	List<ResourceToCopy> sourceFiles = resources.getResourcesToCopy();
+        	
+        	for (ResourceToCopy source : sourceFiles) {
+    			if (source.isStyleSheet()) {
+    				if (source.insertType == InsertType.EMBEDDED) {
+    					withEmbeddedCSS(IOUtil.readResourceAsString(source.getResourceName()));
+    				} else {
+    					withLinkedCSS(source.getResourceName(), new Resource(source.getResourceName()));
+    				}
+    			} else if (source.isScript()) {
+    				if (source.insertType == InsertType.EMBEDDED) {
+    					withEmbeddedJavaScript(IOUtil.readResourceAsString(source.getResourceName()));
+    				} else {
+    					withLinkedJavaScript(source.getResourceName(), new Resource(source.getResourceName()));
+    				}
+    			} else {
+    				withResource(source.getResourceName(), new Resource(source.getResourceName()));
+    			}
+    		}
         			
         	includeDefaultStyling = resources.includeDefaultStyling();
         	
-        	withDocumentParsingListener(new ResourcesListener(resources.getFiles()));
+        	withDocumentParsingListener(new ResourcesListener(sourceFiles));
         } 
         
         if (includeDefaultStyling) {

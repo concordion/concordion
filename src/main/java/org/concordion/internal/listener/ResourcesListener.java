@@ -23,10 +23,6 @@ public class ResourcesListener implements DocumentParsingListener {
 	public void beforeParsing(Document document) {
 		Element head = document.getRootElement().getFirstChildElement("head");
 
-		// TODO: Should we do this or not?  The objective is to remove all link and script elements that could conflict with the ones being added.  It's
-		//		 not like those links will point to anything valid, this just keeps the output html cleaner.
-		// 		 
-		//		 Could go a step further and delete all links where href does not start with "http" and all scripts where src does not start with "http"...
 		removeExistingStyling(head);
 		removeExistingScripts(head);
 	}
@@ -54,7 +50,7 @@ public class ResourcesListener implements DocumentParsingListener {
 
 			// Remove any links to custom css created by developers
 			for (ResourceToCopy source : sourceFiles) {
-				if (source.fileName.endsWith(".css")) {
+				if (source.isStyleSheet()) {
 					if (href.contains("/" + source.getName().toLowerCase()) || href.equals(source.getName().toLowerCase())) {
 						head.removeChild(link);
 						break;
@@ -80,7 +76,7 @@ public class ResourcesListener implements DocumentParsingListener {
 			
 			// Remove any links to custom js created by developers
 			for (ResourceToCopy source : sourceFiles) {
-				if (source.fileName.endsWith(".js")) {
+				if (source.isScript()) {
 					if (src.contains("/" + source.getName().toLowerCase()) || src.equals(source.getName().toLowerCase())) {
 						head.removeChild(script);
 						break;

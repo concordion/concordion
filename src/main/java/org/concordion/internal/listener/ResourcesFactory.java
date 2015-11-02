@@ -15,9 +15,6 @@ import java.util.regex.Pattern;
 import org.concordion.api.Resources;
 import org.concordion.api.Resources.InsertType;
 import org.concordion.api.Fixture;
-import org.concordion.api.Resource;
-import org.concordion.api.extension.ConcordionExtender;
-import org.concordion.internal.util.IOUtil;
 
 /**
  * Copy resources to the destination when specification is built.  Resources are copied to the same relative path as they are in the project.
@@ -26,18 +23,19 @@ import org.concordion.internal.util.IOUtil;
  * @author sumnera
  */
 public class ResourcesFactory {
+	private Fixture fixture;
 	private boolean includeDefaultStyling = true;
-	private List<ResourceToCopy> sourceFiles = new ArrayList<ResourceToCopy>();
 		
 	public boolean includeDefaultStyling() {
 		return this.includeDefaultStyling;
 	}
 	
-	public List<ResourceToCopy> getFiles() {
-		return this.sourceFiles;
+	public ResourcesFactory(Fixture fixture) {
+		this.fixture = fixture;
 	}
-	
-	public ResourcesFactory(ConcordionExtender builder, Fixture fixture) {
+		
+	public List<ResourceToCopy> getResourcesToCopy() {
+		List<ResourceToCopy> sourceFiles = new ArrayList<ResourceToCopy>();
 		
 		List<File> rootPaths = getRootPaths(fixture.getFixtureClass());
 		List<Class<?>> classes = getClassHierarchyParentFirst(fixture.getFixtureClass());
@@ -54,23 +52,7 @@ public class ResourcesFactory {
 	        }
         }
 		
-		for (ResourceToCopy source : sourceFiles) {
-			if (source.fileName.endsWith(".css")) {
-				if (source.insertType == InsertType.EMBEDDED) {
-					builder.withEmbeddedCSS(IOUtil.readResourceAsString(source.getResourceName()));
-				} else {
-					builder.withLinkedCSS(source.getResourceName(), new Resource(source.getResourceName()));
-				}
-			} else if (source.fileName.endsWith(".js")) {
-				if (source.insertType == InsertType.EMBEDDED) {
-					builder.withEmbeddedJavaScript(IOUtil.readResourceAsString(source.getResourceName()));
-				} else {
-					builder.withLinkedJavaScript(source.getResourceName(), new Resource(source.getResourceName()));
-				}
-			} else {
-				builder.withResource(source.getResourceName(), new Resource(source.getResourceName()));
-			}
-		}
+		return sourceFiles;
 	}
 	
 	private Collection<? extends ResourceToCopy> getResourcesToAdd(Class<?> class1, Resources annotation, List<File> rootPaths) {
@@ -109,9 +91,9 @@ public class ResourcesFactory {
 			
 			if (!found) {
 				StringBuilder msg = new StringBuilder();
-				msg.append(String.format("No file found matching '%s' in: \r\n", search.getName()));
+				msg.append(String.format("No file found matching '%s' in:", search.getName()));
 				for (File root : rootPaths) {
-					msg.append("\t* ").append(root.getPath()).append("\r\n");
+					msg.append("\r\n\t* ").append(root.getPath());
 				}
 				throw new RuntimeException(msg.toString());
 			}
@@ -174,9 +156,9 @@ public class ResourcesFactory {
         return classes;
     }
     
-    protected class ResourceToCopy {
+    public class ResourceToCopy {
 		protected String fileName;
-		protected InsertType insertType;
+		public InsertType insertType;
 		
 		public ResourceToCopy(String sourceFile, InsertType insertType) {
 			this.fileName = sourceFile;
@@ -195,6 +177,14 @@ public class ResourcesFactory {
 		
 		public String getName() {
 			return new File(fileName).getName();
+		}
+		
+		public boolean isStyleSheet() {
+			return fileName.endsWith(".css");
+		}
+		
+		public boolean isScript() {
+			return fileName.endsWith(".js");
 		}
 	}
     

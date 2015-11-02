@@ -17,15 +17,19 @@
 <body>
 
     <h1>Resources Annotation</h1>
+    
+    <dl>
+    	<dt><b>Since:</b></dt><dd>Concordion 2.0.0</dd>
+    </dl>
 
     <p>
-        The Resources annotation can be used to apply a new theme to your specifications, tweak the existing styling, or add 
+    	The Resources annotation can be used to apply a new theme to your specifications, tweak the existing styling, or add 
         new css, javascript, images, or other resources.
     </p>
     <p>
-		The Resources annotation can be applied to all classes in the class hierarchy - each class will be inspected in turn (parent first) 
-		for the annotation.  Each annotation will be processed in isolation to others so they will operate independently.  You will need to 
-		ensure that there are no conflicts.
+    	The Resources annotation is applied to the fixture class corresponding to the specification. It can be applied to all classes in the fixture's 
+    	class hierarchy - each class will be inspected in turn (parent first) for the annotation.  Each annotation will be processed in isolation to 
+    	others so they will operate independently.  You will need to ensure that there are no conflicts.
 	</p>
     
     <p>The annotation has the following options:</p>
@@ -65,7 +69,7 @@
 	
 	<!-- ============================================= -->
     <div class="example">
-        <h3>Example: Single Linked Resource</h3>
+        <h3>Example: Single Linked Resource - relative to the fixture</h3>
 		
 		<p>Executing the following fixture:</p>
 		
@@ -85,6 +89,28 @@ public class ResourcesDemoTest {
 		and leave the <span concordion:assertTrue="isDefaultCssIncluded()">default CSS</span> in the generated specification.</p>
 	</div>
 
+	<!-- ============================================= -->
+    <div class="example">
+        <h3>Example: Single Linked Resource - relative to the root folder</h3>
+		
+		<p>Executing the following fixture:</p>
+		
+		<pre class="java" concordion:set="#javaFragment">
+import org.concordion.api.Resources;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
+
+@RunWith(ConcordionRunner.class)
+@Resources( "/resources.css" )
+public class ResourcesDemoTest {
+    
+}
+		</pre>
+		
+		<p concordion:execute="#result1 = process(#javaFragment)">will include a link to the resource <span concordion:assertEquals="getLink(#TEXT)">resources.css</span> into the generated specification
+		and leave the <span concordion:assertTrue="isDefaultCssIncluded()">default CSS</span> in the generated specification.</p>
+	</div>
+	
 	<!-- ============================================= -->
     <div class="example">
         <h3>Example: Single Embedded Resource</h3>
@@ -154,6 +180,7 @@ public class ResourcesDemoTest {
     		a link to the resource <span concordion:assertEquals="getLink(#TEXT)">resources.css</span>,
     		a script link for <span concordion:assertEquals="getScript(#TEXT)">resources.js</span>,
     		and will copy the resource <span concordion:assertTrue="isCopied(#TEXT)">spec/resources.txt</span>,
+    		and will remove the <span concordion:assertFalse="isDefaultCssIncluded()">default CSS</span> from the generated specification.
     	</p>
     </div> 
     
@@ -210,7 +237,27 @@ public class ResourcesDemoParent {
 		<p concordion:execute="#result1 = process(#javaFragment, #javaFragmentParent)">will include 
     		a link to the resource <span concordion:assertEquals="getLink(#TEXT)">resources.css</span>,
     		a script link for <span concordion:assertEquals="getScript(#TEXT)">spec/resources.js</span>,
-    		and will copy the resource <span concordion:assertTrue="isCopied(#TEXT)">spec/resources.txt</span>,
+    		and will remove the <span concordion:assertFalse="isDefaultCssIncluded()">default CSS</span> from the generated specification.
+    	</p>
+    </div> 
+
+    <!-- ============================================= -->
+	<div class="example">
+        <h3>Example: Files with space in name are processed</h3>
+		
+		<p>Executing the following fixture:</p>
+		
+		<pre class="java" concordion:set="#javaFragment">
+import org.concordion.api.Resources;
+
+@Resources( "/spec/resources with space.txt" )
+public class ResourcesDemoTest {
+    
+}
+		</pre>
+		
+		<p concordion:execute="#result1 = process(#javaFragment)">will include 
+    		and will copy the resource <span concordion:assertTrue="isCopied(#TEXT)">spec/resources with space.txt</span>,
     	</p>
     </div> 
 

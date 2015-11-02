@@ -65,6 +65,7 @@ public class ResourcesTest {
             .withResource(new Resource("/resources.css"), "")
             .withResource(new Resource("/spec/resources.js"), "")
             .withResource(new Resource("/spec/resources.txt"), "")
+            .withResource(new Resource("/spec/resources with space.txt"), "")
             .processFragment(htmlFragment);
         
         return result;
