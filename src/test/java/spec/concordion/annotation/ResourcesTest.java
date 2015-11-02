@@ -33,6 +33,9 @@ public class ResourcesTest {
     }
 
     public void process(String javaFragment, String javaFragmentParent) throws Exception {
+    	// Delete files from previous test
+    	
+    	
         compiler = new JavaSourceCompiler();
         String htmlFragment = "";
         Object fixture = compile(javaFragment, javaFragmentParent);
@@ -142,26 +145,10 @@ public class ResourcesTest {
     
     
     public boolean isCopied(String expectedResource) {
-    	try {
-			Enumeration<URL> resources;
-			
-			resources = this.getClass().getClassLoader().getResources("");
-			
-			while (resources.hasMoreElements()) {
-                File root = new File(resources.nextElement().toURI());
-                
-                File file = new File(root, expectedResource);
-    	    	
-        		if (file.exists()) {
-        			return true;
-        		};
-            }
-    	} catch (IOException e) {
-    		// Ignore
-		} catch (URISyntaxException e) {
-			// Ignore
-		}
+    	if (!expectedResource.startsWith("/")) {
+    		expectedResource = "/" + expectedResource;
+    	}
     	
-    	return false;
+    	return testRig.hasCopiedResource(new Resource(expectedResource));
     }
 }
