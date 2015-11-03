@@ -1,0 +1,1 @@
+/* Here is a JavaScript file (Used by Resources test) */

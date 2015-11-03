@@ -57,9 +57,11 @@ public class ResourcesTest {
         ProcessingResult result = testRig
             .withFixture(fixture)
             .withResource(new Resource("/resources.css"), "")
-            .withResource(new Resource("/spec/resources.js"), "")
-            .withResource(new Resource("/spec/resources.txt"), "")
-            .withResource(new Resource("/spec/resources with space.txt"), "")
+            .withResource(new Resource("/resources/test/resources.js"), "")
+            .withResource(new Resource("/resources/test/resources.txt"), "")
+            .withResource(new Resource("/resources/test/resources with space.txt"), "")
+            .withResource(new Resource("/resources/test/subfolder/resources with space.js"), "")
+            .withResource(new Resource("/resources/test/../../resources.css"), "")
             .processFragment(htmlFragment);
         
         return result;
@@ -67,9 +69,9 @@ public class ResourcesTest {
 	
     public String getLink(String expectedResource) {
     	Element[] links = result.getRootElement().getFirstChildElement("head").getChildElements("link");
-    	
+    	    	
     	for (Element link : links) {
-			if (link.getAttributeValue("href").contains(expectedResource)) {
+			if (link.getAttributeValue("href").equals(expectedResource)) {
 				return expectedResource;
 			}
 		}
@@ -81,7 +83,7 @@ public class ResourcesTest {
     	Element[] scripts = result.getRootElement().getFirstChildElement("head").getChildElements("script");
     	
     	for (Element script : scripts) {
-			if (script.getAttributeValue("src").contains(expectedResource)) {
+			if (script.getAttributeValue("src").equals(expectedResource)) {
 				return expectedResource;
 			}
 		}
@@ -112,8 +114,7 @@ public class ResourcesTest {
     	
     	return false;
     }
-    
-    
+        
     public boolean isCopied(String expectedResource) {
     	if (!expectedResource.startsWith("/")) {
     		expectedResource = "/" + expectedResource;
