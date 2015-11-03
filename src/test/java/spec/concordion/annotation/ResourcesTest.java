@@ -20,7 +20,7 @@ public class ResourcesTest {
         String htmlFragment = "";
         Object fixture = compile(javaFragment);
         
-        result = process(htmlFragment, fixture);
+        result = process("", htmlFragment, fixture);
     }
 
     public void process(String javaFragment, String javaFragmentParent) throws Exception {
@@ -31,7 +31,7 @@ public class ResourcesTest {
         String htmlFragment = "";
         Object fixture = compile(javaFragment, javaFragmentParent);
         
-        result = process(htmlFragment, fixture);
+        result = process("", htmlFragment, fixture);
     }
     
     public boolean processExpectingException(String javaFragment, String errorMessage) throws Exception {
@@ -44,6 +44,12 @@ public class ResourcesTest {
         return false;
     }
     
+    public void processSpec(String htmlHead, String javaFragment) throws InstantiationException, IllegalAccessException, Exception {
+    	Object fixture = compile(javaFragment);
+        
+        result = process(htmlHead, "", fixture);
+    }
+    
     private Object compile(String javaSource) throws Exception, InstantiationException, IllegalAccessException {
         return compiler.compile(javaSource).newInstance();
 	}
@@ -52,7 +58,7 @@ public class ResourcesTest {
         return compiler.compileWithParent(javaSource, javaSourceParent).newInstance();
 	}
 
-	private ProcessingResult process(String htmlFragment, Object fixture) {
+	private ProcessingResult process(String htmlHead, String htmlFragment, Object fixture) {
 		testRig = new TestRig();
         ProcessingResult result = testRig
             .withFixture(fixture)
@@ -62,33 +68,33 @@ public class ResourcesTest {
             .withResource(new Resource("/resources/test/resources with space.txt"), "")
             .withResource(new Resource("/resources/test/subfolder/resources with space.js"), "")
             .withResource(new Resource("/resources/test/../../resources.css"), "")
-            .processFragment(htmlFragment);
+            .processFragment(htmlHead, htmlFragment);
         
         return result;
     }
 	
-    public String getLink(String expectedResource) {
+	public boolean getLinkExists(String expectedResource) {
     	Element[] links = result.getRootElement().getFirstChildElement("head").getChildElements("link");
     	    	
     	for (Element link : links) {
 			if (link.getAttributeValue("href").equals(expectedResource)) {
-				return expectedResource;
+				return true;
 			}
 		}
     	
-    	return "";
+    	return false;
     }
-    
-    public String getScript(String expectedResource) {
+
+    public boolean getScriptExists(String expectedResource) {
     	Element[] scripts = result.getRootElement().getFirstChildElement("head").getChildElements("script");
     	
     	for (Element script : scripts) {
 			if (script.getAttributeValue("src").equals(expectedResource)) {
-				return expectedResource;
+				return true;
 			}
 		}
     	
-    	return "";
+    	return false;
     }
     
     public boolean isCssIncluded(String expectedResource) {

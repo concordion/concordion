@@ -34,6 +34,10 @@ public class TestRig {
     public ProcessingResult processFragment(String fragment) {
         return process(wrapFragment(fragment));
     }
+    
+    public ProcessingResult processFragment(String head, String fragment) {
+        return process(wrapFragment(head, fragment));
+    }
 
     public ProcessingResult process(Resource resource) {
         EventRecorder eventRecorder = new EventRecorder();
@@ -80,6 +84,11 @@ public class TestRig {
 
     private String wrapFragment(String fragment) {
         fragment = "<body><fragment>" + fragment + "</fragment></body>";
+        return wrapWithNamespaceDeclaration(fragment);
+    }
+    
+    private String wrapFragment(String head, String fragment) {
+        fragment = head + "<body><fragment>" + fragment + "</fragment></body>";
         return wrapWithNamespaceDeclaration(fragment);
     }
     

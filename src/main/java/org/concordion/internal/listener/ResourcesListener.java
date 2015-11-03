@@ -22,7 +22,7 @@ public class ResourcesListener implements DocumentParsingListener {
 	@Override
 	public void beforeParsing(Document document) {
 		Element head = document.getRootElement().getFirstChildElement("head");
-
+		
 		removeExistingStyling(head);
 		removeExistingScripts(head);
 	}

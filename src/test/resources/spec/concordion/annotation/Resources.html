@@ -87,9 +87,9 @@ public class ResourcesDemoTest {
 		</pre>
 		
 		<p concordion:execute="#result1 = process(#javaFragment)">will include a link to the resources
-			<span concordion:assertEquals="getScript(#TEXT)">resources.js</span>,  
-			<span concordion:assertEquals="getScript(#TEXT)">subfolder/resources with space.js</span> and
-			<span concordion:assertEquals="getLink(#TEXT)">../../resources.css</span> in the generated specification
+			<span concordion:assertTrue="getScriptExists(#TEXT)">resources.js</span>,  
+			<span concordion:assertTrue="getScriptExists(#TEXT)">subfolder/resources with space.js</span> and
+			<span concordion:assertTrue="getLinkExists(#TEXT)">../../resources.css</span> in the generated specification
 		and leave the <span concordion:assertTrue="isDefaultCssIncluded()">default CSS</span> in the generated specification.</p>
 	</div>
 
@@ -115,8 +115,8 @@ public class ResourcesDemoTest {
 		</pre>
 		
 		<p concordion:execute="#result1 = process(#javaFragment)">will include a link to the resources 
-			<span concordion:assertEquals="getLink(#TEXT)">../../resources.css</span> and 
-			<span concordion:assertEquals="getScript(#TEXT)">resources.js</span> into the generated specification
+			<span concordion:assertTrue="getLinkExists(#TEXT)">../../resources.css</span> and 
+			<span concordion:assertTrue="getScriptExists(#TEXT)">resources.js</span> into the generated specification
 		and leave the <span concordion:assertTrue="isDefaultCssIncluded()">default CSS</span> in the generated specification.</p>
 	</div>
 	
@@ -165,7 +165,7 @@ public class ResourcesDemoTest {
 }
 		</pre>
 	
-    	<p concordion:execute="#result1 = process(#javaFragment)">will include a link to the resource <span concordion:assertEquals="getLink(#TEXT)">resources.css</span> 
+    	<p concordion:execute="#result1 = process(#javaFragment)">will include a link to the resource <span concordion:assertTrue="getLinkExists(#TEXT)">resources.css</span> 
     		and remove the <span concordion:assertFalse="isDefaultCssIncluded()">default CSS</span> from the generated specification.
     	</p>
     </div> 
@@ -227,9 +227,56 @@ public class ResourcesDemoParent {
 		</pre>
     	
 		<p concordion:execute="#result1 = process(#javaFragment, #javaFragmentParent)">will include a link to the resources
-			<span concordion:assertEquals="getLink(#TEXT)">../../resources.css</span>
-			and <span concordion:assertEquals="getScript(#TEXT)">resources.js</span>,
+			<span concordion:assertTrue="getLinkExists(#TEXT)">../../resources.css</span>
+			and <span concordion:assertTrue="getScriptExists(#TEXT)">resources.js</span>,
     		and will remove the <span concordion:assertFalse="isDefaultCssIncluded()">default CSS</span> from the generated specification.
+    	</p>
+    </div> 
+
+
+	<!-- ============================================= -->
+	<div class="example">
+        <h3>Example: Remove Developer Added Link and Script Elements</h3>
+		
+		<p>Executing the following fixture:</p>
+		
+		<pre class="java" concordion:set="#javaFragment">
+package resources.test;
+
+import org.concordion.api.Resources;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
+
+@RunWith(ConcordionRunner.class)
+@Resources( value = "/resources.css", "resources.js", includeDefaultStyling = false )
+public class ResourcesDemoTest {
+    
+}
+		</pre>
+		
+		<p>With the following specification:</p>
+
+		<pre class="java" concordion:set="#snippet">
+&lt;head&gt;
+	&lt;link href="../../concordion.css" rel="stylesheet" type="text/css" /&gt;
+	&lt;link href="resources.css" rel="stylesheet" type="text/css" /&gt;
+	&lt;link href="unknown.css" rel="stylesheet" type="text/css" /&gt;
+	&lt;script type="text/javascript" src="../resources.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+		</pre>
+			
+    	<p concordion:execute="#result1 = processSpec(#snippet, #javaFragment)">Will update the generated specification: 
+    		<ul>
+    			<li>remove the link to the resource <span concordion:assertFalse="getLinkExists(#TEXT)">../../concordion.css</span></li>
+    			
+    			<li>remove the link to the resource <span concordion:assertFalse="getLinkExists(#TEXT)">resources.css</span></li>
+    			<li>add a link to the resource <span concordion:assertTrue="getLinkExists(#TEXT)">../../resources.css</span></li>
+    			
+    			<li>remove the reference to the script <span concordion:assertFalse="getLinkExists(#TEXT)">../resources.js</span></li>
+    			<li>add a reference to the script  <span concordion:assertTrue="getLinkExists(#TEXT)">resources.js</span></li>
+    			
+    			<li>leave the link to the resource <span concordion:assertTrue="getLinkExists(#TEXT)">unknown.css</span> as the Resources annotation knows nothing about it</li>
+    		</ul>
     	</p>
     </div> 
 
