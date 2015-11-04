@@ -9,13 +9,14 @@ import nu.xom.Element;
 import nu.xom.Elements;
 
 /**
- * Adds custom CSS to the generated specifications
+ * Removes CSS and JS references from the head section when they've been manually added by the specifications author
+ * 
  * @author sumnera
  */
-public class ResourcesListener implements DocumentParsingListener {
+public class ResourceReferenceRemover implements DocumentParsingListener {
 	private List<ResourceToCopy> sourceFiles = new ArrayList<ResourceToCopy>();
 		
-	public ResourcesListener(List<ResourceToCopy> sourceFiles) {
+	public ResourceReferenceRemover(List<ResourceToCopy> sourceFiles) {
 		this.sourceFiles = sourceFiles;
 	}
 
