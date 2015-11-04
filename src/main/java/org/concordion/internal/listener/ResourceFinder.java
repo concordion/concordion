@@ -22,7 +22,7 @@ import org.concordion.api.Fixture;
  * 
  * @author sumnera
  */
-public class ResourcesFactory {
+public class ResourceFinder {
 	private Fixture fixture;
 	private boolean includeDefaultStyling = true;
 		
@@ -30,7 +30,7 @@ public class ResourcesFactory {
 		return this.includeDefaultStyling;
 	}
 	
-	public ResourcesFactory(Fixture fixture) {
+	public ResourceFinder(Fixture fixture) {
 		this.fixture = fixture;
 	}
 		
@@ -57,29 +57,21 @@ public class ResourcesFactory {
 	
 	private Collection<? extends ResourceToCopy> getResourcesToAdd(Class<?> class1, Resources annotation, List<File> rootPaths) {
 		List<ResourceToCopy> sourceFiles = new ArrayList<ResourceToCopy>();
+
+		String packageName = getPackageName(class1);
 		
 		for (String sourceFile : annotation.value()) {
 			boolean found = false;
-			File search = null;
 			
 			for (File root : rootPaths) {
-				if (sourceFile.startsWith("/")) {
-					search = new File(root, sourceFile);
-				} else {
-					search = new File(root, getClassPath(class1, rootPaths));
-					search = new File(search, sourceFile);
-				}
-				
-				String[] files = new File(search.getParent()).list(new WildcardFilter(search));
-				
-				if (files == null) {
-					continue;
-				}
+				File searchPath = getAbsoluteSearchPath(root, packageName, sourceFile);
+
+				String[] files = findMatchingFiles(searchPath);
 				
 				for (String file : files) {
 					found = true;
 					
-					String fileName = new File(search.getParent(), file).getPath();
+					String fileName = new File(searchPath.getParent(), file).getPath();
 					
 					if (fileName.startsWith(root.getPath())) {
 						fileName = fileName.substring(root.getPath().length());
@@ -91,7 +83,7 @@ public class ResourcesFactory {
 			
 			if (!found) {
 				StringBuilder msg = new StringBuilder();
-				msg.append(String.format("No file found matching '%s' in:", search.getName()));
+				msg.append(String.format("No file found matching '%s' in:", sourceFile));
 				for (File root : rootPaths) {
 					msg.append("\r\n\t* ").append(root.getPath());
 				}
@@ -101,6 +93,37 @@ public class ResourcesFactory {
 		
 		return sourceFiles;
 	}
+
+    private String[] findMatchingFiles(File searchPath) {
+        String[] files = new File(searchPath.getParent()).list(new WildcardFilter(searchPath));
+
+        if (files == null) {
+            files = new String[] {};
+        }
+        return files;
+    }
+
+    private File getAbsoluteSearchPath(File root, String packageName, String sourceFile) {
+        File search;
+        if (sourceFile.startsWith("/")) {
+            search = new File(root, sourceFile);
+        } else {
+            search = new File(root, packageName);
+            search = new File(search, sourceFile);
+        }
+        return search;
+    }
+
+    private String getPackageName(Class<?> class1) {
+        String qualifiedClassName = class1.getName();
+        int lastDot = qualifiedClassName.lastIndexOf(".");
+        String packageName = "";
+        if (lastDot != -1) {
+            packageName = qualifiedClassName.substring(0, lastDot);
+            packageName = packageName.replaceAll("\\.", "/");
+        }
+        return packageName;
+    }
 
 	private List<File> getRootPaths(Class<?> class1) {
 		List<File> rootPaths = new ArrayList<File>();
@@ -120,26 +143,6 @@ public class ResourcesFactory {
 		
 		return rootPaths;
 	}
-	
-	private String getClassPath(Class<?> class1, List<File> rootPaths) {
-		String path;
-				
-		try {
-			path = new File(class1.getResource("").toURI()).getAbsolutePath() + File.separator;
-		} catch (URISyntaxException e) {
-			throw new RuntimeException("Unable to get class path", e);
-		}
-		
-		for (File root : rootPaths) {
-			if (path.startsWith(root.getAbsolutePath() + File.separator)) {
-				path = path.substring((root.getAbsolutePath() + File.separator).length());
-				return path;
-			}
-		}
-		
-		return path;
-	}
-	 
 
 	/**
      * Returns the specified class and all of its superclasses, excluding java.lang.Object,
