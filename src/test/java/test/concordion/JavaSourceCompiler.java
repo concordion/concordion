@@ -20,7 +20,7 @@ public class JavaSourceCompiler {
     public Class<?> compile(String className, String sourceCode) throws Exception {
         
         try {
-            compiler.compile(new Source(sourceCode, getClassName(sourceCode) + ".java"));
+            compiler.compile(new Source(sourceCode, className.replaceAll("\\.", "/") + ".java"));
         } catch (CompilationFailedException e) {
             e.printDiagnosticsTo(System.out);
         }
@@ -30,12 +30,13 @@ public class JavaSourceCompiler {
     
     public Class<?> compileWithParent(String sourceCode, String sourceCodeParent) throws Exception {
         String qualifiedClassName = getPackageName(sourceCode) + getClassName(sourceCode);
-        return compile(qualifiedClassName, sourceCode, sourceCodeParent);
+        String qualifiedParentClassName = getPackageName(sourceCodeParent) + getClassName(sourceCodeParent);
+        return compile(qualifiedClassName, sourceCode, qualifiedParentClassName, sourceCodeParent);
     }
 
-    public Class<?> compile(String className, String sourceCode, String sourceCodeParent) throws Exception {
+    public Class<?> compile(String className, String sourceCode, String parentClassName, String sourceCodeParent) throws Exception {
     	try {
-            compiler.compile(new Source(sourceCode, getClassName(sourceCode) + ".java"), new Source(sourceCodeParent, getClassName(sourceCodeParent) + ".java"));
+            compiler.compile(new Source(sourceCode, className.replaceAll("\\.", "/") + ".java"), new Source(sourceCodeParent, parentClassName.replaceAll("\\.", "/") + ".java"));
         } catch (CompilationFailedException e) {
             e.printDiagnosticsTo(System.out);
         }
