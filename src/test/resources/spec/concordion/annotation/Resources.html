@@ -120,6 +120,38 @@ public class ResourcesDemoTest {
 		and leave the <span concordion:assertTrue="isDefaultCssIncluded()">default CSS</span> in the generated specification.</p>
 	</div>
 	
+
+	<!-- ============================================= -->
+	<div class="example">
+        <h3>Example: Wildcard Search</h3>
+		
+		<p>Executing the following fixture:</p>
+		
+		<pre class="java" concordion:set="#javaFragment">
+package resources.test;
+
+import org.concordion.api.Resources;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
+
+@RunWith(ConcordionRunner.class)
+@Resources( value = { "resources.*", "/resource?.c??" } )
+public class ResourcesDemoTest {
+    
+}
+		</pre>
+		
+    	<p concordion:execute="#result1 = process(#javaFragment)">Will add the following resources to the generated specification: 
+	    	<table concordion:verifyRows="#resources : getResources()">
+		        <tr><th concordion:assertEquals="#resources">Added Resources</th></tr>
+		        <tr><td>resources.js</td></tr>
+		        <tr><td>resources.txt</td></tr>
+		        <tr><td>../../resources.css</td></tr>
+		    </table>
+    	</p>
+    </div>
+    
+    	
 	<!-- ============================================= -->
     <div class="example">
         <h3>Example: Embedded Resource</h3>
@@ -279,6 +311,6 @@ public class ResourcesDemoTest {
     		</ul>
     	</p>
     </div> 
-
+ 
 </body>
 </html>

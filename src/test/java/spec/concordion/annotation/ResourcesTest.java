@@ -1,5 +1,8 @@
 package spec.concordion.annotation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.concordion.api.Element;
 import org.concordion.api.Resource;
 import org.concordion.integration.junit4.ConcordionRunner;
@@ -70,9 +73,20 @@ public class ResourcesTest {
         return result;
     }
 	
+	public Iterable<String> getResources() {
+		List<String> resources = new ArrayList<String>();
+    	
+    	List<Resource> resourceList = testRig.getCopiedResources();
+    	for (Resource resource : resourceList) {
+			resources.add(new Resource("/resources/test/ResourcesTest.html").getRelativePath(resource));
+		}
+    	
+    	return resources;
+	}
+	
 	public boolean getLinkExists(String expectedResource) {
     	Element[] links = result.getRootElement().getFirstChildElement("head").getChildElements("link");
-    	    	
+		    	    	
     	for (Element link : links) {
 			if (link.getAttributeValue("href").equals(expectedResource)) {
 				return true;
@@ -82,7 +96,7 @@ public class ResourcesTest {
     	return false;
     }
 
-    public boolean getScriptExists(String expectedResource) {
+	public boolean getScriptExists(String expectedResource) {
     	Element[] scripts = result.getRootElement().getFirstChildElement("head").getChildElements("script");
     	
     	for (Element script : scripts) {
@@ -93,8 +107,8 @@ public class ResourcesTest {
     	
     	return false;
     }
-    
-    public boolean isCssIncluded(String expectedResource) {
+
+	public boolean isCssIncluded(String expectedResource) {
     	Element[] styles = result.getRootElement().getFirstChildElement("head").getChildElements("style");
     	
     	for (Element style : styles) {

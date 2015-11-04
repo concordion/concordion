@@ -84,9 +84,15 @@ public class ResourceFinder {
 			if (!found) {
 				StringBuilder msg = new StringBuilder();
 				msg.append(String.format("No file found matching '%s' in:", sourceFile));
+				
 				for (File root : rootPaths) {
 					msg.append("\r\n\t* ").append(root.getPath());
-				}
+					
+					if (!isSearchRoot(sourceFile)) {
+						msg.append(File.separator).append(packageName);
+					}
+				}						
+				
 				throw new RuntimeException(msg.toString());
 			}
 		}
@@ -105,7 +111,7 @@ public class ResourceFinder {
 
     private File getAbsoluteSearchPath(File root, String packageName, String sourceFile) {
         File search;
-        if (sourceFile.startsWith("/")) {
+        if (isSearchRoot(sourceFile)) {
             search = new File(root, sourceFile);
         } else {
             search = new File(root, packageName);
@@ -114,13 +120,17 @@ public class ResourceFinder {
         return search;
     }
 
+	private boolean isSearchRoot(String sourceFile) {
+		return sourceFile.startsWith("/");
+	}
+
     private String getPackageName(Class<?> class1) {
         String qualifiedClassName = class1.getName();
         int lastDot = qualifiedClassName.lastIndexOf(".");
         String packageName = "";
         if (lastDot != -1) {
             packageName = qualifiedClassName.substring(0, lastDot);
-            packageName = packageName.replaceAll("\\.", "/");
+            packageName = packageName.replace('.', File.separatorChar);
         }
         return packageName;
     }

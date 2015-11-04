@@ -1,6 +1,7 @@
 package test.concordion;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.concordion.Concordion;
 import org.concordion.api.EvaluatorFactory;
@@ -117,6 +118,10 @@ public class TestRig {
         return stubTarget.hasCopiedResource(resource);
     }
 
+    public List<Resource> getCopiedResources() {
+    	return stubTarget.getCopiedResources();
+    }
+    
     public TestRig withExtension(ConcordionExtension extension) {
         this.extension = extension;
         return this;
