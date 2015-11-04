@@ -24,9 +24,6 @@ public class ResourcesTest {
     }
 
     public void process(String javaFragment, String javaFragmentParent) throws Exception {
-    	// Delete files from previous test
-    	
-    	
         compiler = new JavaSourceCompiler();
         String htmlFragment = "";
         Object fixture = compile(javaFragment, javaFragmentParent);

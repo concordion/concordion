@@ -123,16 +123,16 @@ public class ResourcesFactory {
 	
 	private String getClassPath(Class<?> class1, List<File> rootPaths) {
 		String path;
-		
+				
 		try {
-			path = new File(class1.getResource("").toURI()).getAbsolutePath();
+			path = new File(class1.getResource("").toURI()).getAbsolutePath() + File.separator;
 		} catch (URISyntaxException e) {
 			throw new RuntimeException("Unable to get class path", e);
 		}
 		
 		for (File root : rootPaths) {
-			if (path.startsWith(root.getAbsolutePath())) {
-				path = path.substring(root.getAbsolutePath().length());
+			if (path.startsWith(root.getAbsolutePath() + File.separator)) {
+				path = path.substring((root.getAbsolutePath() + File.separator).length());
 				return path;
 			}
 		}
