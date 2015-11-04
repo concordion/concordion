@@ -35,8 +35,8 @@ public class TestRig {
         return process(wrapFragment(fragment));
     }
     
-    public ProcessingResult processFragment(String head, String fragment) {
-        return process(wrapFragment(head, fragment));
+    public ProcessingResult processFragment(String resourceLocation, String head, String fragment) {
+        return process(resourceLocation, wrapFragment(head, fragment));
     }
 
     public ProcessingResult process(Resource resource) {
@@ -77,7 +77,11 @@ public class TestRig {
     }
 
     public ProcessingResult process(String html) {
-        Resource resource = new Resource("/testrig");
+        return process("/testrig", html);
+    }
+    
+    public ProcessingResult process(String resourceLocation, String html) {
+        Resource resource = new Resource(resourceLocation);
         withResource(resource, html);
         return process(resource);
     }
