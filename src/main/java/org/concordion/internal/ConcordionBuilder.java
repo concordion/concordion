@@ -15,7 +15,7 @@ import org.concordion.api.extension.ConcordionExtensionFactory;
 import org.concordion.api.listener.*;
 import org.concordion.internal.command.*;
 import org.concordion.internal.listener.*;
-import org.concordion.internal.listener.ResourcesFactory.ResourceToCopy;
+import org.concordion.internal.listener.ResourceFinder.ResourceToCopy;
 import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 import org.concordion.internal.util.IOUtil;
@@ -364,7 +364,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         boolean includeDefaultStyling = true;
         
         if (fixture.declaresResources()) {
-        	ResourcesFactory resources = new ResourcesFactory(fixture);
+        	ResourceFinder resources = new ResourceFinder(fixture);
         	List<ResourceToCopy> sourceFiles = resources.getResourcesToCopy();
         	
         	for (ResourceToCopy source : sourceFiles) {
