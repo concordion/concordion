@@ -10,8 +10,8 @@ public class Concordion {
 
     private final EvaluatorFactory evaluatorFactory;
     private final SpecificationReader specificationReader;
-    private final Resource resource;
-    private final SpecificationByExample specification;
+    private Resource resource;
+    private SpecificationByExample specification;
     private Fixture fixture;
 
     public Concordion(SpecificationLocator specificationLocator, SpecificationReader specificationReader, EvaluatorFactory evaluatorFactory, Fixture fixture) throws IOException {
@@ -20,32 +20,40 @@ public class Concordion {
         this.fixture = fixture;
 
         resource = specificationLocator.locateSpecification(fixture.getFixtureObject());
-        specification = loadSpecificationFromResource(resource);
     }
 
     public ResultSummary process() throws IOException {
         return process(specification, fixture);
     }
 
-    public ResultSummary process(Resource resource, Fixture fixture) throws IOException {
-        return process(loadSpecificationFromResource(resource), fixture);
+    /** For TestRig use only **/
+    public void override(Resource resource, Fixture fixture) throws IOException {
+        this.resource= resource;
+        this.fixture = fixture;
     }
  
-    private ResultSummary process(SpecificationByExample specification, Fixture fixture) {
+    private ResultSummary process(SpecificationByExample specification, Fixture fixture) throws IOException {
         SummarizingResultRecorder resultRecorder = new SummarizingResultRecorder();
         resultRecorder.setSpecificationDescription(fixture.getDescription());
-        specification.process(evaluatorFactory.createEvaluator(fixture.getFixtureObject()), resultRecorder);
+        getSpecification().process(evaluatorFactory.createEvaluator(fixture.getFixtureObject()), resultRecorder);
         return resultRecorder;
     }
 
+    private SpecificationByExample getSpecification() throws IOException {
+        if (specification == null) {
+            specification = loadSpecificationFromResource(resource);
+        }
+        return specification;
+    }
+
     public List<String> getExampleNames() throws IOException {
-        return specification.getExampleNames();
+        return getSpecification().getExampleNames();
     }
 
     public ResultSummary processExample(String example) throws IOException {
         SummarizingResultRecorder resultRecorder = new SummarizingResultRecorder();
         resultRecorder.setSpecificationDescription(example);
-        specification.processExample(evaluatorFactory.createEvaluator(fixture.getFixtureObject()), example, resultRecorder);
+        getSpecification().processExample(evaluatorFactory.createEvaluator(fixture.getFixtureObject()), example, resultRecorder);
         return resultRecorder;
     }
 

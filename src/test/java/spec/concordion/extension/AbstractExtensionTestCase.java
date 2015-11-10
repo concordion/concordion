@@ -50,6 +50,7 @@ public abstract class AbstractExtensionTestCase {
         String[] events = baos.toString().split("\\r?\\n");
         eventList = new ArrayList<String>(Arrays.asList(events));
         eventList.remove("");
+        baos.reset();
         return eventList;
     }
 

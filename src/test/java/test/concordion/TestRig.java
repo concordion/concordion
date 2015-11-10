@@ -1,6 +1,7 @@
 package test.concordion;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.concordion.Concordion;
 import org.concordion.api.EvaluatorFactory;
@@ -64,8 +65,20 @@ public class TestRig {
         }
 
         try {
-            ResultSummary resultSummary = concordion.process(resource, fixture);
+
+//            ResultSummary resultSummary = concordion.process(resource, fixture);
+            ResultSummary resultSummary = null;
+            concordion.override(resource, fixture);
+            List<String> examples = concordion.getExampleNames();
+            if (!examples.isEmpty()) {
+                for (String example : examples) {
+                    resultSummary = concordion.processExample(example);
+                }
+            }
+            concordion.finish();
+
             String xml = stubTarget.getWrittenString(resource);
+            
             return new ProcessingResult(resultSummary, eventRecorder, xml);
         } catch (IOException e) {
             throw new RuntimeException("Test rig failed to process specification", e);
