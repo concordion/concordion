@@ -7,8 +7,10 @@ public class ExampleEvent {
 
     private final Element element;
     private final ResultSummary resultSummary;
+    private final String exampleName;
 
-    public ExampleEvent(Element element, ResultSummary resultSummary) {
+    public ExampleEvent(String exampleName, Element element, ResultSummary resultSummary) {
+        this.exampleName = exampleName;
         this.resultSummary = resultSummary;
         this.element = element;
     }
@@ -19,5 +21,9 @@ public class ExampleEvent {
 
     public ResultSummary getResultSummary() {
         return resultSummary;
+    }
+
+    public String getExampleName() {
+        return exampleName;
     }
 }

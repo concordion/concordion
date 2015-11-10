@@ -77,6 +77,104 @@ is &lt;span concordion:assertFalse="isPositive(#num)"&gt;is not positive&lt;/spa
         <li><code>Specification processing listeners</code> provide access to the <code>specification</code> before and after processing</li>
     </ul>
 
+    <div class="example">
+
+        <h3>Example</h3>
+        
+        <p>An <span concordion:execute="addProcessingExtension()">extension is installed</span> with a ConcordionBuildListener, DocumentParsingListener, SpecificationProcesssingListener and AssertEqualsListener. When the following instrumentation:</p> 
+<pre concordion:set="#result = process(#TEXT)">
+&lt;p&gt;The square root of &lt;span concordion:set="#num"&gt;16.0&lt;/span&gt; is &lt;span concordion:assertEquals="sqrt(#num)"&gt;4.0&lt;/span&gt;&lt;/p&gt;
+</pre>
+
+        <p>is run with a fixture that performs the arithmetical operations, the logged events are:
+        </p>
+        <table concordion:verifyRows="#event : getEventLog()">
+        <tr><th concordion:assertEquals="#event">Event</th></tr>
+        <tr><td>Concordion Built</td></tr>
+        <tr><td>Before Parsing Document</td></tr>
+        <tr><td>Before Processing [Resource: /testrig]</td></tr>
+        <tr><td>Success '4.0'</td></tr>
+        <tr><td>After Processing [Resource: /testrig]</td></tr>
+        </table>
+
+    </div>
+
+    <div class="example" concordion:example="Example with examples">
+
+        <h3>Example with concordion:example</h3>
+        
+        <p>An <span concordion:execute="addExampleProcessingExtension()">extension is installed</span> with a ConcordionBuildListener, DocumentParsingListener, SpecificationProcesssingListener, ExampleListener and AssertEqualsListener. When the following instrumentation:</p> 
+<pre concordion:set="#result = process(#TEXT)">
+&lt;div concordion:example="before"&gt;
+&lt;/div&gt;
+
+&lt;div concordion:example="example1"&gt;
+&lt;p&gt;The square root of &lt;span concordion:set="#num"&gt;16.0&lt;/span&gt; is &lt;span concordion:assertEquals="sqrt(#num)"&gt;4.0&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div concordion:example="example2"&gt;
+&lt;p&gt;The square root of &lt;span concordion:set="#num"&gt;9.0&lt;/span&gt; is &lt;span concordion:assertEquals="sqrt(#num)"&gt;3.0&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+</pre>
+
+        <p>is run with a fixture that performs the arithmetical operations, the logged events are:
+        </p>
+        <table concordion:verifyRows="#event : getEventLog()">
+        <tr><th concordion:assertEquals="#event">Event</th></tr>
+        <tr><td>Concordion Built</td></tr>
+        <tr><td>Before Parsing Document</td></tr>
+        <tr><td>Before Processing [Resource: /testrig]</td></tr>
+        <tr><td>Before example 'before'</td></tr>
+        <tr><td>After example 'before'</td></tr>
+        <tr><td>Before example 'example1'</td></tr>
+        <tr><td>Success '4.0'</td></tr>
+        <tr><td>After example 'example1'</td></tr>
+        <tr><td>Before example 'before'</td></tr>
+        <tr><td>After example 'before'</td></tr>
+        <tr><td>Before example 'example2'</td></tr>
+        <tr><td>Success '3.0'</td></tr>
+        <tr><td>After example 'example2'</td></tr>
+        <tr><td>After Processing [Resource: /testrig]</td></tr>
+        </table>
+
+    </div>
+
+    <div class="example" concordion:example="Example with mixed examples">
+
+        <h3>Example with mixture of concordion:example and anonymous example</h3>
+        
+        <p>An <span concordion:execute="addExampleProcessingExtension()">extension is installed</span> with a ConcordionBuildListener, DocumentParsingListener, SpecificationProcesssingListener, ExampleListener and AssertEqualsListener. When the following instrumentation:</p> 
+<pre concordion:set="#result = process(#TEXT)">
+&lt;div concordion:example="before"&gt;
+&lt;/div&gt;
+
+&lt;div concordion:example="example1"&gt;
+&lt;p&gt;The square root of &lt;span concordion:set="#num"&gt;16.0&lt;/span&gt; is &lt;span concordion:assertEquals="sqrt(#num)"&gt;4.0&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The square root of &lt;span concordion:set="#num"&gt;9.0&lt;/span&gt; is &lt;span concordion:assertEquals="sqrt(#num)"&gt;3.0&lt;/span&gt;&lt;/p&gt;
+</pre>
+
+        <p>is run with a fixture that performs the arithmetical operations, the logged events are:
+        </p>
+        <table concordion:verifyRows="#event : getEventLog()">
+        <tr><th concordion:assertEquals="#event">Event</th></tr>
+        <tr><td>Concordion Built</td></tr>
+        <tr><td>Before Parsing Document</td></tr>
+        <tr><td>Before Processing [Resource: /testrig]</td></tr>
+        <tr><td>Before example 'before'</td></tr>
+        <tr><td>After example 'before'</td></tr>
+        <tr><td>Before example 'example1'</td></tr>
+        <tr><td>Success '4.0'</td></tr>
+        <tr><td>After example 'example1'</td></tr>
+        <tr><td>Before example 'before'</td></tr>
+        <tr><td>After example 'before'</td></tr>
+        <tr><td>Success '3.0'</td></tr>
+        <tr><td>After Processing [Resource: /testrig]</td></tr>
+        </table>
+
+    </div>
+
     <h2>Further Details</h2>
 
     <ul>
