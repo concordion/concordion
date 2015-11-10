@@ -2,8 +2,10 @@ package org.concordion.internal.listener;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.concordion.api.listener.DocumentParsingListener;
-import org.concordion.internal.listener.ResourceFinder.ResourceToCopy;
+import org.concordion.internal.ResourceFinder.ResourceToCopy;
+
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Elements;

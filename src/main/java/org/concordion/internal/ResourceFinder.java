@@ -1,4 +1,4 @@
-package org.concordion.internal.listener;
+package org.concordion.internal;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -17,7 +17,7 @@ import org.concordion.api.Resources.InsertType;
 import org.concordion.api.Fixture;
 
 /**
- * Copy resources to the destination when specification is built.  Resources are copied to the same relative path as they are in the project.
+ * Find resources to be copied to the destination when specification is built. 
  * Currently only supports resources on the file path.  Support for resources in Jars may come at a later date but will require java 1.7.
  * 
  * @author sumnera
