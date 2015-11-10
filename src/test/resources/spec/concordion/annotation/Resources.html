@@ -142,7 +142,7 @@ public class ResourcesDemoTest {
 		</pre>
 		
     	<p concordion:execute="#result1 = process(#javaFragment)">Will add the following resources to the generated specification: 
-	    	<table concordion:verifyRows="#resources : getResources()">
+	    	<table concordion:verifyRows="#resources : getResources()" concordion:matchStrategy="BestMatch">
 		        <tr><th concordion:assertEquals="#resources">Added Resources</th></tr>
 		        <tr><td>resources.js</td></tr>
 		        <tr><td>resources.txt</td></tr>
