@@ -36,6 +36,10 @@ public class Fixture {
         return fixtureClass.isAnnotationPresent(FailFast.class);
     }
 
+    public boolean declaresResources() {
+        return fixtureClass.isAnnotationPresent(Resources.class);
+    }
+    
     public Class<? extends Throwable>[] getFailFastExceptions() {
         FailFast failFastAnnotation = fixtureClass.getAnnotation(FailFast.class);
         Class<? extends Throwable>[] failFastExceptions = failFastAnnotation.onExceptionType();

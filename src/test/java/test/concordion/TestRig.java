@@ -35,6 +35,10 @@ public class TestRig {
     public ProcessingResult processFragment(String fragment) {
         return process(wrapFragment(fragment));
     }
+    
+    public ProcessingResult processFragment(String resourceLocation, String head, String fragment) {
+        return process(resourceLocation, wrapFragment(head, fragment));
+    }
 
     public ProcessingResult process(Resource resource) {
         EventRecorder eventRecorder = new EventRecorder();
@@ -66,7 +70,6 @@ public class TestRig {
 
         try {
 
-//            ResultSummary resultSummary = concordion.process(resource, fixture);
             ResultSummary resultSummary = null;
             concordion.override(resource, fixture);
             List<String> examples = concordion.getExampleNames();
@@ -78,7 +81,6 @@ public class TestRig {
             concordion.finish();
 
             String xml = stubTarget.getWrittenString(resource);
-            
             return new ProcessingResult(resultSummary, eventRecorder, xml);
         } catch (IOException e) {
             throw new RuntimeException("Test rig failed to process specification", e);
@@ -86,13 +88,22 @@ public class TestRig {
     }
 
     public ProcessingResult process(String html) {
-        Resource resource = new Resource("/testrig");
+        return process("/testrig", html);
+    }
+    
+    public ProcessingResult process(String resourceLocation, String html) {
+        Resource resource = new Resource(resourceLocation);
         withResource(resource, html);
         return process(resource);
     }
 
     private String wrapFragment(String fragment) {
         fragment = "<body><fragment>" + fragment + "</fragment></body>";
+        return wrapWithNamespaceDeclaration(fragment);
+    }
+    
+    private String wrapFragment(String head, String fragment) {
+        fragment = head + "<body><fragment>" + fragment + "</fragment></body>";
         return wrapWithNamespaceDeclaration(fragment);
     }
     
@@ -117,6 +128,10 @@ public class TestRig {
         return stubTarget.hasCopiedResource(resource);
     }
 
+    public List<Resource> getCopiedResources() {
+    	return stubTarget.getCopiedResources();
+    }
+    
     public TestRig withExtension(ConcordionExtension extension) {
         this.extension = extension;
         return this;

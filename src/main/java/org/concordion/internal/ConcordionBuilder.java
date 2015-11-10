@@ -8,12 +8,14 @@ import java.util.Map.Entry;
 
 import org.concordion.Concordion;
 import org.concordion.api.*;
+import org.concordion.api.Resources.InsertType;
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.api.extension.ConcordionExtensionFactory;
 import org.concordion.api.listener.*;
 import org.concordion.internal.command.*;
 import org.concordion.internal.listener.*;
+import org.concordion.internal.listener.ResourceFinder.ResourceToCopy;
 import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 import org.concordion.internal.util.IOUtil;
@@ -65,8 +67,6 @@ public class ConcordionBuilder implements ConcordionExtender {
         withRunListener(new RunResultRenderer());
         withDocumentParsingListener(new DocumentStructureImprover());
         withDocumentParsingListener(new MetadataCreator());
-        String stylesheetContent = IOUtil.readResourceAsString(EMBEDDED_STYLESHEET_RESOURCE);
-        withEmbeddedCSS(stylesheetContent);
     }
 
     public ConcordionBuilder withSource(Source source) {
@@ -174,6 +174,12 @@ public class ConcordionBuilder implements ConcordionExtender {
 
     public ConcordionBuilder withEmbeddedCSS(String css) {
         StylesheetEmbedder embedder = new StylesheetEmbedder(css);
+        withDocumentParsingListener(embedder);
+        return this;
+    }
+    
+    public ConcordionBuilder withEmbeddedCSS(String css, boolean append) {
+        StylesheetEmbedder embedder = new StylesheetEmbedder(css, append);
         withDocumentParsingListener(embedder);
         return this;
     }
@@ -333,17 +339,63 @@ public class ConcordionBuilder implements ConcordionExtender {
 
     public ConcordionBuilder withFixture(Fixture fixture) {
         this.fixture = fixture;
+        
+        withResources(fixture);
+        
         if (fixture.declaresFailFast()) {
             withFailFast(fixture.getFailFastExceptions());
         }
         if (fixture.declaresFullOGNL()) {
             withEvaluatorFactory(new OgnlEvaluatorFactory());
         }
+
         return this;
     }
     
-	public ConcordionExtender withExampleListener(ExampleListener listener) {
+    public ConcordionExtender withExampleListener(ExampleListener listener) {
 		exampleCommand.addExampleListener(listener);
 		return this;
 	}
+	
+    public ConcordionBuilder withResources(Fixture fixture) {
+        boolean includeDefaultStyling = true;
+        
+        if (fixture.declaresResources()) {
+        	ResourceFinder resources = new ResourceFinder(fixture);
+        	List<ResourceToCopy> sourceFiles = resources.getResourcesToCopy();
+        	
+        	for (ResourceToCopy source : sourceFiles) {
+    			if (source.isStyleSheet()) {
+    				if (source.insertType == InsertType.EMBEDDED) {
+    					withEmbeddedCSS(IOUtil.readResourceAsString(source.getResourceName()));
+    				} else {
+    					withLinkedCSS(source.getResourceName(), new Resource(source.getResourceName()));
+    				}
+    			} else if (source.isScript()) {
+    				if (source.insertType == InsertType.EMBEDDED) {
+    					withEmbeddedJavaScript(IOUtil.readResourceAsString(source.getResourceName()));
+    				} else {
+    					withLinkedJavaScript(source.getResourceName(), new Resource(source.getResourceName()));
+    				}
+    			} else {
+    				withResource(source.getResourceName(), new Resource(source.getResourceName()));
+    			}
+    		}
+        			
+        	includeDefaultStyling = resources.includeDefaultStyling();
+        	
+        	withDocumentParsingListener(new ResourceReferenceRemover(sourceFiles));
+        } 
+        
+        if (includeDefaultStyling) {
+        	addDefaultStyling();
+        }
+        
+        return this;
+    }
+    
+	private void addDefaultStyling() {
+    	String stylesheetContent = IOUtil.readResourceAsString(EMBEDDED_STYLESHEET_RESOURCE);    
+    	withEmbeddedCSS(stylesheetContent);
+    }
 }

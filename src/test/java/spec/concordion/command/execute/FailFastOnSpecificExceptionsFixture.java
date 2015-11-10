@@ -21,6 +21,7 @@ public class FailFastOnSpecificExceptionsFixture {
         new TestRig()
             .withFixture(this)
             .processFragment(fragment);
+        
         return myMethodWasCalled;
     }
     

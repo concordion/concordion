@@ -47,4 +47,8 @@ public class StubTarget implements Target {
     public String resolvedPathFor(Resource resource) {
         return null;
     }
+    
+    public List<Resource> getCopiedResources() {
+    	return copiedResources;
+    }
 }
