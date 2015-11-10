@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.concordion.api.listener.DocumentParsingListener;
-import org.concordion.internal.ResourceFinder.ResourceToCopy;
+import org.concordion.internal.ResourceToCopy;
 
 import nu.xom.Document;
 import nu.xom.Element;

@@ -1,5 +1,14 @@
 package org.concordion.api;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
+
 import org.concordion.internal.util.Check;
 
 public class Fixture {
@@ -68,5 +77,39 @@ public class Fixture {
         }
     
         return ImplementationStatus.EXPECTED_TO_PASS;
+    }
+
+    /**
+     * Returns the fixture class and all of its superclasses, excluding java.lang.Object,
+     * ordered from the most super class to the fixture class.
+     */
+    public List<Class<?>> getClassHierarchyParentFirst() {
+        ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
+        Class<?> current = getFixtureClass();
+        while (current != null && current != Object.class) {
+            classes.add(current);
+            current = current.getSuperclass();
+        }
+        Collections.reverse(classes);
+        return classes;
+    }
+
+    public List<File> getClassPathRoots() {
+    	List<File> rootPaths = new ArrayList<File>();
+    	
+    	Enumeration<URL> resources;
+    	try {
+    		resources = getFixtureClass().getClassLoader().getResources("");
+    	
+    		while (resources.hasMoreElements()) {
+                rootPaths.add(new File(resources.nextElement().toURI()));
+            }
+    	} catch (IOException e) {
+    		throw new RuntimeException("Unable to get root path", e);
+    	} catch (URISyntaxException e) {
+    		throw new RuntimeException("Unable to get root path", e);
+    	}
+    	
+    	return rootPaths;
     }
 }

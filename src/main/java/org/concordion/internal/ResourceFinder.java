@@ -2,18 +2,12 @@ package org.concordion.internal;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import org.concordion.api.Resources;
-import org.concordion.api.Resources.InsertType;
 import org.concordion.api.Fixture;
 
 /**
@@ -37,8 +31,8 @@ public class ResourceFinder {
 	public List<ResourceToCopy> getResourcesToCopy() {
 		List<ResourceToCopy> sourceFiles = new ArrayList<ResourceToCopy>();
 		
-		List<File> rootPaths = getRootPaths(fixture.getFixtureClass());
-		List<Class<?>> classes = getClassHierarchyParentFirst(fixture.getFixtureClass());
+		List<File> rootPaths = fixture.getClassPathRoots();
+		List<Class<?>> classes = fixture.getClassHierarchyParentFirst();
 		
 		for (Class<?> class1 : classes) {
 			if (class1.isAnnotationPresent(Resources.class)) {
@@ -135,73 +129,7 @@ public class ResourceFinder {
         return packageName;
     }
 
-	private List<File> getRootPaths(Class<?> class1) {
-		List<File> rootPaths = new ArrayList<File>();
-		
-		Enumeration<URL> resources;
-		try {
-			resources = class1.getClassLoader().getResources("");
-		
-			while (resources.hasMoreElements()) {
-                rootPaths.add(new File(resources.nextElement().toURI()));
-            }
-		} catch (IOException e) {
-			throw new RuntimeException("Unable to get root path", e);
-		} catch (URISyntaxException e) {
-			throw new RuntimeException("Unable to get root path", e);
-		}
-		
-		return rootPaths;
-	}
-
-	/**
-     * Returns the specified class and all of its superclasses, excluding java.lang.Object,
-     * ordered from the most super class to the specified class.
-     */
-    private List<Class<?>> getClassHierarchyParentFirst(Class<?> class1) {
-        ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
-        Class<?> current = class1;
-        while (current != null && current != Object.class) {
-            classes.add(current);
-            current = current.getSuperclass();
-        }
-        Collections.reverse(classes);
-        return classes;
-    }
-    
-    public class ResourceToCopy {
-		protected String fileName;
-		public InsertType insertType;
-		
-		public ResourceToCopy(String sourceFile, InsertType insertType) {
-			this.fileName = sourceFile;
-			this.insertType = insertType;
-			
-			if (fileName.startsWith(String.valueOf(File.separatorChar))) {
-				fileName = fileName.substring(1);
-			}				
-			
-			fileName = fileName.replace("\\", "/");
-		}
-		
-		public String getResourceName() {
-			return "/" + fileName;
-		}
-		
-		public String getName() {
-			return new File(fileName).getName();
-		}
-		
-		public boolean isStyleSheet() {
-			return fileName.endsWith(".css");
-		}
-		
-		public boolean isScript() {
-			return fileName.endsWith(".js");
-		}
-	}
-    
-    protected class WildcardFilter implements FilenameFilter {
+	private static class WildcardFilter implements FilenameFilter {
     	Pattern r;
     	
     	public WildcardFilter(File search) {
@@ -233,4 +161,3 @@ public class ResourceFinder {
     	}
     }
 }
-
