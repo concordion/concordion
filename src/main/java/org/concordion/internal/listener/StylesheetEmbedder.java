@@ -47,8 +47,6 @@ public class StylesheetEmbedder implements DocumentParsingListener {
     private String updateConcordionNamespacePrefix(Element html, String stylesheetContent) {
         for (int i=0; i<html.getNamespaceDeclarationCount(); i++) {
             String prefix = html.getNamespacePrefix(i);
-            System.out.println(prefix);
-            System.out.println(html.getNamespaceURI(prefix));
             if (ConcordionBuilder.NAMESPACE_CONCORDION_2007.equals(html.getNamespaceURI(prefix))) {
                 return stylesheetContent.replace("concordion\\:", prefix + "\\:");
             }
