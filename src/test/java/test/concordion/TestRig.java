@@ -23,7 +23,7 @@ public class TestRig {
     private Fixture fixture;
     private EvaluatorFactory evaluatorFactory = new SimpleEvaluatorFactory();
     private StubSource stubSource = new StubSource();
-    private StubTarget stubTarget;
+    private StubTarget stubTarget = new StubTarget();
     private FixtureExtensionLoader fixtureExtensionLoader = new FixtureExtensionLoader();
     private ConcordionExtension extension; 
 
@@ -33,9 +33,13 @@ public class TestRig {
     }
 
     public ProcessingResult processFragment(String fragment) {
-        return process(wrapFragment(fragment));
+        return processFragment(fragment, "/testrig");
     }
-    
+
+    public ProcessingResult processFragment(String fragment, String fixtureName) {
+        return process(wrapFragment(fragment), new Resource(fixtureName));
+    }
+
     public ProcessingResult processFragment(String resourceLocation, String head, String fragment) {
         return process(resourceLocation, wrapFragment(head, fragment));
     }
@@ -93,6 +97,10 @@ public class TestRig {
     
     public ProcessingResult process(String resourceLocation, String html) {
         Resource resource = new Resource(resourceLocation);
+        return process(html, resource);
+    }
+
+    private ProcessingResult process(String html, Resource resource) {
         withResource(resource, html);
         return process(resource);
     }
@@ -136,4 +144,10 @@ public class TestRig {
         this.extension = extension;
         return this;
     }
+    
+    public TestRig withOutputStreamer(OutputStreamer streamer) {
+        stubTarget.setOutputStreamer(streamer);
+        return this;
+    }
+
 }

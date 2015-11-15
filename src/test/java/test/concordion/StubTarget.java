@@ -15,7 +15,8 @@ public class StubTarget implements Target {
 
     private final LinkedHashMap<Resource, String> writtenStrings = new LinkedHashMap<Resource, String>();
     private final List<Resource> copiedResources = new ArrayList<Resource>();
-    
+    private OutputStreamer outputStreamer;
+
     public void copyTo(Resource resource, InputStream inputStream) throws IOException {
         copiedResources.add(resource);
     }
@@ -40,8 +41,19 @@ public class StubTarget implements Target {
         return copiedResources.contains(resource);
     }
 
-    public OutputStream getOutputStream(Resource resource) {
-        throw new UnsupportedOperationException("not implemented on StubTarget");
+    public OutputStream getOutputStream(Resource resource) throws IOException {
+        if (outputStreamer == null) {
+            throw new UnsupportedOperationException("not implemented on StubTarget");
+        }
+        return outputStreamer.getOutputStream(resource);
+    }
+
+    public void setOutputStreamer(OutputStreamer streamer) {
+        outputStreamer = streamer;
+    }
+
+    public OutputStreamer getOutputStreamer() {
+        return outputStreamer;
     }
 
     public String resolvedPathFor(Resource resource) {
