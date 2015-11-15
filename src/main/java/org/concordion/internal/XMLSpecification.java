@@ -1,7 +1,6 @@
 package org.concordion.internal;
 
 import org.concordion.api.*;
-import org.concordion.internal.command.ExampleCommand;
 import org.concordion.internal.command.SpecificationCommand;
 
 import java.util.ArrayList;
