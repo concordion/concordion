@@ -43,13 +43,13 @@ li {
   margin-bottom: 6px; 
 }
 
-.example {
+.example, [concordion\:example] {
   padding: 6px 16px 6px 16px;
   border: 1px solid #C3D9FF;
   margin: 6px 0px 28px 0px;
   background-color: #F5F9FD;
 }
-.example h3 {
+.example h3, [concordion\:example] h3 {
   margin-top: 8px;
   margin-bottom: 8px;
   font-size: 12pt;
