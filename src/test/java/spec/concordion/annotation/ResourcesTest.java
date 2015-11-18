@@ -124,7 +124,7 @@ public class ResourcesTest {
     	Element[] styles = result.getRootElement().getFirstChildElement("head").getChildElements("style");
     	
     	for (Element style : styles) {
-			if (style.getText().contains(".example {")) {
+			if (style.getText().contains("[concordion\\:example] {")) {
 				return true;
 			}
 		}
