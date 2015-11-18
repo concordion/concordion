@@ -9,13 +9,14 @@ import nu.xom.Document;
 
 import org.concordion.api.MultiValueResult;
 import org.concordion.api.Resource;
+import org.concordion.api.Resources;
 import org.concordion.api.extension.Extensions;
 import org.concordion.ext.EmbedExtension;
 
 import test.concordion.TestRig;
-import extension.SpecificationToggle.SpecificationToggleExtension;
 
-@Extensions({EmbedExtension.class, SpecificationToggleExtension.class})
+@Extensions(EmbedExtension.class)
+@Resources("toggle_html.*")
 public class BaseMatchStrategyTest {
 
     public List<MultiValueResult> users;
@@ -46,8 +47,8 @@ public class BaseMatchStrategyTest {
         users = parse(actualData);
         Document document = new TestRig()
                 .withFixture(this)
-                .withResource(new Resource("/toggle_html.js"), "")
-                .withResource(new Resource("/toggle_html.css"), "")
+                .withResource(new Resource("/spec/concordion/command/verifyRows/strategies/toggle_html.js"), "")
+                .withResource(new Resource("/spec/concordion/command/verifyRows/strategies/toggle_html.css"), "")
                 .processFragment(fragment)
                 .getXOMDocument();
 

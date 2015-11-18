@@ -190,8 +190,6 @@ githubPages {
 //    deleteExistingFiles = false
     pages {
         from 'ghpages'
-        from 'build/reports/toggle_html.css'
-        from 'build/reports/toggle_html.js'
         
         into ('latest') {
             from ('build/reports/spec/concordion') {
