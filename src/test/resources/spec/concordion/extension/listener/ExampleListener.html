@@ -11,9 +11,9 @@
 
     <div class="example">
 		<h3>Before and after events are captured</h3>
+        <p>An extension is installed that listens to the example command and the following instrumentation is run:</p> 
 		
 		<div concordion:example="example1">
-            <p>An extension is installed that listens to the example command and the following instrumentation is run:</p> 
 			<p style="margin: 20px">
 				<code style="border: 1px solid black; padding: 10px">
 					&lt;div concordion:example="example1"&gt;
@@ -26,8 +26,8 @@
         <p>The logged events for this example are:</p>
         <table concordion:verifyRows="#event : getEventLog()">
         <tr><th concordion:assertEquals="#event">Event</th></tr>
-        <tr><td>Before Example</td></tr>
-        <tr><td>After Example - passed: 1, failed: 0, exceptions: 0</td></tr>
+        <tr><td>Before example 'example1'</td></tr>
+        <tr><td>After example 'example1' - passed: 1, failed: 0, exceptions: 0</td></tr>
         </table>
  
     </div>

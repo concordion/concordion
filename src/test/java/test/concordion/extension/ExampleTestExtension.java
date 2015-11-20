@@ -23,13 +23,13 @@ public class ExampleTestExtension implements ConcordionExtension, ExampleListene
 
 	@Override
 	public void beforeExample(ExampleEvent event) {
-		stream.println("Before Example");
+		stream.println(String.format("Before example '%s'", event.getExampleName()));
 	}
 
 	@Override
 	public void afterExample(ExampleEvent event) {
 		ResultSummary summary = event.getResultSummary();
 		
-		stream.println(String.format("After Example - passed: %s, failed: %s, exceptions: %s", summary.getSuccessCount(), summary.getFailureCount(), summary.getExceptionCount()));
+		stream.println(String.format("After example '%s' - passed: %s, failed: %s, exceptions: %s", event.getExampleName(), summary.getSuccessCount(), summary.getFailureCount(), summary.getExceptionCount()));
 	}
 }
