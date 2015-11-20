@@ -1,1 +1,1 @@
-/* Here is a JavaScript file (Used by Resources test) */
+/* Here is a JavaScript file (Used by ConcordionResources test) */

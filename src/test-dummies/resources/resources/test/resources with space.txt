@@ -1,1 +1,1 @@
-Here is a resource file (Used by Resources test)
+Here is a resource file (Used by ConcordionResources test)

@@ -2,7 +2,7 @@ package org.concordion.internal;
 
 import java.io.File;
 
-import org.concordion.api.Resources.InsertType;
+import org.concordion.api.ConcordionResources.InsertType;
 
 public class ResourceToCopy {
 	protected String fileName;

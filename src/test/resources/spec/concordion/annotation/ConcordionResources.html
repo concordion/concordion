@@ -1,7 +1,7 @@
 <html xmlns:concordion="http://www.concordion.org/2007/concordion">
 <head>
     <link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
-    <title>Resources</title>
+    <title>Concordion Resources</title>
     <style>
 	    .annotationSummary td, .annotationSummary th {
 	      padding: 8px;
@@ -16,17 +16,17 @@
 </head>
 <body>
 
-    <h1>Resources Annotation</h1>
+    <h1>ConcordionResources Annotation</h1>
 
     <dl><dt><b>Since:</b></dt>
     <dd>Concordion 2.0.0</dd></dl>
 
     <p>
-    	The Resources annotation can be used to apply a new theme to your specifications, tweak the existing styling, or add 
+    	The ConcordionResources annotation can be used to apply a new theme to your specifications, tweak the existing styling, or add 
         new css, javascript, images, or other resources.
     </p>
     <p>
-    	The Resources annotation is applied to the fixture class corresponding to the specification. It can be applied to all classes in the fixture's 
+    	The ConcordionResources annotation is applied to the fixture class corresponding to the specification. It can be applied to all classes in the fixture's 
     	class hierarchy - each class will be inspected in turn (parent first) for the annotation.  Each annotation will be processed in isolation to 
     	others so they will operate independently.  You will need to ensure that there are no conflicts.
 	</p>
@@ -75,12 +75,12 @@
 		<pre class="java" concordion:set="#javaFragment">
 package resources.test;
 
-import org.concordion.api.Resources;
+import org.concordion.api.ConcordionResources;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
-@Resources( { "resources.js", "subfolder/resources with space.js", "../../resources.css" } )
+@ConcordionResources( { "resources.js", "subfolder/resources with space.js", "../../resources.css" } )
 public class ResourcesDemoTest {
     
 }
@@ -103,13 +103,13 @@ public class ResourcesDemoTest {
 		<pre class="java" concordion:set="#javaFragment">
 package resources.test;
 
-import org.concordion.api.Resources;
+import org.concordion.api.ConcordionResources;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
-@Resources( { "/resources.css", "/resources/test/resources.js" } )
-public class ResourcesDemoTest {
+@ConcordionResources( { "/resources.css", "/resources/test/resources.js" } )
+public class ConcordionResourcesDemoTest {
     
 }
 		</pre>
@@ -130,13 +130,13 @@ public class ResourcesDemoTest {
 		<pre class="java" concordion:set="#javaFragment">
 package resources.test;
 
-import org.concordion.api.Resources;
+import org.concordion.api.ConcordionResources;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
-@Resources( value = { "resources.*", "/resource?.c??" } )
-public class ResourcesDemoTest {
+@ConcordionResources( value = { "resources.*", "/resource?.c??" } )
+public class ConcordionResourcesDemoTest {
     
 }
 		</pre>
@@ -161,14 +161,14 @@ public class ResourcesDemoTest {
 		<pre class="java" concordion:set="#javaFragment">
 package resources.test;
 
-import org.concordion.api.Resources;
-import org.concordion.api.Resources.InsertType;
+import org.concordion.api.ConcordionResources;
+import org.concordion.api.ConcordionResources.InsertType;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
-@Resources( value = "/resources.css", insertType = InsertType.EMBEDDED )
-public class ResourcesDemoTest {
+@ConcordionResources( value = "/resources.css", insertType = InsertType.EMBEDDED )
+public class ConcordionResourcesDemoTest {
     
 }
 		</pre>
@@ -185,14 +185,14 @@ public class ResourcesDemoTest {
 		<pre class="java" concordion:set="#javaFragment">
 package resources.test;
 
-import org.concordion.api.Resources;
-import org.concordion.api.Resources.InsertType;
+import org.concordion.api.ConcordionResources;
+import org.concordion.api.ConcordionResources.InsertType;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
-@Resources( value = "/resources.css", includeDefaultStyling = false )
-public class ResourcesDemoTest {
+@ConcordionResources( value = "/resources.css", includeDefaultStyling = false )
+public class ConcordionResourcesDemoTest {
     
 }
 		</pre>
@@ -211,14 +211,14 @@ public class ResourcesDemoTest {
 		<pre class="java" concordion:set="#javaFragment">
 package resources.test;
 
-import org.concordion.api.Resources;
-import org.concordion.api.Resources.InsertType;
+import org.concordion.api.ConcordionResources;
+import org.concordion.api.ConcordionResources.InsertType;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
-@Resources( "im-not-here.txt" )
-public class ResourcesDemoTest {
+@ConcordionResources( "im-not-here.txt" )
+public class ConcordionResourcesDemoTest {
     
 }
 		</pre>
@@ -235,10 +235,10 @@ public class ResourcesDemoTest {
 		<pre class="java" concordion:set="#javaFragment">
 package resources.test;
 
-import org.concordion.api.Resources;
+import org.concordion.api.ConcordionResources;
 
-@Resources( "resources.js" )
-public class ResourcesDemoTest extends ResourcesDemoParent {
+@ConcordionResources( "resources.js" )
+public class ConcordionResourcesDemoTest extends ConcordionResourcesDemoParent {
     
 }
 		</pre>
@@ -247,13 +247,13 @@ public class ResourcesDemoTest extends ResourcesDemoParent {
 		<pre class="java" concordion:set="#javaFragmentParent">	
 package resources.test;
 
-import org.concordion.api.Resources;
+import org.concordion.api.ConcordionResources;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
-@Resources( value = "/resources.css", includeDefaultStyling = false )
-public class ResourcesDemoParent {
+@ConcordionResources( value = "/resources.css", includeDefaultStyling = false )
+public class ConcordionResourcesDemoParent {
     
 }
 		</pre>
@@ -275,13 +275,13 @@ public class ResourcesDemoParent {
 		<pre class="java" concordion:set="#javaFragment">
 package resources.test;
 
-import org.concordion.api.Resources;
+import org.concordion.api.ConcordionResources;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
-@Resources( value = {  "/resources.css", "resources.js" }, includeDefaultStyling = false )
-public class ResourcesDemoTest {
+@ConcordionResources( value = {  "/resources.css", "resources.js" }, includeDefaultStyling = false )
+public class ConcordionResourcesDemoTest {
     
 }
 		</pre>
@@ -307,7 +307,7 @@ public class ResourcesDemoTest {
     			<li>remove the reference to the script <span concordion:assertFalse="getLinkExists(#TEXT)">../resources.js</span></li>
     			<li>add a reference to the script  <span concordion:assertTrue="getScriptExists(#TEXT)">resources.js</span></li>
     			
-    			<li>leave the link to the resource <span concordion:assertTrue="getLinkExists(#TEXT)">unknown.css</span> as the Resources annotation knows nothing about it</li>
+    			<li>leave the link to the resource <span concordion:assertTrue="getLinkExists(#TEXT)">unknown.css</span> as the ConcordionResources annotation knows nothing about it</li>
     		</ul>
     	</p>
     </div> 

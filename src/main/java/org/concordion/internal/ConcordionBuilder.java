@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 
 import org.concordion.Concordion;
 import org.concordion.api.*;
-import org.concordion.api.Resources.InsertType;
+import org.concordion.api.ConcordionResources.InsertType;
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.api.extension.ConcordionExtensionFactory;

@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-public @interface Resources {
+public @interface ConcordionResources {
 
 	public enum InsertType {
 	   LINKED, EMBEDDED

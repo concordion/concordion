@@ -9,14 +9,14 @@ import nu.xom.Document;
 
 import org.concordion.api.MultiValueResult;
 import org.concordion.api.Resource;
-import org.concordion.api.Resources;
+import org.concordion.api.ConcordionResources;
 import org.concordion.api.extension.Extensions;
 import org.concordion.ext.EmbedExtension;
 
 import test.concordion.TestRig;
 
 @Extensions(EmbedExtension.class)
-@Resources("toggle_html.*")
+@ConcordionResources("toggle_html.*")
 public class BaseMatchStrategyTest {
 
     public List<MultiValueResult> users;

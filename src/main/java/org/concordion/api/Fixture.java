@@ -46,7 +46,7 @@ public class Fixture {
     }
 
     public boolean declaresResources() {
-        return fixtureClass.isAnnotationPresent(Resources.class);
+        return fixtureClass.isAnnotationPresent(ConcordionResources.class);
     }
     
     public Class<? extends Throwable>[] getFailFastExceptions() {

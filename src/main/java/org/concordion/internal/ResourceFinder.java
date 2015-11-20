@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.concordion.api.Resources;
+import org.concordion.api.ConcordionResources;
 import org.concordion.api.Fixture;
 
 /**
@@ -35,8 +35,8 @@ public class ResourceFinder {
 		List<Class<?>> classes = fixture.getClassHierarchyParentFirst();
 		
 		for (Class<?> class1 : classes) {
-			if (class1.isAnnotationPresent(Resources.class)) {
-	            Resources annotation = class1.getAnnotation(Resources.class);
+			if (class1.isAnnotationPresent(ConcordionResources.class)) {
+	            ConcordionResources annotation = class1.getAnnotation(ConcordionResources.class);
 	            
 	            if (!annotation.includeDefaultStyling()) {
     				includeDefaultStyling = false;
@@ -49,7 +49,7 @@ public class ResourceFinder {
 		return sourceFiles;
 	}
 	
-	private Collection<? extends ResourceToCopy> getResourcesToAdd(Class<?> class1, Resources annotation, List<File> rootPaths) {
+	private Collection<? extends ResourceToCopy> getResourcesToAdd(Class<?> class1, ConcordionResources annotation, List<File> rootPaths) {
 		List<ResourceToCopy> sourceFiles = new ArrayList<ResourceToCopy>();
 
 		String packageName = getPackageName(class1);
