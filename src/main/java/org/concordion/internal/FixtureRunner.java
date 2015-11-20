@@ -19,7 +19,6 @@ public class FixtureRunner {
         ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture);
         fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
         concordion = concordionBuilder.build();
-
     }
 
     private final FixtureExtensionLoader fixtureExtensionLoader = new FixtureExtensionLoader();
@@ -35,7 +34,6 @@ public class FixtureRunner {
         ResultSummary postProcessedResultSummary = runOutput==null?
                 null:
                 runOutput.getModifiedResultSummary();
-
 
         String additionalInformation = null;
     	if (runOutput == null) {
@@ -88,10 +86,18 @@ public class FixtureRunner {
     }
 
     public synchronized Concordion getConcordion() {
-            return concordion;
+        return concordion;
     }
 
     public ResultSummary run() throws IOException {
-        return run(null);
+        ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixture.getFixtureClass(), null);
+
+        ResultSummary resultSummary = run(null);
+        
+        // only actually finish the specification if it has not already been run.
+        if (results == null) {
+            concordion.finish();
+        }
+        return resultSummary;
     }
 }
