@@ -18,6 +18,7 @@ import org.concordion.internal.SummarizingResultRecorder;
 import org.concordion.internal.UnableToBuildConcordionException;
 import org.concordion.internal.cache.ConcordionRunOutput;
 import org.concordion.internal.cache.RunResultsCache;
+import org.concordion.internal.scopedObjects.ConcordionScopedObjectFactory;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -168,6 +169,8 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
             // to worry about them. But it doesn't invoke the @Before and @After methods. So we explicitly
             // invoke them here.
 
+            ConcordionScopedObjectFactory.SINGLETON.setupFixture(fixture);
+
             ResultSummary result = fixtureRunner.run(example);
 
 //            System.err.printf("Accumulated %s into %s\n",
@@ -185,8 +188,8 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
             accumulatedResultSummary.record(Result.EXCEPTION);
             failFastException = e;
             throw e;
-
-        }catch (Throwable e) {
+        }
+        catch (Throwable e) {
             // if *anything* goes wrong, we fire a test failure notification.
             e.printStackTrace(System.err);
 

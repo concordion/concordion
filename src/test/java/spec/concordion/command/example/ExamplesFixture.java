@@ -14,14 +14,15 @@ import java.util.Map;
 @FullOGNL
 public class ExamplesFixture {
 
+
     private int counter = 0;
+
+    public void setCounter(String val) {
+        counter = Integer.parseInt(val);
+    }
 
     public int getCounter() {
         return counter;
-    }
-
-    public void setCounter(String value) {
-        this.counter = Integer.parseInt(value);
     }
 
     public void incrementCounter() {
