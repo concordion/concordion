@@ -3,7 +3,6 @@ package org.concordion.internal.scopedObjects;
 import org.concordion.api.ConcordionScopedField;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 /**
  * Created by tim on 3/12/15.
