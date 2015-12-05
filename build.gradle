@@ -4,7 +4,7 @@ apply plugin: 'wrapper'
 description = 'Concordion is an open source framework for Java that lets you turn a plain English description of a requirement into an automated test'
 
 wrapper {
-    gradleVersion = "2.7"
+    gradleVersion = "2.9"
 }
 
 repositories {
