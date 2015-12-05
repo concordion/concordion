@@ -1,6 +1,6 @@
 package org.concordion.internal.scopedObjects;
 
-import org.concordion.api.ConcordionScopedField;
+import org.concordion.internal.ConcordionScopedField;
 
 /**
  * Created by tim on 3/12/15.

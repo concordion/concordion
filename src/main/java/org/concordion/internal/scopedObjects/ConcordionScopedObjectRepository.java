@@ -1,6 +1,6 @@
 package org.concordion.internal.scopedObjects;
 
-import org.concordion.api.ConcordionScopedField;
+import org.concordion.internal.ConcordionScopedField;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

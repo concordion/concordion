@@ -1,6 +1,6 @@
 package org.concordion.internal.scopedObjects;
 
-import org.concordion.api.ConcordionScopedField;
+import org.concordion.internal.ConcordionScopedField;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

@@ -1,7 +1,7 @@
 package org.concordion.internal.scopedObjects;
 
-import org.concordion.api.ConcordionScopedField;
 import org.concordion.api.Fixture;
+import org.concordion.internal.ConcordionScopedField;
 import org.concordion.internal.scopedObjects.ConcordionScopedObject;
 import org.concordion.internal.scopedObjects.ConcordionScopedObjectFactory;
 import org.junit.Before;
