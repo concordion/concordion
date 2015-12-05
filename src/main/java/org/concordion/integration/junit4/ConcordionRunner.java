@@ -104,10 +104,11 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         }
     }
 
-    // This is important or else jUnit will create lots of different instances of the class under test.
     @Override
     protected Object createTest() throws Exception {
         Fixture fixture = new Fixture(super.createTest());
+        // we need to setup the concordion scoped objects so that the @Before methods and @Rules can access
+        // them
         ConcordionScopedObjectFactory.SINGLETON.setupFixture(fixture);
         return fixture.getFixtureObject();
     }
@@ -197,10 +198,6 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         }
 
         try {
-
-            // The ParentRunner class invokes the @BeforeClass and @AfterClass methods so we don't need
-            // to worry about them. But it doesn't invoke the @Before and @After methods. So we explicitly
-            // invoke them here.
 
             ResultSummary result = fixtureRunner.run(example, fixture);
 

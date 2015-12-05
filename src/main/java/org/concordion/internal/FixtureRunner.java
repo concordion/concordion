@@ -86,6 +86,15 @@ public class FixtureRunner {
         return concordion;
     }
 
+    /**
+     *
+     * This method is depreciated as it's only used in jUnit 3.
+     *
+     * @param fixture
+     * @return
+     * @throws IOException
+     */
+    @Deprecated
     public ResultSummary run(Fixture fixture) throws IOException {
         ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixture.getFixtureClass(), null);
 
