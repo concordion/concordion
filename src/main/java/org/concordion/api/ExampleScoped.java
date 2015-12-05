@@ -7,15 +7,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ConcordionScopedField {
-    enum Scope {
-        EXAMPLE,
-        SPECIFICATION,
-        GLOBAL
-    }
-
-    Scope scope() default Scope.EXAMPLE;
-
+public @interface ExampleScoped {
     String value() default "";
-
 }
