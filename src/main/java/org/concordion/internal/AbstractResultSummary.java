@@ -86,7 +86,7 @@ public abstract class AbstractResultSummary implements ResultSummary {
     
     public ImplementationStatusChecker getImplementationStatusChecker(Fixture fixture) {
         ImplementationStatus implementationStatus;
-        if (isForExample()) {
+        if (isForExample() || fixture == null) {
             implementationStatus = getImplementationStatus();
         } else {
             implementationStatus = fixture.getImplementationStatus();

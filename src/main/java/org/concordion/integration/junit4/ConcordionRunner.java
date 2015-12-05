@@ -1,16 +1,17 @@
 package org.concordion.integration.junit4;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.AnnotationFormatError;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.concordion.Concordion;
-import org.concordion.api.FailFast;
-import org.concordion.api.Fixture;
-import org.concordion.api.Result;
-import org.concordion.api.ResultSummary;
+import org.concordion.api.*;
 import org.concordion.internal.ConcordionAssertionError;
 import org.concordion.internal.FailFastException;
 import org.concordion.internal.FixtureRunner;
@@ -18,7 +19,9 @@ import org.concordion.internal.SummarizingResultRecorder;
 import org.concordion.internal.UnableToBuildConcordionException;
 import org.concordion.internal.cache.ConcordionRunOutput;
 import org.concordion.internal.cache.RunResultsCache;
+import org.concordion.internal.scopedObjects.ConcordionScopedObjectFactory;
 import org.junit.runner.Description;
+import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
@@ -27,9 +30,10 @@ import org.junit.runners.model.InitializationError;
 public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
     // this sort of thing is so much easier with Java 8!
-    public ConcordionFrameworkMethod.ConcordionRunnerInterface concordionRunnerInterface = new ConcordionFrameworkMethod.ConcordionRunnerInterface() {
-        public void invoke(ConcordionFrameworkMethod concordionFrameworkMethod) {
-            ConcordionRunner.this.invoke(concordionFrameworkMethod);
+    public ConcordionFrameworkMethod.ConcordionRunnerInterface concordionRunnerInterface =
+            new ConcordionFrameworkMethod.ConcordionRunnerInterface() {
+        public void invoke(ConcordionFrameworkMethod concordionFrameworkMethod, Object target) {
+            ConcordionRunner.this.invoke(concordionFrameworkMethod, target);
         }
     };
 
@@ -37,11 +41,11 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
     private final FixtureRunner fixtureRunner;
     private final Concordion concordion;
     private final List<ConcordionFrameworkMethod> concordionFrameworkMethods;
-    private final Fixture fixture;
     private SummarizingResultRecorder accumulatedResultSummary;
 
 
     private FailFastException failFastException = null;
+    private Fixture setupFixture;
 
     public ConcordionRunner(Class<?> fixtureClass) throws InitializationError {
         super(fixtureClass);
@@ -49,23 +53,25 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         this.accumulatedResultSummary = new SummarizingResultRecorder();
 
         try {
-            fixture = new Fixture(fixtureClass.newInstance());
+            setupFixture = new Fixture(fixtureClass.newInstance());
+            // needs to be called so extensions have access to scoped variables
+            ConcordionScopedObjectFactory.SINGLETON.setupFixture(setupFixture);
         } catch (InstantiationException e) {
             throw new InitializationError(e);
         } catch (IllegalAccessException e) {
             throw new InitializationError(e);
         }
-        accumulatedResultSummary.setSpecificationDescription(fixture.getDescription());
+        accumulatedResultSummary.setSpecificationDescription(setupFixture.getDescription());
 
         try {
-            fixtureRunner = new FixtureRunner(fixture);
+            fixtureRunner = new FixtureRunner(setupFixture);
         } catch (UnableToBuildConcordionException e) {
             throw new InitializationError(e);
         }
         concordion = fixtureRunner.getConcordion();
 
         try {
-            List<String> examples = concordion.getExampleNames();
+            List<String> examples = concordion.getExampleNames(setupFixture);
 
             verifyUniqueExampleMethods(examples);
 
@@ -98,9 +104,12 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         }
     }
 
-    // This is important or else jUnit will create lots of different instances of the class under test.
     @Override
     protected Object createTest() throws Exception {
+        Fixture fixture = new Fixture(super.createTest());
+        // we need to setup the concordion scoped objects so that the @Before methods and @Rules can access
+        // them
+        ConcordionScopedObjectFactory.SINGLETON.setupFixture(fixture);
         return fixture.getFixtureObject();
     }
 
@@ -109,7 +118,11 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
         ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
 
+        invokeMethods(setupFixture, BeforeSpecification.class);
+
         super.run(notifier);
+
+        invokeMethods(setupFixture, AfterSpecification.class);
 
         // only actually finish the specification if it has not already been run.
         if (results == null) {
@@ -122,7 +135,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
             // we only print meta-results when the spec has multiple examples.
             if (concordionFrameworkMethods.size() > 1) {
                 synchronized (System.out) {
-                    results.getActualResultSummary().print(System.out, fixture);
+                    results.getActualResultSummary().print(System.out, setupFixture);
                 }
             }
         }
@@ -132,6 +145,26 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
                 throw new FailFastException("Failing Fast", failFastException);
             }
         }
+    }
+
+    private void invokeMethods(Fixture fixture, Class<? extends Annotation> annotation) {
+
+        Method[] methods = fixture.getFixtureClass().getMethods();
+
+        for (Method method: methods) {
+//            Annotation a = method.getAnnotation(annotation);
+            if (method.isAnnotationPresent(annotation)) {
+                try {
+                    method.setAccessible(true);
+                    method.invoke(fixture.getFixtureObject(), new Object[] {});
+                } catch (IllegalAccessException e) {
+                    throw new AnnotationFormatError("Invalid permissions to invoke method: " + method.getName());
+                } catch (InvocationTargetException e) {
+                    throw new AnnotationFormatError("Could not invoke method with no arguments: " + method.getName());
+                }
+            }
+        }
+
     }
 
     @Override
@@ -153,7 +186,9 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         super.runChild(method, notifier);
     }
 
-    void invoke(ConcordionFrameworkMethod concordionFrameworkMethod) {
+    void invoke(ConcordionFrameworkMethod concordionFrameworkMethod, Object target) {
+
+        Fixture fixture = new Fixture(target);
 
         String example = concordionFrameworkMethod.getExampleName();
 
@@ -164,11 +199,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
         try {
 
-            // The ParentRunner class invokes the @BeforeClass and @AfterClass methods so we don't need
-            // to worry about them. But it doesn't invoke the @Before and @After methods. So we explicitly
-            // invoke them here.
-
-            ResultSummary result = fixtureRunner.run(example);
+            ResultSummary result = fixtureRunner.run(example, fixture);
 
 //            System.err.printf("Accumulated %s into %s\n",
 //                    result.printToString(fixture),
@@ -185,8 +216,8 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
             accumulatedResultSummary.record(Result.EXCEPTION);
             failFastException = e;
             throw e;
-
-        }catch (Throwable e) {
+        }
+        catch (Throwable e) {
             // if *anything* goes wrong, we fire a test failure notification.
             e.printStackTrace(System.err);
 
