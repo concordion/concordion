@@ -75,11 +75,11 @@ public class TestRig {
         try {
 
             ResultSummary resultSummary = null;
-            concordion.override(resource, fixture);
-            List<String> examples = concordion.getExampleNames();
+            concordion.override(resource);
+            List<String> examples = concordion.getExampleNames(fixture);
             if (!examples.isEmpty()) {
                 for (String example : examples) {
-                    resultSummary = concordion.processExample(example);
+                    resultSummary = concordion.processExample(fixture, example);
                 }
             }
             concordion.finish();

@@ -19,9 +19,8 @@
         <code>@ConcordionScopedField(scope = ConcordionScopedField.Scope.GLOBAL)</code>
         will shared between all fixtures.
     </li>
-    <li>
-        Un annotated fixture variables are currently treated as having specification scope. However, this differs
-        from default junit behaviour (which is Example scope) and will be changed in the future.
+    <li>Unannotated: fields in the fixture without any annotations will be re-initialised between each test.
+        This is standard jUnit behaviour (in fact, jUnit creates a new fixture object for each test).
     </li>
 </ol>
 
@@ -35,6 +34,7 @@
     <ol>
         <li c:execute="incrementAllCounters()">Increment all counters</li>
 
+        <li>Unannotated field value is <code c:assertEquals="getExampleScopedCounter()">1</code></li>
         <li>Example scope value is <code c:assertEquals="getExampleScopedCounter()">1</code></li>
         <li>Specification scope value is <code c:echo="getSpecScopedCounter()"></code></li>
         <li>Global scope value is <code c:echo="getGlobalScopedCounter()"></code></li>
@@ -49,6 +49,7 @@
     <ol>
         <li c:execute="incrementAllCounters()">Increment all counters</li>
 
+        <li>Unannotated field value is <code c:assertEquals="getExampleScopedCounter()">1</code></li>
         <li>Example scope value is <code c:assertEquals="getExampleScopedCounter()">1</code></li>
         <li>Specification scope value is <code c:echo="getSpecScopedCounter()"></code></li>
         <li>Global scope value is <code c:echo="getGlobalScopedCounter()"></code></li>

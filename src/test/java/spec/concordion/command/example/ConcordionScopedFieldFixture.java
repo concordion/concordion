@@ -20,6 +20,12 @@ public class ConcordionScopedFieldFixture {
     @ConcordionScopedField(scope = ConcordionScopedField.Scope.GLOBAL)
     private AtomicInteger globalScopedCounter;
 
+    private int fieldCounter = 0;
+
+    public int getFieldCounter() {
+        return fieldCounter;
+    }
+
     public int getSpecScopedCounter() {
         return specScopedCounter.get();
     }
