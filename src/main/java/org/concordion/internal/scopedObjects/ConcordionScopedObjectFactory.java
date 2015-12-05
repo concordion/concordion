@@ -113,8 +113,10 @@ public enum ConcordionScopedObjectFactory {
         try {
             value = obj.getObject();
             field.set(fixtureObject, value);
-        } catch (ReflectiveOperationException e) {
-            throw new AnnotationFormatError("Could not create/set object on field " + field.getName());
+        } catch (InstantiationException e) {
+            throw new AnnotationFormatError("Could not create object on field " + field.getName());
+        } catch (IllegalAccessException e) {
+            throw new AnnotationFormatError("Could not set object on field " + field.getName());
         }
     }
 

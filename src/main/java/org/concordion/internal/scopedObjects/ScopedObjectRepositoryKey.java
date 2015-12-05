@@ -2,6 +2,7 @@ package org.concordion.internal.scopedObjects;
 
 import org.concordion.api.ConcordionScopedField;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -29,11 +30,16 @@ class ScopedObjectRepositoryKey<T> {
     public int hashCode() {
         switch (scope) {
             case GLOBAL:
-                return Objects.hash(scopedObjectClass, name);
+                return hash(scopedObjectClass, name);
             default:
-                return Objects.hash(scopedObjectClass, name, scope, specificationClass);
+                return hash(scopedObjectClass, name, scope, specificationClass);
         }
     }
+
+    public static int hash(Object... values) {
+        return Arrays.hashCode(values);
+    }
+
 
     @Override
     public boolean equals(Object other) {
