@@ -1,16 +1,17 @@
 package org.concordion.integration.junit4;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.AnnotationFormatError;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.concordion.Concordion;
-import org.concordion.api.FailFast;
-import org.concordion.api.Fixture;
-import org.concordion.api.Result;
-import org.concordion.api.ResultSummary;
+import org.concordion.api.*;
 import org.concordion.internal.ConcordionAssertionError;
 import org.concordion.internal.FailFastException;
 import org.concordion.internal.FixtureRunner;
@@ -110,7 +111,13 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
         ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
 
+        ConcordionScopedObjectFactory.SINGLETON.setupFixture(fixture);
+
+        invokeMethods(fixture, BeforeSpecification.class);
+
         super.run(notifier);
+
+        invokeMethods(fixture, AfterSpecification.class);
 
         // only actually finish the specification if it has not already been run.
         if (results == null) {
@@ -133,6 +140,26 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
                 throw new FailFastException("Failing Fast", failFastException);
             }
         }
+    }
+
+    private void invokeMethods(Fixture fixture, Class<? extends Annotation> annotation) {
+
+        Method[] methods = fixture.getFixtureClass().getMethods();
+
+        for (Method method: methods) {
+//            Annotation a = method.getAnnotation(annotation);
+            if (method.isAnnotationPresent(annotation)) {
+                try {
+                    method.setAccessible(true);
+                    method.invoke(fixture.getFixtureObject(), new Object[] {});
+                } catch (IllegalAccessException e) {
+                    throw new AnnotationFormatError("Invalid permissions to invoke method: " + method.getName());
+                } catch (InvocationTargetException e) {
+                    throw new AnnotationFormatError("Could not invoke method with no arguments: " + method.getName());
+                }
+            }
+        }
+
     }
 
     @Override

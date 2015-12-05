@@ -57,6 +57,9 @@
     <p>Of course, variables set in the before example <span c:assertEquals="#are">are</span> accessible
         (but changes to them in one example are not visible in the other examples)</p>
 
+    <p>Note that methods in the fixture class annotated with @BeforeSpecification are executed
+        <span c:assertTrue="beforeSpecRunOnce()">exactly once</span> before
+        any examples are run. Methods annotated with @AfterSpecification are executed after the specification has executed.</p>
 
 </div>
 
@@ -83,6 +86,10 @@
         set it to "<span c:set="#notshared">a value</span>". We do this in both examples to counter running order effects.</p>
 
     <p>Of course, variables set in the before example <span c:assertEquals="#are">are</span> accessible.</p>
+
+    <p>Note that methods in the fixture class annotated with @BeforeSpecification are executed
+        <span c:assertTrue="beforeSpecRunOnce()">exactly once</span> before
+        any examples are run. Methods annotated with @AfterSpecification are executed after the specification has executed.</p>
 
 </div>
 
