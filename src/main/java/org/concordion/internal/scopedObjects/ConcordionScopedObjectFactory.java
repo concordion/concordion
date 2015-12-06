@@ -104,6 +104,11 @@ public enum ConcordionScopedObjectFactory {
     }
 
     private void injectField(Object fixtureObject, Field field, ConcordionScopedObject<Object> obj)  {
+
+        if (field.getType().isPrimitive()) {
+            throw new AnnotationFormatError("Cannot use concordion scope annotations on primitive types");
+        }
+
         field.setAccessible(true);
 
         Object value = null;
