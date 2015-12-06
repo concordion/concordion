@@ -8,21 +8,25 @@
 
 <ol>
     <li>Example: fields in the fixture annotated with
-        <code>@ConcordionScopedField(scope = ConcordionScopedField.Scope.EXAMPLE)</code>
+        <code>@ExampleScoped</code>
         will be re-initialised between each test.
     </li>
     <li>Specification: fields in the fixture annotated with
-        <code>@ConcordionScopedField(scope = ConcordionScopedField.Scope.SPECIFICATION)</code>
+        <code>@SpecificationScoped</code>
         will shared between tests.
     </li>
     <li>Global: fields in the fixture annotated with
-        <code>@ConcordionScopedField(scope = ConcordionScopedField.Scope.GLOBAL)</code>
+        <code>@GloballyScoped</code>
         will shared between all fixtures.
     </li>
     <li>Unannotated: fields in the fixture without any annotations will be re-initialised between each test.
         This is standard jUnit behaviour (in fact, jUnit creates a new fixture object for each test).
     </li>
 </ol>
+
+<p>Note that for the annotated fields, concordion initialises the field using the default (no arguments) constructor for the
+object. Concordion initialises the field before any jUnit Rules are executed, before any methods annoated with @Before
+are executed, and before any methods annotated with @BeforeSpecification are executed.</p>
 
 <p>To show this, we have two examples below. Each example increments an AtomicInteger that is scoped differently and
     echos the value</p>

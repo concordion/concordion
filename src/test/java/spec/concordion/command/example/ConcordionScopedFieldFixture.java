@@ -1,7 +1,9 @@
 package spec.concordion.command.example;
 
+import org.concordion.api.ExampleScoped;
+import org.concordion.api.GloballyScoped;
+import org.concordion.api.SpecificationScoped;
 import org.concordion.integration.junit4.ConcordionRunner;
-import org.concordion.internal.ConcordionScopedField;
 import org.junit.runner.RunWith;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -11,13 +13,13 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @RunWith(ConcordionRunner.class)
 public class ConcordionScopedFieldFixture {
-    @ConcordionScopedField(scope = ConcordionScopedField.Scope.SPECIFICATION)
-    private AtomicInteger specScopedCounter;
-
-    @ConcordionScopedField(scope = ConcordionScopedField.Scope.EXAMPLE)
+    @ExampleScoped
     private AtomicInteger exampleScopedCounter;
 
-    @ConcordionScopedField(scope = ConcordionScopedField.Scope.GLOBAL)
+    @SpecificationScoped
+    private AtomicInteger specScopedCounter;
+
+    @GloballyScoped
     private AtomicInteger globalScopedCounter;
 
     private int fieldCounter = 0;

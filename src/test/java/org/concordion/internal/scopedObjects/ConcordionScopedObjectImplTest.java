@@ -1,6 +1,6 @@
 package org.concordion.internal.scopedObjects;
 
-import org.concordion.internal.ConcordionScopedField;
+import org.concordion.internal.ConcordionFieldScope;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -16,8 +16,8 @@ public class ConcordionScopedObjectImplTest {
     public void testScopedObjectsMatch() throws InstantiationException, IllegalAccessException {
 
         // setup
-        ConcordionScopedObjectImpl<String> scopedObj1 = new ConcordionScopedObjectImpl<String>(getClass(), "name", String.class, ConcordionScopedField.Scope.SPECIFICATION, repo);
-        ConcordionScopedObjectImpl<String> scopedObj2 = new ConcordionScopedObjectImpl<String>(getClass(), "name", String.class, ConcordionScopedField.Scope.SPECIFICATION, repo);
+        ConcordionScopedObjectImpl<String> scopedObj1 = new ConcordionScopedObjectImpl<String>(getClass(), "name", String.class, ConcordionFieldScope.SPECIFICATION, repo);
+        ConcordionScopedObjectImpl<String> scopedObj2 = new ConcordionScopedObjectImpl<String>(getClass(), "name", String.class, ConcordionFieldScope.SPECIFICATION, repo);
 
         // test
         String obj1 = scopedObj1.getObject();
@@ -32,8 +32,8 @@ public class ConcordionScopedObjectImplTest {
     public void testScopedObjectsDifferentNamesNoMatch() throws InstantiationException, IllegalAccessException {
 
         // setup
-        ConcordionScopedObjectImpl<String> scopedObj1 = new ConcordionScopedObjectImpl<String>(getClass(), "name1", String.class, ConcordionScopedField.Scope.SPECIFICATION, repo);
-        ConcordionScopedObjectImpl<String> scopedObj2 = new ConcordionScopedObjectImpl<String>(getClass(), "name2", String.class, ConcordionScopedField.Scope.SPECIFICATION, repo);
+        ConcordionScopedObjectImpl<String> scopedObj1 = new ConcordionScopedObjectImpl<String>(getClass(), "name1", String.class, ConcordionFieldScope.SPECIFICATION, repo);
+        ConcordionScopedObjectImpl<String> scopedObj2 = new ConcordionScopedObjectImpl<String>(getClass(), "name2", String.class, ConcordionFieldScope.SPECIFICATION, repo);
 
         // test
         String obj1 = scopedObj1.getObject();

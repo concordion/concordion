@@ -1,7 +1,6 @@
 package org.concordion.internal.scopedObjects;
 
 import org.concordion.api.*;
-import org.concordion.internal.ConcordionScopedField;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,18 +23,6 @@ public class ScopedAnnotationsTest {
 
     @GloballyScoped
     AtomicInteger globalInteger;
-
-    @ConcordionScopedField(scope = ConcordionScopedField.Scope.SPECIFICATION)
-    private AtomicInteger specificationScopedField;
-
-    @ConcordionScopedField(scope = ConcordionScopedField.Scope.EXAMPLE)
-    private AtomicInteger exampleScopedField;
-
-    @ConcordionScopedField(scope = ConcordionScopedField.Scope.GLOBAL)
-    private AtomicInteger globalScopedField;
-
-    @ConcordionScopedField
-    private AtomicInteger defaultScopedField;
 
 
     private static int integer = 0;
@@ -64,17 +51,8 @@ public class ScopedAnnotationsTest {
         int exampleInt = exampleInteger.addAndGet(1);
         int globalInt = globalInteger.addAndGet(1);
 
-        int specificationScopedint = specificationScopedField.addAndGet(1);
-        int exampleScopedint = exampleScopedField.addAndGet(1);
-        int globalScopedint = globalScopedField.addAndGet(1);
-        int defaultScopedint = defaultScopedField.addAndGet(1);
-
         assertThat(integer, is(equalTo(specificationInt)));
         assertThat(integer, is(equalTo(globalInt)));
-        assertThat(integer, is(equalTo(specificationScopedint)));
-        assertThat(integer, is(equalTo(globalScopedint)));
         assertThat(1, is(equalTo(exampleInt)));
-        assertThat(1, is(equalTo(exampleScopedint)));
-        assertThat(1, is(equalTo(defaultScopedint)));
     }
 }

@@ -1,6 +1,6 @@
 package org.concordion.internal.scopedObjects;
 
-import org.concordion.internal.ConcordionScopedField;
+import org.concordion.internal.ConcordionFieldScope;
 
 import java.util.Arrays;
 
@@ -11,13 +11,13 @@ class ScopedObjectRepositoryKey<T> {
 
     private final Class<? extends T> scopedObjectClass;
     private final String name;
-    private final ConcordionScopedField.Scope scope;
+    private final ConcordionFieldScope concordionFieldScope;
     private final Class<?> specificationClass;
 
-    public ScopedObjectRepositoryKey(Class<? extends T> scopedObjectClass, String name, ConcordionScopedField.Scope scope, Class<?> specificationClass) {
+    public ScopedObjectRepositoryKey(Class<? extends T> scopedObjectClass, String name, ConcordionFieldScope concordionFieldScope, Class<?> specificationClass) {
         this.scopedObjectClass = scopedObjectClass;
         this.name = name;
-        this.scope = scope;
+        this.concordionFieldScope = concordionFieldScope;
         this.specificationClass = specificationClass;
     }
 
@@ -27,11 +27,11 @@ class ScopedObjectRepositoryKey<T> {
 
     @Override
     public int hashCode() {
-        switch (scope) {
+        switch (concordionFieldScope) {
             case GLOBAL:
                 return hash(scopedObjectClass, name);
             default:
-                return hash(scopedObjectClass, name, scope, specificationClass);
+                return hash(scopedObjectClass, name, concordionFieldScope, specificationClass);
         }
     }
 
@@ -61,12 +61,12 @@ class ScopedObjectRepositoryKey<T> {
             return false;
         }
 
-        if (!this.scope.equals(that.scope)) {
+        if (!this.concordionFieldScope.equals(that.concordionFieldScope)) {
             return false;
         }
 
         // we do not check the scope for globaly scoped objects.
-        if (this.scope != ConcordionScopedField.Scope.GLOBAL) {
+        if (this.concordionFieldScope != ConcordionFieldScope.GLOBAL) {
             if (!this.specificationClass.equals(that.specificationClass)) {
                 return false;
             }

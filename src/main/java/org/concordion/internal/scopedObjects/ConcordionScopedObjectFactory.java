@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
 import org.concordion.api.Fixture;
 import org.concordion.internal.ConcordionScopeDeclaration;
 import org.concordion.internal.ConcordionScopedField;
-import org.concordion.internal.ConcordionScopedField.Scope;
+import org.concordion.internal.ConcordionFieldScope;
 
 /**
  * Created by tim on 3/12/15.
@@ -20,9 +20,9 @@ public enum ConcordionScopedObjectFactory {
     public <T> ConcordionScopedObject<T> create(Class<?> specificationClass,
                                                 String name,
                                                 Class<? extends T> scopedObject,
-                                                ConcordionScopedField.Scope scope) {
+                                                ConcordionFieldScope concordionFieldScope) {
 
-        return new ConcordionScopedObjectImpl<T>(specificationClass, name, scopedObject, scope, repository);
+        return new ConcordionScopedObjectImpl<T>(specificationClass, name, scopedObject, concordionFieldScope, repository);
     }
 
     /**
@@ -62,34 +62,27 @@ public enum ConcordionScopedObjectFactory {
     }
 
     private ConcordionScopedObject<Object> getScopedObject(Object fixtureObject, Field field) {
-        ConcordionScopedField scopedField = field.getAnnotation(ConcordionScopedField.class);
 
         String name = "";
-        ConcordionScopedField.Scope scope = null;
+        ConcordionFieldScope concordionFieldScope = null;
 
-        if (scopedField != null) {
-            name = scopedField.value();
-            scope = scopedField.scope();
-
-        } else {
-            Annotation[] annotations = field.getAnnotations();
-            for (Annotation annotation : annotations) {
-                Scope annotationScope = getScopeFromAnnotation(annotation);
-                if (annotationScope != null) {
-                    if (scope != null) {
-                        throw new AnnotationFormatError("Multiple concordion scope annotations on field '" + field.getName() + "'");
-                    } 
-                    scope = annotationScope;
-                    try {
-                        name = (String) annotation.getClass().getDeclaredMethod("value").invoke(annotation);
-                    } catch (Exception e) {
-                        throw new AnnotationFormatError("Expected concordion scope annotation on field '"  + field.getName() + "' to also have a 'value()' method");
-                    }
+        Annotation[] annotations = field.getAnnotations();
+        for (Annotation annotation : annotations) {
+            ConcordionFieldScope annotationConcordionFieldScope = getScopeFromAnnotation(annotation);
+            if (annotationConcordionFieldScope != null) {
+                if (concordionFieldScope != null) {
+                    throw new AnnotationFormatError("Multiple concordion scope annotations on field '" + field.getName() + "'");
+                }
+                concordionFieldScope = annotationConcordionFieldScope;
+                try {
+                    name = (String) annotation.getClass().getDeclaredMethod("value").invoke(annotation);
+                } catch (Exception e) {
+                    throw new AnnotationFormatError("Expected concordion scope annotation on field '"  + field.getName() + "' to also have a 'value()' method");
                 }
             }
         }
-        
-        if (scope == null) {
+
+        if (concordionFieldScope == null) {
             return null;
         }
 
@@ -98,16 +91,16 @@ public enum ConcordionScopedObjectFactory {
             name = field.getName();
         }
 
-        return create(fixtureObject.getClass(), name, field.getType(), scope);
+        return create(fixtureObject.getClass(), name, field.getType(), concordionFieldScope);
     }
 
-    private ConcordionScopedField.Scope getScopeFromAnnotation(Annotation annotation) {
+    private ConcordionFieldScope getScopeFromAnnotation(Annotation annotation) {
         ConcordionScopeDeclaration scopeDeclaration = annotation.annotationType().getAnnotation(ConcordionScopeDeclaration.class);
-        Scope scope = null;
+        ConcordionFieldScope concordionFieldScope = null;
         if (scopeDeclaration != null) {
-            scope = scopeDeclaration.scope();
+            concordionFieldScope = scopeDeclaration.scope();
         }
-        return scope;
+        return concordionFieldScope;
     }
 
     private void injectField(Object fixtureObject, Field field, ConcordionScopedObject<Object> obj)  {

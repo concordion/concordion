@@ -1,9 +1,7 @@
 package org.concordion.internal.scopedObjects;
 
 import org.concordion.api.Fixture;
-import org.concordion.internal.ConcordionScopedField;
-import org.concordion.internal.scopedObjects.ConcordionScopedObject;
-import org.concordion.internal.scopedObjects.ConcordionScopedObjectFactory;
+import org.concordion.internal.ConcordionFieldScope;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,7 +21,7 @@ public class ConcordionScopedObjectFactoryTest {
                     getClass(),
                     "variable name",
                     AtomicInteger.class,
-                    ConcordionScopedField.Scope.SPECIFICATION);
+                    ConcordionFieldScope.SPECIFICATION);
 
 
     private int nonStaticValue = 0;

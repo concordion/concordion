@@ -1,6 +1,6 @@
 package org.concordion.internal.scopedObjects;
 
-import org.concordion.internal.ConcordionScopedField;
+import org.concordion.internal.ConcordionFieldScope;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,12 +17,12 @@ public class ConcordionScopedObjectRepository {
         repo = new ConcurrentHashMap<ScopedObjectRepositoryKey, ScopedObjectRepositoryValue>();
     }
 
-    public <T> T getObject(Class<? extends T> scopedObjectClass, String name, ConcordionScopedField.Scope scope, Class<?> specificationClass) throws InstantiationException, IllegalAccessException {
+    public <T> T getObject(Class<? extends T> scopedObjectClass, String name, ConcordionFieldScope concordionFieldScope, Class<?> specificationClass) throws InstantiationException, IllegalAccessException {
 
-        ScopedObjectRepositoryKey<T> key = new ScopedObjectRepositoryKey<T>(scopedObjectClass, name, scope, specificationClass);
+        ScopedObjectRepositoryKey<T> key = new ScopedObjectRepositoryKey<T>(scopedObjectClass, name, concordionFieldScope, specificationClass);
 
         // return a new one each time if the object is example scoped
-        if (scope == ConcordionScopedField.Scope.EXAMPLE) {
+        if (concordionFieldScope == ConcordionFieldScope.EXAMPLE) {
             ScopedObjectRepositoryValue<T> value = createObject(key);
             return value.getObject();
         }
