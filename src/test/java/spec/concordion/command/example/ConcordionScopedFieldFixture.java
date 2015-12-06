@@ -41,6 +41,7 @@ public class ConcordionScopedFieldFixture {
     }
 
     public void incrementAllCounters() {
+        fieldCounter++;
         specScopedCounter.addAndGet(1);
         exampleScopedCounter.addAndGet(1);
         globalScopedCounter.addAndGet(1);
