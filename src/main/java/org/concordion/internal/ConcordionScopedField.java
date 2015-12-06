@@ -1,4 +1,4 @@
-package org.concordion.api;
+package org.concordion.internal;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

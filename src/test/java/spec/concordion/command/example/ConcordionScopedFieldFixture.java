@@ -1,7 +1,7 @@
 package spec.concordion.command.example;
 
-import org.concordion.api.ConcordionScopedField;
 import org.concordion.integration.junit4.ConcordionRunner;
+import org.concordion.internal.ConcordionScopedField;
 import org.junit.runner.RunWith;
 
 import java.util.concurrent.atomic.AtomicInteger;

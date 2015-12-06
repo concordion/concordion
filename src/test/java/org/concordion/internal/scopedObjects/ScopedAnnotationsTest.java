@@ -1,6 +1,7 @@
 package org.concordion.internal.scopedObjects;
 
 import org.concordion.api.*;
+import org.concordion.internal.ConcordionScopedField;
 import org.junit.Before;
 import org.junit.Test;
 
