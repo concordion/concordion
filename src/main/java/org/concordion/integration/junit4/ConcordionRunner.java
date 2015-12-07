@@ -220,11 +220,6 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
             accumulatedResultSummary.record(Result.EXCEPTION);
             throw e;
         }
-//        catch (Throwable e) {
-//            // if *anything* goes wrong, we fire a test failure notification.
-//            e.printStackTrace(System.err);
-//
-//        }
     }
 
     @Override @Deprecated
