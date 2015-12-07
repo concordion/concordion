@@ -52,7 +52,10 @@ public class ThrowableCatchingDecorator extends AbstractCommandDecorator {
 
     private void rethrowFailFastException(ResultRecorder resultRecorder, Throwable t) {
         for (Class<? extends Throwable> exceptionType : failFastExceptions) {
-            if (exceptionType.isAssignableFrom(t.getCause().getClass())) {
+
+            Throwable cause = t.getCause() == null? t:t.getCause();
+
+            if (exceptionType.isAssignableFrom(cause.getClass())) {
                 FailFastException failFastException = new FailFastException("An exception was thrown in a @FailFast fixture", t);
                 resultRecorder.recordFailFastException(failFastException);
                 throw failFastException;

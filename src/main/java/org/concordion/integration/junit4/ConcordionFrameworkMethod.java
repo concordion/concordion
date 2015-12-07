@@ -14,7 +14,7 @@ public class ConcordionFrameworkMethod extends FrameworkMethod {
     private static final Method CONCORDION_METHOD;
 
     public interface ConcordionRunnerInterface {
-        void invoke(ConcordionFrameworkMethod concordionFrameworkMethod, Object target);
+        void invoke(ConcordionFrameworkMethod concordionFrameworkMethod, Object target) throws Exception;
     }
 
 

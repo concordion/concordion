@@ -32,7 +32,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
     // this sort of thing is so much easier with Java 8!
     public ConcordionFrameworkMethod.ConcordionRunnerInterface concordionRunnerInterface =
             new ConcordionFrameworkMethod.ConcordionRunnerInterface() {
-        public void invoke(ConcordionFrameworkMethod concordionFrameworkMethod, Object target) {
+        public void invoke(ConcordionFrameworkMethod concordionFrameworkMethod, Object target) throws Exception {
             ConcordionRunner.this.invoke(concordionFrameworkMethod, target);
         }
     };
@@ -186,7 +186,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         super.runChild(method, notifier);
     }
 
-    void invoke(ConcordionFrameworkMethod concordionFrameworkMethod, Object target) {
+    void invoke(ConcordionFrameworkMethod concordionFrameworkMethod, Object target) throws Exception {
 
         Fixture fixture = new Fixture(target);
 
@@ -216,12 +216,15 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
             accumulatedResultSummary.record(Result.EXCEPTION);
             failFastException = e;
             throw e;
+        } catch (IOException e) {
+            accumulatedResultSummary.record(Result.EXCEPTION);
+            throw e;
         }
-        catch (Throwable e) {
-            // if *anything* goes wrong, we fire a test failure notification.
-            e.printStackTrace(System.err);
-
-        }
+//        catch (Throwable e) {
+//            // if *anything* goes wrong, we fire a test failure notification.
+//            e.printStackTrace(System.err);
+//
+//        }
     }
 
     @Override @Deprecated
