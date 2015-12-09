@@ -149,18 +149,22 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
     private void invokeMethods(Fixture fixture, Class<? extends Annotation> annotation) {
 
-        Method[] methods = fixture.getFixtureClass().getMethods();
+        for (Class<?> currentclass = fixture.getFixtureClass();
+             currentclass != Object.class;
+             currentclass = currentclass.getSuperclass()) {
 
-        for (Method method: methods) {
-//            Annotation a = method.getAnnotation(annotation);
-            if (method.isAnnotationPresent(annotation)) {
-                try {
-                    method.setAccessible(true);
-                    method.invoke(fixture.getFixtureObject(), new Object[] {});
-                } catch (IllegalAccessException e) {
-                    throw new AnnotationFormatError("Invalid permissions to invoke method: " + method.getName());
-                } catch (InvocationTargetException e) {
-                    throw new AnnotationFormatError("Could not invoke method with no arguments: " + method.getName());
+            Method[] methods = currentclass.getMethods();
+
+            for (Method method : methods) {
+                if (method.isAnnotationPresent(annotation)) {
+                    try {
+                        method.setAccessible(true);
+                        method.invoke(fixture.getFixtureObject(), new Object[]{});
+                    } catch (IllegalAccessException e) {
+                        throw new AnnotationFormatError("Invalid permissions to invoke method: " + method.getName());
+                    } catch (InvocationTargetException e) {
+                        throw new AnnotationFormatError("Could not invoke method with no arguments: " + method.getName());
+                    }
                 }
             }
         }
