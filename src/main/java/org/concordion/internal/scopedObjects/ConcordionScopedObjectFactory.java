@@ -6,7 +6,6 @@ import java.lang.reflect.Field;
 
 import org.concordion.api.Fixture;
 import org.concordion.internal.ConcordionScopeDeclaration;
-import org.concordion.internal.ConcordionScopedField;
 import org.concordion.internal.ConcordionFieldScope;
 
 /**
