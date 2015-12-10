@@ -15,18 +15,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @RunWith(ConcordionRunner.class)
 @FullOGNL
-public class ExamplesFixture {
-
+public class ExamplesFixture extends SpecWithBeforeSpec {
 
     private int counter = 0;
-
-    @SpecificationScoped
-    AtomicInteger beforeSpecCounter;
-
-    @BeforeSpecification
-    public void beforeSpec() {
-        beforeSpecCounter.getAndIncrement();
-    }
 
     public void setCounter(String val) {
         counter = Integer.parseInt(val);

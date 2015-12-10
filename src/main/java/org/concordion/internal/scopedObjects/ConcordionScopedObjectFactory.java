@@ -32,9 +32,7 @@ public enum ConcordionScopedObjectFactory {
      * @throws AnnotationFormatError if there is an annotation processing error or introspection error.
      */
     public void setupFixture(Fixture fixture) throws AnnotationFormatError{
-
         injectScopedObjects(fixture.getFixtureObject(), fixture.getFixtureClass());
-
     }
 
     private void injectScopedObjects(Object fixtureObject, Class<?> fixtureClass)  {
