@@ -18,4 +18,8 @@ public class SpecWithBeforeSpec {
         beforeSpecCounter.getAndIncrement();
     }
 
+    public boolean beforeSpecRunOnce() {
+        return beforeSpecCounter.get() == 1;
+    }
+
 }
