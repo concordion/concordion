@@ -1,11 +1,6 @@
 package org.concordion.api.extension;
 
-import org.concordion.api.Command;
-import org.concordion.api.Resource;
-import org.concordion.api.RunStrategy;
-import org.concordion.api.Source;
-import org.concordion.api.SpecificationLocator;
-import org.concordion.api.Target;
+import org.concordion.api.*;
 import org.concordion.api.listener.AssertEqualsListener;
 import org.concordion.api.listener.AssertFalseListener;
 import org.concordion.api.listener.AssertTrueListener;
@@ -18,6 +13,7 @@ import org.concordion.api.listener.SetListener;
 import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.api.listener.VerifyRowsListener;
+import org.concordion.internal.ConcordionBuilder;
 import org.concordion.internal.command.RunCommand;
 
 /**
@@ -196,4 +192,12 @@ public interface ConcordionExtender {
      * @return this
      */
     ConcordionExtender withRunStrategy(RunStrategy runStrategy);
+
+    /**
+     * Adds a new specification type to the types that can be handled (by default HTML and Markdown are supported). 
+     * @param typeSuffix the suffix of the file type to map this to
+     * @param specificationConverter converts the specification to HTML format
+     * @return this
+     */
+    ConcordionExtender withSpecificationType(String typeSuffix, SpecificationConverter specificationConverter);
 }

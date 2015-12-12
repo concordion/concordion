@@ -18,15 +18,19 @@ public class ClassNameBasedSpecificationLocator implements SpecificationLocator 
     }
     
     public Resource locateSpecification(Fixture fixture) {
+        return locateSpecification(fixture, specificationSuffix);
+    }
+
+    @Override
+    public Resource locateSpecification(Object fixture) {
+        return locateSpecification(new Fixture(fixture), specificationSuffix);
+    }
+
+    protected Resource locateSpecification(Fixture fixture, String specificationSuffix) {
         Check.notNull(fixture, "Fixture is null");
         String fixturePath = fixture.getFixturePathWithoutSuffix();
         String resourcePath = "/" + fixturePath + "." + specificationSuffix;
         
         return new Resource(resourcePath);
-    }
-
-    @Override
-    public Resource locateSpecification(Object fixture) {
-        return locateSpecification(new Fixture(fixture));
     }
 }

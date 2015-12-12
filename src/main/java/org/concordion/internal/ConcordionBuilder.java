@@ -29,7 +29,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private static final String EMBEDDED_STYLESHEET_RESOURCE = "/org/concordion/internal/resource/embedded.css";
     
     private static File baseOutputDir;
-    private SpecificationLocator specificationLocator = new ClassNameBasedSpecificationLocator();
+    private SpecificationLocator specificationLocator = new ClassNameAndTypeBasedSpecificationLocator();
     private Source source = new ClassPathSource();
     private Target target = null;
     private CommandRegistry commandRegistry = new CommandRegistry();
@@ -53,6 +53,8 @@ public class ConcordionBuilder implements ConcordionExtender {
     private boolean builtAlready;
     private Fixture fixture;
 
+    private List<SpecificationType> specificationTypes = new ArrayList<SpecificationType>();
+
     {
         withThrowableListener(new ThrowableRenderer());
         
@@ -66,6 +68,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         withRunListener(new RunResultRenderer());
         withDocumentParsingListener(new DocumentStructureImprover());
         withDocumentParsingListener(new MetadataCreator());
+        withSpecificationType("html", null);
     }
 
     public ConcordionBuilder withSource(Source source) {
@@ -233,7 +236,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         }
         XMLParser xmlParser = new XMLParser();
         
-        specificationCommand.addSpecificationListener(new BreadcrumbRenderer(source, xmlParser));
+        specificationCommand.addSpecificationListener(new BreadcrumbRenderer(source, xmlParser, specificationTypes));
         specificationCommand.addSpecificationListener(new PageFooterRenderer(target));
 
         specificationReader = new XMLSpecificationReader(source, xmlParser, documentParser);        
@@ -252,7 +255,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         listeners.announce().concordionBuilt(new ConcordionBuildEvent(target));
 
         try {
-            return new Concordion(specificationLocator, specificationReader, evaluatorFactory, fixture);
+            return new Concordion(specificationTypes, specificationLocator, specificationReader, evaluatorFactory, fixture);
         } catch (IOException e) {
             throw new UnableToBuildConcordionException(e);
         }
@@ -397,4 +400,10 @@ public class ConcordionBuilder implements ConcordionExtender {
     	String stylesheetContent = IOUtil.readResourceAsString(EMBEDDED_STYLESHEET_RESOURCE);    
     	withEmbeddedCSS(stylesheetContent);
     }
+
+	@Override
+    public ConcordionBuilder withSpecificationType(String typeSuffix, SpecificationConverter converter) {
+	    specificationTypes.add(new SpecificationType(typeSuffix, converter));
+	    return this;
+	}
 }
