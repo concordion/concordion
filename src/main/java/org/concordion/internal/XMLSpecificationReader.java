@@ -1,19 +1,18 @@
 package org.concordion.internal;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import nu.xom.Document;
 
-import org.concordion.api.Resource;
-import org.concordion.api.Source;
-import org.concordion.api.Specification;
-import org.concordion.api.SpecificationReader;
+import org.concordion.api.*;
 
 public class XMLSpecificationReader implements SpecificationReader {
 
     private final Source source;
     private final XMLParser xmlParser;
     private final DocumentParser documentParser;
+    private SpecificationConverter specificationConverter;
 
     public XMLSpecificationReader(Source source, XMLParser xmlParser, DocumentParser documentParser) {
         this.source = source;
@@ -22,7 +21,24 @@ public class XMLSpecificationReader implements SpecificationReader {
     }
     
     public Specification readSpecification(Resource resource) throws IOException {
-        Document document = xmlParser.parse(source.createInputStream(resource), String.format("[%s: %s]", source, resource.getPath()));
+        InputStream inputStream = source.createInputStream(resource);
+        if (specificationConverter != null) {
+            inputStream = specificationConverter.convert(resource, inputStream);
+        }
+        Document document = xmlParser.parse(inputStream, String.format("[%s: %s]", source, resource.getPath()));
+        if (specificationConverter != null) {
+            resource = new Resource(resource.getPath().replaceFirst("\\..*$", "\\.html"));
+        }
         return documentParser.parse(document, resource);
+    }
+
+    @Override
+    public boolean canFindSpecification(Resource resource) throws IOException {
+        return source.canFind(resource);
+    }
+
+    @Override
+    public void setSpecificationConverter(SpecificationConverter specificationConverter) {
+        this.specificationConverter = specificationConverter;
     }
 }

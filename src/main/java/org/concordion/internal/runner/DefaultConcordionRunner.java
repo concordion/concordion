@@ -33,7 +33,8 @@ public class DefaultConcordionRunner implements Runner {
     protected Class<?> findTestClass(Resource resource, String href) throws ClassNotFoundException {
         String name = resource.getName();
         Resource hrefResource = resource.getParent().getRelativeResource(href);
-        name = hrefResource.getPath().replaceFirst("/", "").replace("/", ".").replaceAll("\\.html$", "");
+        String dottedHrefResource = hrefResource.getPath().replaceFirst("/", "").replace("/", ".");
+        name = dottedHrefResource.substring(0, dottedHrefResource.lastIndexOf("."));
         Class<?> concordionClass;
         try {
             concordionClass = Class.forName(name);

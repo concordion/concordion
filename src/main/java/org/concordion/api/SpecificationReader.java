@@ -6,4 +6,7 @@ public interface SpecificationReader {
 
     Specification readSpecification(Resource resource) throws IOException;
 
+    boolean canFindSpecification(Resource resource) throws IOException;
+
+    void setSpecificationConverter(SpecificationConverter converter);
 }
