@@ -43,13 +43,19 @@ public class Concordion {
                 specificationType = currentType;
                 resource = currentResource;
             }
+            if (specificationType == null) {
+                throw new RuntimeException(createUnableToFindSpecMessage(fixture, specificationTypes));
+            }
+            specificationReader.setSpecificationConverter(specificationType.getConverter());
+        } else {
+            resource = specificationLocator.locateSpecification(fixture.getFixtureObject());
         }
         if (specificationType == null) {
             throw new RuntimeException(createUnableToFindSpecMessage(fixture, specificationTypes));
         }
         specificationReader.setSpecificationConverter(specificationType.getConverter());
     }
-    
+
     public ResultSummary process() throws IOException {
         return process(specification, fixture);
     }
