@@ -19,5 +19,6 @@ public abstract class ConcordionTestCase extends TestCase {
         fixture.beforeSpecification();
         fixture.setupForRun(this);
         new FixtureRunner(fixture).run(fixture);
+        fixture.afterSpecification();
     }
 }
