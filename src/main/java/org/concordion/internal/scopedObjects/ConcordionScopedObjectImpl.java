@@ -25,4 +25,9 @@ public class ConcordionScopedObjectImpl<T> implements ConcordionScopedObject<T> 
         return repository.getObject(scopedObjectClass, name, concordionFieldScope, specificationClass);
     }
 
+    @Override
+    public void setObject(T existingValue) {
+        repository.setObject(scopedObjectClass, name, concordionFieldScope, specificationClass, existingValue);
+    }
+
 }

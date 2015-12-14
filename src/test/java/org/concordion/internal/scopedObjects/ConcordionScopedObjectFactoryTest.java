@@ -29,8 +29,8 @@ public class ConcordionScopedObjectFactoryTest {
     @Before
     public void before() {
         // apply any annotations
-        Fixture fixture = new Fixture(this);
-        ConcordionScopedObjectFactory.SINGLETON.setupFixture(fixture);
+//        Fixture fixture = new Fixture(this);
+//        fixture.setupForRun(this);
     }
 
     @Test

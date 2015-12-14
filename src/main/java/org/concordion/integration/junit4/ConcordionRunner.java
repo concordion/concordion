@@ -1,10 +1,6 @@
 package org.concordion.integration.junit4;
 
 import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.annotation.AnnotationFormatError;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,9 +15,8 @@ import org.concordion.internal.SummarizingResultRecorder;
 import org.concordion.internal.UnableToBuildConcordionException;
 import org.concordion.internal.cache.ConcordionRunOutput;
 import org.concordion.internal.cache.RunResultsCache;
-import org.concordion.internal.scopedObjects.ConcordionScopedObjectFactory;
+import org.concordion.api.Fixture;
 import org.junit.runner.Description;
-import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
@@ -53,9 +48,8 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         this.accumulatedResultSummary = new SummarizingResultRecorder();
 
         try {
-            setupFixture = new Fixture(fixtureClass.newInstance());
+            setupFixture = createFixture(fixtureClass.newInstance());
             // needs to be called so extensions have access to scoped variables
-            ConcordionScopedObjectFactory.SINGLETON.setupFixture(setupFixture);
         } catch (InstantiationException e) {
             throw new InitializationError(e);
         } catch (IllegalAccessException e) {
@@ -106,30 +100,50 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
     @Override
     protected Object createTest() throws Exception {
-        Fixture fixture = new Fixture(super.createTest());
+
+        // junit creates a new object for each test case, so we need to capture this
+        // and setup our object - that makes sure that scoped variables are injected properly
+        Object fixtureObject = super.createTest();
+
         // we need to setup the concordion scoped objects so that the @Before methods and @Rules can access
         // them
-        ConcordionScopedObjectFactory.SINGLETON.setupFixture(fixture);
-        return fixture.getFixtureObject();
+        setupFixture.setupForRun(fixtureObject);
+
+        return fixtureObject;
+    }
+
+    /**
+     *
+     * Protected so superclasses can change the Fixture being returned.
+     *
+     * @param fixtureObject
+     * @return
+     */
+    protected Fixture createFixture(Object fixtureObject) {
+        return new Fixture(fixtureObject);
     }
 
     @Override
     public void run(RunNotifier notifier) {
 
-        ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
+        // we figure out if the spec has been run before by checking if there are any
+        // prior results in the cache
+        boolean firstRun = null ==RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
 
-        invokeMethods(setupFixture, BeforeSpecification.class);
+        // only setup the fixture if it hasn't been run before
+        if (firstRun) {
+            setupFixture.beforeSpecification();
+        }
 
         super.run(notifier);
 
-        invokeMethods(setupFixture, AfterSpecification.class);
-
-        // only actually finish the specification if it has not already been run.
-        if (results == null) {
+        // only actually finish the specification if this is the first time it was run
+        if (firstRun) {
+            setupFixture.afterSpecification();
             concordion.finish();
         }
 
-        results = RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
+        ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
 
         if (results != null) {
             // we only print meta-results when the spec has multiple examples.
@@ -146,25 +160,6 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
             }
         }
     }
-
-    private void invokeMethods(Fixture fixture, Class<? extends Annotation> annotation) {
-
-        Method[] methods = fixture.getFixtureClass().getMethods();
-
-        for (Method method : methods) {
-            if (method.isAnnotationPresent(annotation)) {
-                try {
-                    method.setAccessible(true);
-                    method.invoke(fixture.getFixtureObject(), new Object[]{});
-                } catch (IllegalAccessException e) {
-                    throw new AnnotationFormatError("Invalid permissions to invoke method: " + method.getName());
-                } catch (InvocationTargetException e) {
-                    throw new AnnotationFormatError("Could not invoke method with no arguments: " + method.getName());
-                }
-            }
-        }
-    }
-
 
 
     @Override
@@ -188,7 +183,8 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
     void invoke(ConcordionFrameworkMethod concordionFrameworkMethod, Object target) throws Exception {
 
-        Fixture fixture = new Fixture(target);
+        // create the new fixture because there is a new fixture object.
+        Fixture fixture = createFixture(target);
 
         String example = concordionFrameworkMethod.getExampleName();
 

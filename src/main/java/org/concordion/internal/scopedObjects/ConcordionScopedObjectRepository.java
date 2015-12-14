@@ -45,4 +45,20 @@ public class ConcordionScopedObjectRepository {
     private ScopedObjectRepositoryValue createObject(ScopedObjectRepositoryKey key) throws InstantiationException, IllegalAccessException {
         return new ScopedObjectRepositoryValue(key);
     }
+
+    public <T> void setObject(Class<? extends T> scopedObjectClass, String name, ConcordionFieldScope concordionFieldScope, Class<?> specificationClass, T existingValue) {
+        ScopedObjectRepositoryKey<T> key = new ScopedObjectRepositoryKey<T>(scopedObjectClass, name, concordionFieldScope, specificationClass);
+
+        // look up in repo and create/set if necessary
+        synchronized (syncObject) {
+            ScopedObjectRepositoryValue<T> value = repo.get(key);
+
+            if (value == null) {
+                value = new ScopedObjectRepositoryValue<T>(key, existingValue);
+                repo.put(key, value);
+            } else {
+                value.setObject(existingValue);
+            }
+        }
+    }
 }

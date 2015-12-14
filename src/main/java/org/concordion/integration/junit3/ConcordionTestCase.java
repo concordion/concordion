@@ -16,6 +16,8 @@ public abstract class ConcordionTestCase extends TestCase {
 
     public void testProcessSpecification() throws Throwable {
         Fixture fixture  = new Fixture(this);
+        fixture.beforeSpecification();
+        fixture.setupForRun(this);
         new FixtureRunner(fixture).run(fixture);
     }
 }

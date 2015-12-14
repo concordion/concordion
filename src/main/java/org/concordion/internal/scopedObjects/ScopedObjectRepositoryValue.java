@@ -5,14 +5,22 @@ package org.concordion.internal.scopedObjects;
  */
 public class ScopedObjectRepositoryValue<T> {
     private final ScopedObjectRepositoryKey key;
-    private final T value;
+    private T value;
 
     public ScopedObjectRepositoryValue(ScopedObjectRepositoryKey key) throws IllegalAccessException, InstantiationException {
-        this.key = key;
-        this.value = (T) key.getScopedObjectClass().newInstance();
+        this(key, (T) key.getScopedObjectClass().newInstance());
     }
 
-    public synchronized T getObject()  {
+    public ScopedObjectRepositoryValue(ScopedObjectRepositoryKey key, T value) {
+        this.key = key;
+        this.value = value;
+    }
+
+    public void setObject(T value) {
+        this.value = value;
+    }
+
+    public T getObject()  {
         return value;
     }
 }

@@ -30,8 +30,7 @@ public class ScopedAnnotationsTest {
     @Before
     public void before() {
         Fixture fixture = new Fixture(this);
-
-        ConcordionScopedObjectFactory.SINGLETON.setupFixture(fixture);
+        fixture.beforeSpecification();
     }
 
     @Test

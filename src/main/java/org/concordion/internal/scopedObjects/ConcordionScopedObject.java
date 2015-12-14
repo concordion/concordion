@@ -8,4 +8,6 @@ import org.junit.rules.TestRule;
 public interface ConcordionScopedObject<T> {
 
     T getObject() throws IllegalAccessException, InstantiationException;
+
+    void setObject(T existingValue);
 }
