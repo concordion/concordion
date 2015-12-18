@@ -255,7 +255,11 @@ public class ConcordionBuilder implements ConcordionExtender {
         listeners.announce().concordionBuilt(new ConcordionBuildEvent(target));
 
         try {
-            return new Concordion(specificationTypes, specificationLocator, specificationReader, evaluatorFactory, fixture);
+            if (specificationLocator instanceof SpecificationLocatorWithType) {
+                return new Concordion(specificationTypes, (SpecificationLocatorWithType)specificationLocator, specificationReader, evaluatorFactory, fixture);
+            } else {
+                return new Concordion(specificationLocator, specificationReader, evaluatorFactory, fixture);
+            }
         } catch (IOException e) {
             throw new UnableToBuildConcordionException(e);
         }

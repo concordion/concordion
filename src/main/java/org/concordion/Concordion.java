@@ -15,38 +15,41 @@ public class Concordion {
     private SpecificationByExample specification;
     private Fixture fixture;
 
+    public Concordion(SpecificationLocator specificationLocator, SpecificationReader specificationReader, EvaluatorFactory evaluatorFactory, Fixture fixture) throws IOException {
+        this.specificationReader = specificationReader;
+        this.evaluatorFactory = evaluatorFactory;
+        this.fixture = fixture;
+
+        this.resource = specificationLocator.locateSpecification(fixture.getFixtureObject());
+    }
+
     /**
      * @param specificationTypes a list of types that this Concordion instance will check for (eg. html, md), with a converter for each type 
-     * @param specificationLocator either a {@link SpecificationLocator} if the specificationType is irrelevant or a {@link SpecificationLocatorWithType} if type is relevant 
      */
-    public Concordion(List<SpecificationType> specificationTypes, SpecificationLocator specificationLocator, SpecificationReader specificationReader, EvaluatorFactory evaluatorFactory, Fixture fixture) throws IOException {
+    public Concordion(List<SpecificationType> specificationTypes, SpecificationLocatorWithType specificationLocator, SpecificationReader specificationReader, EvaluatorFactory evaluatorFactory, Fixture fixture) throws IOException {
         this.specificationReader = specificationReader;
         this.evaluatorFactory = evaluatorFactory;
         this.fixture = fixture;
 
         SpecificationType specificationType = null;
 
-        if (specificationLocator instanceof SpecificationLocatorWithType) {
-            SpecificationLocatorWithType specificationTypeLocator = (SpecificationLocatorWithType)specificationLocator;
-            for (SpecificationType currentType : specificationTypes) {
-                Resource currentResource = specificationTypeLocator.locateSpecification(fixture.getFixtureObject(), currentType.getTypeSuffix());
-                if (specificationReader.canFindSpecification(currentResource)) {
-                    if (specificationType != null) {
-                        throw new RuntimeException(createMultipleSpecsMessage(fixture, specificationType, currentType));
-                    }
-                    specificationType = currentType;
-                    resource = currentResource;
+        SpecificationLocatorWithType specificationTypeLocator = (SpecificationLocatorWithType)specificationLocator;
+        for (SpecificationType currentType : specificationTypes) {
+            Resource currentResource = specificationTypeLocator.locateSpecification(fixture.getFixtureObject(), currentType.getTypeSuffix());
+            if (specificationReader.canFindSpecification(currentResource)) {
+                if (specificationType != null) {
+                    throw new RuntimeException(createMultipleSpecsMessage(fixture, specificationType, currentType));
                 }
+                specificationType = currentType;
+                resource = currentResource;
             }
-            if (specificationType == null) {
-                throw new RuntimeException(createUnableToFindSpecMessage(fixture, specificationTypes));
-            }
-            specificationReader.setSpecificationConverter(specificationType.getConverter());
-        } else {
-            resource = specificationLocator.locateSpecification(fixture.getFixtureObject());
         }
+        if (specificationType == null) {
+            throw new RuntimeException(createUnableToFindSpecMessage(fixture, specificationTypes));
+        }
+        specificationReader.setSpecificationConverter(specificationType.getConverter());
     }
-
+    
     public ResultSummary process() throws IOException {
         return process(specification, fixture);
     }
