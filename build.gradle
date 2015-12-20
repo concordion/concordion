@@ -13,7 +13,8 @@ repositories {
 
 dependencies {
     compile 'junit:junit:4.12',
-            'ognl:ognl:3.1'
+            'ognl:ognl:3.1',
+            'org.pegdown:pegdown:1.6.0'
 
     compile ('xom:xom:1.2.5') {
         exclude group: 'xalan', module: 'xalan'
