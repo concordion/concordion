@@ -12,17 +12,18 @@ import java.io.IOException;
 public class FixtureRunner {
     private static RunResultsCache runResultsCache = RunResultsCache.SINGLETON;
     private final Fixture fixture;
+    private final FixtureExtensionLoader fixtureExtensionLoader = new FixtureExtensionLoader();
+    private final FixtureOptionsLoader fixtureOptionsLoader = new FixtureOptionsLoader();
+    private Concordion concordion;
 
     public FixtureRunner(Fixture fixture) throws UnableToBuildConcordionException {
         this.fixture = fixture;
 
         ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture);
         fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
+        fixtureOptionsLoader.addOptions(fixture, concordionBuilder);
         concordion = concordionBuilder.build();
     }
-
-    private final FixtureExtensionLoader fixtureExtensionLoader = new FixtureExtensionLoader();
-    private Concordion concordion;
 
     public ResultSummary run(String example) throws IOException {
     	

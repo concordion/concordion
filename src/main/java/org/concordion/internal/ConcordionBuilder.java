@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.concordion.Concordion;
 import org.concordion.api.*;
@@ -13,8 +15,11 @@ import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.api.extension.ConcordionExtensionFactory;
 import org.concordion.api.listener.*;
+import org.concordion.api.option.ConcordionOptions;
+import org.concordion.api.option.MarkdownExtensions;
 import org.concordion.internal.command.*;
 import org.concordion.internal.listener.*;
+import org.concordion.internal.parser.markdown.MarkdownConverter;
 import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 import org.concordion.internal.util.IOUtil;
@@ -52,6 +57,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private List<Class<? extends Throwable>> failFastExceptions = Collections.<Class<? extends Throwable>>emptyList();
     private boolean builtAlready;
     private Fixture fixture;
+    private MarkdownConverter markdownConverter = new MarkdownConverter();
 
     private List<SpecificationType> specificationTypes = new ArrayList<SpecificationType>();
 
@@ -69,6 +75,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         withDocumentParsingListener(new DocumentStructureImprover());
         withDocumentParsingListener(new MetadataCreator());
         withSpecificationType("html", null);
+        withSpecificationType("md", markdownConverter);
     }
 
     public ConcordionBuilder withSource(Source source) {
@@ -410,4 +417,31 @@ public class ConcordionBuilder implements ConcordionExtender {
 	    specificationTypes.add(new SpecificationType(typeSuffix, converter));
 	    return this;
 	}
+
+    void configureWith(ConcordionOptions options) {
+        if (options.markdownExtensions().length > 0) {
+            int markdownExtensions = 0;
+            for (MarkdownExtensions markdownExtension : options.markdownExtensions()) {
+                markdownExtensions = markdownExtensions | markdownExtension.getPegdownExtension();
+            }
+            markdownConverter.withPegdownExtensions(markdownExtensions);
+        }
+
+        String location = options.copySourceHtmlToDir();
+        if (!location.isEmpty()) {
+            Pattern pattern = Pattern.compile("\\$\\{(.+?)\\}");
+            Matcher matcher = pattern.matcher(location);
+            StringBuffer sb = new StringBuffer();
+            while (matcher.find()) {
+                String property = matcher.group(1);
+                String value = System.getProperty(property);
+                if (value == null) {
+                    throw new RuntimeException(String.format("Unable to find system property '%s' in @ConcordionOptions setting copySourceHtmlToDir of '%s'", property, location));
+                }
+                matcher.appendReplacement(sb, value);
+            }
+            matcher.appendTail(sb);
+            markdownConverter.setSourceHtmlTarget(new FileTarget(new File(sb.toString())));
+        }
+    }
 }

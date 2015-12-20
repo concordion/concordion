@@ -1,4 +1,4 @@
-package spec.concordion.command;
+package spec.concordion.specificationType.html;
 
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import test.concordion.TestRig;
 
 @RunWith(ConcordionRunner.class)
-public class LowerCaseCommandsTest {
+public class LowerCaseCommandsFixture {
 	
 	public String processEquals(String snippet) throws Exception {
 		return process(snippet, "Fred");
