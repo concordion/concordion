@@ -99,12 +99,13 @@ public class XMLSpecification implements SpecificationByExample {
 
         List<String> commands = new ArrayList<String>();
 
+        // Add the main spec first to increase the chance that it will be run first by jUnit.
+        commands.add(testDescription);
+
+
         for (CommandCall exampleCall: examples) {
             commands.add(makeJunitTestName(exampleCall));
         }
-
-        // always add the main spec last. Helps with junit test ordering
-        commands.add(testDescription);
 
         return commands;
     }
