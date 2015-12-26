@@ -51,7 +51,7 @@ public class IOUtil {
     }
 
     public static InputStream getResourceAsStream(String resourcePath) {
-        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-        return contextClassLoader.getResourceAsStream(resourcePath.replaceFirst("/", ""));
+    	ClassLoader classLoader = IOUtil.class.getClassLoader();
+    	return classLoader.getResourceAsStream(resourcePath.replaceFirst("/", ""));
     }
 }
