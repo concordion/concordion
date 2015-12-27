@@ -1,5 +1,7 @@
 package spec.concordion.extension.listener;
 
+import java.util.List;
+
 import org.concordion.api.BeforeSpecification;
 import org.concordion.api.extension.Extension;
 import org.concordion.integration.junit4.ConcordionRunner;
@@ -19,11 +21,13 @@ public class ExampleListenerTest extends AbstractExtensionTestCase {
         extension.withStream(getLogStream());
     }
 	
-//    public void addExampleExtension() {
-//        setExtension(new ExampleTestExtension().withStream(getLogStream()));
-//    }
-        
     public double sqrt(double num) {
         return Math.sqrt(num);
+    }
+    
+    public List<String> getEventLogExcludingCheck() {
+        List<String> eventLog = getEventLog();
+        eventLog.remove("Before example 'check-results'");
+        return eventLog;
     }
 }
