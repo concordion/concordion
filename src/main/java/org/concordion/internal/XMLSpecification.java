@@ -46,9 +46,9 @@ public class XMLSpecification implements SpecificationByExample {
                 before.getCommand().executeAsExample(before, evaluator, beforeResultRecorder);
                 if (beforeResultRecorder.getTotalCount() > 0) {
                     beforeResultRecorder.setSpecificationDescription("Running before for example " + node.getExpression());
-                    String errorText = String.format("Before example performed tests in %s %s",
-                            testDescription,
-                            beforeResultRecorder.printToString(null)
+                    String errorText = String.format("Assertions were made in the 'before' example in '%s'.\n"
+                            + "Assertions are not supported in the 'before' example.\n",
+                            testDescription
                     );
     
                     throw new ConcordionAssertionError(errorText, beforeResultRecorder);
