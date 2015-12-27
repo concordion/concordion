@@ -23,13 +23,14 @@
 			</p>
 		</div>
 	
-        <p>The logged events for this example are:</p>
-        <table concordion:verifyRows="#event : getEventLog()">
-        <tr><th concordion:assertEquals="#event">Event</th></tr>
-        <tr><td>Before example 'example1'</td></tr>
-        <tr><td>After example 'example1' - passed: 1, failed: 0, exceptions: 0</td></tr>
-        </table>
- 
+        <div concordion:example="check-results">
+           <p>The logged events for this example are:</p>
+           <table concordion:verifyRows="#event : getEventLogExcludingCheck()">
+           <tr><th concordion:assertEquals="#event">Event</th></tr>
+           <tr><td>Before example 'example1'</td></tr>
+           <tr><td>After example 'example1' - passed: 1, failed: 0, exceptions: 0</td></tr>
+           </table>
+        </div> 
     </div>
 </body>
 </html>
