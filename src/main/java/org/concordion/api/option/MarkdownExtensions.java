@@ -9,7 +9,7 @@ import org.pegdown.LinkRenderer;
  * Note that the following extensions are enabled by default:
  * <ul>
  * <li>TABLES - similar to what <a href="http://fletcherpenney.net/multimarkdown/users_guide/">MultiMarkdown</a> offers.</li>
- * <li>STRIKETHROUGH - ~~strikethroughs~~ as supported in Pandoc and Github.<li>
+ * <li>STRIKETHROUGH - ~~strikethroughs~~ as supported in Pandoc and Github.</li>
  * </ul>
  * <p>
  * The SMARTS, QUOTES and SMARTYPANTS extensions from Pegdown are currently not supported in Concordion Markdown, 
@@ -69,6 +69,7 @@ public enum MarkdownExtensions {
      * <ul>
      * <li>Spaces and non-alphanumerics replaced by -, multiple dashes trimmed to one.</li>
      * <li>Anchor link is added as first element inside the header with empty content: <h1><a name="header"></a>header</h1></li>
+     * </ul>
      */
     EXTANCHORLINKS(Extensions.EXTANCHORLINKS),
     /**

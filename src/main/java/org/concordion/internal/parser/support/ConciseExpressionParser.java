@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 /**
  * Parses the concise Concordion expression syntax into {@link ConcordionStatement}s.
  *
- * See {@link ConciseExpressionParserTest} for usage examples.
+ * See <code>ConciseExpressionParserTest</code> for usage examples.
  */
 public class ConciseExpressionParser {
 
