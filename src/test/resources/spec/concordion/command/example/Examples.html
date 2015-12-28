@@ -59,11 +59,12 @@
 </div>
 
 <div c:example="example2">
-    <h3>Example 2</h3>
+    <h3>Another Example</h3>
 
 
-    <p>This is a separate example in the specification. Note that concordion automatically adds "a name" tags
-    into the output HTML so you can link to particular examples in a larger spec. The name used is the example name</p>
+    <p>This is a separate example in the specification. Note that concordion automatically adds an <code>id</code> attribute
+    anchor into the output HTML so you can link to particular examples. The value of the concordion:example attribute is used for the id. For example, you can link to this example by adding
+    <code>#example2</code> to the URL. </p>
     <code><pre>
 &lt;div concordion:example="example2"&gt;
         Example goes here

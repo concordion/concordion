@@ -93,6 +93,7 @@ public class RunCommand extends AbstractCommand {
             }
 
             runStrategy.call(runner, commandCall.getResource(), href, resultAnnouncer, resultRecorder);
+            updateHrefSuffix(element, href);
 
         } catch (FailFastException e) {
             throw e; // propagate FailFastExceptions
@@ -104,6 +105,15 @@ public class RunCommand extends AbstractCommand {
             resultRecorder.record(Result.FAILURE);
         }
 
+    }
+
+    /* For non-html format specs, update the href to reference the html output */
+    private void updateHrefSuffix(Element element, String href) {
+        if (!(href.endsWith(".html"))) {
+            String modifiedHref = href.substring(0, href.lastIndexOf(".")) + ".html";
+            element.removeAttribute("href");
+            element.addAttribute("href", modifiedHref);
+        }
     }
 
     private ResultAnnouncer newRunResultAnnouncer(final Resource resource, final Element element, final String expression) {

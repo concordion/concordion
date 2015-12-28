@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.concordion.Concordion;
 import org.concordion.api.*;
@@ -13,8 +15,11 @@ import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.api.extension.ConcordionExtensionFactory;
 import org.concordion.api.listener.*;
+import org.concordion.api.option.ConcordionOptions;
+import org.concordion.api.option.MarkdownExtensions;
 import org.concordion.internal.command.*;
 import org.concordion.internal.listener.*;
+import org.concordion.internal.parser.markdown.MarkdownConverter;
 import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 import org.concordion.internal.util.IOUtil;
@@ -29,7 +34,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private static final String EMBEDDED_STYLESHEET_RESOURCE = "/org/concordion/internal/resource/embedded.css";
     
     private static File baseOutputDir;
-    private SpecificationLocator specificationLocator = new ClassNameBasedSpecificationLocator();
+    private SpecificationLocator specificationLocator = new ClassNameAndTypeBasedSpecificationLocator();
     private Source source = new ClassPathSource();
     private Target target = null;
     private CommandRegistry commandRegistry = new CommandRegistry();
@@ -52,6 +57,9 @@ public class ConcordionBuilder implements ConcordionExtender {
     private List<Class<? extends Throwable>> failFastExceptions = Collections.<Class<? extends Throwable>>emptyList();
     private boolean builtAlready;
     private Fixture fixture;
+    private MarkdownConverter markdownConverter = new MarkdownConverter();
+
+    private List<SpecificationType> specificationTypes = new ArrayList<SpecificationType>();
 
     {
         withThrowableListener(new ThrowableRenderer());
@@ -66,6 +74,8 @@ public class ConcordionBuilder implements ConcordionExtender {
         withRunListener(new RunResultRenderer());
         withDocumentParsingListener(new DocumentStructureImprover());
         withDocumentParsingListener(new MetadataCreator());
+        withSpecificationType("html", null);
+        withSpecificationType("md", markdownConverter);
     }
 
     public ConcordionBuilder withSource(Source source) {
@@ -233,7 +243,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         }
         XMLParser xmlParser = new XMLParser();
         
-        specificationCommand.addSpecificationListener(new BreadcrumbRenderer(source, xmlParser));
+        specificationCommand.addSpecificationListener(new BreadcrumbRenderer(source, xmlParser, specificationTypes));
         specificationCommand.addSpecificationListener(new PageFooterRenderer(target));
 
         specificationReader = new XMLSpecificationReader(source, xmlParser, documentParser);        
@@ -252,7 +262,11 @@ public class ConcordionBuilder implements ConcordionExtender {
         listeners.announce().concordionBuilt(new ConcordionBuildEvent(target));
 
         try {
-            return new Concordion(specificationLocator, specificationReader, evaluatorFactory, fixture);
+            if (specificationLocator instanceof SpecificationLocatorWithType) {
+                return new Concordion(specificationTypes, (SpecificationLocatorWithType)specificationLocator, specificationReader, evaluatorFactory, fixture);
+            } else {
+                return new Concordion(specificationLocator, specificationReader, evaluatorFactory, fixture);
+            }
         } catch (IOException e) {
             throw new UnableToBuildConcordionException(e);
         }
@@ -396,5 +410,38 @@ public class ConcordionBuilder implements ConcordionExtender {
 	private void addDefaultStyling() {
     	String stylesheetContent = IOUtil.readResourceAsString(EMBEDDED_STYLESHEET_RESOURCE);    
     	withEmbeddedCSS(stylesheetContent);
+    }
+
+	@Override
+    public ConcordionBuilder withSpecificationType(String typeSuffix, SpecificationConverter converter) {
+	    specificationTypes.add(new SpecificationType(typeSuffix, converter));
+	    return this;
+	}
+
+    void configureWith(ConcordionOptions options) {
+        if (options.markdownExtensions().length > 0) {
+            int markdownExtensions = 0;
+            for (MarkdownExtensions markdownExtension : options.markdownExtensions()) {
+                markdownExtensions = markdownExtensions | markdownExtension.getPegdownExtension();
+            }
+            markdownConverter.withPegdownExtensions(markdownExtensions);
+        }
+
+        String location = options.copySourceHtmlToDir();
+        if (!location.isEmpty()) {
+            Pattern pattern = Pattern.compile("\\$\\{(.+?)\\}");
+            Matcher matcher = pattern.matcher(location);
+            StringBuffer sb = new StringBuffer();
+            while (matcher.find()) {
+                String property = matcher.group(1);
+                String value = System.getProperty(property);
+                if (value == null) {
+                    throw new RuntimeException(String.format("Unable to find system property '%s' in @ConcordionOptions setting copySourceHtmlToDir of '%s'", property, location));
+                }
+                matcher.appendReplacement(sb, value);
+            }
+            matcher.appendTail(sb);
+            markdownConverter.setSourceHtmlTarget(new FileTarget(new File(sb.toString())));
+        }
     }
 }

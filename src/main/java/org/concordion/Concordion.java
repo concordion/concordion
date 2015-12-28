@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.concordion.api.*;
+import org.concordion.internal.SpecificationType;
 import org.concordion.internal.SummarizingResultRecorder;
 
 public class Concordion {
@@ -19,9 +20,36 @@ public class Concordion {
         this.evaluatorFactory = evaluatorFactory;
         this.fixture = fixture;
 
-        resource = specificationLocator.locateSpecification(fixture.getFixtureObject());
+        this.resource = specificationLocator.locateSpecification(fixture.getFixtureObject());
     }
 
+    /**
+     * @param specificationTypes a list of types that this Concordion instance will check for (eg. html, md), with a converter for each type 
+     */
+    public Concordion(List<SpecificationType> specificationTypes, SpecificationLocatorWithType specificationLocator, SpecificationReader specificationReader, EvaluatorFactory evaluatorFactory, Fixture fixture) throws IOException {
+        this.specificationReader = specificationReader;
+        this.evaluatorFactory = evaluatorFactory;
+        this.fixture = fixture;
+
+        SpecificationType specificationType = null;
+
+        SpecificationLocatorWithType specificationTypeLocator = (SpecificationLocatorWithType)specificationLocator;
+        for (SpecificationType currentType : specificationTypes) {
+            Resource currentResource = specificationTypeLocator.locateSpecification(fixture.getFixtureObject(), currentType.getTypeSuffix());
+            if (specificationReader.canFindSpecification(currentResource)) {
+                if (specificationType != null) {
+                    throw new RuntimeException(createMultipleSpecsMessage(fixture, specificationType, currentType));
+                }
+                specificationType = currentType;
+                resource = currentResource;
+            }
+        }
+        if (specificationType == null) {
+            throw new RuntimeException(createUnableToFindSpecMessage(fixture, specificationTypes));
+        }
+        specificationReader.setSpecificationConverter(specificationType.getConverter());
+    }
+    
     public ResultSummary process() throws IOException {
         return process(specification, fixture);
     }
@@ -79,5 +107,26 @@ public class Concordion {
 
     public void finish() {
         specification.finish();
+    }
+
+
+    private String createMultipleSpecsMessage(Fixture fixture, SpecificationType type1, SpecificationType type2) {
+        return String.format("Found multiple matching specifications: '%s.%s' and '%1$s.%s'",
+            fixture.getFixturePathWithoutSuffix(), type1.getTypeSuffix(), type2.getTypeSuffix());
+    }
+
+    private String createUnableToFindSpecMessage(Fixture fixture, List<SpecificationType> specificationTypes) {
+        String msg = "Unable to find specification: '";
+        boolean first = true;
+        for (SpecificationType specificationType : specificationTypes) {
+            if (first) {
+                first = false;
+            } else {
+                msg += "' or '";
+            }
+            msg += fixture.getFixturePathWithoutSuffix() + "." + specificationType.getTypeSuffix();
+        }
+        msg += "'";
+        return msg;
     }
 }
