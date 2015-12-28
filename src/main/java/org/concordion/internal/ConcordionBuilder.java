@@ -18,6 +18,7 @@ import org.concordion.api.listener.*;
 import org.concordion.api.option.ConcordionOptions;
 import org.concordion.api.option.MarkdownExtensions;
 import org.concordion.internal.command.*;
+import org.concordion.internal.extension.ExtensionChecker;
 import org.concordion.internal.listener.*;
 import org.concordion.internal.parser.markdown.MarkdownConverter;
 import org.concordion.internal.util.Announcer;
@@ -62,6 +63,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private List<SpecificationType> specificationTypes = new ArrayList<SpecificationType>();
 
     {
+        ExtensionChecker.checkForOutdatedExtensions();
         withThrowableListener(new ThrowableRenderer());
         
         commandRegistry.register("", "specification", specificationCommand);
