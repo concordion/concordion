@@ -3,8 +3,6 @@ package org.concordion.internal.listener;
 import java.util.HashSet;
 import java.util.Set;
 
-import ognl.OgnlException;
-
 import org.concordion.api.Element;
 import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
@@ -105,13 +103,6 @@ public class ThrowableRenderer implements ThrowableCaughtListener {
             stackTrace.appendChild(stackTraceElement(traceElement));
         }
 
-        if (t instanceof OgnlException) {
-            Throwable reason = ((OgnlException) t).getReason();
-            if (reason != null) {
-                recursivelyAppendStackTrace(reason, stackTrace);
-            }
-        }
-        
         if (t.getCause() != null) {
             recursivelyAppendStackTrace(t.getCause(), stackTrace);
         }
