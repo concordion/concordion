@@ -29,7 +29,7 @@ public class ExtensionChecker {
         } catch (ClassNotFoundException expected) {
             return; // We don't want it to be found
         }
-        String msg = "The concordion-extensions module is now deprecated. Please replace with the individual extension modules. See http://concordion.org/Extensions.html.";
+        String msg = "Warning. The concordion-extensions module is now deprecated. Please replace with the individual extension modules. See http://concordion.org/Extensions.html.";
         System.err.println(msg);
     }
 }
