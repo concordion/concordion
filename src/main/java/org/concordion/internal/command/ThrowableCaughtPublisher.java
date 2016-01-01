@@ -1,22 +1,27 @@
 package org.concordion.internal.command;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
-import org.concordion.internal.util.Announcer;
 
 public class ThrowableCaughtPublisher implements ThrowableCaughtListener {
-    private Announcer<ThrowableCaughtListener> listeners = Announcer.to(ThrowableCaughtListener.class);
+    
+	private List<ThrowableCaughtListener> listeners = new ArrayList<ThrowableCaughtListener>();
     
     public void addThrowableListener(ThrowableCaughtListener listener) {
-        listeners.addListener(listener);
+        listeners.add(listener);
     }
 
     public void removeThrowableListener(ThrowableCaughtListener listener) {
-        listeners.removeListener(listener);
+        listeners.remove(listener);
     }
 
     public void throwableCaught(ThrowableCaughtEvent event) {
-        listeners.announce().throwableCaught(event);
+        for (ThrowableCaughtListener listener : listeners) {
+			listener.throwableCaught(event);
+		}
     }
 
 }

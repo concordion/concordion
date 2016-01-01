@@ -1,7 +1,9 @@
 package org.concordion.internal.command;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,19 +19,18 @@ import org.concordion.api.listener.SurplusRowEvent;
 import org.concordion.api.listener.VerifyRowsListener;
 import org.concordion.internal.Row;
 import org.concordion.internal.TableSupport;
-import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 
 public class VerifyRowsCommand extends AbstractCommand {
 
-    private Announcer<VerifyRowsListener> listeners = Announcer.to(VerifyRowsListener.class);
+    private List<VerifyRowsListener> listeners = new ArrayList<VerifyRowsListener>();
 
     public void addVerifyRowsListener(VerifyRowsListener listener) {
-        listeners.addListener(listener);
+        listeners.add(listener);
     }
 
     public void removeVerifyRowsListener(VerifyRowsListener listener) {
-        listeners.removeListener(listener);
+        listeners.remove(listener);
     }
     
     @SuppressWarnings("unchecked")
@@ -77,14 +78,20 @@ public class VerifyRowsCommand extends AbstractCommand {
     }
     
     private void announceExpressionEvaluated(Element element) {
-        listeners.announce().expressionEvaluated(new ExpressionEvaluatedEvent(element));
+        for (VerifyRowsListener listener : listeners) {
+			listener.expressionEvaluated(new ExpressionEvaluatedEvent(element));
+		}
     }
 
     private void announceMissingRow(Element element) {
-        listeners.announce().missingRow(new MissingRowEvent(element));
+        for (VerifyRowsListener listener : listeners) {
+			listener.missingRow(new MissingRowEvent(element));
+		}
     }
 
     private void announceSurplusRow(Element element) {
-        listeners.announce().surplusRow(new SurplusRowEvent(element));
+        for (VerifyRowsListener listener : listeners) {
+			listener.surplusRow(new SurplusRowEvent(element));
+		}
     }
 }

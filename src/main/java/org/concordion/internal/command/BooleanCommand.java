@@ -1,5 +1,8 @@
 package org.concordion.internal.command;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.concordion.api.AbstractCommand;
 import org.concordion.api.CommandCall;
 import org.concordion.api.CommandCallList;
@@ -10,18 +13,17 @@ import org.concordion.api.listener.AssertFailureEvent;
 import org.concordion.api.listener.AssertListener;
 import org.concordion.api.listener.AssertSuccessEvent;
 import org.concordion.internal.InvalidExpressionException;
-import org.concordion.internal.util.Announcer;
 
 public abstract class BooleanCommand extends AbstractCommand {
 
-    private Announcer<AssertListener> listeners = Announcer.to(AssertListener.class);
+    private List<AssertListener> listeners = new ArrayList<AssertListener>();
     
     public void addAssertListener(AssertListener listener) {
-        listeners.addListener(listener);
+        listeners.add(listener);
     }
 
     public void removeAssertListener(AssertListener listener) {
-        listeners.removeListener(listener);
+        listeners.remove(listener);
     }
     
     @Override
@@ -46,11 +48,15 @@ public abstract class BooleanCommand extends AbstractCommand {
     }
     
     protected void announceSuccess(Element element) {
-        listeners.announce().successReported(new AssertSuccessEvent(element));
+        for (AssertListener listener : listeners) {
+			listener.successReported(new AssertSuccessEvent(element));
+		}
     }
 
     protected void announceFailure(Element element, String expected, Object actual) {
-        listeners.announce().failureReported(new AssertFailureEvent(element, expected, actual));
+        for (AssertListener listener : listeners) {
+			listener.failureReported(new AssertFailureEvent(element, expected, actual));
+		}
     }
     
     protected abstract void processTrueResult(CommandCall commandCall,ResultRecorder resultRecorder);

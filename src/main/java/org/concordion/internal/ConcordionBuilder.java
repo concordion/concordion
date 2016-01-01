@@ -67,7 +67,8 @@ import org.concordion.internal.util.IOUtil;
 
 public class ConcordionBuilder implements ConcordionExtender {
 
-    private Announcer<ConcordionBuildListener> listeners = Announcer.to(ConcordionBuildListener.class);
+    //private Announcer<ConcordionBuildListener> listeners = Announcer.to(ConcordionBuildListener.class);
+	private List<ConcordionBuildListener> listeners = new ArrayList<ConcordionBuildListener>();
 
     public static final String NAMESPACE_CONCORDION_2007 = "http://www.concordion.org/2007/concordion";
     private static final String PROPERTY_OUTPUT_DIR = "concordion.output.dir";
@@ -191,7 +192,8 @@ public class ConcordionBuilder implements ConcordionExtender {
     }
 
     public ConcordionBuilder withBuildListener(ConcordionBuildListener listener) {
-        listeners.addListener(listener);
+        //listeners.addListener(listener);
+    	listeners.add(listener);
         return this;
     }
     
@@ -287,7 +289,11 @@ public class ConcordionBuilder implements ConcordionExtender {
         specificationCommand.addSpecificationListener(exporter);
         specificationCommand.setSpecificationDescriber(exporter);
         
-        listeners.announce().concordionBuilt(new ConcordionBuildEvent(target));
+        //listeners.announce().concordionBuilt(new ConcordionBuildEvent(target));
+        //ToDo
+        for (ConcordionBuildListener buildListener : listeners) {
+			buildListener.concordionBuilt(new ConcordionBuildEvent(target));
+		}
         
         return new Concordion(specificationLocator, specificationReader, evaluatorFactory);
     }
