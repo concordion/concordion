@@ -1,5 +1,7 @@
 package org.concordion.internal.command;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.regex.Matcher;
@@ -48,14 +50,23 @@ public class VerifyRowsCommand extends AbstractCommand {
 
     private RowsMatchStrategy newStrategyInstance(Class<? extends RowsMatchStrategy> strategyClass,
                 CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, String loopVariableName, Iterable<Object> iterable) {
+        Constructor<? extends RowsMatchStrategy> constructor;
         try {
-            return strategyClass
-                    .getConstructor(CommandCall.class, Evaluator.class, ResultRecorder.class, Announcer.class, String.class, Iterable.class)
-                    .newInstance(commandCall, evaluator, resultRecorder, listeners, loopVariableName, iterable);
-        } catch (Exception e) {
-            throw new RuntimeException(RowsMatchStrategy.class.getName() + " must declare constructor with arguments: " +
+            constructor = strategyClass.getConstructor(CommandCall.class, Evaluator.class, ResultRecorder.class, Announcer.class, String.class, Iterable.class);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(strategyClass.getName() + " must declare constructor with arguments: " +
                     "CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder,\n" +
                     "Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows");
+        }
+        try {
+            return constructor.newInstance(commandCall, evaluator, resultRecorder, listeners, loopVariableName, iterable);
+        } catch (InvocationTargetException e) {
+            if (e.getCause() instanceof RuntimeException) {
+                throw (RuntimeException) e.getCause();
+            }
+            throw new RuntimeException(e.getCause());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
