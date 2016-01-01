@@ -1,5 +1,8 @@
 package org.concordion.internal;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import nu.xom.Attribute;
 import nu.xom.Document;
 import nu.xom.Elements;
@@ -11,28 +14,29 @@ import org.concordion.api.Element;
 import org.concordion.api.Resource;
 import org.concordion.api.Specification;
 import org.concordion.api.listener.DocumentParsingListener;
-import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 
 public class DocumentParser {
 
     private final CommandFactory commandFactory;
-    private final Announcer<DocumentParsingListener> listeners = Announcer.to(DocumentParsingListener.class);
+    private List<DocumentParsingListener> listeners = new ArrayList<DocumentParsingListener>();
     
     public DocumentParser(CommandFactory commandFactory) {
         this.commandFactory = commandFactory;
     }
 
     public void addDocumentParsingListener(DocumentParsingListener listener) {
-        listeners.addListener(listener);
+        listeners.add(listener);
     }
 
     public void removeDocumentParsingListener(DocumentParsingListener listener) {
-        listeners.removeListener(listener);
+        listeners.remove(listener);
     }
     
     private void announceBeforeParsing(Document document) {
-        listeners.announce().beforeParsing(document);
+        for (DocumentParsingListener parsingListener : listeners) {
+			parsingListener.beforeParsing(document);
+		}
     }
 
     public Specification parse(Document document, Resource resource) {

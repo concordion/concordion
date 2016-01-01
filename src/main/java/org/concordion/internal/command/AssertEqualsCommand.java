@@ -1,6 +1,8 @@
 package org.concordion.internal.command;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import org.concordion.api.AbstractCommand;
 import org.concordion.api.CommandCall;
@@ -12,12 +14,11 @@ import org.concordion.api.listener.AssertEqualsListener;
 import org.concordion.api.listener.AssertFailureEvent;
 import org.concordion.api.listener.AssertSuccessEvent;
 import org.concordion.internal.BrowserStyleWhitespaceComparator;
-import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 
 public class AssertEqualsCommand extends AbstractCommand {
 
-    private Announcer<AssertEqualsListener> listeners = Announcer.to(AssertEqualsListener.class);
+    private List<AssertEqualsListener> listeners = new ArrayList<AssertEqualsListener>();
     private final Comparator<Object> comparator;
 
     public AssertEqualsCommand() {
@@ -29,11 +30,11 @@ public class AssertEqualsCommand extends AbstractCommand {
     }
     
     public void addAssertEqualsListener(AssertEqualsListener listener) {
-        listeners.addListener(listener);
+        listeners.add(listener);
     }
 
     public void removeAssertEqualsListener(AssertEqualsListener listener) {
-        listeners.removeListener(listener);
+        listeners.remove(listener);
     }
     
     @Override
@@ -55,10 +56,14 @@ public class AssertEqualsCommand extends AbstractCommand {
     }
     
     private void announceSuccess(Element element) {
-        listeners.announce().successReported(new AssertSuccessEvent(element));
+        for (AssertEqualsListener listener : listeners) {
+			listener.successReported(new AssertSuccessEvent(element));
+		}
     }
 
     private void announceFailure(Element element, String expected, Object actual) {
-        listeners.announce().failureReported(new AssertFailureEvent(element, expected, actual));
+        for (AssertEqualsListener listener : listeners) {
+			listener.failureReported(new AssertFailureEvent(element, expected, actual));
+		}
     }
 }
