@@ -15,6 +15,10 @@ import org.concordion.internal.FixtureRunner;
 public abstract class ConcordionTestCase extends TestCase {
 
     public void testProcessSpecification() throws Throwable {
-        new FixtureRunner(new Fixture(this)).run();
+        Fixture fixture  = new Fixture(this);
+        fixture.beforeSpecification();
+        fixture.setupForRun(this);
+        new FixtureRunner(fixture).run(fixture);
+        fixture.afterSpecification();
     }
 }

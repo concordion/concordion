@@ -7,7 +7,7 @@ import org.junit.runners.model.Statement;
 /**
  * Created by tim on 20/06/15.
  */
-class RuleWithCallback implements TestRule {
+public class RuleWithCallback implements TestRule {
 
     private static class CompoundStatement extends Statement {
         Statement statement1;

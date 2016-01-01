@@ -46,30 +46,30 @@ public class ExampleCommand extends AbstractCommand {
         
         try {
             node.getChildren().processSequentially(evaluator, resultRecorder);
-            node.getElement().addAttribute("id", exampleName); 
+        } catch (FailFastException f) {
+            // Ignore - it'll be re-thrown later by the implementation status checker if necessary.
+        }
+        node.getElement().addAttribute("id", exampleName);
 
-            String params = node.getParameter("status");
-            if (params != null) {
-                ImplementationStatus implementationStatus = ImplementationStatus.implementationStatusFor(params);
-                resultRecorder.setImplementationStatus(implementationStatus);
-                // let's be really nice and add the implementation status text into the element itself.
-                ImplementationStatusChecker checker = ImplementationStatusChecker.implementationStatusCheckerFor(implementationStatus);
+        String params = node.getParameter("status");
+        if (params != null) {
+            ImplementationStatus implementationStatus = ImplementationStatus.implementationStatusFor(params);
+            resultRecorder.setImplementationStatus(implementationStatus);
+            // let's be really nice and add the implementation status text into the element itself.
+            ImplementationStatusChecker checker = ImplementationStatusChecker.implementationStatusCheckerFor(implementationStatus);
 
-                String note;
-                if (checker != null) {
-                    note = checker.printNoteToString();
-                } else {
-                    note = "Invalid status expression " + params;
-                } 
-                Element fixtureNode = new Element("p");
-                fixtureNode.appendText(note);
-                node.getElement().prependChild(fixtureNode);
+            String note;
+            if (checker != null) {
+                note = checker.printNoteToString();
+            } else {
+                note = "Invalid status expression " + params;
             }
-            
-            listeners.announce().afterExample(new ExampleEvent(exampleName, node.getElement(), (SummarizingResultRecorder)resultRecorder));
-        } catch (FailFastException e) {
-            // Ignore - it'll be re-thrown later if necessary.
-        } 
+            Element fixtureNode = new Element("p");
+            fixtureNode.appendText(note);
+            node.getElement().prependChild(fixtureNode);
+        }
+
+        listeners.announce().afterExample(new ExampleEvent(exampleName, node.getElement(), (SummarizingResultRecorder)resultRecorder));
     }
 
     public boolean isExample() {

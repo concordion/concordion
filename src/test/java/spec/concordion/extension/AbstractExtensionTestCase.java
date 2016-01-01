@@ -1,12 +1,12 @@
 package spec.concordion.extension;
 
-import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.concordion.api.Resource;
+import org.concordion.api.SpecificationScoped;
 import org.concordion.api.extension.ConcordionExtension;
 
 import test.concordion.ProcessingResult;
@@ -17,14 +17,10 @@ public abstract class AbstractExtensionTestCase {
     private List<String> eventList;
     private TestRig testRig;
     private ProcessingResult processingResult;
-    private PrintStream logStream;
-    private ByteArrayOutputStream baos;
     private ConcordionExtension extension;
 
-    public AbstractExtensionTestCase() {
-        baos = new ByteArrayOutputStream(4096);
-        logStream = new PrintStream(baos);
-    }
+    @SpecificationScoped
+    private ExtensionTestHelper helper;
 
     public void processAnything() throws Exception { 
         process("<p>anything..</p>");
@@ -42,15 +38,15 @@ public abstract class AbstractExtensionTestCase {
     }
 
     public PrintStream getLogStream() {
-        return logStream;
+        return helper.getLogStream();
     }
 
     public List<String> getEventLog() {
-        logStream.flush();
-        String[] events = baos.toString().split("\\r?\\n");
+        helper.getLogStream().flush();
+        String[] events = helper.getBaos().toString().split("\\r?\\n");
         eventList = new ArrayList<String>(Arrays.asList(events));
         eventList.remove("");
-        baos.reset();
+        helper.getBaos().reset();
         return eventList;
     }
 

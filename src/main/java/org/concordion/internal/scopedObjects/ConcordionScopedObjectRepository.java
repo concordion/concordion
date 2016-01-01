@@ -1,0 +1,64 @@
+package org.concordion.internal.scopedObjects;
+
+import org.concordion.internal.ConcordionFieldScope;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * Created by tim on 3/12/15.
+ */
+public class ConcordionScopedObjectRepository {
+
+    private Map<ScopedObjectRepositoryKey, ScopedObjectRepositoryValue> repo;
+    private Object syncObject = new Object();
+
+    public ConcordionScopedObjectRepository() {
+        repo = new ConcurrentHashMap<ScopedObjectRepositoryKey, ScopedObjectRepositoryValue>();
+    }
+
+    public <T> T getObject(Class<? extends T> scopedObjectClass, String name, ConcordionFieldScope concordionFieldScope, Class<?> specificationClass) throws InstantiationException, IllegalAccessException {
+
+        ScopedObjectRepositoryKey<T> key = new ScopedObjectRepositoryKey<T>(scopedObjectClass, name, concordionFieldScope, specificationClass);
+
+        // return a new one each time if the object is example scoped
+        if (concordionFieldScope == ConcordionFieldScope.EXAMPLE) {
+            ScopedObjectRepositoryValue<T> value = createObject(key);
+            return value.getObject();
+        }
+
+        // otherwise look up in the repo
+        synchronized (syncObject) {
+
+            ScopedObjectRepositoryValue<T> value = repo.get(key);
+
+            // if not there, then create and put.
+            if (value == null) {
+                value = createObject(key);
+                repo.put(key, value);
+            }
+
+            return value.getObject();
+        }
+    }
+
+    private ScopedObjectRepositoryValue createObject(ScopedObjectRepositoryKey key) throws InstantiationException, IllegalAccessException {
+        return new ScopedObjectRepositoryValue(key);
+    }
+
+    public <T> void setObject(Class<? extends T> scopedObjectClass, String name, ConcordionFieldScope concordionFieldScope, Class<?> specificationClass, T existingValue) {
+        ScopedObjectRepositoryKey<T> key = new ScopedObjectRepositoryKey<T>(scopedObjectClass, name, concordionFieldScope, specificationClass);
+
+        // look up in repo and create/set if necessary
+        synchronized (syncObject) {
+            ScopedObjectRepositoryValue<T> value = repo.get(key);
+
+            if (value == null) {
+                value = new ScopedObjectRepositoryValue<T>(key, existingValue);
+                repo.put(key, value);
+            } else {
+                value.setObject(existingValue);
+            }
+        }
+    }
+}

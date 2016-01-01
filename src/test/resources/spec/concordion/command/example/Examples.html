@@ -8,6 +8,8 @@
 
 <p>The example command also supports the <a c:run="concordion" href="../../extension/listener/ExampleListener.html">example listener</a>.</p>
 
+<p>Fixture fields can be <a c:run="concordion" href="ConcordionScopedField.html">annotated</a> to have scope restricted to an example or to a spec</p>
+
 <div c:example="before">
     <h3>Before</h3>
     <p>To specify that a piece of HTML should be run before each example, annotate the enclosing
@@ -55,6 +57,9 @@
     <p>Of course, variables set in the before example <span c:assertEquals="#are">are</span> accessible
         (but changes to them in one example are not visible in the other examples)</p>
 
+    <p>Note that methods in the fixture class annotated with @BeforeSpecification are executed
+        <span c:assertTrue="beforeSpecRunOnce()">exactly once</span> before
+        any examples are run. Methods annotated with @AfterSpecification are executed after the specification has executed.</p>
 
 </div>
 
@@ -82,6 +87,10 @@
         set it to "<span c:set="#notshared">a value</span>". We do this in both examples to counter running order effects.</p>
 
     <p>Of course, variables set in the before example <span c:assertEquals="#are">are</span> accessible.</p>
+
+    <p>Note that methods in the fixture class annotated with @BeforeSpecification are executed
+        <span c:assertTrue="beforeSpecRunOnce()">exactly once</span> before
+        any examples are run. Methods annotated with @AfterSpecification are executed after the specification has executed.</p>
 
 </div>
 
