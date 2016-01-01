@@ -3,11 +3,11 @@ package org.concordion.internal.parser.markdown;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Scanner;
 
 import org.concordion.api.Resource;
 import org.concordion.api.SpecificationConverter;
 import org.concordion.api.Target;
+import org.concordion.internal.util.IOUtil;
 
 public class MarkdownConverter implements SpecificationConverter {
 
@@ -19,7 +19,7 @@ public class MarkdownConverter implements SpecificationConverter {
 
     @Override
     public InputStream convert(Resource resource, InputStream inputStream) throws IOException {
-        String markdown = read(inputStream);
+        String markdown = IOUtil.readResourceAsString(resource.getPath());
         MarkdownParser markdownParser = new MarkdownParser(pegdownExtensions);
         String html = markdownParser.markdownToHtml(markdown, CONCORDION_NAMESPACE_PREFIX);
         html = wrapBody(html);
@@ -30,21 +30,6 @@ public class MarkdownConverter implements SpecificationConverter {
         }
 
         return new ByteArrayInputStream(html.getBytes());
-    }
-
-    private String read(InputStream inputStream) throws IOException {
-        Scanner scanner = null;
-        try {
-            scanner = new Scanner(inputStream, "UTF-8");
-            if (scanner.hasNext()) {
-                return scanner.useDelimiter("\\A").next();
-            }
-            return "";
-        } finally {
-            if (scanner != null) {
-                scanner.close();
-            }
-        }
     }
 
     private String wrapBody(String body) {

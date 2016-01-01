@@ -1,11 +1,6 @@
 package org.concordion.internal.util;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.Reader;
+import java.io.*;
 
 public class IOUtil {
     
@@ -53,5 +48,18 @@ public class IOUtil {
     public static InputStream getResourceAsStream(String resourcePath) {
     	ClassLoader classLoader = IOUtil.class.getClassLoader();
     	return classLoader.getResourceAsStream(resourcePath.replaceFirst("/", ""));
+    }
+
+    public static String readAsString(InputStream inputStream) throws IOException {
+        return readAsString(inputStream, "UTF-8");
+    }
+    
+    public static String readAsString(InputStream inputStream, String charsetName) throws IOException {
+        Reader reader = new InputStreamReader(inputStream, charsetName);
+        try {
+            return readAsString(reader);
+        } finally {
+            reader.close();
+        }
     }
 }
