@@ -11,7 +11,7 @@ public class IOUtil {
     
     private static final int BUFFER_SIZE = 4096;
     
-    public static void copy(InputStream inputStream, OutputStream outputStream) throws IOException {
+    public void copy(InputStream inputStream, OutputStream outputStream) throws IOException {
         byte[] buffer = new byte[BUFFER_SIZE];
         int len = 0;
         while ((len = inputStream.read(buffer)) != -1) {
@@ -19,11 +19,11 @@ public class IOUtil {
         }
     }
 
-    public static String readResourceAsString(String resourcePath) {
+    public String readResourceAsString(String resourcePath) {
         return readResourceAsString(resourcePath, "UTF-8");
     }
 
-    public static String readResourceAsString(String resourcePath, String charsetName) {
+    public String readResourceAsString(String resourcePath, String charsetName) {
         try {
             InputStream in = getResourceAsStream(resourcePath);
             if (in == null) {
@@ -40,7 +40,7 @@ public class IOUtil {
         }
     }
     
-    public static String readAsString(Reader reader) throws IOException {
+    public String readAsString(Reader reader) throws IOException {
         StringBuilder sb = new StringBuilder();
         String line;
         BufferedReader bufferedReader = new BufferedReader(reader);
@@ -50,7 +50,7 @@ public class IOUtil {
         return sb.toString();
     }
 
-    public static InputStream getResourceAsStream(String resourcePath) {
+    public InputStream getResourceAsStream(String resourcePath) {
     	ClassLoader classLoader = IOUtil.class.getClassLoader();
     	return classLoader.getResourceAsStream(resourcePath.replaceFirst("/", ""));
     }

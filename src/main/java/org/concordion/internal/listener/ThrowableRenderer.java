@@ -15,6 +15,11 @@ public class ThrowableRenderer implements ThrowableCaughtListener {
     private static final String TOGGLING_SCRIPT_RESOURCE_PATH = "/org/concordion/internal/resource/visibility-toggler.js";
     private long buttonId = 0;
     private Set<Element> rootElementsWithScript = new HashSet<Element>();
+	private IOUtil ioUtil;
+    
+    public ThrowableRenderer(IOUtil ioUtil) {
+    	this.ioUtil = ioUtil;
+    }
     
     public void throwableCaught(ThrowableCaughtEvent event) {
         Element element = event.getElement();
@@ -50,7 +55,7 @@ public class ThrowableRenderer implements ThrowableCaughtListener {
             Check.notNull(head, "Document <head> section is missing");
             Element script = new Element("script").addAttribute("type", "text/javascript");
             head.prependChild(script);
-            script.appendText(IOUtil.readResourceAsString(TOGGLING_SCRIPT_RESOURCE_PATH, "UTF-8"));
+            script.appendText(ioUtil.readResourceAsString(TOGGLING_SCRIPT_RESOURCE_PATH));
             
         }
     }
