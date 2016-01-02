@@ -19,9 +19,11 @@ public class FileTarget implements Target {
 
     private static final long FRESH_ENOUGH_MILLIS = 2000; // 2 secs
     private final File baseDir;
+	private IOUtil ioUtil;
 
-    public FileTarget(File baseDir) {
+    public FileTarget(File baseDir, IOUtil ioUtil) {
         this.baseDir = baseDir;
+        this.ioUtil = ioUtil;
     }
     
     public void copyTo(Resource resource, InputStream inputStream) throws IOException {
@@ -34,7 +36,7 @@ public class FileTarget implements Target {
         }
         OutputStream outputStream = createOutputStream(resource);
         try {
-            IOUtil.copy(inputStream, outputStream);
+        	ioUtil.copy(inputStream, outputStream);
         } finally {
             outputStream.close();
         }

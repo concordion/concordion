@@ -7,6 +7,7 @@ import java.io.OutputStream;
 
 import org.concordion.api.Resource;
 import org.concordion.api.Target;
+import org.concordion.internal.util.IOUtil;
 
 public class FileTargetWithSuffix implements Target {
 
@@ -14,9 +15,9 @@ public class FileTargetWithSuffix implements Target {
     private String suffix;
     private FileTarget target;
     
-    public FileTargetWithSuffix(String suffix) {
+    public FileTargetWithSuffix(String suffix, IOUtil ioUtil) {
         this.suffix = suffix;
-        target = new FileTarget(getBaseOutputDir());
+        target = new FileTarget(getBaseOutputDir(), ioUtil);
     }
     
     private File getBaseOutputDir() {

@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import org.concordion.api.Resource;
 import org.concordion.internal.ClassPathSource;
+import org.concordion.internal.util.IOUtil;
 import org.junit.Test;
 
 public class ClassPathSourceTest {
@@ -15,7 +16,7 @@ public class ClassPathSourceTest {
     private static final String EXPECTED_SOURCE_NAME = "classpath";
     private static final String MISSING_RESOURCE_NAME = "/NonExistent.html";
     
-    private ClassPathSource source = new ClassPathSource();
+    private ClassPathSource source = new ClassPathSource(new IOUtil());
     
     @Test
     public void failsWithIOExceptionOnCreateInputStreamWithMissingResource() throws Exception {

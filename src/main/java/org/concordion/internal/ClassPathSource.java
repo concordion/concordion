@@ -8,9 +8,15 @@ import org.concordion.api.Source;
 import org.concordion.internal.util.IOUtil;
 
 public class ClassPathSource implements Source {
+	
+	private IOUtil ioUtil;
+
+	public ClassPathSource(IOUtil ioUtil) {
+		this.ioUtil = ioUtil;
+	}
 
     public InputStream createInputStream(Resource resource) throws IOException {
-        InputStream inputStream = IOUtil.getResourceAsStream(resource.getPath());
+        InputStream inputStream = ioUtil.getResourceAsStream(resource.getPath());
         if (inputStream == null) {
             throw new IOException(String.format("Resource '[%s: %s]' not found", this, resource.getPath()));
         }
@@ -18,7 +24,7 @@ public class ClassPathSource implements Source {
     }
 
     public boolean canFind(Resource resource) {
-        InputStream stream = IOUtil.getResourceAsStream(resource.getPath());
+        InputStream stream = ioUtil.getResourceAsStream(resource.getPath());
         if (stream == null) {
             return false;
         }

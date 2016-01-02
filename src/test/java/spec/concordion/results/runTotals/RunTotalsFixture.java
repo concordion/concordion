@@ -13,6 +13,7 @@ import org.concordion.internal.FailFastException;
 import org.concordion.internal.FileTarget;
 import org.concordion.internal.SummarizingResultRecorder;
 import org.concordion.internal.command.RunCommand;
+import org.concordion.internal.util.IOUtil;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
@@ -25,7 +26,7 @@ public class RunTotalsFixture {
 		final String path = "/" + getClass().getName().replace('.', '/');
 
 		final Resource resource = new Resource(path);
-		File parentFile = new FileTarget(ConcordionBuilder.getBaseOutputDir()).getFile(resource).getParentFile();
+		File parentFile = new FileTarget(ConcordionBuilder.getBaseOutputDir(), new IOUtil()).getFile(resource).getParentFile();
 
 		final RunCommand command = new RunCommand();
 
