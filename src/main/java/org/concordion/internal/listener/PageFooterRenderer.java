@@ -1,17 +1,16 @@
 package org.concordion.internal.listener;
 
-import java.util.logging.Logger;
 import org.concordion.api.Element;
 import org.concordion.api.Resource;
 import org.concordion.api.Target;
 import org.concordion.api.listener.SpecificationProcessingEvent;
 import org.concordion.api.listener.SpecificationProcessingListener;
+import org.concordion.internal.util.Check;
 
 public class PageFooterRenderer implements SpecificationProcessingListener {
 
     private static final String CONCORDION_WEBSITE_URL = "http://www.concordion.org";
     private long startMillis;
-    private static Logger logger = Logger.getLogger(PageFooterRenderer.class.getName());
 
     public PageFooterRenderer(Target target) {
     }
@@ -26,7 +25,7 @@ public class PageFooterRenderer implements SpecificationProcessingListener {
             addFooterToDocument(event.getRootElement(), event.getResource(), millisTaken);
         } catch (Throwable t) {
             t.printStackTrace();
-            logger.warning("Failed to write page footer. " + t.getMessage());
+            Check.isTrue(false, "Failed to write page footer. " + t.getMessage());
         }
     }
 

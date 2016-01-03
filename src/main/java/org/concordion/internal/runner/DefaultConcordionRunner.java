@@ -1,8 +1,6 @@
 package org.concordion.internal.runner;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.concordion.api.ExpectedToFail;
 import org.concordion.api.Resource;
@@ -14,13 +12,11 @@ import org.concordion.internal.CachedRunResults;
 import org.concordion.internal.ConcordionRunOutput;
 import org.concordion.internal.FailFastException;
 import org.concordion.internal.SummarizingResultRecorder;
+import org.concordion.internal.util.Check;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.notification.Failure;
 
 public class DefaultConcordionRunner implements Runner {
-
-    private static Logger logger = Logger.getLogger(DefaultConcordionRunner.class.getName());
-
 
     @Override
 	public ResultSummary execute(Resource resource, String href) throws Exception {
@@ -127,7 +123,7 @@ public class DefaultConcordionRunner implements Runner {
 
     private void logExceptionIfNotAssertionError(Throwable exception) {
         if (!(exception instanceof AssertionError)) {
-            logger.log(Level.WARNING, "", exception);
+            Check.isTrue(false, exception.toString());
         }
     }
 

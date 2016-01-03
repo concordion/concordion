@@ -1,8 +1,6 @@
 package org.concordion.internal.listener;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import nu.xom.Document;
 
@@ -12,10 +10,10 @@ import org.concordion.api.Source;
 import org.concordion.api.listener.SpecificationProcessingEvent;
 import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.internal.XMLParser;
+import org.concordion.internal.util.Check;
 
 public class BreadcrumbRenderer implements SpecificationProcessingListener {
 
-    private static Logger logger = Logger.getLogger(BreadcrumbRenderer.class.getName());
     private final Source source;
     private final XMLParser xmlParser;
 
@@ -61,7 +59,7 @@ public class BreadcrumbRenderer implements SpecificationProcessingListener {
                 try {
                     prependBreadcrumb(breadcrumbSpan, createBreadcrumbElement(documentResource, indexPageResource));
                 } catch (Exception e) {
-                    logger.log(Level.WARNING, "Failed to generate breadcrumb", e);
+                	Check.isTrue(false, "Failed to generate breadcrumb");
                 }
             }
             packageResource = packageResource.getParent();
