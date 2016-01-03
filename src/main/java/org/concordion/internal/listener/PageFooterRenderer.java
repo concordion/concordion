@@ -1,7 +1,5 @@
 package org.concordion.internal.listener;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.logging.Logger;
 import org.concordion.api.Element;
 import org.concordion.api.Resource;
@@ -46,12 +44,6 @@ public class PageFooterRenderer implements SpecificationProcessingListener {
             link.addAttribute("style", "font-weight: bold; text-decoration: none; color: #89C;");
             footer.appendChild(link);
             link.appendText("Concordion");
-            
-            Element dateDiv = new Element("div");
-            dateDiv.addStyleClass("testTime");
-            dateDiv.appendText("in " + (millisTaken + 1) + " ms ");
-            dateDiv.appendText(new SimpleDateFormat("'on' dd-MMM-yyyy 'at' HH:mm:ss z").format(new Date()));
-            footer.appendChild(dateDiv);
             
             body.appendChild(footer);
         }
