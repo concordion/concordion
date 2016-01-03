@@ -274,4 +274,12 @@ public class Fixture {
             scopedField.copyValueIntoField(fixtureObject, true);
         }
     }
+
+    public void beforeSuite() {
+        invokeMethods(BeforeSuite.class);
+    }
+
+    public void afterSuite() {
+        invokeMethods(AfterSuite.class);
+    }
 }
