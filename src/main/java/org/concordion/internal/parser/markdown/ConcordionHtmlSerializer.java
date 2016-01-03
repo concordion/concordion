@@ -227,7 +227,7 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
         printer.print('<').print("span");
         printConcordionCommand(command);
         printer.print('>');
-        printer.printEncoded(command.text);
+        printer.print(command.text);
         printer.print('<').print('/').print("span").print('>');
     }
 
