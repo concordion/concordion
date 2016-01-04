@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
-import org.concordion.api.*;
 import org.concordion.internal.ConcordionFieldScope;
 import org.concordion.internal.ConcordionScopeDeclaration;
 import org.concordion.internal.scopedObjects.ConcordionScopedFieldImpl;
@@ -235,8 +234,18 @@ public class Fixture {
     }
 
     private void invokeMethods(Class<? extends Annotation> annotation) {
+        invokeMethods(getFixtureClass(), annotation);
+    }
 
-        Method[] methods = getFixtureClass().getMethods();
+    private void invokeMethods(Class<? extends Object> clazz, Class<? extends Annotation> annotation) throws AnnotationFormatError {
+        
+        if (clazz == Object.class) {
+            return;
+        }
+        
+        invokeMethods(clazz.getSuperclass(), annotation);
+        
+        Method[] methods = clazz.getDeclaredMethods();
 
         for (Method method : methods) {
             if (method.isAnnotationPresent(annotation)) {
