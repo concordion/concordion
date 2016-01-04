@@ -246,7 +246,10 @@ public class Fixture {
                 } catch (IllegalAccessException e) {
                     throw new AnnotationFormatError("Invalid permissions to invoke method: " + method.getName());
                 } catch (InvocationTargetException e) {
-                    throw new AnnotationFormatError("Could not invoke method with no arguments: " + method.getName());
+                    if (e.getCause() instanceof RuntimeException) {
+                        throw (RuntimeException)e.getCause();
+                    }
+                    throw new RuntimeException(e.getCause());
                 }
             }
         }
