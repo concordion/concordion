@@ -19,8 +19,12 @@ public abstract class AbstractExtensionTestCase {
     private ProcessingResult processingResult;
     private ConcordionExtension extension;
 
-    @SpecificationScoped
-    private ExtensionTestHelper helper;
+    private SpecificationScoped<ExtensionTestHelper> helper = new SpecificationScoped<ExtensionTestHelper>() {
+         @Override
+        protected ExtensionTestHelper create() {
+             return new ExtensionTestHelper();
+        }
+    };
 
     public void processAnything() throws Exception { 
         process("<p>anything..</p>");
@@ -38,15 +42,15 @@ public abstract class AbstractExtensionTestCase {
     }
 
     public PrintStream getLogStream() {
-        return helper.getLogStream();
+        return helper.get().getLogStream();
     }
 
     public List<String> getEventLog() {
-        helper.getLogStream().flush();
-        String[] events = helper.getBaos().toString().split("\\r?\\n");
+        helper.get().getLogStream().flush();
+        String[] events = helper.get().getBaos().toString().split("\\r?\\n");
         eventList = new ArrayList<String>(Arrays.asList(events));
         eventList.remove("");
-        helper.getBaos().reset();
+        helper.get().getBaos().reset();
         return eventList;
     }
 

@@ -14,18 +14,18 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
-import org.concordion.internal.ConcordionFieldScope;
-import org.concordion.internal.ConcordionScopeDeclaration;
-import org.concordion.internal.scopedObjects.ConcordionScopedFieldImpl;
-import org.concordion.internal.scopedObjects.ConcordionScopedObject;
-import org.concordion.internal.scopedObjects.ConcordionScopedObjectFactory;
+import org.concordion.internal.FieldScope;
+import org.concordion.internal.scopedObjects.ScopedField;
+import org.concordion.internal.scopedObjects.ScopedFieldImpl;
+import org.concordion.internal.scopedObjects.ScopedObject;
+import org.concordion.internal.scopedObjects.ScopedObjectFactory;
 import org.concordion.internal.util.Check;
 
 public class Fixture {
     private final Object fixtureObject;
     private Class<?> fixtureClass;
 
-    private List<ConcordionScopedField> scopedFields = new ArrayList<ConcordionScopedField>();
+    private List<ScopedField> scopedFields = new ArrayList<ScopedField>();
 
     public Fixture(Object fixtureObject) {
         Check.notNull(fixtureObject, "Fixture is null");
@@ -42,12 +42,12 @@ public class Fixture {
      *
      * @param scopedFields
      */
-    protected void addScopedFields(List<ConcordionScopedField> scopedFields) {
+    protected void addScopedFields(List<ScopedField> scopedFields) {
 
         addScopedFields(fixtureClass, scopedFields);
     }
 
-    private void addScopedFields(Class<?> klass, List<ConcordionScopedField> scopedFields) {
+    private void addScopedFields(Class<?> klass, List<ScopedField> scopedFields) {
 
         if (klass == Object.class) {
             return;
@@ -55,62 +55,28 @@ public class Fixture {
 
         addScopedFields(klass.getSuperclass(), scopedFields);
 
-        // cycle through all the fields and add any annotated fields into the cache
         Field[] fields = klass.getDeclaredFields();
         if (fields != null) {
             for (Field field : fields) {
-                // we only copy from the field when we are initialising the class
-                ConcordionScopedObject<Object> scopedObject = createScopedObject(fixtureObject, field);
-
-                if (scopedObject != null) {
-                    // we only replace existing values when we are not initialising
-
-                    scopedFields.add(new ConcordionScopedFieldImpl(scopedObject, field));
+                if (SpecificationScoped.class.isAssignableFrom(field.getType())) {
+                    // we only copy from the field when we are initialising the class
+                    ScopedObject scopedObject = createScopedObject(fixtureObject, field);
+    
+                    if (scopedObject != null) {
+                        // we only replace existing values when we are not initialising
+    
+                        scopedFields.add(new ScopedFieldImpl(scopedObject, field));
+                    }
                 }
             }
         }
     }
 
-    private ConcordionScopedObject<Object> createScopedObject(Object fixtureObject, Field field) {
+    private ScopedObject createScopedObject(Object fixtureObject, Field field) {
 
-        String name = "";
-        ConcordionFieldScope concordionFieldScope = null;
-
-        // go through all the annotations on the field
-        Annotation[] annotations = field.getAnnotations();
-        for (Annotation annotation : annotations) {
-            // see if the annotation has a scope annotation
-            ConcordionFieldScope annotationConcordionFieldScope = getScopeFromAnnotation(annotation);
-
-            // double check there is only one annotated annotation.
-            if (annotationConcordionFieldScope != null) {
-                if (concordionFieldScope != null) {
-                    throw new AnnotationFormatError("Multiple concordion scope annotations on field '" + field.getName() + "'");
-                }
-                concordionFieldScope = annotationConcordionFieldScope;
-
-                // get the field name. Defaults to "" if not set - then we overwrite with the field name below if necessary
-                try {
-                    name = (String) annotation.getClass().getDeclaredMethod("value").invoke(annotation);
-                } catch (Exception e) {
-                    throw new AnnotationFormatError("Expected concordion scope annotation on field '"  + field.getName() + "' to also have a 'value()' method");
-                }
-            }
-        }
-
-        // did we find one?
-        if (concordionFieldScope == null) {
-            return null;
-        }
-
-        // use the field name if not set.
-        if ("".equals(name)) {
-            name = field.getName();
-        }
-
-        ConcordionScopedObject<Object> concordionScopedObject = createScopedObject(fixtureObject, field, name, concordionFieldScope);
-
-        return concordionScopedObject;
+        String name = field.getName();
+        FieldScope concordionFieldScope = FieldScope.SPECIFICATION;
+        return createScopedObject(fixtureObject, name, concordionFieldScope);
     }
 
     /**
@@ -119,27 +85,13 @@ public class Fixture {
      * override if necessary
      *
      * @param fixtureObject
-     * @param field
-     * @param name
-     * @param concordionFieldScope
+     * @param fieldName
+     * @param fieldScope
      * @return
      */
-    protected ConcordionScopedObject<Object> createScopedObject(Object fixtureObject, Field field, String name, ConcordionFieldScope concordionFieldScope) {
-        return ConcordionScopedObjectFactory.SINGLETON.create(fixtureObject.getClass(),
-                name,
-                field.getType(),
-                concordionFieldScope);
+    protected ScopedObject createScopedObject(Object fixtureObject, String fieldName, FieldScope fieldScope) {
+        return ScopedObjectFactory.SINGLETON.create(fixtureObject.getClass(), fieldName, fieldScope);
     }
-
-    private ConcordionFieldScope getScopeFromAnnotation(Annotation annotation) {
-        ConcordionScopeDeclaration scopeDeclaration = annotation.annotationType().getAnnotation(ConcordionScopeDeclaration.class);
-        ConcordionFieldScope concordionFieldScope = null;
-        if (scopeDeclaration != null) {
-            concordionFieldScope = scopeDeclaration.scope();
-        }
-        return concordionFieldScope;
-    }
-
 
     public String getClassName() {
         return fixtureClass.getName();
@@ -265,25 +217,23 @@ public class Fixture {
     }
 
     public void beforeSpecification() {
-        for (ConcordionScopedField scopedField : scopedFields) {
-            scopedField.copyValueIntoField(fixtureObject, false);
-        }
-
         invokeMethods(BeforeSpecification.class);
 
-        for (ConcordionScopedField scopedField : scopedFields) {
+        for (ScopedField scopedField : scopedFields) {
             scopedField.copyValueFromField(fixtureObject);
         }
-
     }
 
     public void afterSpecification() {
         invokeMethods(AfterSpecification.class);
+        for (ScopedField scopedField : scopedFields) {
+            scopedField.destroy(fixtureObject);
+        }
     }
 
     public void setupForRun(Object fixtureObject) {
-        for (ConcordionScopedField scopedField : scopedFields) {
-            scopedField.copyValueIntoField(fixtureObject, true);
+        for (ScopedField scopedField : scopedFields) {
+            scopedField.copyValueIntoField(fixtureObject);
         }
     }
 

@@ -1,14 +1,12 @@
 package spec.concordion.command.example;
 
-import org.concordion.api.BeforeSpecification;
+import java.util.Map;
+
 import org.concordion.api.FullOGNL;
-import org.concordion.api.SpecificationScoped;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
-import spec.concordion.results.runTotals.RunTotalsFixture;
 
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
+import spec.concordion.results.runTotals.RunTotalsFixture;
 
 /**
  * Created by tim on 2/07/15.

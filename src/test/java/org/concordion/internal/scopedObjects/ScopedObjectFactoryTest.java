@@ -1,36 +1,34 @@
 package org.concordion.internal.scopedObjects;
 
-import org.concordion.api.Fixture;
-import org.concordion.internal.ConcordionFieldScope;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.*;
+import org.concordion.internal.FieldScope;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Created by tim on 3/12/15.
  */
-public class ConcordionScopedObjectFactoryTest {
+public class ScopedObjectFactoryTest {
 
     private static int staticValue = 0;
 
-    private ConcordionScopedObject<AtomicInteger> scopedValue =
-            ConcordionScopedObjectFactory.SINGLETON.create(
+    private ScopedObject scopedValue =
+            ScopedObjectFactory.SINGLETON.create(
                     getClass(),
                     "variable name",
-                    AtomicInteger.class,
-                    ConcordionFieldScope.SPECIFICATION);
+                    FieldScope.SPECIFICATION);
 
 
     private int nonStaticValue = 0;
 
     @Before
-    public void before() {
-        // apply any annotations
-//        Fixture fixture = new Fixture(this);
-//        fixture.setupForRun(this);
+    public void before() throws IllegalAccessException, InstantiationException {
+        if (scopedValue.getObject() == null) {
+            scopedValue.setObject(new AtomicInteger());
+        }
     }
 
     @Test
@@ -48,7 +46,7 @@ public class ConcordionScopedObjectFactoryTest {
         // increment all the counters
         staticValue++;
         nonStaticValue++;
-        int scopedVal = scopedValue.getObject().addAndGet(1);
+        int scopedVal = ((AtomicInteger) scopedValue.getObject()).addAndGet(1);
 
         // if our scoped value is acting like a static variable, then it should have the same value as the static
         // variable

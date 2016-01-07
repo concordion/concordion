@@ -1,25 +1,28 @@
 package spec.concordion.command.example;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.concordion.api.BeforeSpecification;
 import org.concordion.api.SpecificationScoped;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by tim on 10/12/15.
  */
 public class SpecWithBeforeSpec {
 
-    @SpecificationScoped
-    protected AtomicInteger beforeSpecCounter;
+    protected SpecificationScoped<AtomicInteger> beforeSpecCounter = new SpecificationScoped<AtomicInteger>() {
+        @Override
+        protected AtomicInteger create() {
+            return new AtomicInteger();
+        };
+    };
 
     @BeforeSpecification
     public void beforeSpec() {
-        beforeSpecCounter.getAndIncrement();
+        beforeSpecCounter.get().getAndIncrement();
     }
 
     public boolean beforeSpecRunOnce() {
-        return beforeSpecCounter.get() == 1;
+        return beforeSpecCounter.get().get() == 1;
     }
-
 }

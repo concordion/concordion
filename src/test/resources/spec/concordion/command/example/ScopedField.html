@@ -10,27 +10,17 @@ This allows individual examples to be run in isolation. It also makes the specif
 <p>To support this behaviour, Concordion reinitialises the fields in fixture objects for each Concordion example (where the example is using the <code>concordion:example</code> command). 
 This is standard JUnit behaviour (in fact, JUnit creates a new fixture object for each test).</p> 
 
-<p>Concordion has support for four types of fixture field scope.</p>
+<p>Concordion has support for two types of fixture field scope.</p>
 
 <ol>
-    <li>Unannotated: fields in the fixture without any annotations are reinitialised between each test.
+    <li>Example: fields in the fixture of type <code>ExampleScoped&lt;T></code> are reinitialised between each test. Note that you do not need to use this type, since this is the default behaviour.
     </li>
-    <li>Example: fields in the fixture annotated with <code>@ExampleScoped</code> are reinitialised between each test. 
-        Note that you do not need to use this annotation, since this is the default behaviour.
-    </li>
-    <li>Specification: fields in the fixture annotated with <code>@SpecificationScoped</code> are shared between tests in the same fixture.
-    </li>
-    <li>Global: fields in the fixture annotated with <code>@GloballyScoped</code> are shared between all fixtures.
+    <li>Specification: fields in the fixture of type <code>SpecificationScoped&lt;T></code> are shared between tests in the same fixture.
     </li>
 </ol>
 
-<p>Note that for the annotated fields, Concordion initialises the field using the default (no arguments) constructor for the
-object. Concordion initialises the field before any JUnit Rules are executed, before any methods annotated with @Before
-are executed, and before any methods annotated with @BeforeSpecification are executed.</p>
-
 <p>To show this, we have two examples below. Each example increments an AtomicInteger that is scoped differently and
-    echos the value.</p>
-
+    echoes the value.</p>
 
 <div c:example="before">
     <h2>Before each example</h2>
@@ -47,10 +37,7 @@ are executed, and before any methods annotated with @BeforeSpecification are exe
         <li>Unannotated field value is <code c:assertEquals="getFieldCounter()">1</code></li>
         <li>Example scope value is <code c:assertEquals="getExampleScopedCounter()">1</code></li>
         <li>Specification scope value is <code c:assertEquals="getSpecScopedCounter()">1</code></li>
-        <li>Global scope value is <code c:assertEquals="getGlobalScopedCounter()">1</code></li>
-
     </ol>
-
 
 </div>
 
@@ -60,13 +47,9 @@ are executed, and before any methods annotated with @BeforeSpecification are exe
         <li>Unannotated field value is <code c:assertEquals="getFieldCounter()">1</code></li>
         <li>Example scope value is <code c:assertEquals="getExampleScopedCounter()">1</code></li>
         <li>Specification scope value is <code c:assertEquals="getSpecScopedCounter()">2</code></li>
-        <li>Global scope value is <code c:assertEquals="getGlobalScopedCounter()">2</code></li>
-
     </ol>
 
-
 </div>
-
 
 </body>
 </html>
