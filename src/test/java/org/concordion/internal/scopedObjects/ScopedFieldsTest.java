@@ -15,14 +15,16 @@ import static org.hamcrest.core.Is.is;
  */
 public class ScopedFieldsTest {
 
-    SpecificationScoped<AtomicInteger> specificationInteger = new SpecificationScoped<AtomicInteger>() {
+    @SpecificationScoped
+    Scoped<AtomicInteger> specificationInteger = new Scoped<AtomicInteger>() {
         @Override
         protected AtomicInteger create() {
             return new AtomicInteger();
         }
     };
             
-    ExampleScoped<AtomicInteger> exampleInteger = new ExampleScoped<AtomicInteger>() {
+    @ExampleScoped
+    Scoped<AtomicInteger> exampleInteger = new Scoped<AtomicInteger>() {
         @Override
         protected AtomicInteger create() {
             return new AtomicInteger();

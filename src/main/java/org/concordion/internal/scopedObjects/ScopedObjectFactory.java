@@ -1,6 +1,6 @@
 package org.concordion.internal.scopedObjects;
 
-import org.concordion.internal.FieldScope;
+import org.concordion.internal.ScopeType;
 
 /**
  * Created by tim on 3/12/15.
@@ -12,7 +12,7 @@ public enum ScopedObjectFactory {
 
     public ScopedObject create(Class<?> specificationClass,
                                                 String name,
-                                                FieldScope concordionFieldScope) {
+                                                ScopeType concordionFieldScope) {
 
         return new ScopedObjectImpl(specificationClass, name, concordionFieldScope, repository);
     }

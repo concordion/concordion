@@ -6,5 +6,5 @@ import java.lang.annotation.RetentionPolicy;
 
 @java.lang.annotation.Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AfterSuite {
+public @interface AfterExample {
 }

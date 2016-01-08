@@ -1,10 +1,12 @@
-package org.concordion.api;
+package org.concordion.internal;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@java.lang.annotation.Target(ElementType.METHOD)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AfterSuite {
+public @interface ScopeDeclaration {
+    ScopeType scope();
 }

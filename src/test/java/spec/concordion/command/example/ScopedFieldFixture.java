@@ -3,6 +3,7 @@ package spec.concordion.command.example;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.concordion.api.ExampleScoped;
+import org.concordion.api.Scoped;
 import org.concordion.api.SpecificationScoped;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
@@ -12,14 +13,17 @@ import org.junit.runner.RunWith;
  */
 @RunWith(ConcordionRunner.class)
 public class ScopedFieldFixture {
-    private ExampleScoped<AtomicInteger> exampleScopedCounter = new ExampleScoped<AtomicInteger>() {
+    
+    @ExampleScoped
+    private Scoped<AtomicInteger> exampleScopedCounter = new Scoped<AtomicInteger>() {
         @Override
         protected AtomicInteger create() {
             return new AtomicInteger();
         }
     };
 
-    private SpecificationScoped<AtomicInteger> specScopedCounter = new SpecificationScoped<AtomicInteger>() {
+    @SpecificationScoped
+    private Scoped<AtomicInteger> specScopedCounter = new Scoped<AtomicInteger>() {
         @Override
         protected AtomicInteger create() {
             return new AtomicInteger();

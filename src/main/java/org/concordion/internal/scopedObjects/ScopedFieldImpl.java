@@ -5,6 +5,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.concordion.api.Scoped;
+
 /**
  * Created by tim on 14/12/15.
  */
@@ -52,8 +54,13 @@ public class ScopedFieldImpl implements ScopedField {
         try {
             Object fieldObject = field.get(fixtureObject);
             
-            // TODO determine how to get correct class for value field and destroy method
             Class<?> scopedClass = fieldObject.getClass().getSuperclass();
+            while (!(Scoped.class.equals(scopedClass))) {
+                scopedClass = scopedClass.getSuperclass();
+                if (scopedClass == null) {
+                    return;
+                }
+            }
             Field valueField = scopedClass.getDeclaredField("value");
             valueField.setAccessible(true);
             Object value = valueField.get(fieldObject);

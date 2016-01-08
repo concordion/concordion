@@ -162,7 +162,6 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
             }
         }
         
-        // only setup the fixture if it hasn't been run before
         if (suiteDepth.decrementAndGet() == 0) {
             setupFixture.afterSuite();
         }
@@ -207,16 +206,15 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         }
 
         try {
+            fixture.beforeExample(example);
+            
+            try {
+                ResultSummary result = fixtureRunner.run(example, fixture);
+                result.assertIsSatisfied(fixture);
 
-            ResultSummary result = fixtureRunner.run(example, fixture);
-
-//            System.err.printf("Accumulated %s into %s\n",
-//                    result.printToString(fixture),
-//                    accumulatedResultSummary.printToString(fixture));
-
-
-            result.assertIsSatisfied(fixture);
-
+            } finally {
+                fixture.afterExample(example);
+            } 
 
         } catch (ConcordionAssertionError e) {
             accumulatedResultSummary.record(e.getResultSummary());

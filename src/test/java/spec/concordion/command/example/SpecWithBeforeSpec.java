@@ -3,6 +3,7 @@ package spec.concordion.command.example;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.concordion.api.BeforeSpecification;
+import org.concordion.api.Scoped;
 import org.concordion.api.SpecificationScoped;
 
 /**
@@ -10,7 +11,8 @@ import org.concordion.api.SpecificationScoped;
  */
 public class SpecWithBeforeSpec {
 
-    protected SpecificationScoped<AtomicInteger> beforeSpecCounter = new SpecificationScoped<AtomicInteger>() {
+    @SpecificationScoped
+    protected Scoped<AtomicInteger> beforeSpecCounter = new Scoped<AtomicInteger>() {
         @Override
         protected AtomicInteger create() {
             return new AtomicInteger();

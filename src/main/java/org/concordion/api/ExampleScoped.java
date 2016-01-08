@@ -1,18 +1,16 @@
 package org.concordion.api;
 
-public abstract class ExampleScoped<T> {
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-    private T value;
+import org.concordion.internal.ScopeType;
+import org.concordion.internal.ScopeDeclaration;
 
-    protected abstract T create();
-    
-    protected void destroy(T t) {
-    };
-    
-    public T get() {
-        if (value == null) {
-            value = create();
-        }
-        return value;
-    }
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+@ScopeDeclaration(scope = ScopeType.EXAMPLE)
+public @interface ExampleScoped {
+    String value() default "";
 }

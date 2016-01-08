@@ -1,12 +1,11 @@
-package org.concordion.internal;
+package org.concordion.api;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.ANNOTATION_TYPE)
+@Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ConcordionScopeDeclaration {
-    FieldScope scope();
+public @interface SpecificationHook {
 }

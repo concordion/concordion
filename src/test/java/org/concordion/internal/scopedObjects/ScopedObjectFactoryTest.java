@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.concordion.internal.FieldScope;
+import org.concordion.internal.ScopeType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,7 +19,7 @@ public class ScopedObjectFactoryTest {
             ScopedObjectFactory.SINGLETON.create(
                     getClass(),
                     "variable name",
-                    FieldScope.SPECIFICATION);
+                    ScopeType.SPECIFICATION);
 
 
     private int nonStaticValue = 0;

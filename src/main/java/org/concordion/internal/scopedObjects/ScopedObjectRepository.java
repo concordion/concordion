@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.concordion.internal.FieldScope;
+import org.concordion.internal.ScopeType;
 
 /**
  * Created by tim on 3/12/15.
@@ -17,7 +17,7 @@ public class ScopedObjectRepository {
         repo = new ConcurrentHashMap<ScopedObjectRepositoryKey, Object>();
     }
 
-    public Object getObject(String name, FieldScope concordionFieldScope, Class<?> specificationClass) throws InstantiationException, IllegalAccessException {
+    public Object getObject(String name, ScopeType concordionFieldScope, Class<?> specificationClass) throws InstantiationException, IllegalAccessException {
 
         ScopedObjectRepositoryKey key = new ScopedObjectRepositoryKey(name, concordionFieldScope, specificationClass);
 
@@ -30,7 +30,7 @@ public class ScopedObjectRepository {
         return repo.get(key);
     }
 
-    public <T> void setObject(String name, FieldScope concordionFieldScope, Class<?> specificationClass, T existingValue) {
+    public <T> void setObject(String name, ScopeType concordionFieldScope, Class<?> specificationClass, T existingValue) {
         ScopedObjectRepositoryKey key = new ScopedObjectRepositoryKey(name, concordionFieldScope, specificationClass);
 
         repo.put(key, existingValue);
@@ -39,10 +39,10 @@ public class ScopedObjectRepository {
     static class ScopedObjectRepositoryKey {
 
         private final String name;
-        private final FieldScope concordionFieldScope;
+        private final ScopeType concordionFieldScope;
         private final Class<?> specificationClass;
 
-        public ScopedObjectRepositoryKey(String name, FieldScope concordionFieldScope, Class<?> specificationClass) {
+        public ScopedObjectRepositoryKey(String name, ScopeType concordionFieldScope, Class<?> specificationClass) {
             this.name = name;
             this.concordionFieldScope = concordionFieldScope;
             this.specificationClass = specificationClass;
