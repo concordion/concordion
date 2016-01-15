@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.concordion.internal.ScopeType;
+import org.concordion.api.Scope;
 
 /**
  * Created by tim on 3/12/15.
@@ -17,7 +17,7 @@ public class ScopedObjectRepository {
         repo = new ConcurrentHashMap<ScopedObjectRepositoryKey, Object>();
     }
 
-    public Object getObject(String name, ScopeType concordionFieldScope, Class<?> specificationClass) throws InstantiationException, IllegalAccessException {
+    public Object getObject(String name, Scope concordionFieldScope, Class<?> specificationClass) throws InstantiationException, IllegalAccessException {
 
         ScopedObjectRepositoryKey key = new ScopedObjectRepositoryKey(name, concordionFieldScope, specificationClass);
 
@@ -30,7 +30,7 @@ public class ScopedObjectRepository {
         return repo.get(key);
     }
 
-    public <T> void setObject(String name, ScopeType concordionFieldScope, Class<?> specificationClass, T existingValue) {
+    public <T> void setObject(String name, Scope concordionFieldScope, Class<?> specificationClass, T existingValue) {
         ScopedObjectRepositoryKey key = new ScopedObjectRepositoryKey(name, concordionFieldScope, specificationClass);
 
         repo.put(key, existingValue);
@@ -39,10 +39,10 @@ public class ScopedObjectRepository {
     static class ScopedObjectRepositoryKey {
 
         private final String name;
-        private final ScopeType concordionFieldScope;
+        private final Scope concordionFieldScope;
         private final Class<?> specificationClass;
 
-        public ScopedObjectRepositoryKey(String name, ScopeType concordionFieldScope, Class<?> specificationClass) {
+        public ScopedObjectRepositoryKey(String name, Scope concordionFieldScope, Class<?> specificationClass) {
             this.name = name;
             this.concordionFieldScope = concordionFieldScope;
             this.specificationClass = specificationClass;
@@ -50,9 +50,18 @@ public class ScopedObjectRepository {
 
         @Override
         public int hashCode() {
-            Object[] values = { name, concordionFieldScope, specificationClass };
+            switch (concordionFieldScope) {
+                case GLOBAL:
+                    return hash(name);
+                default:
+                    return hash(name, concordionFieldScope, specificationClass);
+            }
+        }
+
+        public static int hash(Object... values) {
             return Arrays.hashCode(values);
         }
+
 
         @Override
         public boolean equals(Object other) {
@@ -75,8 +84,11 @@ public class ScopedObjectRepository {
                 return false;
             }
 
-            if (!this.specificationClass.equals(that.specificationClass)) {
-                return false;
+            // we do not check the scope for globally scoped objects.
+            if (this.concordionFieldScope != Scope.GLOBAL) {
+                if (!this.specificationClass.equals(that.specificationClass)) {
+                    return false;
+                }
             }
 
             return true;

@@ -1,6 +1,6 @@
 package org.concordion.api;
 
-public abstract class Scoped<T> {
+public abstract class ScopedObjectHolder<T> {
 
     private volatile T value;
 

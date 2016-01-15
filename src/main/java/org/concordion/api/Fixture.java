@@ -12,8 +12,6 @@ import java.net.URL;
 import java.util.*;
 
 import org.concordion.api.extension.Extension;
-import org.concordion.internal.ScopeType;
-import org.concordion.internal.ScopeDeclaration;
 import org.concordion.internal.scopedObjects.ScopedField;
 import org.concordion.internal.scopedObjects.ScopedFieldImpl;
 import org.concordion.internal.scopedObjects.ScopedObject;
@@ -21,11 +19,11 @@ import org.concordion.internal.scopedObjects.ScopedObjectFactory;
 import org.concordion.internal.util.Check;
 
 public class Fixture {
-    private static final ScopeType EXTENSION_SCOPE = ScopeType.SPECIFICATION;
+    private static final Scope DEFAULT_EXTENSION_SCOPE = Scope.SPECIFICATION;
     private final Object fixtureObject;
     private Class<?> fixtureClass;
 
-    private Map<ScopeType, List<ScopedField>> scopedFields = new HashMap<ScopeType, List<ScopedField>>();
+    private Map<Scope, List<ScopedField>> scopedFields = new HashMap<Scope, List<ScopedField>>();
 
     public Fixture(Object fixtureObject) {
         Check.notNull(fixtureObject, "Fixture is null");
@@ -34,7 +32,7 @@ public class Fixture {
 
         addScopedFields(scopedFields);
     }
-
+    
     /**
      *
      * This method is called during object construction to configure all the scoped fields. The default behaviour is to
@@ -42,15 +40,15 @@ public class Fixture {
      *
      * @param scopedFields
      */
-    protected void addScopedFields(Map<ScopeType, List<ScopedField>> scopedFields) {
+    protected void addScopedFields(Map<Scope, List<ScopedField>> scopedFields) {
 
-        for (ScopeType scopeType : ScopeType.values()) {
-            scopedFields.put(scopeType, new ArrayList<ScopedField>());
+        for (Scope Scope : Scope.values()) {
+            scopedFields.put(Scope, new ArrayList<ScopedField>());
         }
         addScopedFields(fixtureClass, scopedFields);
     }
 
-    private void addScopedFields(Class<?> klass, Map<ScopeType, List<ScopedField>> scopedFields) {
+    private void addScopedFields(Class<?> klass, Map<Scope, List<ScopedField>> scopedFields) {
 
         if (klass == Object.class) {
             return;
@@ -61,7 +59,7 @@ public class Fixture {
         Field[] fields = klass.getDeclaredFields();
         if (fields != null) {
             for (Field field : fields) {
-                if (Scoped.class.isAssignableFrom(field.getType())) {
+                if (field.getAnnotation(ConcordionScoped.class) != null) {
                     createScopedObject(fixtureObject, field, scopedFields);
                 }
                 if (field.getAnnotation(Extension.class) != null) {
@@ -71,43 +69,19 @@ public class Fixture {
         }
     }
 
-    private void createScopedExtension(Object fixtureObject, Field field, Map<ScopeType, List<ScopedField>> scopedFields) {
-        ScopedObject scopedObject = createScopedObject(fixtureObject, field.getName(), EXTENSION_SCOPE);
-        scopedFields.get(EXTENSION_SCOPE).add(new ScopedFieldImpl(scopedObject, field));        
+    private void createScopedExtension(Object fixtureObject, Field field, Map<Scope, List<ScopedField>> scopedFields) {
+        ScopedObject scopedObject = createScopedObject(fixtureObject, field.getName(), DEFAULT_EXTENSION_SCOPE);
+        scopedFields.get(DEFAULT_EXTENSION_SCOPE).add(new ScopedFieldImpl(scopedObject, field));        
     }
 
-    private void createScopedObject(Object fixtureObject, Field field, Map<ScopeType, List<ScopedField>> scopedFields) {
+    private void createScopedObject(Object fixtureObject, Field field, Map<Scope, List<ScopedField>> scopedFields) {
+        if (!field.getType().equals(ScopedObjectHolder.class)) {
+            throw new AnnotationFormatError(String.format("The '%s' annotation can only be applied to fields of type '%s'", ConcordionScoped.class.getSimpleName(), ScopedObjectHolder.class.getSimpleName()));
+        }
 
+        ConcordionScoped annotation = field.getAnnotation(ConcordionScoped.class);
+        Scope fieldScope = annotation.value();
         String name = field.getName();
-        ScopeType fieldScope = null;
-
-        // go through all the annotations on the field
-        Annotation[] annotations = field.getAnnotations();
-        for (Annotation annotation : annotations) {
-            // see if the annotation has a scope annotation
-            ScopeType annotationFieldScope = getScopeFromAnnotation(annotation);
-
-            // double check there is only one annotated annotation.
-            if (annotationFieldScope != null) {
-                if (fieldScope != null) {
-                    throw new AnnotationFormatError("Multiple field scope annotations on field '" + field.getName() + "'");
-                }
-                fieldScope = annotationFieldScope;
-
-                // get the field name. Defaults to "" if not set - then we overwrite with the field name below if necessary
-                try {
-                    name = (String) annotation.getClass().getDeclaredMethod("value").invoke(annotation);
-                } catch (Exception e) {
-                    throw new AnnotationFormatError("Expected field scope annotation on field '"  + field.getName() + "' to also have a 'value()' method");
-                }
-            }
-        }
-
-        // did we find one?
-        if (fieldScope == null) {
-            return;
-        }
-        
         ScopedObject scopedObject = createScopedObject(fixtureObject, name, fieldScope);
         scopedFields.get(fieldScope).add(new ScopedFieldImpl(scopedObject, field));
     }
@@ -122,19 +96,10 @@ public class Fixture {
      * @param fieldScope
      * @return
      */
-    protected ScopedObject createScopedObject(Object fixtureObject, String fieldName, ScopeType fieldScope) {
+    protected ScopedObject createScopedObject(Object fixtureObject, String fieldName, Scope fieldScope) {
         return ScopedObjectFactory.SINGLETON.create(fixtureObject.getClass(), fieldName, fieldScope);
     }
     
-    private ScopeType getScopeFromAnnotation(Annotation annotation) {
-        ScopeDeclaration scopeDeclaration = annotation.annotationType().getAnnotation(ScopeDeclaration.class);
-        ScopeType fieldScope = null;
-        if (scopeDeclaration != null) {
-            fieldScope = scopeDeclaration.scope();
-        }
-        return fieldScope;
-    }    
-
     public String getClassName() {
         return fixtureClass.getName();
     }
@@ -261,16 +226,24 @@ public class Fixture {
 
     public void beforeSuite() {
         invokeMethods(BeforeSuite.class);
+
+        for (ScopedField scopedField : scopedFields.get(Scope.GLOBAL)) {
+            scopedField.copyValueFromField(fixtureObject);
+        }
     }
 
     public void afterSuite() {
         invokeMethods(AfterSuite.class);
+
+        for (ScopedField scopedField : scopedFields.get(Scope.GLOBAL)) {
+            scopedField.destroy(fixtureObject);
+        }
     }
 
     public void beforeSpecification() {
         invokeMethods(BeforeSpecification.class);
 
-        for (ScopedField scopedField : scopedFields.get(ScopeType.SPECIFICATION)) {
+        for (ScopedField scopedField : scopedFields.get(Scope.SPECIFICATION)) {
             scopedField.copyValueFromField(fixtureObject);
         }
     }
@@ -278,13 +251,16 @@ public class Fixture {
     public void afterSpecification() {
         invokeMethods(AfterSpecification.class);
         
-        for (ScopedField scopedField : scopedFields.get(ScopeType.SPECIFICATION)) {
+        for (ScopedField scopedField : scopedFields.get(Scope.SPECIFICATION)) {
             scopedField.destroy(fixtureObject);
         }
     }
 
     public void setupForRun(Object fixtureObject) {
-        for (ScopedField scopedField : scopedFields.get(ScopeType.SPECIFICATION)) {
+        for (ScopedField scopedField : scopedFields.get(Scope.GLOBAL)) {
+            scopedField.copyValueIntoField(fixtureObject);
+        }
+        for (ScopedField scopedField : scopedFields.get(Scope.SPECIFICATION)) {
             scopedField.copyValueIntoField(fixtureObject);
         }
     }
@@ -296,7 +272,7 @@ public class Fixture {
     public void afterExample(String exampleName) {
         invokeMethods(AfterExample.class, exampleName);
         
-        for (ScopedField scopedField : scopedFields.get(ScopeType.EXAMPLE)) {
+        for (ScopedField scopedField : scopedFields.get(Scope.EXAMPLE)) {
             scopedField.destroy(fixtureObject);
         }
     }

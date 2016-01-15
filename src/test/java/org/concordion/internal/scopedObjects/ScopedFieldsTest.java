@@ -1,30 +1,33 @@
 package org.concordion.internal.scopedObjects;
 
-import org.concordion.api.*;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.concurrent.atomic.AtomicInteger;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.concordion.api.ConcordionScoped;
+import org.concordion.api.Fixture;
+import org.concordion.api.ScopedObjectHolder;
+import org.concordion.api.Scope;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Created by tim on 5/12/15.
  */
 public class ScopedFieldsTest {
 
-    @SpecificationScoped
-    Scoped<AtomicInteger> specificationInteger = new Scoped<AtomicInteger>() {
+    @ConcordionScoped(Scope.SPECIFICATION)
+    ScopedObjectHolder<AtomicInteger> specificationInteger = new ScopedObjectHolder<AtomicInteger>() {
         @Override
         protected AtomicInteger create() {
             return new AtomicInteger();
         }
     };
             
-    @ExampleScoped
-    Scoped<AtomicInteger> exampleInteger = new Scoped<AtomicInteger>() {
+    @ConcordionScoped(Scope.EXAMPLE)
+    ScopedObjectHolder<AtomicInteger> exampleInteger = new ScopedObjectHolder<AtomicInteger>() {
         @Override
         protected AtomicInteger create() {
             return new AtomicInteger();

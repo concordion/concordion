@@ -5,9 +5,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.concordion.api.ConcordionScoped;
+import org.concordion.api.ScopedObjectHolder;
 import org.concordion.api.Resource;
-import org.concordion.api.Scoped;
-import org.concordion.api.SpecificationScoped;
+import org.concordion.api.Scope;
 import org.concordion.api.extension.ConcordionExtension;
 
 import test.concordion.ProcessingResult;
@@ -20,8 +21,8 @@ public abstract class AbstractExtensionTestCase {
     private ProcessingResult processingResult;
     private ConcordionExtension extension;
 
-    @SpecificationScoped
-    private Scoped<ExtensionTestHelper> helper = new Scoped<ExtensionTestHelper>() {
+    @ConcordionScoped(Scope.SPECIFICATION)
+    private ScopedObjectHolder<ExtensionTestHelper> helper = new ScopedObjectHolder<ExtensionTestHelper>() {
          @Override
         protected ExtensionTestHelper create() {
              return new ExtensionTestHelper();

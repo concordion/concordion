@@ -5,7 +5,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.concordion.api.Scoped;
+import org.concordion.api.ScopedObjectHolder;
 
 /**
  * Created by tim on 14/12/15.
@@ -55,7 +55,7 @@ public class ScopedFieldImpl implements ScopedField {
             Object fieldObject = field.get(fixtureObject);
             
             Class<?> scopedClass = fieldObject.getClass().getSuperclass();
-            while (!(Scoped.class.equals(scopedClass))) {
+            while (!(ScopedObjectHolder.class.equals(scopedClass))) {
                 scopedClass = scopedClass.getSuperclass();
                 if (scopedClass == null) {
                     return;

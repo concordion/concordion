@@ -14,6 +14,8 @@
 - [ ] Exceptions in before examples are not reported on command line
 - [ ] Ensure spec scoped variables destroyed on exception
 - [ ] If Scoped variable is defined, but no annotation added, what to do?
+[] Check what's in API and what's in internal
+[] Update javadocs, remove created by from docs
 
 Allow for future extensibility with tags to define when hook is run (similar to Cucumber hooks)
 
