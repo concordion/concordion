@@ -7,9 +7,6 @@ import java.lang.reflect.Method;
 
 import org.concordion.api.ScopedObjectHolder;
 
-/**
- * Created by tim on 14/12/15.
- */
 public class ScopedFieldImpl implements ScopedField {
     private final ScopedObject scopedObject;
     private final Field field;
@@ -69,24 +66,14 @@ public class ScopedFieldImpl implements ScopedField {
                 destroy.setAccessible(true);
                 destroy.invoke(fieldObject, value);
             }
-        } catch (NoSuchMethodException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         } catch (InvocationTargetException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            if (e.getCause() instanceof RuntimeException) {
+                throw (RuntimeException)e.getCause();
+            }
+            throw new RuntimeException(e.getCause());
+        } catch (Exception e) {
+            String msg = String.format("Unexpected exception while destroying scoped object '%s' on class '%s'", field.getName(), fixtureObject.getClass().getName());
+            throw new RuntimeException(msg, e);
         }
     }
 }
