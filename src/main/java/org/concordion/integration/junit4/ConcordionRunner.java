@@ -39,6 +39,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
     private Fixture setupFixture;
 
     private static AtomicInteger suiteDepth = new AtomicInteger();
+    private boolean firstTest = true;
 
     public ConcordionRunner(Class<?> fixtureClass) throws InitializationError {
         super(fixtureClass);
@@ -46,11 +47,9 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         this.accumulatedResultSummary = new SummarizingResultRecorder();
 
         try {
-            setupFixture = createFixture(fixtureClass.newInstance());
+            setupFixture = createFixture(super.createTest());
             // needs to be called so extensions have access to scoped variables
-        } catch (InstantiationException e) {
-            throw new InitializationError(e);
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             throw new InitializationError(e);
         }
         accumulatedResultSummary.setSpecificationDescription(setupFixture.getSpecificationDescription());
@@ -98,13 +97,18 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
     @Override
     protected Object createTest() throws Exception {
+        Object fixtureObject;
+        if (firstTest) {
+            firstTest = false;
+            // we've already created a test object above, so reuse it to make sure we don't initialise the fixture object multiple times
+            fixtureObject = setupFixture.getFixtureObject();
+        } else {
+            // junit creates a new object for each test case, so we need to capture this
+            // and setup our object - that makes sure that scoped variables are injected properly
+            fixtureObject = super.createTest();
+        }
 
-        // junit creates a new object for each test case, so we need to capture this
-        // and setup our object - that makes sure that scoped variables are injected properly
-        Object fixtureObject = super.createTest();
-
-        // we need to setup the concordion scoped objects so that the @Before methods and @Rules can access
-        // them
+        // we need to setup the concordion scoped objects so that the @Before methods and @Rules can access them
         setupFixture.setupForRun(fixtureObject);
 
         return fixtureObject;
