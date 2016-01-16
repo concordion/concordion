@@ -10,6 +10,7 @@ import org.concordion.api.ConcordionScoped;
 import org.concordion.api.Fixture;
 import org.concordion.api.ScopedObjectHolder;
 import org.concordion.api.Scope;
+import org.concordion.internal.FixtureInstance;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,7 +41,7 @@ public class ScopedFieldsTest {
 
     @Before
     public void before() {
-        Fixture fixture = new Fixture(this);
+        Fixture fixture = new FixtureInstance(this);
         if (firstRun) {
             firstRun = false;
             fixture.beforeSpecification();

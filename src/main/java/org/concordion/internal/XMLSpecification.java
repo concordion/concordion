@@ -77,8 +77,8 @@ public class XMLSpecification implements SpecificationByExample {
         processNode(rootCommandNode, evaluator, resultRecorder);
     }
 
-    public void setFixtureClass(Fixture fixture) {
-        testDescription = fixture.getDescription();
+    public void setFixture(Fixture fixture) {
+        testDescription = fixture.getSpecificationDescription();
     }
 
     public void processExample(Evaluator evaluator, String example, ResultRecorder resultRecorder) {

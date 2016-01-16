@@ -10,6 +10,7 @@ import static org.junit.Assert.fail;
 import java.util.List;
 
 import org.concordion.api.Fixture;
+import org.concordion.internal.FixtureInstance;
 import org.concordion.internal.extension.ExtensionInitialisationException;
 import org.concordion.internal.extension.FixtureExtensionLoader;
 import org.junit.Test;
@@ -136,7 +137,7 @@ public class FixtureExtensionLoaderWithAnnotatedFieldsTest {
         String className = "ExampleFixture";
         Class<?> clazz = classWithFieldDeclaration(declaration, className, superClassName);
         Object fixture = clazz.newInstance();
-        return new Fixture(fixture);
+        return new FixtureInstance(fixture);
     }
     
     private Class<?> classWithFieldDeclaration(String declaration, String className, String superClassName) throws Exception {

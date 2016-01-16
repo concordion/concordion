@@ -109,7 +109,7 @@
 
     <p>
         For example, a spec (<a href="LotsOfExamples.html" c:execute="#result=runTestDummySpec(#TEXT)">LotsOfExamples.html</a>)
-        with two successfull examples, a failed example, an an exception example,
+        with two successful examples, a failed example, an an exception example,
         returns <span c:assertEquals="#result.successCount">2</span> successes,
         <span c:assertEquals="#result.failureCount">1</span> failure,
         <span c:assertEquals="#result.exceptionCount">1</span> exceptions, and
@@ -127,7 +127,7 @@
 
     <p>
             A spec (<a href="AssertsOutsideExamples.html" c:execute="#result=runTestDummySpec(#TEXT)">AssertsOutsideExamples.html</a>)
-        with a successfull example and two tests outside the example, one of which
+        with a successful example and two tests outside the example, one of which
             fails, returns <span c:assertEquals="#result.successCount">2</span> successes,
         <span c:assertEquals="#result.failureCount">1</span> failure,
             <span c:assertEquals="#result.exceptionCount">0</span> exceptions, and

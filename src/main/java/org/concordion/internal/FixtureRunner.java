@@ -41,13 +41,13 @@ public class FixtureRunner {
                 if (example != null) {
                     actualResultSummary = concordion.processExample(fixture, example);
                     statusChecker = ImplementationStatusChecker.getImplementationStatusChecker(
-                            fixture.getFixtureClass(),
-                            fixture, actualResultSummary.getImplementationStatus());
+                            fixture,
+                            actualResultSummary.getImplementationStatus());
                 } else {
                     actualResultSummary = concordion.process(fixture);
                     statusChecker = ImplementationStatusChecker.getImplementationStatusChecker(
-                            fixture.getFixtureClass(),
-                            fixture, null);
+                            fixture,
+                            null);
                 }
                 // we want to make sure all the annotations are considered when storing the result summary
                 // converting for the cache doesn't need the example - it just does annotation based conversions
@@ -97,7 +97,7 @@ public class FixtureRunner {
      */
     @Deprecated
     public ResultSummary run(Fixture fixture) throws IOException {
-        ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixture.getFixtureClass(), null);
+        ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixture, null);
 
         ResultSummary resultSummary = run(null, fixture);
         

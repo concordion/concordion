@@ -10,9 +10,11 @@ import java.io.IOException;
 import org.concordion.api.ExpectedToFail;
 import org.concordion.api.ResultSummary;
 import org.concordion.api.Unimplemented;
+import org.concordion.internal.FixtureType;
 import org.concordion.internal.runner.DefaultConcordionRunner;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.Result;
 
 import test.concordion.ConsoleLogGobbler;
 import test.concordion.StubLogger;
@@ -36,7 +38,7 @@ public class DefaultConcordionRunnerTest {
 
     @Test
     public void returnsSuccessOnJUnitSuccess() throws Exception {
-    	ResultSummary myresult = runner.decodeJUnitResult(UnannotatedClass.class, StubResult.SUCCESS);
+        ResultSummary myresult = runner.decodeJUnitResult(UnannotatedClass.class, StubResult.SUCCESS);
         assertThat(myresult.getFailureCount(), is(0L));
         assertThat(myresult.getIgnoredCount(), is(0L));
         assertThat(myresult.getExceptionCount(), is(0L));
@@ -46,7 +48,7 @@ public class DefaultConcordionRunnerTest {
     // JUnit success is reported when an ExpectedToFail test does fail
     @Test
     public void returnsIgnoredOnJUnitSuccessWhenExpectedToFail() throws Exception {
-    	ResultSummary myresult = runner.decodeJUnitResult(ExpectedToFailClass.class, StubResult.SUCCESS);
+        ResultSummary myresult = runner.decodeJUnitResult(ExpectedToFailClass.class, StubResult.SUCCESS);
         assertThat(myresult.getFailureCount(), is(0L));
         assertThat(myresult.getIgnoredCount(), is(1L));
         assertThat(myresult.getExceptionCount(), is(0L));
@@ -176,9 +178,8 @@ public class DefaultConcordionRunnerTest {
     }
 
     private static final class TestDefaultConcordionRunner extends DefaultConcordionRunner {
-        @Override
-		protected ResultSummary decodeJUnitResult(Class<?> concordionClass, org.junit.runner.Result jUnitResult) throws Exception {
-            return super.decodeJUnitResult(concordionClass, jUnitResult);
+        protected ResultSummary decodeJUnitResult(Class<?> fixtureClass, Result jUnitResult) throws Exception {
+            return super.decodeJUnitResult(new FixtureType(fixtureClass), jUnitResult);
         }
     }
 }

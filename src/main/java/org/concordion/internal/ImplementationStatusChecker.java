@@ -149,13 +149,13 @@ public enum ImplementationStatusChecker {
         return implementationStatus;
     }
 
-    public static ImplementationStatusChecker getImplementationStatusChecker(Class<?> fixtureClass, Fixture fixture, ImplementationStatus implementationStatus) {
+    public static ImplementationStatusChecker getImplementationStatusChecker(Fixture fixture, ImplementationStatus implementationStatus) {
         // examples have precedence
         if (implementationStatus != null) {
             return implementationStatusCheckerFor(implementationStatus);
         }
 
-        return implementationStatusCheckerFor(fixture.getImplementationStatus());
+        return implementationStatusCheckerFor(fixture.getDeclaredImplementationStatus());
     }
 
     public static ImplementationStatusChecker implementationStatusCheckerFor(ImplementationStatus implementationStatus) {

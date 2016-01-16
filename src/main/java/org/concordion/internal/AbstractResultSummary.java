@@ -18,7 +18,7 @@ public abstract class AbstractResultSummary implements ResultSummary {
 
     @Override @Deprecated
     public void print(PrintStream out, Object fixture) {
-        print(out, new Fixture(fixture));
+        print(out, new FixtureInstance(fixture));
     }
 
     @Override
@@ -41,7 +41,7 @@ public abstract class AbstractResultSummary implements ResultSummary {
 
     @Override @Deprecated
     public String printCountsToString(Object fixture) {
-        return printCountsToString(new Fixture(fixture));
+        return printCountsToString(new FixtureInstance(fixture));
     }
 
     @Override
@@ -89,13 +89,13 @@ public abstract class AbstractResultSummary implements ResultSummary {
         if (isForExample() || fixture == null) {
             implementationStatus = getImplementationStatus();
         } else {
-            implementationStatus = fixture.getImplementationStatus();
+            implementationStatus = fixture.getDeclaredImplementationStatus();
         }
         return ImplementationStatusChecker.implementationStatusCheckerFor(implementationStatus);
     }
 
     @Override @Deprecated
     public void assertIsSatisfied(Object fixture) {
-        assertIsSatisfied(new Fixture(fixture));
+        assertIsSatisfied(new FixtureInstance(fixture));
     }
 }

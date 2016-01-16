@@ -9,14 +9,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.concordion.Concordion;
 import org.concordion.api.*;
-import org.concordion.internal.ConcordionAssertionError;
-import org.concordion.internal.FailFastException;
-import org.concordion.internal.FixtureRunner;
-import org.concordion.internal.SummarizingResultRecorder;
-import org.concordion.internal.UnableToBuildConcordionException;
+import org.concordion.internal.*;
 import org.concordion.internal.cache.ConcordionRunOutput;
 import org.concordion.internal.cache.RunResultsCache;
-import org.concordion.api.Fixture;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -58,7 +53,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         } catch (IllegalAccessException e) {
             throw new InitializationError(e);
         }
-        accumulatedResultSummary.setSpecificationDescription(setupFixture.getDescription());
+        accumulatedResultSummary.setSpecificationDescription(setupFixture.getSpecificationDescription());
 
         try {
             fixtureRunner = new FixtureRunner(setupFixture);
@@ -123,7 +118,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
      * @return
      */
     protected Fixture createFixture(Object fixtureObject) {
-        return new Fixture(fixtureObject);
+        return new FixtureInstance(fixtureObject);
     }
 
     @Override
@@ -167,7 +162,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         }
 
         if (failFastException != null) {
-            if (fixtureClass.getAnnotation(FailFast.class) != null) {
+            if (setupFixture.declaresFailFast()) {
                 throw new FailFastException("Failing Fast", failFastException);
             }
         }

@@ -358,7 +358,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         withResources(fixture);
         
         if (fixture.declaresFailFast()) {
-            withFailFast(fixture.getFailFastExceptions());
+            withFailFast(fixture.getDeclaredFailFastExceptions());
         }
         if (fixture.declaresFullOGNL()) {
             withEvaluatorFactory(new OgnlEvaluatorFactory());

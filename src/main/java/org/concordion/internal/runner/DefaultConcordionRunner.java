@@ -3,6 +3,8 @@ package org.concordion.internal.runner;
 import org.concordion.api.*;
 import org.concordion.internal.cache.RunResultsCache;
 import org.concordion.internal.FailFastException;
+import org.concordion.internal.FixtureType;
+import org.concordion.internal.FixtureSpecificationMapper;
 import org.concordion.internal.SummarizingResultRecorder;
 import org.concordion.internal.cache.ConcordionRunOutput;
 import org.junit.runner.JUnitCore;
@@ -17,8 +19,8 @@ public class DefaultConcordionRunner implements Runner {
     private static Logger logger = Logger.getLogger(DefaultConcordionRunner.class.getName());
 
     public ResultSummary execute(Resource resource, String href) throws Exception {
-        Class<?> concordionClass = findTestClass(resource, href);
-        return runTestClass(concordionClass);
+        Class<?> fixtureClass = findTestClass(resource, href);
+        return runTestClass(fixtureClass);
     }
 
     /**
@@ -31,24 +33,11 @@ public class DefaultConcordionRunner implements Runner {
      * @throws ClassNotFoundException if test class not found
      */
     protected Class<?> findTestClass(Resource resource, String href) throws ClassNotFoundException {
-        String name = resource.getName();
         Resource hrefResource = resource.getParent().getRelativeResource(href);
-        String dottedHrefResource = hrefResource.getPath().replaceFirst("/", "").replace("/", ".");
-        name = dottedHrefResource.substring(0, dottedHrefResource.lastIndexOf("."));
-        Class<?> concordionClass;
-        try {
-            concordionClass = Class.forName(name);
-        } catch (ClassNotFoundException e) {
-            try {
-                concordionClass = Class.forName(name + "Test");
-            } catch (ClassNotFoundException e1) {
-                concordionClass = Class.forName(name + "Fixture"); // FIXED: Issue 47
-            }
-        }
-        return concordionClass;
+        return FixtureSpecificationMapper.findFixtureClass(hrefResource);
     }
 
-    protected ResultSummary runTestClass(Class<?> concordionClass) throws Exception {
+    protected ResultSummary runTestClass(Class<?> fixtureClass) throws Exception {
         RunResultsCache cache = RunResultsCache.SINGLETON;
 
         // first check the cache.
@@ -56,15 +45,15 @@ public class DefaultConcordionRunner implements Runner {
 
         // we always run the test to ensure that the FixtureRunner class
         // has an opportuinity to print out any necessary debugging information.
-        org.junit.runner.Result jUnitResult = runJUnitClass(concordionClass);
+        org.junit.runner.Result jUnitResult = runJUnitClass(fixtureClass);
 
         // we always decode the jUnut summary because it handles specification exceptions
         // (as opposed to exceptions that occured in a specification) better.
-        ResultSummary jUnitSummary = decodeJUnitResult(concordionClass, jUnitResult);
+        ResultSummary jUnitSummary = decodeJUnitResult(new FixtureType(fixtureClass), jUnitResult);
 
         // check the cache - if the test was a concordion test, it will have stuck the results
         // in the cache. Use "null" for the example to get the accumulated values from all examples
-        ConcordionRunOutput concordionRunOutput = cache.getFromCache(concordionClass, null);
+        ConcordionRunOutput concordionRunOutput = cache.getFromCache(fixtureClass, null);
 
         // check the test actually put something in the cache
         if (concordionRunOutput == null) {
@@ -83,24 +72,22 @@ public class DefaultConcordionRunner implements Runner {
         return summary;
     }
 
-
-
-    private void processTestException(Throwable exception,
-			Class<?> concordionClass) throws AssertionError, Exception {
+    private void processTestException(FixtureType fixtureDeclaration,
+			Throwable exception) throws AssertionError, Exception {
         logExceptionIfNotAssertionError(exception);
-        rethrowExceptionIfWarranted(concordionClass, exception);
+        rethrowExceptionIfWarranted(fixtureDeclaration, exception);
 	}
 
-	protected org.junit.runner.Result runJUnitClass(Class<?> concordionClass) {
-        org.junit.runner.Result jUnitResult = JUnitCore.runClasses(concordionClass);
+	protected org.junit.runner.Result runJUnitClass(Class<?> fixtureClass) {
+        org.junit.runner.Result jUnitResult = JUnitCore.runClasses(fixtureClass);
         return jUnitResult;
     }
 
-    protected ResultSummary decodeJUnitResult(Class<?> concordionClass, org.junit.runner.Result jUnitResult) throws Exception {
+    protected ResultSummary decodeJUnitResult(FixtureType fixtureDeclaration, org.junit.runner.Result jUnitResult) throws Exception {
         Result result = Result.FAILURE;
         if (jUnitResult.wasSuccessful()) {
             result = Result.SUCCESS;
-            if (onlyPartiallyImplemented(concordionClass)) {
+            if (onlyPartiallyImplemented(fixtureDeclaration)) {
                 result = Result.IGNORED;
             }
             if (jUnitResult.getIgnoreCount() > 0) {
@@ -109,7 +96,7 @@ public class DefaultConcordionRunner implements Runner {
         } else {
             List<Failure> failures = jUnitResult.getFailures();
             for (Failure failure : failures) {
-    			processTestException(failure.getException(), concordionClass);
+    			processTestException(fixtureDeclaration, failure.getException());
             }
         }
 
@@ -125,12 +112,12 @@ public class DefaultConcordionRunner implements Runner {
         }
     }
 
-    private void rethrowExceptionIfWarranted(Class<?> concordionClass, Throwable exception) throws AssertionError, Exception {
+    private void rethrowExceptionIfWarranted(FixtureType fixtureDeclaration, Throwable exception) throws AssertionError, Exception {
         if (exception instanceof AssertionError) {
             if (exception.getCause() instanceof FailFastException) {
                 throw (FailFastException)(exception.getCause());
             }
-            if (fullyImplemented(concordionClass)) {
+            if (fullyImplemented(fixtureDeclaration)) {
                 return; // do not throw exception, failing specs are treated as test failures.
             } else {
                 // However if the spec is partially implemented we do want an exception so that the caller can be informed of the reason.
@@ -143,13 +130,13 @@ public class DefaultConcordionRunner implements Runner {
         throw new RuntimeException(exception);
     }
 
-    private boolean onlyPartiallyImplemented(Class<?> concordionClass) {
-        return concordionClass.getAnnotation(ExpectedToFail.class) != null
-            || concordionClass.getAnnotation(Unimplemented.class) != null;
+    private boolean onlyPartiallyImplemented(FixtureType fixtureDeclaration) {
+        return fixtureDeclaration.declaresStatus(ImplementationStatus.EXPECTED_TO_FAIL) ||
+               fixtureDeclaration.declaresStatus(ImplementationStatus.UNIMPLEMENTED);
     }
 
-    private boolean fullyImplemented(Class<?> concordionClass) {
-        return !(onlyPartiallyImplemented(concordionClass));
+    private boolean fullyImplemented(FixtureType fixtureDeclaration) {
+        return !(onlyPartiallyImplemented(fixtureDeclaration));
     }
 
 }

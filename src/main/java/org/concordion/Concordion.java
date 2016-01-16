@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.concordion.api.*;
+import org.concordion.internal.SpecificationToSpecificationByExampleAdaptor;
 import org.concordion.internal.SpecificationType;
 import org.concordion.internal.SummarizingResultRecorder;
 
@@ -54,7 +55,7 @@ public class Concordion {
  
     public ResultSummary process(Fixture fixture) throws IOException {
         SummarizingResultRecorder resultRecorder = new SummarizingResultRecorder();
-        resultRecorder.setSpecificationDescription(fixture.getDescription());
+        resultRecorder.setSpecificationDescription(fixture.getSpecificationDescription());
         getSpecification(fixture).process(evaluatorFactory.createEvaluator(fixture.getFixtureObject()), resultRecorder);
         return resultRecorder;
     }
@@ -93,7 +94,7 @@ public class Concordion {
         } else {
             specificationByExample = new SpecificationToSpecificationByExampleAdaptor(specification);
         }
-        specificationByExample.setFixtureClass(fixture);
+        specificationByExample.setFixture(fixture);
         return specificationByExample;
     }
 

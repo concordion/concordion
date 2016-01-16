@@ -32,18 +32,18 @@ public class ResourceFinder {
 		List<ResourceToCopy> sourceFiles = new ArrayList<ResourceToCopy>();
 		
 		List<File> rootPaths = fixture.getClassPathRoots();
-		List<Class<?>> classes = fixture.getClassHierarchyParentFirst();
+        List<Class<?>> classes = fixture.getClassHierarchyParentFirst();
 		
-		for (Class<?> class1 : classes) {
-			if (class1.isAnnotationPresent(ConcordionResources.class)) {
-	            ConcordionResources annotation = class1.getAnnotation(ConcordionResources.class);
-	            
-	            if (!annotation.includeDefaultStyling()) {
-    				includeDefaultStyling = false;
-    			}
-    	
-	            sourceFiles.addAll(getResourcesToAdd(class1, annotation, rootPaths));
-	        }
+        for (Class<?> class1 : classes) {
+            if (class1.isAnnotationPresent(ConcordionResources.class)) {
+                ConcordionResources annotation = class1.getAnnotation(ConcordionResources.class);
+                
+                if (!annotation.includeDefaultStyling()) {
+                    includeDefaultStyling = false;
+                }
+        
+                sourceFiles.addAll(getResourcesToAdd(class1, annotation, rootPaths));
+            }
         }
 		
 		return sourceFiles;
