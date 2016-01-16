@@ -3,7 +3,7 @@ package org.concordion.api;
 import java.io.File;
 import java.util.List;
 
-public interface Fixture extends FixtureOptions {
+public interface Fixture extends FixtureDeclarations {
 
     /**
      * @return the fixture instance.

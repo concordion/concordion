@@ -7,7 +7,7 @@ import java.util.List;
 import org.concordion.api.*;
 import org.concordion.api.option.ConcordionOptions;
 
-public class FixtureType implements FixtureOptions {
+public class FixtureType implements FixtureDeclarations {
 
     protected Class<?> fixtureClass;
     private ArrayList<Class<?>> classHierarchyParentFirst;

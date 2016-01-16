@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.concordion.api.option.ConcordionOptions;
 
-public interface FixtureOptions {
+public interface FixtureDeclarations {
     boolean declaresFullOGNL();
 
     boolean declaresFailFast();

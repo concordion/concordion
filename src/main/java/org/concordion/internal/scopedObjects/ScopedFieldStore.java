@@ -22,8 +22,8 @@ public class ScopedFieldStore {
      * @param fixtureClass the class that the fields are being stored for
      */
     public ScopedFieldStore(Class<?> fixtureClass) {
-        for (Scope Scope : Scope.values()) {
-            scopedFields.put(Scope, new ArrayList<ScopedField>());
+        for (Scope scope : Scope.values()) {
+            scopedFields.put(scope, new ArrayList<ScopedField>());
         }
         addScopedFields(fixtureClass, fixtureClass);
     }

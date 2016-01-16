@@ -15,7 +15,7 @@ import java.util.List;
 import org.concordion.api.*;
 import org.concordion.internal.scopedObjects.ScopedFieldStore;
 
-public class FixtureInstance extends FixtureType implements Fixture, FixtureOptions {
+public class FixtureInstance extends FixtureType implements Fixture, FixtureDeclarations {
     private final Object fixtureObject;
     private final ScopedFieldStore scopedFieldStore;
 
