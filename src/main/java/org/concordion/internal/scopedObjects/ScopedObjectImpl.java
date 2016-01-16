@@ -2,9 +2,6 @@ package org.concordion.internal.scopedObjects;
 
 import org.concordion.api.Scope;
 
-/**
- * Created by tim on 3/12/15.
- */
 public class ScopedObjectImpl implements ScopedObject {
 
     private final Class<?> specificationClass;

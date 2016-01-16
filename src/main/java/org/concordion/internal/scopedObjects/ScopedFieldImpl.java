@@ -17,7 +17,7 @@ public class ScopedFieldImpl implements ScopedField {
     }
 
     @Override
-    public void copyValueFromField(Object fixtureObject) {
+    public void saveValueFromField(Object fixtureObject) {
         field.setAccessible(true);
 
         Object currentValue = null;
@@ -30,7 +30,7 @@ public class ScopedFieldImpl implements ScopedField {
     }
 
     @Override
-    public void copyValueIntoField(Object fixtureObject) {
+    public void loadValueIntoField(Object fixtureObject) {
         field.setAccessible(true);
 
         try {

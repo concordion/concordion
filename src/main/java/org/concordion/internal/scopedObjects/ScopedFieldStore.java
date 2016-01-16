@@ -8,41 +8,43 @@ import java.util.List;
 import java.util.Map;
 
 import org.concordion.api.ConcordionScoped;
+import org.concordion.api.Fixture;
 import org.concordion.api.Scope;
 import org.concordion.api.ScopedObjectHolder;
 import org.concordion.api.extension.Extension;
 
 public class ScopedFieldStore {
+    /**
+     * Set extensions to have specification scope, since they are constructed once per specification and added to ConcordionBuilder.
+     * This may change in the future to allow scope to be defined, but will require changes to the way extensions are instantiated.
+     */
     static final Scope DEFAULT_EXTENSION_SCOPE = Scope.SPECIFICATION;
     private Map<Scope, List<ScopedField>> scopedFields = new HashMap<Scope, List<ScopedField>>();
 
     /**
      * This method is called during object construction to configure all the scoped fields. The default behaviour is to
      * scan the fixture class for any scoping annotations. Protection is "protected" so subclasses can overwrite as necessary.
-     * @param fixtureClass the class that the fields are being stored for
+     * @param fixture the fixture that the fields are being stored for
      */
-    public ScopedFieldStore(Class<?> fixtureClass) {
+    public ScopedFieldStore(Fixture fixture) {
         for (Scope scope : Scope.values()) {
             scopedFields.put(scope, new ArrayList<ScopedField>());
         }
-        addScopedFields(fixtureClass, fixtureClass);
+        createScopedFields(fixture);
     }
     
-    private void addScopedFields(Class<?> fixtureClass, Class<?> currentClass) {
-        if (currentClass == Object.class) {
-            return;
-        }
-        
-        addScopedFields(fixtureClass, currentClass.getSuperclass());
-        
-        Field[] fields = currentClass.getDeclaredFields();
-        if (fields != null) {
-            for (Field field : fields) {
-                if (field.getAnnotation(ConcordionScoped.class) != null) {
-                    createScopedObjectField(fixtureClass, field);
-                }
-                if (field.getAnnotation(Extension.class) != null) {
-                    createScopedExtensionField(fixtureClass, field);
+    private void createScopedFields(Fixture fixture) {
+        List<Class<?>> classHierarchyParentFirst = fixture.getClassHierarchyParentFirst();
+        for (Class<?> clazz : classHierarchyParentFirst) {
+            Field[] fields = clazz.getDeclaredFields();
+            if (fields != null) {
+                for (Field field : fields) {
+                    if (field.getAnnotation(ConcordionScoped.class) != null) {
+                        createScopedObjectField(fixture.getFixtureClass(), field);
+                    }
+                    if (field.getAnnotation(Extension.class) != null) {
+                        createScopedExtensionField(fixture.getFixtureClass(), field);
+                    }
                 }
             }
         }
@@ -80,13 +82,13 @@ public class ScopedFieldStore {
     
     public void saveValueFromFields(Object fixtureObject, Scope scope) {
         for (ScopedField scopedField : scopedFields.get(scope)) {
-            scopedField.copyValueFromField(fixtureObject);
+            scopedField.saveValueFromField(fixtureObject);
         }
     }
 
     public void loadValuesIntoFields(Object fixtureObject, Scope scope) {
         for (ScopedField scopedField : scopedFields.get(scope)) {
-            scopedField.copyValueIntoField(fixtureObject);
+            scopedField.loadValueIntoField(fixtureObject);
         }
     }
     

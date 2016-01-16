@@ -22,7 +22,7 @@ public class FixtureInstance extends FixtureType implements Fixture, FixtureDecl
     public FixtureInstance(Object fixtureObject) {
         super(fixtureObject.getClass());
         this.fixtureObject = fixtureObject;
-        scopedFieldStore = new ScopedFieldStore(fixtureObject.getClass());
+        scopedFieldStore = new ScopedFieldStore(this);
     }
     
     @Override

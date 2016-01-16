@@ -6,9 +6,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.concordion.api.Scope;
 
-/**
- * Created by tim on 3/12/15.
- */
 public class ScopedObjectRepository {
 
     private Map<ScopedObjectRepositoryKey, Object> repo;
@@ -18,14 +15,7 @@ public class ScopedObjectRepository {
     }
 
     public Object getObject(String name, Scope concordionFieldScope, Class<?> specificationClass) throws InstantiationException, IllegalAccessException {
-
         ScopedObjectRepositoryKey key = new ScopedObjectRepositoryKey(name, concordionFieldScope, specificationClass);
-
-//        // return a new one each time if the object is example scoped
-//        if (concordionFieldScope == ConcordionFieldScope.EXAMPLE) {
-//            Object<T> value = createObject(key);
-//            return value.getObject();
-//        }
 
         return repo.get(key);
     }

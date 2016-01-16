@@ -21,7 +21,8 @@ public interface Fixture extends FixtureDeclarations {
     List<File> getClassPathRoots();
     
     /**
-     * @return the class hierarchy, parent first, starting from java.lang.Object. 
+     * @return the fixture class and all of its superclasses, excluding java.lang.Object,
+     * ordered from the most super class to the fixture class. 
      */
     List<Class<?>> getClassHierarchyParentFirst();
     
