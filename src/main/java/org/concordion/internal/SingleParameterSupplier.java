@@ -3,7 +3,6 @@ package org.concordion.internal;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.AnnotationFormatError;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 
 class SingleParameterSupplier implements ParameterSupplier {
     private Class<? extends Annotation> methodAnnotationClass;
@@ -17,18 +16,17 @@ class SingleParameterSupplier implements ParameterSupplier {
     }
 
     @Override
-    public Object getValueForParameter(Method method, Parameter parameter) {
-        Annotation[] annotations = parameter.getDeclaredAnnotations();
+    public Object getValueForParameter(Method method, Class<?> parameterClass, Annotation[] annotations) {
         if (annotations.length != 1) {
-            throw new AnnotationFormatError("Error invoking " + parameter.getDeclaringExecutable() + ". Methods annotated with '" + methodAnnotationClass.getName() + "' can only have parameters annotated with '" + parameterAnnotation.getName() + "'.");
+            throw new AnnotationFormatError("Error invoking " + method.getName() + ". Methods annotated with '" + methodAnnotationClass.getName() + "' can only have parameters annotated with '" + parameterAnnotation.getName() + "'.");
         }
         Annotation annotation = annotations[0];
         if (parameterAnnotation.equals(annotation.annotationType())) {
-            if (!(parameter.getParameterizedType().equals(parameterValue.getClass()))) {
-                throw new AnnotationFormatError("Error invoking '" + method + "'. Parameter '" + parameter.getName() + "' is expected to be of type '" + parameterValue.getClass().getName() + "'");
+            if (!(parameterClass.equals(parameterValue.getClass()))) {
+                throw new AnnotationFormatError("Error invoking '" + method + "'. Parameter with annotation '" + parameterAnnotation + "' is expected to be of type '" + parameterValue.getClass().getName() + "'");
             }
             return parameterValue; 
         }
-        throw new AnnotationFormatError("Error invoking " + parameter.getDeclaringExecutable() + ". Methods annotated with '" + methodAnnotationClass.getName() + "' can only have parameters annotated with '" + parameterAnnotation.getName() + "'.");
+        throw new AnnotationFormatError("Error invoking " + method.getName() + ". Methods annotated with '" + methodAnnotationClass.getName() + "' can only have parameters annotated with '" + parameterAnnotation.getName() + "'.");
     }
 }

@@ -1,8 +1,8 @@
 package org.concordion.internal;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 
 interface ParameterSupplier {
-    Object getValueForParameter(Method method, Parameter parameter);
+    Object getValueForParameter(Method method, Class<?> parameterClass, Annotation[] parameterAnnotations);
 }

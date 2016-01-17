@@ -1,11 +1,12 @@
 package org.concordion.internal;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.lang.annotation.AnnotationFormatError;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 
 import org.concordion.api.BeforeExample;
 import org.concordion.api.ExampleName;
@@ -17,8 +18,7 @@ public class SingleParameterSupplierTest {
     @Test
     public void returnsParameterWhenAnnotatedCorrectly() throws Exception {
         Method method = this.getClass().getMethod("validMethod", String.class);
-        Parameter[] parameters = method.getParameters();
-        assertThat((String)singleParameterSupplier.getValueForParameter(method, parameters[0]), is("myExample"));
+        assertThat((String)singleParameterSupplier.getValueForParameter(method, method.getParameterTypes()[0], method.getParameterAnnotations()[0]), is("myExample"));
     }
     
     public void validMethod(@ExampleName String param1) {
@@ -28,9 +28,8 @@ public class SingleParameterSupplierTest {
     @Test
     public void throwsExceptionWhenParameterTypeIsIncorrect() throws Exception {
         Method method = this.getClass().getMethod("incorrectParamType", int.class);
-        Parameter[] parameters = method.getParameters();
         try {
-            singleParameterSupplier.getValueForParameter(method, parameters[0]);
+            singleParameterSupplier.getValueForParameter(method, method.getParameterTypes()[0], method.getParameterAnnotations()[0]);
             fail("Expected exception");
         } catch (AnnotationFormatError e) {
             assertThat(e.getMessage(), containsString("is expected to be of type 'java.lang.String'"));
@@ -43,9 +42,8 @@ public class SingleParameterSupplierTest {
     @Test
     public void throwsExceptionWhenParameterHasNoAnnotations() throws Exception {
         Method method = this.getClass().getMethod("parameterWithNoAnnotations", String.class);
-        Parameter[] parameters = method.getParameters();
         try {
-            singleParameterSupplier.getValueForParameter(method, parameters[0]);
+            singleParameterSupplier.getValueForParameter(method, method.getParameterTypes()[0], method.getParameterAnnotations()[0]);
             fail("Expected exception");
         } catch (AnnotationFormatError e) {
             assertThat(e.getMessage(), containsString("parameters annotated with '" + ExampleName.class.getName()));
@@ -59,9 +57,8 @@ public class SingleParameterSupplierTest {
     @Test
     public void throwsExceptionWhenParameterHasMultipleAnnotations() throws Exception {
         Method method = this.getClass().getMethod("parameterWithMultipleAnnotations", String.class);
-        Parameter[] parameters = method.getParameters();
         try {
-            singleParameterSupplier.getValueForParameter(method, parameters[0]);
+            singleParameterSupplier.getValueForParameter(method, method.getParameterTypes()[0], method.getParameterAnnotations()[0]);
             fail("Expected exception");
         } catch (AnnotationFormatError e) {
             assertThat(e.getMessage(), containsString("parameters annotated with '" + ExampleName.class.getName()));

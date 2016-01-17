@@ -6,7 +6,6 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.AnnotationFormatError;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -136,14 +135,15 @@ public class FixtureInstance extends FixtureType implements Fixture, FixtureDecl
                 if (method.isAnnotationPresent(methodAnnotation)) {
                     try {
                         method.setAccessible(true);
-                        Parameter[] parameters = method.getParameters();
+                        Class<?>[] parameters = method.getParameterTypes();
+                        Annotation[][] parameterAnnotations = method.getParameterAnnotations();
                         Object[] paramValues = new Object[parameters.length];
                         if (parameters.length > 0) {
                             if (parameterSupplier == null) {
                                 throw new AnnotationFormatError("Error invoking " + method + ". Methods annotated with '" + methodAnnotation + "' are not allowed parameters");
                             }
                             for (int i = 0; i < parameters.length; i++) {
-                                paramValues[i] = parameterSupplier.getValueForParameter(method, parameters[i]);
+                                paramValues[i] = parameterSupplier.getValueForParameter(method, parameters[i], parameterAnnotations[i]);
                             }
                         }
                         
