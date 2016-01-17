@@ -34,8 +34,7 @@ public class ScopedFieldStore {
     }
     
     private void createScopedFields(Fixture fixture) {
-        List<Class<?>> classHierarchyParentFirst = fixture.getClassHierarchyParentFirst();
-        for (Class<?> clazz : classHierarchyParentFirst) {
+        for (Class<?> clazz : fixture.getClassHierarchyParentFirst()) {
             Field[] fields = clazz.getDeclaredFields();
             if (fields != null) {
                 for (Field field : fields) {

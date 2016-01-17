@@ -39,10 +39,15 @@ public class FixtureRunner {
             try {
                 ImplementationStatusChecker statusChecker;
                 if (example != null) {
-                    actualResultSummary = concordion.processExample(fixture, example);
-                    statusChecker = ImplementationStatusChecker.getImplementationStatusChecker(
-                            fixture,
-                            actualResultSummary.getImplementationStatus());
+                    fixture.beforeExample(example);
+                    try {
+                        actualResultSummary = concordion.processExample(fixture, example);
+                        statusChecker = ImplementationStatusChecker.getImplementationStatusChecker(
+                                fixture,
+                                actualResultSummary.getImplementationStatus());
+                    } finally {
+                        fixture.afterExample(example);
+                    } 
                 } else {
                     actualResultSummary = concordion.process(fixture);
                     statusChecker = ImplementationStatusChecker.getImplementationStatusChecker(

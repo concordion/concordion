@@ -4,7 +4,7 @@ import org.concordion.api.Resource;
 
 /**
  * Maps from a fixture class to a specification and vice-versa.
- * <p/>
+ * 
  * Encapsulates the rules for fixture class naming:
  * <ul>
  * <li>The fixture class must be in the same package as its specification.

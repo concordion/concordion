@@ -205,15 +205,8 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         }
 
         try {
-            fixture.beforeExample(example);
-            
-            try {
-                ResultSummary result = fixtureRunner.run(example, fixture);
-                result.assertIsSatisfied(fixture);
-
-            } finally {
-                fixture.afterExample(example);
-            } 
+            ResultSummary result = fixtureRunner.run(example, fixture);
+            result.assertIsSatisfied(fixture);
 
         } catch (ConcordionAssertionError e) {
             accumulatedResultSummary.record(e.getResultSummary());

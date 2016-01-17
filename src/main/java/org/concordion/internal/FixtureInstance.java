@@ -6,6 +6,7 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.AnnotationFormatError;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -76,38 +77,6 @@ public class FixtureInstance extends FixtureType implements Fixture, FixtureDecl
     	return rootPaths;
     }
 
-    private void invokeMethods(Class<? extends Annotation> annotation, Object... params) {
-        invokeMethods(fixtureClass, annotation, params);
-    }
-
-    private void invokeMethods(Class<? extends Object> clazz, Class<? extends Annotation> annotation, Object... params) throws AnnotationFormatError {
-        
-        if (clazz == Object.class) {
-            return;
-        }
-        
-        invokeMethods(clazz.getSuperclass(), annotation, params);
-        
-        Method[] methods = clazz.getDeclaredMethods();
-
-        for (Method method : methods) {
-            if (method.isAnnotationPresent(annotation)) {
-                try {
-//TODO check method signature - before and after example methods can take String parameter with example name       
-                    method.setAccessible(true);
-                    method.invoke(fixtureObject, params);
-                } catch (IllegalAccessException e) {
-                    throw new AnnotationFormatError("Invalid permissions to invoke method: " + method.getName());
-                } catch (InvocationTargetException e) {
-                    if (e.getCause() instanceof RuntimeException) {
-                        throw (RuntimeException)e.getCause();
-                    }
-                    throw new RuntimeException(e.getCause());
-                }
-            }
-        }
-    }
-
     @Override
     public void setupForRun(Object fixtureObject) {
         scopedFieldStore.loadValuesIntoFields(fixtureObject, Scope.SUITE);
@@ -138,19 +107,57 @@ public class FixtureInstance extends FixtureType implements Fixture, FixtureDecl
         scopedFieldStore.destroyFields(fixtureObject, Scope.SPECIFICATION);
     }
 
+    
     @Override
-    public void beforeExample(String exampleName) {
-        invokeMethods(BeforeExample.class, exampleName);
+    public void beforeExample(final String exampleName) {
+        invokeMethods(BeforeExample.class, new SingleParameterSupplier(BeforeExample.class, ExampleName.class, exampleName));
     }
     
     @Override
     public void afterExample(String exampleName) {
-        invokeMethods(AfterExample.class, exampleName);
+        invokeMethods(AfterExample.class, new SingleParameterSupplier(AfterExample.class, ExampleName.class, exampleName));
         scopedFieldStore.destroyFields(fixtureObject, Scope.EXAMPLE);
     }
     
     @Override
     public List<Class<?>> getClassHierarchyParentFirst() {
         return super.getClassHierarchyParentFirst();
+    }
+    
+    private void invokeMethods(Class<? extends Annotation> methodAnnotation) {
+        invokeMethods(methodAnnotation, null);
+    }
+    
+    private void invokeMethods(Class<? extends Annotation> methodAnnotation, ParameterSupplier parameterSupplier) {
+        for (Class<?> clazz : getClassHierarchyParentFirst()) {
+            Method[] methods = clazz.getDeclaredMethods();
+            
+            for (Method method : methods) {
+                if (method.isAnnotationPresent(methodAnnotation)) {
+                    try {
+                        method.setAccessible(true);
+                        Parameter[] parameters = method.getParameters();
+                        Object[] paramValues = new Object[parameters.length];
+                        if (parameters.length > 0) {
+                            if (parameterSupplier == null) {
+                                throw new AnnotationFormatError("Error invoking " + method + ". Methods annotated with '" + methodAnnotation + "' are not allowed parameters");
+                            }
+                            for (int i = 0; i < parameters.length; i++) {
+                                paramValues[i] = parameterSupplier.getValueForParameter(method, parameters[i]);
+                            }
+                        }
+                        
+                        method.invoke(fixtureObject, paramValues);
+                    } catch (IllegalAccessException e) {
+                        throw new AnnotationFormatError("Invalid permissions to invoke method: " + method.getName());
+                    } catch (InvocationTargetException e) {
+                        if (e.getCause() instanceof RuntimeException) {
+                            throw (RuntimeException)e.getCause();
+                        }
+                        throw new RuntimeException(e.getCause());
+                    }
+                }
+            }
+        }        
     }
 }
