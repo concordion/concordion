@@ -1,19 +1,7 @@
 package org.concordion.api.extension;
 
 import org.concordion.api.*;
-import org.concordion.api.listener.AssertEqualsListener;
-import org.concordion.api.listener.AssertFalseListener;
-import org.concordion.api.listener.AssertTrueListener;
-import org.concordion.api.listener.ConcordionBuildListener;
-import org.concordion.api.listener.DocumentParsingListener;
-import org.concordion.api.listener.ExampleListener;
-import org.concordion.api.listener.ExecuteListener;
-import org.concordion.api.listener.RunListener;
-import org.concordion.api.listener.SetListener;
-import org.concordion.api.listener.SpecificationProcessingListener;
-import org.concordion.api.listener.ThrowableCaughtListener;
-import org.concordion.api.listener.VerifyRowsListener;
-import org.concordion.internal.ConcordionBuilder;
+import org.concordion.api.listener.*;
 import org.concordion.internal.command.RunCommand;
 
 /**
