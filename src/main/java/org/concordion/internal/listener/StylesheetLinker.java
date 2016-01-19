@@ -31,7 +31,11 @@ public class StylesheetLinker implements DocumentParsingListener, SpecificationP
 
     public void beforeProcessingSpecification(SpecificationProcessingEvent event) {
         Resource resource = event.getResource();
-        link.addAttribute(new Attribute("href", resource.getRelativePath(stylesheetResource)));
+        
+        //work around with setValue() necessary for Concordion.NET
+        Attribute hrefAttribute = new Attribute("href", "");
+        hrefAttribute.setValue(resource.getRelativePath(stylesheetResource));
+		link.addAttribute(hrefAttribute);
     }
 
     public void afterProcessingSpecification(SpecificationProcessingEvent event) {

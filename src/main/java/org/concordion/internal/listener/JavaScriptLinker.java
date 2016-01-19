@@ -35,7 +35,11 @@ public class JavaScriptLinker implements DocumentParsingListener, SpecificationP
 
     public void beforeProcessingSpecification(SpecificationProcessingEvent event) {
         Resource resource = event.getResource();
-        script.addAttribute(new Attribute("src", resource.getRelativePath(javaScriptResource)));
+        
+        //work around with setValue() necessary for Concordion.NET
+        Attribute srcAttribute = new Attribute("src", "");
+        srcAttribute.setValue(resource.getRelativePath(javaScriptResource));
+        script.addAttribute(srcAttribute);
     }
 
     public void afterProcessingSpecification(SpecificationProcessingEvent event) {
