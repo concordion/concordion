@@ -1,11 +1,11 @@
-package spec.concordion.specificationType.markdown;
+package spec.concordion.annotation;
 
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.concordion.internal.parser.markdown.MarkdownParser;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
-public class MarkdownConfigurationFixture {
+public class ConcordionOptionsFixture {
     private int pegdownExtensions;
     
     public String translate(String markdown) {
