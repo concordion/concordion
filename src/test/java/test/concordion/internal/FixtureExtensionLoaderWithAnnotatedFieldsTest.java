@@ -58,45 +58,33 @@ public class FixtureExtensionLoaderWithAnnotatedFieldsTest {
     }
 
     @Test
-    public void errorsIfPrivateFieldHasExtensionAnnotation() throws Exception {
+    public void allowsPrivateFieldWithExtensionAnnotation() throws Exception {
         String fields = 
             "@Extension " +
             "private ConcordionExtension extension = new FakeExtension1();";
         
-        try {
-            loader.getExtensionsForFixture(withFieldDeclaration(fields));
-            fail("Expected ExtensionInitialisationException");
-        } catch (ExtensionInitialisationException e) {
-            assertThat(e.getMessage(), containsString("must be public"));
-        }
+        List extensions = loader.getExtensionsForFixture(withFieldDeclaration(fields));
+        assertThat((List<Object>)extensions, hasItem(instanceOf(FakeExtension1.class)));
     }
     
     @Test
-    public void errorsIfProtectedFieldHasExtensionAnnotation() throws Exception {
+    public void allowsProtectedFieldWithExtensionAnnotation() throws Exception {
         String fields = 
             "@Extension " +
             "protected ConcordionExtension extension = new FakeExtension1();";
         
-        try {
-            loader.getExtensionsForFixture(withFieldDeclaration(fields));
-            fail("Expected ExtensionInitialisationException");
-        } catch (ExtensionInitialisationException e) {
-            assertThat(e.getMessage(), containsString("must be public"));
-        }
+        List extensions = loader.getExtensionsForFixture(withFieldDeclaration(fields));
+        assertThat((List<Object>)extensions, hasItem(instanceOf(FakeExtension1.class)));
     }
     
     @Test
-    public void errorsIfPackageAccessibleFieldHasExtensionAnnotation() throws Exception {
+    public void allowsPackageAccessibleFieldWithExtensionAnnotation() throws Exception {
         String fields = 
             "@Extension " +
             "ConcordionExtension extension = new FakeExtension1();";
         
-        try {
-            loader.getExtensionsForFixture(withFieldDeclaration(fields));
-            fail("Expected ExtensionInitialisationException");
-        } catch (ExtensionInitialisationException e) {
-            assertThat(e.getMessage(), containsString("must be public"));
-        }
+        List extensions = loader.getExtensionsForFixture(withFieldDeclaration(fields));
+        assertThat((List<Object>)extensions, hasItem(instanceOf(FakeExtension1.class)));
     }
     
     @Test
