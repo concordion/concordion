@@ -5,12 +5,14 @@ import org.junit.runners.model.FrameworkMethod;
 
 import java.lang.reflect.Method;
 
-/**
- * Created by tim on 30/06/15.
- */
 public class ConcordionFrameworkMethod extends FrameworkMethod {
 
     private static final Method CONCORDION_METHOD;
+
+    public interface ConcordionRunnerInterface {
+        void invoke(ConcordionFrameworkMethod concordionFrameworkMethod, Object target) throws Exception;
+    }
+
 
     static {
         Method method;
@@ -26,7 +28,6 @@ public class ConcordionFrameworkMethod extends FrameworkMethod {
     private final String exampleName;
     private final ConcordionRunnerInterface runner;
     private RunNotifier notifier;
-
 
     public ConcordionFrameworkMethod(ConcordionRunnerInterface runner, String exampleName) {
         super(CONCORDION_METHOD);
@@ -54,13 +55,10 @@ public class ConcordionFrameworkMethod extends FrameworkMethod {
 
     public Object invokeExplosively(final Object target, final Object... params)
             throws Throwable {
-        runner.invoke(this);
+        runner.invoke(this, target);
         return null;
     }
 
-    public interface ConcordionRunnerInterface {
-        void invoke(ConcordionFrameworkMethod concordionFrameworkMethod);
-    }
 
     public boolean equals(Object other) {
         if (other == null) {

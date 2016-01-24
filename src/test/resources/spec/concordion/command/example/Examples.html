@@ -8,6 +8,11 @@
 
 <p>The example command also supports the <a c:run="concordion" href="../../extension/listener/ExampleListener.html">example listener</a>.</p>
 
+<p>A new fixture instance is created for each example, in keeping with the way that JUnit creates a <a href="http://martinfowler.com/bliki/JunitNewInstance.html">new instance per test</a>.
+For classes without examples, only <a c:run="concordion" href="FixtureWithoutExamplesInitialisation.html">1 instance is created</a>.
+For classes with examples, <a c:run="concordion" href="FixtureWithExamplesInitialisation.html">n+1 instances are created</a> where n is the number of examples.</p>  
+<p>Fixture fields can be <a c:run="concordion" href="ScopedField.html">scoped</a> for reuse across a specification, in addition to the default example scope.</p>
+
 <div c:example="before">
     <h3>Before</h3>
     <p>To specify that a piece of HTML should be run before each example, annotate the enclosing
@@ -55,6 +60,9 @@
     <p>Of course, variables set in the before example <span c:assertEquals="#are">are</span> accessible
         (but changes to them in one example are not visible in the other examples)</p>
 
+    <p>Note that methods in the fixture class annotated with @BeforeSpecification are executed
+        <span c:assertTrue="beforeSpecRunOnce()">exactly once</span> before
+        any examples are run. Methods annotated with @AfterSpecification are executed after the specification has executed.</p>
 
 </div>
 
@@ -83,6 +91,10 @@
 
     <p>Of course, variables set in the before example <span c:assertEquals="#are">are</span> accessible.</p>
 
+    <p>Note that methods in the fixture class annotated with @BeforeSpecification are executed
+        <span c:assertTrue="beforeSpecRunOnce()">exactly once</span> before
+        any examples are run. Methods annotated with @AfterSpecification are executed after the specification has executed.</p>
+
 </div>
 
 <div c:example="runresults">
@@ -100,7 +112,7 @@
 
     <p>
         For example, a spec (<a href="LotsOfExamples.html" c:execute="#result=runTestDummySpec(#TEXT)">LotsOfExamples.html</a>)
-        with two successfull examples, a failed example, an an exception example,
+        with two successful examples, a failed example, an an exception example,
         returns <span c:assertEquals="#result.successCount">2</span> successes,
         <span c:assertEquals="#result.failureCount">1</span> failure,
         <span c:assertEquals="#result.exceptionCount">1</span> exceptions, and
@@ -118,7 +130,7 @@
 
     <p>
             A spec (<a href="AssertsOutsideExamples.html" c:execute="#result=runTestDummySpec(#TEXT)">AssertsOutsideExamples.html</a>)
-        with a successfull example and two tests outside the example, one of which
+        with a successful example and two tests outside the example, one of which
             fails, returns <span c:assertEquals="#result.successCount">2</span> successes,
         <span c:assertEquals="#result.failureCount">1</span> failure,
             <span c:assertEquals="#result.exceptionCount">0</span> exceptions, and

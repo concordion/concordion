@@ -7,8 +7,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Inlcudes resource files such as css, javascript, images, etc along with the generated specification.
- * @since Concordion 2.0.0
+ * Includes resource files such as CSS, JavaScript, images, etc along with the generated specification.
+ * @since 2.0.0
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
@@ -41,7 +41,7 @@ public @interface ConcordionResources {
 	public InsertType insertType() default InsertType.LINKED;
 	
 	/**
-	 * @return If false will remove the default concordion css styling (defaults to true)
+	 * @return If false will remove the default Concordion CSS styling (defaults to true)
 	 */
 	public boolean includeDefaultStyling() default true;
 }

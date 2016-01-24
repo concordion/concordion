@@ -87,7 +87,13 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
         if (inHeaderNode || inTableHeader) {
             printer.printEncoded(text);
         } else {
-            ConcordionStatement command = statementParser.parse(linkNode.getTitle(), text);
+            String expression = linkNode.getTitle();
+            if (expression.equals("c:run")) {
+                throw new ConcordionMarkdownException("Markdown link contains invalid URL for \"c:run\" command.\n"
+                        + "Set the URL to the location of the specification to be run, rather than '-'.\n"
+                        + "For example, [My Specification](mySpec.md \"c:run\")");
+            }
+            ConcordionStatement command = statementParser.parse(expression, text);
             printConcordionCommandElement(command);
         }
     }

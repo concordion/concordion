@@ -23,7 +23,7 @@ public class ConciseExpressionParser {
         return parse(expression, "");
     }
 
-    public ConcordionStatement parse(String expression, String text) {
+    public ConcordionStatement parse(String expression, String text) throws ConcordionSyntaxException {
         ConcordionStatement statement;
         if (expression.startsWith("#") && !(expression.contains("="))) {
             statement = new ConcordionStatement(targetPrefix + "set", expression);
@@ -39,9 +39,12 @@ public class ConciseExpressionParser {
         return statement.withText(text);
     }
 
-    private ConcordionStatement parseStatement(String statement) {
+    private ConcordionStatement parseStatement(String statement) throws ConcordionSyntaxException {
         String[] components = statement.split("=", 2);
         String commandName = components[0];
+        if (components.length != 2) {
+            throw new ConcordionSyntaxException(String.format("Invalid statement '%s'. Expected an = sign and a right hand side to the statement.", statement));
+        }
         String valueAndAttributes = components[1];
         
         return parseCommandValueAndAttributes(commandName, valueAndAttributes);

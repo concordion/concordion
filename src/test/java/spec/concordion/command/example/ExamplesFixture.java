@@ -1,27 +1,25 @@
 package spec.concordion.command.example;
 
+import java.util.Map;
+
 import org.concordion.api.FullOGNL;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
+
 import spec.concordion.results.runTotals.RunTotalsFixture;
 
-import java.util.Map;
-
-/**
- * Created by tim on 2/07/15.
- */
 @RunWith(ConcordionRunner.class)
 @FullOGNL
-public class ExamplesFixture {
+public class ExamplesFixture extends SpecWithBeforeSpec {
 
     private int counter = 0;
 
-    public int getCounter() {
-        return counter;
+    public void setCounter(String val) {
+        counter = Integer.parseInt(val);
     }
 
-    public void setCounter(String value) {
-        this.counter = Integer.parseInt(value);
+    public int getCounter() {
+        return counter;
     }
 
     public void incrementCounter() {
@@ -39,5 +37,4 @@ public class ExamplesFixture {
     public Map<String, String> runTestDummySpec(String href) throws Exception {
         return new RunTotalsFixture().withTestClass(this.getClass()).simulateRun(href);
     }
-
 }

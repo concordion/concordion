@@ -11,6 +11,7 @@ import static org.junit.Assert.assertThat;
 import java.util.List;
 
 import org.concordion.api.Fixture;
+import org.concordion.internal.FixtureInstance;
 import org.concordion.internal.extension.ExtensionInitialisationException;
 import org.concordion.internal.extension.FixtureExtensionLoader;
 import org.junit.Test;
@@ -120,7 +121,7 @@ public class FixtureExtensionLoaderWithClassAnnotationTest {
         String className = "ExampleFixture";
         Class<?> clazz = classWithAnnotation(annotation, className, superClassName);
         Object fixture = clazz.newInstance();
-        return new Fixture(fixture);
+        return new FixtureInstance(fixture);
     }
     
     private Class<?> classWithAnnotation(String annotation, String className, String superClassName) throws Exception {

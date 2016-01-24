@@ -3,6 +3,7 @@ package org.concordion.integration.junit3;
 import junit.framework.TestCase;
 
 import org.concordion.api.Fixture;
+import org.concordion.internal.FixtureInstance;
 import org.concordion.internal.FixtureRunner;
 
 /**
@@ -15,6 +16,10 @@ import org.concordion.internal.FixtureRunner;
 public abstract class ConcordionTestCase extends TestCase {
 
     public void testProcessSpecification() throws Throwable {
-        new FixtureRunner(new Fixture(this)).run();
+        Fixture fixture  = new FixtureInstance(this);
+        fixture.beforeSpecification();
+        fixture.setupForRun(this);
+        new FixtureRunner(fixture).run(fixture);
+        fixture.afterSpecification();
     }
 }

@@ -1,0 +1,55 @@
+<html xmlns:c="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+<h1>Field Scope in Fixtures</h1>
+
+<p>Concordion encourages you to keep your <a href="Examples.html">examples</a> completely independent of each other. 
+This allows individual examples to be run in isolation. It also makes the specification easier to follow when you can read examples in isolation.</p>
+
+<p>To support this behaviour, Concordion reinitialises the fields in fixture objects for each Concordion example (where the example is using the <code>concordion:example</code> command). 
+This is standard JUnit behaviour (in fact, JUnit creates a new fixture object for each test).</p> 
+
+<p>Concordion has support for two types of fixture field scope.</p>
+
+<ol>
+    <li>Example: fields in the fixture of type <code>ExampleScoped&lt;T></code> are reinitialised between each test. Note that you do not need to use this type, since this is the default behaviour.
+    </li>
+    <li>Specification: fields in the fixture of type <code>SpecificationScoped&lt;T></code> are shared between tests in the same fixture.
+    </li>
+</ol>
+
+<p>To show this, we have two examples below. Each example increments an AtomicInteger that is scoped differently and
+    echoes the value.</p>
+
+<div c:example="before">
+    <h2>Before each example</h2>
+
+    <ol>
+        <li c:execute="incrementAllCounters()">Increment all counters</li>
+    </ol>
+</div>    
+
+<div c:example="test1">
+    <h2>Test that increments counters</h2>
+
+    <ol>
+        <li>Unannotated field value is <code c:assertEquals="getFieldCounter()">1</code></li>
+        <li>Example scope value is <code c:assertEquals="getExampleScopedCounter()">1</code></li>
+        <li>Specification scope value is <code c:assertEquals="getSpecScopedCounter()">1</code></li>
+    </ol>
+
+</div>
+
+<div c:example="test2">
+    <h2>The same test again</h2>
+    <ol>
+        <li>Unannotated field value is <code c:assertEquals="getFieldCounter()">1</code></li>
+        <li>Example scope value is <code c:assertEquals="getExampleScopedCounter()">1</code></li>
+        <li>Specification scope value is <code c:assertEquals="getSpecScopedCounter()">2</code></li>
+    </ol>
+
+</div>
+
+</body>
+</html>

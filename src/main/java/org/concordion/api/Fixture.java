@@ -1,115 +1,81 @@
 package org.concordion.api;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 
-import org.concordion.internal.util.Check;
-
-public class Fixture {
-    private final Object fixtureObject;
-    private Class<?> fixtureClass;
-
-    public Fixture(Object fixtureObject) {
-        Check.notNull(fixtureObject, "Fixture is null");
-        this.fixtureObject = fixtureObject;
-        this.fixtureClass = fixtureObject.getClass();
-    }
-
-    public String getClassName() {
-        return fixtureClass.getName();
-    }
-    
-    public Object getFixtureObject() {
-        return fixtureObject;
-    }
-    
-    public Class<? extends Object> getFixtureClass() {
-        return fixtureClass;
-    }
-    
-    public boolean declaresStatus(ImplementationStatus status) {
-        return fixtureClass.isAnnotationPresent(status.getAnnotation());
-    }
-    
-    public boolean declaresFullOGNL() {
-        return fixtureClass.isAnnotationPresent(FullOGNL.class);
-    }
-
-    public boolean declaresFailFast() {
-        return fixtureClass.isAnnotationPresent(FailFast.class);
-    }
-
-    public boolean declaresResources() {
-        return fixtureClass.isAnnotationPresent(ConcordionResources.class);
-    }
-    
-    public Class<? extends Throwable>[] getFailFastExceptions() {
-        FailFast failFastAnnotation = fixtureClass.getAnnotation(FailFast.class);
-        Class<? extends Throwable>[] failFastExceptions = failFastAnnotation.onExceptionType();
-        return failFastExceptions;
-    }
-
-    public String getDescription() {
-        String name = removeSuffix(fixtureClass.getSimpleName());
-        return String.format("[Concordion Specification for '%s']", name); // Based on suggestion by Danny Guerrier
-    }
-
-    public String getFixturePathWithoutSuffix() {
-        String slashedClassName = getClassName().replaceAll("\\.", "/");
-        return removeSuffix(slashedClassName);
-    }
-
-    private String removeSuffix(String fixtureName) {
-        return fixtureName.replaceAll("(Fixture|Test)$", "");
-    }
-
-    public ImplementationStatus getImplementationStatus() {
-        for (ImplementationStatus status : ImplementationStatus.values()) {
-            if (declaresStatus(status)) {
-                return status;
-            }
-        }
-    
-        return ImplementationStatus.EXPECTED_TO_PASS;
-    }
+/**
+ * An instance of a fixture class.
+ * 
+ * @since 2.0.0
+ */
+public interface Fixture extends FixtureDeclarations {
 
     /**
-     * Returns the fixture class and all of its superclasses, excluding java.lang.Object,
-     * ordered from the most super class to the fixture class.
+     * @return the fixture instance.
      */
-    public List<Class<?>> getClassHierarchyParentFirst() {
-        ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
-        Class<?> current = getFixtureClass();
-        while (current != null && current != Object.class) {
-            classes.add(current);
-            current = current.getSuperclass();
-        }
-        Collections.reverse(classes);
-        return classes;
-    }
+    Object getFixtureObject();
 
-    public List<File> getClassPathRoots() {
-    	List<File> rootPaths = new ArrayList<File>();
-    	
-    	Enumeration<URL> resources;
-    	try {
-    		resources = getFixtureClass().getClassLoader().getResources("");
-    	
-    		while (resources.hasMoreElements()) {
-                rootPaths.add(new File(resources.nextElement().toURI()));
-            }
-    	} catch (IOException e) {
-    		throw new RuntimeException("Unable to get root path", e);
-    	} catch (URISyntaxException e) {
-    		throw new RuntimeException("Unable to get root path", e);
-    	}
-    	
-    	return rootPaths;
-    }
+    /**
+     * @return the class of the fixture instance.
+     */
+    Class<?> getFixtureClass(); 
+
+    /**
+     * @return a list of the absolute paths on the class path. 
+     */
+    List<File> getClassPathRoots();
+    
+    /**
+     * @return the fixture class and all of its superclasses, excluding java.lang.Object,
+     * ordered from the most super class to the fixture class. 
+     */
+    List<Class<?>> getClassHierarchyParentFirst();
+    
+    /**
+     * @return a description of the specification containing the fixture name.
+     */
+    String getSpecificationDescription();
+
+    /**
+     * @return the absolute path to the fixture, omitting the suffix.
+     */
+    String getFixturePathWithoutSuffix();
+
+    /**
+     * Setup the fixture for the next run, hence the need to pass in a fixture object.
+     * @param fixtureObject the fixture about to be run
+     */
+    void setupForRun(Object fixtureObject);
+
+    /**
+     * Call methods annotated with <code>@BeforeSuite</code>.
+     */
+    void beforeSuite();
+
+    /**
+     * Call methods annotated with <code>@AfterSuite</code>.
+     */
+    void afterSuite();
+
+    /**
+     * Save the specification scoped fields and call methods annotated with <code>@BeforeSpecification</code>.  
+     */
+    void beforeSpecification();
+
+    /**
+     * Call methods annotated with <code>@AfterSpecification</code> and destroy specification scoped fields.   
+     */
+    void afterSpecification();
+
+    /**
+     * Call methods annotated with <code>@BeforeExample</code>.
+     * @param exampleName the name of the example being invoked  
+     */
+    void beforeExample(String exampleName);
+
+    /**
+     * Call methods annotated with <code>@AfterExample</code> and destroy example scoped fields.   
+     * @param exampleName the name of the example being invoked  
+     */
+    void afterExample(String exampleName);
 }

@@ -30,6 +30,18 @@ public enum RunResultsCache {
     }
 
     /**
+    *
+    * Provides a direct method to access the cache
+    *
+    * @param fixture fixture containing class to retrieve from the cache
+    * @param example the example to get from the cache
+    * @return can return null if not in the cache
+    */
+    public ConcordionRunOutput getFromCache(Fixture fixture, String example) {
+        return getFromCache(fixture.getFixtureClass(), example);
+    }
+    
+    /**
      *
      * Provides a direct method to access the cache
      *
@@ -37,15 +49,8 @@ public enum RunResultsCache {
      * @param example the example to get from the cache
      * @return can return null if not in the cache
      */
-    public synchronized  ConcordionRunOutput getFromCache(Class<?> fixtureClass, String example) {
-        ConcordionRunOutput summary = map.get(getID(fixtureClass, example));
-
-        // check for nothing in cache
-        if (summary == null) {
-            return null;
-        }
-
-        return summary;
+    public synchronized ConcordionRunOutput getFromCache(Class<?> fixtureClass, String example) {
+        return map.get(getID(fixtureClass, example));
     }
 
 
@@ -110,7 +115,7 @@ public enum RunResultsCache {
         runSummary.setActualResultSummary(actualSummary);
         runSummary.setModifiedResultSummary(postProcessedResultSummary);
 
-        String specificationDescription = fixture.getDescription();
+        String specificationDescription = fixture.getSpecificationDescription();
 
 
         // now accumulate into the parent
@@ -154,6 +159,45 @@ public enum RunResultsCache {
             if (key.isForClass(fixture.getFixtureClass())) {
                 map.remove(key);
             }
+        }
+    }
+    
+    private static class CacheKey {
+        final String example;
+        final Class<?> clas;
+
+        public CacheKey(Class<?> clas, String example) {
+            assert clas != null;
+            this.clas = clas;
+            this.example = example;
+        }
+
+        @Override
+        public int hashCode() {
+            int classHash = clas.hashCode();
+            int exampleHash = example == null ? 0 : example.hashCode();
+
+            // use 11 because it's prime
+            return classHash * 11 + exampleHash;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+
+            if (!(o instanceof CacheKey)) {
+                return super.equals(o);
+            }
+
+            CacheKey other = (CacheKey) o;
+
+            boolean classesEqual = clas.equals(other.clas);
+            boolean examplesEqual = example == null ? other.example == null : example.equals(other.example);
+
+            return classesEqual && examplesEqual;
+        }
+
+        public boolean isForClass(Class<?> aClass) {
+            return this.clas.equals(aClass);
         }
     }
 }

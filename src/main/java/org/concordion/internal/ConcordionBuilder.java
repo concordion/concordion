@@ -61,6 +61,9 @@ public class ConcordionBuilder implements ConcordionExtender {
     private MarkdownConverter markdownConverter = new MarkdownConverter();
 
     private List<SpecificationType> specificationTypes = new ArrayList<SpecificationType>();
+    private Set<SpecificationConverter> specificationConverters = new HashSet<SpecificationConverter>();
+
+    private FileTarget copySourceHtmlTarget;
 
     {
         ExtensionChecker.checkForOutdatedExtensions();
@@ -77,7 +80,9 @@ public class ConcordionBuilder implements ConcordionExtender {
         withDocumentParsingListener(new DocumentStructureImprover());
         withDocumentParsingListener(new MetadataCreator());
         withSpecificationType("html", null);
+        withSpecificationType("xhtml", null);
         withSpecificationType("md", markdownConverter);
+        withSpecificationType("markdown", markdownConverter);
     }
 
     public ConcordionBuilder withSource(Source source) {
@@ -248,7 +253,8 @@ public class ConcordionBuilder implements ConcordionExtender {
         specificationCommand.addSpecificationListener(new BreadcrumbRenderer(source, xmlParser, specificationTypes));
         specificationCommand.addSpecificationListener(new PageFooterRenderer(target));
 
-        specificationReader = new XMLSpecificationReader(source, xmlParser, documentParser);        
+        specificationReader = new XMLSpecificationReader(source, xmlParser, documentParser);
+        specificationReader.setCopySourceHtmlTarget(copySourceHtmlTarget);
 
         addExtensions();
         copyResources();
@@ -358,7 +364,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         withResources(fixture);
         
         if (fixture.declaresFailFast()) {
-            withFailFast(fixture.getFailFastExceptions());
+            withFailFast(fixture.getDeclaredFailFastExceptions());
         }
         if (fixture.declaresFullOGNL()) {
             withEvaluatorFactory(new OgnlEvaluatorFactory());
@@ -416,6 +422,7 @@ public class ConcordionBuilder implements ConcordionExtender {
 
 	@Override
     public ConcordionBuilder withSpecificationType(String typeSuffix, SpecificationConverter converter) {
+	    specificationConverters.add(converter);
 	    specificationTypes.add(new SpecificationType(typeSuffix, converter));
 	    return this;
 	}
@@ -431,19 +438,24 @@ public class ConcordionBuilder implements ConcordionExtender {
 
         String location = options.copySourceHtmlToDir();
         if (!location.isEmpty()) {
-            Pattern pattern = Pattern.compile("\\$\\{(.+?)\\}");
-            Matcher matcher = pattern.matcher(location);
-            StringBuffer sb = new StringBuffer();
-            while (matcher.find()) {
-                String property = matcher.group(1);
-                String value = System.getProperty(property);
-                if (value == null) {
-                    throw new RuntimeException(String.format("Unable to find system property '%s' in @ConcordionOptions setting copySourceHtmlToDir of '%s'", property, location));
-                }
-                matcher.appendReplacement(sb, value);
-            }
-            matcher.appendTail(sb);
-            markdownConverter.setSourceHtmlTarget(new FileTarget(new File(sb.toString())));
+            location = expandSystemProperties(location);
+            copySourceHtmlTarget = new FileTarget(new File(location));
         }
+    }
+
+    private String expandSystemProperties(String location) {
+        Pattern pattern = Pattern.compile("\\$\\{(.+?)\\}");
+        Matcher matcher = pattern.matcher(location);
+        StringBuffer sb = new StringBuffer();
+        while (matcher.find()) {
+            String property = matcher.group(1);
+            String value = System.getProperty(property);
+            if (value == null) {
+                throw new RuntimeException(String.format("Unable to find system property '%s' in @ConcordionOptions setting copySourceHtmlToDir of '%s'", property, location));
+            }
+            matcher.appendReplacement(sb, value);
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
     }
 }

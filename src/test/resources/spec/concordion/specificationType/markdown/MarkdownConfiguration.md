@@ -9,9 +9,9 @@ To save a copy, use the `@ConcordionOptions` annotation on the fixture class wit
     @ConcordionOptions(copySourceHtmlToDir="/tmp")
     public class ...
 
-The target directory can include To include system property values in the path, by wrapping the system property key in `${` and `}`. For example:
+The target directory can include system property values in the path, by wrapping the system property key in `${` and `}`. For example:
 
-    @ConcordionOptions(copySourceHtmlToDir="${java.io.tmpdir}/output"
+    @ConcordionOptions(copySourceHtmlToDir="${java.io.tmpdir}/output")
 
 will write to the output directory under the system temp folder.
 

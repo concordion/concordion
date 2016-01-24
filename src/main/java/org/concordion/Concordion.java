@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.concordion.api.*;
+import org.concordion.internal.SpecificationToSpecificationByExampleAdaptor;
 import org.concordion.internal.SpecificationType;
 import org.concordion.internal.SummarizingResultRecorder;
 
@@ -13,23 +14,28 @@ public class Concordion {
     private final SpecificationReader specificationReader;
     private Resource resource;
     private SpecificationByExample specification;
-    private Fixture fixture;
 
     public Concordion(SpecificationLocator specificationLocator, SpecificationReader specificationReader, EvaluatorFactory evaluatorFactory, Fixture fixture) throws IOException {
         this.specificationReader = specificationReader;
         this.evaluatorFactory = evaluatorFactory;
-        this.fixture = fixture;
 
-        this.resource = specificationLocator.locateSpecification(fixture.getFixtureObject());
+        resource = specificationLocator.locateSpecification(fixture.getFixtureObject());
     }
 
     /**
-     * @param specificationTypes a list of types that this Concordion instance will check for (eg. html, md), with a converter for each type 
+     * Constructor. Locates the specification with a type from the <code>specificationTypes</code> list. 
+     * Errors if unable to find exactly one specification of all the specified types. 
+     * 
+     * @param specificationTypes a list of types that this Concordion instance will check for (eg. html, md), with a converter for each type
+     * @param specificationLocator locates the specification based on the specification type
+     * @param specificationReader specification reader
+     * @param evaluatorFactory evaluator factory
+     * @param fixture fixture instance 
+     * @throws IOException on i/o error
      */
     public Concordion(List<SpecificationType> specificationTypes, SpecificationLocatorWithType specificationLocator, SpecificationReader specificationReader, EvaluatorFactory evaluatorFactory, Fixture fixture) throws IOException {
         this.specificationReader = specificationReader;
         this.evaluatorFactory = evaluatorFactory;
-        this.fixture = fixture;
 
         SpecificationType specificationType = null;
 
@@ -50,49 +56,49 @@ public class Concordion {
         specificationReader.setSpecificationConverter(specificationType.getConverter());
     }
     
-    public ResultSummary process() throws IOException {
-        return process(specification, fixture);
-    }
-
-    /** For TestRig use only **/
-    public void override(Resource resource, Fixture fixture) throws IOException {
-        this.resource= resource;
-        this.fixture = fixture;
+    /** 
+     * For TestRig use only
+     * @param resource test resource to override the specification resource with
+     * @throws IOException on i/o error 
+     */
+    public void override(Resource resource) throws IOException {
+        this.resource = resource;
     }
  
-    private ResultSummary process(SpecificationByExample specification, Fixture fixture) throws IOException {
+    public ResultSummary process(Fixture fixture) throws IOException {
         SummarizingResultRecorder resultRecorder = new SummarizingResultRecorder();
-        resultRecorder.setSpecificationDescription(fixture.getDescription());
-        getSpecification().process(evaluatorFactory.createEvaluator(fixture.getFixtureObject()), resultRecorder);
+        resultRecorder.setSpecificationDescription(fixture.getSpecificationDescription());
+        getSpecification(fixture).process(evaluatorFactory.createEvaluator(fixture.getFixtureObject()), resultRecorder);
         return resultRecorder;
     }
 
-    private SpecificationByExample getSpecification() throws IOException {
+    private SpecificationByExample getSpecification(Fixture fixture) throws IOException {
         if (specification == null) {
-            specification = loadSpecificationFromResource(resource);
+            specification = loadSpecificationFromResource(fixture, resource);
         }
         return specification;
     }
 
-    public List<String> getExampleNames() throws IOException {
-        return getSpecification().getExampleNames();
+    public List<String> getExampleNames(Fixture fixture) throws IOException {
+        return getSpecification(fixture).getExampleNames();
     }
 
-    public ResultSummary processExample(String example) throws IOException {
+    public ResultSummary processExample(Fixture fixture, String example) throws IOException {
         SummarizingResultRecorder resultRecorder = new SummarizingResultRecorder();
         resultRecorder.setSpecificationDescription(example);
-        getSpecification().processExample(evaluatorFactory.createEvaluator(fixture.getFixtureObject()), example, resultRecorder);
+        getSpecification(fixture).processExample(evaluatorFactory.createEvaluator(fixture.getFixtureObject()), example, resultRecorder);
         return resultRecorder;
     }
 
     /**
      * Loads the specification for the specified fixture.
      *
+     * @param fixture the fixture instance
      * @param resource the resource to load
      * @return a SpecificationByExample object to use
      * @throws IOException if the resource cannot be loaded
      */
-    private SpecificationByExample loadSpecificationFromResource(Resource resource) throws IOException {
+    private SpecificationByExample loadSpecificationFromResource(Fixture fixture, Resource resource) throws IOException {
         Specification specification= specificationReader.readSpecification(resource);
 
         SpecificationByExample specificationByExample;
@@ -101,7 +107,7 @@ public class Concordion {
         } else {
             specificationByExample = new SpecificationToSpecificationByExampleAdaptor(specification);
         }
-        specificationByExample.setFixtureClass(fixture);
+        specificationByExample.setFixture(fixture);
         return specificationByExample;
     }
 

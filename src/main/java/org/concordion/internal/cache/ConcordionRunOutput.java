@@ -1,6 +1,6 @@
 package org.concordion.internal.cache;
 
-import org.concordion.api.Fixture;
+import org.concordion.api.FixtureDeclarations;
 import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.SingleResultSummary;
@@ -12,9 +12,9 @@ public class ConcordionRunOutput {
     private ResultSummary actualResultSummary;
     private ResultSummary modifiedResultSummary;
 
-    public ConcordionRunOutput(Fixture fixture) {
+    public ConcordionRunOutput(FixtureDeclarations fixture) {
         SingleResultSummary singleResultSummary = new CacheResultSummary(Result.IGNORED,
-                "No current results for fixture " + fixture.getClassName() + " as the specification is currently being executed");
+                "No current results for fixture " + fixture + " as the specification is currently being executed");
         this.actualResultSummary = singleResultSummary;
         this.modifiedResultSummary = singleResultSummary;
     }

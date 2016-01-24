@@ -11,21 +11,18 @@ import java.io.IOException;
 
 public class FixtureRunner {
     private static RunResultsCache runResultsCache = RunResultsCache.SINGLETON;
-    private final Fixture fixture;
     private final FixtureExtensionLoader fixtureExtensionLoader = new FixtureExtensionLoader();
     private final FixtureOptionsLoader fixtureOptionsLoader = new FixtureOptionsLoader();
     private Concordion concordion;
 
     public FixtureRunner(Fixture fixture) throws UnableToBuildConcordionException {
-        this.fixture = fixture;
-
         ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture);
         fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
         fixtureOptionsLoader.addOptions(fixture, concordionBuilder);
         concordion = concordionBuilder.build();
     }
 
-    public ResultSummary run(String example) throws IOException {
+    public ResultSummary run(String example, Fixture fixture) throws IOException {
     	
     	ConcordionRunOutput runOutput = runResultsCache.startRun(fixture, example);
         ResultSummary actualResultSummary = runOutput==null?
@@ -42,15 +39,20 @@ public class FixtureRunner {
             try {
                 ImplementationStatusChecker statusChecker;
                 if (example != null) {
-                    actualResultSummary = concordion.processExample(example);
-                    statusChecker = ImplementationStatusChecker.getImplementationStatusChecker(
-                            fixture.getFixtureClass(),
-                            fixture, actualResultSummary.getImplementationStatus());
+                    fixture.beforeExample(example);
+                    try {
+                        actualResultSummary = concordion.processExample(fixture, example);
+                        statusChecker = ImplementationStatusChecker.getImplementationStatusChecker(
+                                fixture,
+                                actualResultSummary.getImplementationStatus());
+                    } finally {
+                        fixture.afterExample(example);
+                    } 
                 } else {
-                    actualResultSummary = concordion.process();
+                    actualResultSummary = concordion.process(fixture);
                     statusChecker = ImplementationStatusChecker.getImplementationStatusChecker(
-                            fixture.getFixtureClass(),
-                            fixture, null);
+                            fixture,
+                            null);
                 }
                 // we want to make sure all the annotations are considered when storing the result summary
                 // converting for the cache doesn't need the example - it just does annotation based conversions
@@ -90,10 +92,19 @@ public class FixtureRunner {
         return concordion;
     }
 
-    public ResultSummary run() throws IOException {
-        ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixture.getFixtureClass(), null);
+    /**
+     *
+     * This method is deprecated as it's only used in jUnit 3.
+     *
+     * @param fixture fixture
+     * @return result summary
+     * @throws IOException on io error
+     */
+    @Deprecated
+    public ResultSummary run(Fixture fixture) throws IOException {
+        ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixture, null);
 
-        ResultSummary resultSummary = run(null);
+        ResultSummary resultSummary = run(null, fixture);
         
         // only actually finish the specification if it has not already been run.
         if (results == null) {

@@ -1,7 +1,6 @@
 package org.concordion.internal.extension;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -78,7 +77,7 @@ public class FixtureExtensionLoader {
         Field[] declaredFields = class1.getDeclaredFields();      
         for (Field field : declaredFields) {
             if (field.isAnnotationPresent(Extension.class)) {
-                validatePublic(field);
+                field.setAccessible(true);
                 ConcordionExtension extension = getExtensionField(fixture, field);
                 validateNonNull(field, extension);
                 extensions.add(extension);
@@ -99,12 +98,6 @@ public class FixtureExtensionLoader {
         }
     }
 
-    private void validatePublic(Field field) {
-        if (!(Modifier.isPublic(field.getModifiers()))) {
-            throw new ExtensionInitialisationException("Extension field '" + field.getName() + "' must be public");
-        }
-    }
-    
     private void validateNonNull(Field field, ConcordionExtension extension) {
         if (extension == null) {
             throw new ExtensionInitialisationException("Extension field '" + field.getName() + "' must be non-null");

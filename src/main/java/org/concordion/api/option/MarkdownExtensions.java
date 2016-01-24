@@ -13,7 +13,9 @@ import org.pegdown.LinkRenderer;
  * </ul>
  * <p>
  * The SMARTS, QUOTES and SMARTYPANTS extensions from Pegdown are currently not supported in Concordion Markdown, 
- * since the XOM parser fails due to unknown entity references for these characters. 
+ * since the XOM parser fails due to unknown entity references for these characters.
+ * 
+ * @since 2.0.0
  */
 public enum MarkdownExtensions {
     /**

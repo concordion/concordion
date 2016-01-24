@@ -8,9 +8,6 @@ import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 import org.junit.runners.model.Statement;
 
-/**
- * Created by tim on 20/06/15.
- */
 @RunWith(ConcordionRunner.class)
 public class Junit4Test extends Statement {
 
