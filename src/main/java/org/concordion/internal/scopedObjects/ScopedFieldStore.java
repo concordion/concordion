@@ -68,11 +68,11 @@ public class ScopedFieldStore {
     
     /**
      * Creates the scoped object for use in setting and getting the data from the fields. Protected so that a subclass can
-     * override if necessary
-     * @param fixtureClass 
-     * @param fieldName
-     * @param fieldScope
-     * @return
+     * override if necessary.
+     * @param fixtureClass fixture class
+     * @param fieldName name of field in fixture class
+     * @param fieldScope scope to be applied to the field
+     * @return scoped object
      */
     protected ScopedObject createScopedObject(Class<?> fixtureClass, String fieldName, Scope fieldScope) {
         return ScopedObjectFactory.SINGLETON.create(fixtureClass, fieldName, fieldScope);

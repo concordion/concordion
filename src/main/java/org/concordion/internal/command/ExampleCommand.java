@@ -12,9 +12,6 @@ import org.concordion.internal.SpecificationDescriber;
 import org.concordion.internal.SummarizingResultRecorder;
 import org.concordion.internal.util.Announcer;
 
-/**
- * Created by tim on 2/07/15.
- */
 public class ExampleCommand extends AbstractCommand {
 
 	private Announcer<ExampleListener> listeners = Announcer.to(ExampleListener.class);

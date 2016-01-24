@@ -23,7 +23,15 @@ public class Concordion {
     }
 
     /**
-     * @param specificationTypes a list of types that this Concordion instance will check for (eg. html, md), with a converter for each type 
+     * Constructor. Locates the specification with a type from the <code>specificationTypes</code> list. 
+     * Errors if unable to find exactly one specification of all the specified types. 
+     * 
+     * @param specificationTypes a list of types that this Concordion instance will check for (eg. html, md), with a converter for each type
+     * @param specificationLocator locates the specification based on the specification type
+     * @param specificationReader specification reader
+     * @param evaluatorFactory evaluator factory
+     * @param fixture fixture instance 
+     * @throws IOException on i/o error
      */
     public Concordion(List<SpecificationType> specificationTypes, SpecificationLocatorWithType specificationLocator, SpecificationReader specificationReader, EvaluatorFactory evaluatorFactory, Fixture fixture) throws IOException {
         this.specificationReader = specificationReader;
@@ -48,9 +56,13 @@ public class Concordion {
         specificationReader.setSpecificationConverter(specificationType.getConverter());
     }
     
-    /** For TestRig use only **/
+    /** 
+     * For TestRig use only
+     * @param resource test resource to override the specification resource with
+     * @throws IOException on i/o error 
+     */
     public void override(Resource resource) throws IOException {
-        this.resource= resource;
+        this.resource = resource;
     }
  
     public ResultSummary process(Fixture fixture) throws IOException {
@@ -81,6 +93,7 @@ public class Concordion {
     /**
      * Loads the specification for the specified fixture.
      *
+     * @param fixture the fixture instance
      * @param resource the resource to load
      * @return a SpecificationByExample object to use
      * @throws IOException if the resource cannot be loaded

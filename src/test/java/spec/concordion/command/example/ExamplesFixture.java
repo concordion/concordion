@@ -8,9 +8,6 @@ import org.junit.runner.RunWith;
 
 import spec.concordion.results.runTotals.RunTotalsFixture;
 
-/**
- * Created by tim on 2/07/15.
- */
 @RunWith(ConcordionRunner.class)
 @FullOGNL
 public class ExamplesFixture extends SpecWithBeforeSpec {

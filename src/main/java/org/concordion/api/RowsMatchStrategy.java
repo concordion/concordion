@@ -11,6 +11,11 @@ import org.concordion.internal.util.Announcer;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Base class for strategies for matching rows with the verify-rows command.
+ * 
+ * @since 2.0.0
+ */
 public abstract class RowsMatchStrategy {
 
     protected final CommandCall commandCall;

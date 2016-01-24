@@ -54,7 +54,7 @@ public class FixtureType implements FixtureDeclarations {
     }
 
     /**
-     * Returns the fixture class and all of its superclasses, excluding java.lang.Object,
+     * @return the fixture class and all of its superclasses, excluding java.lang.Object,
      * ordered from the most super class to the fixture class.
      */
     protected List<Class<?>> getClassHierarchyParentFirst() {

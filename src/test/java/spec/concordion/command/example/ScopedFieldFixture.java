@@ -8,9 +8,6 @@ import org.concordion.api.Scope;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
-/**
- * Created by tim on 2/12/15.
- */
 @RunWith(ConcordionRunner.class)
 public class ScopedFieldFixture {
     

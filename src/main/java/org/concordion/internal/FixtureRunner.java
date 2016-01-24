@@ -96,9 +96,9 @@ public class FixtureRunner {
      *
      * This method is deprecated as it's only used in jUnit 3.
      *
-     * @param fixture
-     * @return
-     * @throws IOException
+     * @param fixture fixture
+     * @return result summary
+     * @throws IOException on io error
      */
     @Deprecated
     public ResultSummary run(Fixture fixture) throws IOException {

@@ -5,9 +5,6 @@ import java.util.List;
 
 import org.concordion.api.*;
 
-/**
- * Created by tim on 9/01/15.
- */
 public class SpecificationToSpecificationByExampleAdaptor implements SpecificationByExample {
 
     private String testDescription;

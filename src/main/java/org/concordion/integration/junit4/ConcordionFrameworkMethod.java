@@ -5,9 +5,6 @@ import org.junit.runners.model.FrameworkMethod;
 
 import java.lang.reflect.Method;
 
-/**
- * Created by tim on 30/06/15.
- */
 public class ConcordionFrameworkMethod extends FrameworkMethod {
 
     private static final Method CONCORDION_METHOD;

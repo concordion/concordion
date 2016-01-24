@@ -118,8 +118,8 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
      *
      * Protected so superclasses can change the Fixture being returned.
      *
-     * @param fixtureObject
-     * @return
+     * @param fixtureObject fixture instance
+     * @return fixture
      */
     protected Fixture createFixture(Object fixtureObject) {
         return new FixtureInstance(fixtureObject);

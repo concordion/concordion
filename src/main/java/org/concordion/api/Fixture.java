@@ -3,6 +3,11 @@ package org.concordion.api;
 import java.io.File;
 import java.util.List;
 
+/**
+ * An instance of a fixture class.
+ * 
+ * @since 2.0.0
+ */
 public interface Fixture extends FixtureDeclarations {
 
     /**
@@ -32,7 +37,7 @@ public interface Fixture extends FixtureDeclarations {
     String getSpecificationDescription();
 
     /**
-     * The absolute path to the fixture, omitting the suffix.
+     * @return the absolute path to the fixture, omitting the suffix.
      */
     String getFixturePathWithoutSuffix();
 
@@ -53,12 +58,14 @@ public interface Fixture extends FixtureDeclarations {
     void afterSpecification();
 
     /**
-     * Call methods annotated with <code>@BeforeExample</code>.  
+     * Call methods annotated with <code>@BeforeExample</code>.
+     * @param exampleName the name of the example being invoked  
      */
     void beforeExample(String exampleName);
 
     /**
      * Call methods annotated with <code>@AfterExample</code> and destroy example scoped fields.   
+     * @param exampleName the name of the example being invoked  
      */
     void afterExample(String exampleName);
 }

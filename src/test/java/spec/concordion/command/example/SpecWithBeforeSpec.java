@@ -7,9 +7,6 @@ import org.concordion.api.ConcordionScoped;
 import org.concordion.api.ScopedObjectHolder;
 import org.concordion.api.Scope;
 
-/**
- * Created by tim on 10/12/15.
- */
 public class SpecWithBeforeSpec {
 
     @ConcordionScoped(Scope.SPECIFICATION)

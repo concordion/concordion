@@ -12,11 +12,6 @@ import org.concordion.internal.cache.RunResultsCache;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * Created by TimW5 on 27/09/14.
- *
- * @author TimW5
- */
 public class CachedResultsUnitTest {
 
     public static final String EXAMPLE_1_NAME = "eg1";

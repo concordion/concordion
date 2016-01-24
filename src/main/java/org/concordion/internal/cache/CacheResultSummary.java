@@ -4,9 +4,6 @@ import org.concordion.api.Fixture;
 import org.concordion.api.Result;
 import org.concordion.internal.SingleResultSummary;
 
-/**
- * Created by tim on 30/06/15.
- */
 class CacheResultSummary extends SingleResultSummary {
 
     public CacheResultSummary(Result result, String specificationDescription) {

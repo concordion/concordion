@@ -1,10 +1,5 @@
 package org.concordion.internal;
 
-/**
- * Created by TimW5 on 15/11/14.
- *
- * @author TimW5
- */
 import org.concordion.api.Fixture;
 import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;

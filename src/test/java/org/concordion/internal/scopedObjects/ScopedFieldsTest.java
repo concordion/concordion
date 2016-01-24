@@ -14,9 +14,6 @@ import org.concordion.internal.FixtureInstance;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * Created by tim on 5/12/15.
- */
 public class ScopedFieldsTest {
 
     @ConcordionScoped(Scope.SPECIFICATION)

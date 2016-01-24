@@ -4,9 +4,6 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
-/**
- * Created by tim on 20/06/15.
- */
 public class RuleWithCallback implements TestRule {
 
     private static class CompoundStatement extends Statement {

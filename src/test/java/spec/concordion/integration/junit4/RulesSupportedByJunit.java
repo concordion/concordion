@@ -6,9 +6,6 @@ import org.junit.runners.model.Statement;
 
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by tim on 20/06/15.
- */
 public class RulesSupportedByJunit extends Statement {
 
     @Rule

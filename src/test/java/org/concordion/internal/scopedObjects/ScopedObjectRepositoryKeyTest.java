@@ -7,9 +7,6 @@ import org.concordion.api.Scope;
 import org.concordion.internal.scopedObjects.ScopedObjectRepository.ScopedObjectRepositoryKey;
 import org.junit.Test;
 
-/**
- * Created by tim on 3/12/15.
- */
 public class ScopedObjectRepositoryKeyTest {
 
     @Test

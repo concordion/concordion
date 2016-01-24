@@ -8,9 +8,6 @@ import org.concordion.api.Scope;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * Created by tim on 3/12/15.
- */
 public class ScopedObjectFactoryTest {
 
     private static int staticValue = 0;

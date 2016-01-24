@@ -1,5 +1,41 @@
 package org.concordion.api;
 
+/**
+ * A factory and holder for objects that are to have their scope managed by Concordion.
+ * <p>
+ * When the {@link #get()} method is invoked, the wrapped object is lazily constructed by
+ * calling the {@link #create()} method.
+ * </p>
+ * <p>
+ * When annotated with {@link ConcordionScoped}, the scope will be managed by Concordion and the
+ * object destroyed when it goes out of scope.
+ * </p>
+ * <p><b>For example:</b></p>
+ * <pre>
+ * &#064;ConcordionScoped(Scope.SPECIFICATION)
+ * private ScopedObjectHolder&lt;Browser&gt; browserHolder = new ScopedObjectHolder&lt;Browser&gt;() {
+ *     &#064;Override
+ *     protected Browser create() {
+ *         return new Browser();
+ *     }
+ *     
+ *     &#064;Override
+ *     protected void destroy(Browser browser) {
+ *         browser.close();
+ *     };
+ * };
+ * </pre> 
+ * <p>
+ * The browser will be constructed in the first method that calls <code>browserHolder.get()</code>. 
+ * </p>
+ * <p>
+ * The browser will be destroyed when the specification completes. 
+ * </p>
+ * 
+ * @since 2.0.0
+ *
+ * @param <T> type of wrapped object
+ */
 public abstract class ScopedObjectHolder<T> {
 
     private volatile T value;

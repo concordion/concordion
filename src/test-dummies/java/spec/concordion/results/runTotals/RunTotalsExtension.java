@@ -11,9 +11,6 @@ import org.concordion.api.listener.RunSuccessEvent;
 import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.internal.FixtureInstance;
 
-/**
- * Created by tim on 25/06/15.
- */
 public class RunTotalsExtension implements ConcordionExtension, RunListener {
 
     public void addTo(ConcordionExtender concordionExtender) {

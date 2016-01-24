@@ -124,9 +124,9 @@ public interface ConcordionExtender {
     
     /**
      * Embeds the given CSS in the Concordion output.
-     * @param css
+     * @param css CSS
      * @param append if true appends as last element in head section, else inserts as first element
-     * @return
+     * @return this
      */
     ConcordionExtender withEmbeddedCSS(String css, boolean append);
     
