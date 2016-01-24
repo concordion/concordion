@@ -10,5 +10,11 @@ import java.io.InputStream;
  */
 public interface SpecificationConverter {
 
-    InputStream convert(Resource resource, InputStream inputStream) throws IOException;
+    /**
+     * Convert the resource's input stream to an HTML input stream.
+     * @param inputStream the input stream containing the content of the resource
+     * @return converted resource's content
+     * @throws IOException on i/o error
+     */
+    InputStream convert(InputStream inputStream) throws IOException;
 }

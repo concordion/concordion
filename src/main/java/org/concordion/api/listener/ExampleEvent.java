@@ -3,6 +3,9 @@ package org.concordion.api.listener;
 import org.concordion.api.Element;
 import org.concordion.api.ResultSummary;
 
+/**
+ * @since 2.0.0
+ */
 public class ExampleEvent {
 
     private final Element element;
