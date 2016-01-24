@@ -46,7 +46,17 @@ public interface Fixture extends FixtureDeclarations {
      * @param fixtureObject the fixture about to be run
      */
     void setupForRun(Object fixtureObject);
-    
+
+    /**
+     * Call methods annotated with <code>@BeforeSuite</code>.
+     */
+    void beforeSuite();
+
+    /**
+     * Call methods annotated with <code>@AfterSuite</code>.
+     */
+    void afterSuite();
+
     /**
      * Save the specification scoped fields and call methods annotated with <code>@BeforeSpecification</code>.  
      */

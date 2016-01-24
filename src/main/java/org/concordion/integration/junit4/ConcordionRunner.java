@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.concordion.Concordion;
 import org.concordion.api.Fixture;
@@ -39,6 +40,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
     private FailFastException failFastException = null;
     private Fixture setupFixture;
 
+    private static AtomicInteger suiteDepth = new AtomicInteger();
     private boolean firstTest = true;
 
     public ConcordionRunner(Class<?> fixtureClass) throws InitializationError {
@@ -128,6 +130,10 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
     @Override
     public void run(RunNotifier notifier) {
 
+        if (suiteDepth.getAndIncrement() == 0) {
+            setupFixture.beforeSuite();
+        }
+
         // we figure out if the spec has been run before by checking if there are any
         // prior results in the cache
         boolean firstRun = null ==RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
@@ -155,14 +161,17 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
                 }
             }
         }
-        
+
+        if (suiteDepth.decrementAndGet() == 0) {
+            setupFixture.afterSuite();
+        }
+
         if (failFastException != null) {
             if (setupFixture.declaresFailFast()) {
                 throw new FailFastException("Failing Fast", failFastException);
             }
         }
     }
-
 
     @Override
     protected List<FrameworkMethod> getChildren() {
