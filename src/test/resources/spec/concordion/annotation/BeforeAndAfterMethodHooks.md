@@ -1,6 +1,6 @@
 # Before and After Hooks
 
-Concordion provides hooks to invoke fixture methods before or after an __example__, __specification__ or __suite__.
+Concordion provides hooks to invoke fixture methods before or after an __example__ or __specification__.
 
 ## Example hooks 
 
@@ -15,12 +15,6 @@ Optionally, the method can have a String parameter annotated with `@ExampleName`
 ## Specification hooks 
 
 Annotate a fixture method with `@BeforeSpecification` to invoke it before any of the examples are executed, or `@AfterSpecification` to invoke it after all the examples are executed.
-
-## Suite hooks 
-
-Annotate a fixture method with `@BeforeSuite` to invoke it before any of the specifications run, or `@AfterSuite` to invoke it after all the specifications run.
-
-Note that for the suite hooks to be run, they must exist on the fixture that is being executed directly by the test runner (eg. by JUnit).
 
 ## [Example] (- "example-hooks")
 

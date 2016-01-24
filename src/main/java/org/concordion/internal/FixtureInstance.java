@@ -78,22 +78,9 @@ public class FixtureInstance extends FixtureType implements Fixture, FixtureDecl
 
     @Override
     public void setupForRun(Object fixtureObject) {
-        scopedFieldStore.loadValuesIntoFields(fixtureObject, Scope.SUITE);
         scopedFieldStore.loadValuesIntoFields(fixtureObject, Scope.SPECIFICATION);
     }
     
-    @Override
-    public void beforeSuite() {
-        scopedFieldStore.saveValueFromFields(fixtureObject, Scope.SUITE);
-        invokeMethods(BeforeSuite.class);
-    }
-
-    @Override
-    public void afterSuite() {
-        invokeMethods(AfterSuite.class);
-        scopedFieldStore.destroyFields(fixtureObject, Scope.SUITE);
-    }
-
     @Override
     public void beforeSpecification() {
         scopedFieldStore.saveValueFromFields(fixtureObject, Scope.SPECIFICATION);

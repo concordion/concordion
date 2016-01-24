@@ -43,16 +43,6 @@ public interface Fixture extends FixtureDeclarations {
     void setupForRun(Object fixtureObject);
     
     /**
-     * Save the suite scoped fields and call methods annotated with <code>@BeforeSuite</code>.  
-     */
-    void beforeSuite();
-
-    /**
-     * Call methods annotated with <code>@AfterSuite</code> and destroy suite scoped fields.   
-     */
-    void afterSuite();
-
-    /**
      * Save the specification scoped fields and call methods annotated with <code>@BeforeSpecification</code>.  
      */
     void beforeSpecification();

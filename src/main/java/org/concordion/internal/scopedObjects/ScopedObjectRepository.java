@@ -40,12 +40,7 @@ public class ScopedObjectRepository {
 
         @Override
         public int hashCode() {
-            switch (concordionFieldScope) {
-                case SUITE:
-                    return hash(name);
-                default:
-                    return hash(name, concordionFieldScope, specificationClass);
-            }
+            return hash(name, concordionFieldScope, specificationClass);
         }
 
         public static int hash(Object... values) {
@@ -74,11 +69,8 @@ public class ScopedObjectRepository {
                 return false;
             }
 
-            // we do not check the scope for globally scoped objects.
-            if (this.concordionFieldScope != Scope.SUITE) {
-                if (!this.specificationClass.equals(that.specificationClass)) {
-                    return false;
-                }
+            if (!this.specificationClass.equals(that.specificationClass)) {
+                return false;
             }
 
             return true;
