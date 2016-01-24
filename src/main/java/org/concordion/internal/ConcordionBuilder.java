@@ -77,7 +77,9 @@ public class ConcordionBuilder implements ConcordionExtender {
         withDocumentParsingListener(new DocumentStructureImprover());
         withDocumentParsingListener(new MetadataCreator());
         withSpecificationType("html", null);
+        withSpecificationType("xhtml", null);
         withSpecificationType("md", markdownConverter);
+        withSpecificationType("markdown", markdownConverter);
     }
 
     public ConcordionBuilder withSource(Source source) {
