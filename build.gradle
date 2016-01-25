@@ -22,7 +22,9 @@ dependencies {
         exclude group: 'xml-apis', module: 'xml-apis'
     }
     
-    testCompile 'org.concordion:concordion-embed-extension:1.1.2'
+    testCompile ('org.concordion:concordion-embed-extension:1.1.2') {
+        exclude group: 'org.concordion', module: 'concordion'
+    }
 }
 
 sourceSets {
