@@ -16,6 +16,8 @@
 
 <h1>KeyMatch verification strategy</h1>
 
+<p><i>Since</i> Concordion 2.0.0</p>
+
 <p>The KeyMatch strategy can be applied to the <a href="../VerifyRows.html">verify rows</a> command to find a matching row, prior to verifying the contents of the row. The match is performed against a subset of the table columns, defined by marking those columns as key fields.</p>
 <p>The strategy is applied by adding the <code>concordion:matchStrategy="<b>KeyMatch</b>"</code> attribute to the verify rows command.</p>
 <p>Please note that the commands on the table header are being evaluated on a copy of the rows multiple times. This means the commands have to be idempotent and lightweight.</p>

@@ -1,4 +1,5 @@
 # Concordion Markdown Grammar
+_Since_: Concordion 2.0.0
 
 With the Markdown extension, Concordion commands are expressed using Markdown links, for example:
 

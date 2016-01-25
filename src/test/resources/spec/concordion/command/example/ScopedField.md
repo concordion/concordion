@@ -1,4 +1,5 @@
 # Field Scope in Fixtures
+_Since_: Concordion 2.0.0
 
 Concordion encourages you to keep your [examples](Examples.html) completely independent of each other. 
 This allows individual examples to be run in isolation. It also makes the specification easier to follow when you can read examples in isolation.

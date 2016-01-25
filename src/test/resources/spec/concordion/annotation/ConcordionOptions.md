@@ -1,4 +1,5 @@
 # Concordion Options
+_Since_: Concordion 2.0.0
 
 The [@ConcordionOptions](http://concordion.github.io/concordion/latest/javadoc/org/concordion/api/option/ConcordionOptions.html) annotation can be applied to specifications to configure aspects of Concordion.
 
