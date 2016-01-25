@@ -1,6 +1,7 @@
 package org.concordion.internal.command;
 
 import org.concordion.api.*;
+import org.concordion.internal.FailFastException;
 
 public class SequentialRunStrategy implements RunStrategy {
 

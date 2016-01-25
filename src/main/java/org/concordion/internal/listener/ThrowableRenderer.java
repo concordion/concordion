@@ -6,9 +6,9 @@ import java.util.Set;
 import ognl.OgnlException;
 
 import org.concordion.api.Element;
-import org.concordion.api.FailFastException;
 import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
+import org.concordion.internal.FailFastException;
 import org.concordion.internal.util.Check;
 import org.concordion.internal.util.IOUtil;
 

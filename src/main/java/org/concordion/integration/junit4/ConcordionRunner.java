@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.concordion.Concordion;
-import org.concordion.api.FailFastException;
 import org.concordion.api.Fixture;
 import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;

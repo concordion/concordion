@@ -3,6 +3,7 @@ package org.concordion.internal.command;
 import org.concordion.api.*;
 import org.concordion.api.listener.SpecificationProcessingEvent;
 import org.concordion.api.listener.SpecificationProcessingListener;
+import org.concordion.internal.FailFastException;
 import org.concordion.internal.SpecificationDescriber;
 import org.concordion.internal.util.Announcer;
 

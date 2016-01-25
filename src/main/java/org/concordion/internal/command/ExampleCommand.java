@@ -6,6 +6,7 @@ import java.util.List;
 import org.concordion.api.*;
 import org.concordion.api.listener.ExampleEvent;
 import org.concordion.api.listener.ExampleListener;
+import org.concordion.internal.FailFastException;
 import org.concordion.internal.ImplementationStatusChecker;
 import org.concordion.internal.SpecificationDescriber;
 import org.concordion.internal.SummarizingResultRecorder;

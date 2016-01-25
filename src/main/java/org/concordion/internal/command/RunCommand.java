@@ -9,6 +9,7 @@ import org.concordion.api.listener.RunListener;
 import org.concordion.api.listener.RunSuccessEvent;
 import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.internal.ConcordionAssertionError;
+import org.concordion.internal.FailFastException;
 import org.concordion.internal.runner.DefaultConcordionRunner;
 import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;

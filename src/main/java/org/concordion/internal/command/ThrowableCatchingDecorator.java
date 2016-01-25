@@ -5,6 +5,7 @@ import java.util.List;
 import org.concordion.api.*;
 import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
+import org.concordion.internal.FailFastException;
 import org.concordion.internal.util.Announcer;
 
 public class ThrowableCatchingDecorator extends AbstractCommandDecorator {
