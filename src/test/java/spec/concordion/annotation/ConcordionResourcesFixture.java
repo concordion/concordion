@@ -13,7 +13,7 @@ import test.concordion.ProcessingResult;
 import test.concordion.TestRig;
 
 @RunWith(ConcordionRunner.class)
-public class ConcordionResourcesTest {
+public class ConcordionResourcesFixture {
     private TestRig testRig = null;
 	private JavaSourceCompiler compiler;
 	private ProcessingResult result;
