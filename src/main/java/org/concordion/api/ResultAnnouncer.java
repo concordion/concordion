@@ -1,7 +1,4 @@
-package org.concordion.internal.command;
-
-import org.concordion.api.ResultSummary;
-
+package org.concordion.api;
 
 public interface ResultAnnouncer {
     void announceException(Throwable e);

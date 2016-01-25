@@ -1,5 +1,9 @@
-package org.concordion.api;
+package org.concordion.internal.command.strategies;
 
+import org.concordion.api.CommandCall;
+import org.concordion.api.Element;
+import org.concordion.api.Evaluator;
+import org.concordion.api.ResultRecorder;
 import org.concordion.api.listener.ExpressionEvaluatedEvent;
 import org.concordion.api.listener.MissingRowEvent;
 import org.concordion.api.listener.SurplusRowEvent;

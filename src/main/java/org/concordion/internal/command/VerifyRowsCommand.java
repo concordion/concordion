@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import org.concordion.api.*;
 import org.concordion.api.listener.VerifyRowsListener;
 import org.concordion.internal.command.strategies.DefaultMatchStrategy;
+import org.concordion.internal.command.strategies.RowsMatchStrategy;
 import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 

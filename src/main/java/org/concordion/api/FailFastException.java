@@ -1,4 +1,4 @@
-package org.concordion.internal;
+package org.concordion.api;
 
 public class FailFastException extends RuntimeException {
 

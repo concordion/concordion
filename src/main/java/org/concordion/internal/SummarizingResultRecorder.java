@@ -3,10 +3,7 @@ package org.concordion.internal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.concordion.api.Fixture;
-import org.concordion.api.Result;
-import org.concordion.api.ResultRecorder;
-import org.concordion.api.ResultSummary;
+import org.concordion.api.*;
 
 public class SummarizingResultRecorder extends AbstractResultSummary implements ResultRecorder, ResultSummary {
 

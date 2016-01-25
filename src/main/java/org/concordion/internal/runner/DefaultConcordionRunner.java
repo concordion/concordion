@@ -2,7 +2,6 @@ package org.concordion.internal.runner;
 
 import org.concordion.api.*;
 import org.concordion.internal.cache.RunResultsCache;
-import org.concordion.internal.FailFastException;
 import org.concordion.internal.FixtureType;
 import org.concordion.internal.FixtureSpecificationMapper;
 import org.concordion.internal.SummarizingResultRecorder;

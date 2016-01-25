@@ -3,7 +3,6 @@ package org.concordion.internal.command.strategies;
 import org.concordion.api.CommandCall;
 import org.concordion.api.Evaluator;
 import org.concordion.api.ResultRecorder;
-import org.concordion.api.RowsMatchStrategy;
 import org.concordion.api.listener.VerifyRowsListener;
 import org.concordion.internal.Row;
 import org.concordion.internal.util.Announcer;
