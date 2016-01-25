@@ -186,8 +186,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     }
 
     public ConcordionBuilder withBuildListener(ConcordionBuildListener listener) {
-        //listeners.addListener(listener);
-    	listeners.add(listener);
+        listeners.add(listener);
         return this;
     }
     
