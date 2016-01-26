@@ -85,7 +85,7 @@ public class XMLSpecificationReader implements SpecificationReader {
         System.out.println(String.format("[Source: %s]", copySourceHtmlTarget.resolvedPathFor(sourceHtmlResource)));
         String html = asString(inputStream);
         copySourceHtmlTarget.write(sourceHtmlResource, html);
-        inputStream = new ByteArrayInputStream(html.getBytes());
+        inputStream = new ByteArrayInputStream(html.getBytes("UTF-8"));
         return inputStream;
     }
 }

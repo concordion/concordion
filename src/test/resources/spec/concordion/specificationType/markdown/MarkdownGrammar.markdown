@@ -823,6 +823,22 @@ HTML entities in the text value are encoded correctly.
   </table>
 </div>
 
+### Extended character set
+
+<div class="example">
+  <h3>Examples</h3>
+  <table concordion:execute="#html=translate(#md)">
+    <tr>
+      <th concordion:set="#md">Markdown</th>
+      <th concordion:assert-equals="#html">Resultant HTML</th>
+    </tr>
+    <tr>
+        <td>&#233;</td>
+        <td>é</td>
+    </tr>
+  </table>
+</div>
+
 ##TODO
 
 ### Support for Concordion commands in other namespaces, eg extensions

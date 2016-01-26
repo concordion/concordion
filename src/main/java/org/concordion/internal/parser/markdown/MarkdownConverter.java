@@ -20,7 +20,7 @@ public class MarkdownConverter implements SpecificationConverter {
         String html = markdownParser.markdownToHtml(markdown, CONCORDION_NAMESPACE_PREFIX);
         html = wrapBody(html);
 
-        return new ByteArrayInputStream(html.getBytes());
+        return new ByteArrayInputStream(html.getBytes("UTF-8"));
     }
 
     private String asString(InputStream inputStream) {
