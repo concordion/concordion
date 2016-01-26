@@ -147,7 +147,7 @@ public class BreadcrumbRenderer implements SpecificationProcessingListener {
         if (s.equals("")) {
             return "";
         }
-        return s.substring(0, 1).toUpperCase() + s.substring(1);
+        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
 
     private String stripExtension(String s) {
