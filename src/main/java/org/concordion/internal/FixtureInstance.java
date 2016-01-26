@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.concordion.api.*;
 import org.concordion.internal.scopedObjects.ScopedFieldStore;
+import org.concordion.internal.util.SimpleFormatter;
 
 public class FixtureInstance extends FixtureType implements Fixture, FixtureDeclarations {
     private final Object fixtureObject;
@@ -43,7 +44,7 @@ public class FixtureInstance extends FixtureType implements Fixture, FixtureDecl
     @Override
     public String getSpecificationDescription() {
         String name = removeSuffix(fixtureClass.getSimpleName());
-        return String.format("[Concordion Specification for '%s']", name); // Based on suggestion by Danny Guerrier
+        return SimpleFormatter.format("[Concordion Specification for '%s']", name); // Based on suggestion by Danny Guerrier
     }
 
     @Override
