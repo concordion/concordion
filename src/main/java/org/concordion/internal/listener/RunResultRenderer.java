@@ -1,11 +1,16 @@
 package org.concordion.internal.listener;
 
+import org.concordion.api.Source;
 import org.concordion.api.listener.RunFailureEvent;
 import org.concordion.api.listener.RunIgnoreEvent;
 import org.concordion.api.listener.RunListener;
 import org.concordion.api.listener.RunSuccessEvent;
 
 public class RunResultRenderer extends ThrowableRenderer implements RunListener {
+
+    public RunResultRenderer(Source source) {
+        super(source);
+    }
 
     public void successReported(RunSuccessEvent event) {
         event.getElement().addStyleClass("success").appendNonBreakingSpaceIfBlank();

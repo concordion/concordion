@@ -23,7 +23,6 @@ import org.concordion.internal.listener.*;
 import org.concordion.internal.parser.markdown.MarkdownConverter;
 import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
-import org.concordion.internal.util.IOUtil;
 
 public class ConcordionBuilder implements ConcordionExtender {
 
@@ -67,8 +66,6 @@ public class ConcordionBuilder implements ConcordionExtender {
 
     {
         ExtensionChecker.checkForOutdatedExtensions();
-        withThrowableListener(new ThrowableRenderer());
-        
         commandRegistry.register("", "specification", specificationCommand);
         
         AssertResultRenderer assertRenderer = new AssertResultRenderer();
@@ -76,7 +73,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         withAssertTrueListener(assertRenderer);
         withAssertFalseListener(assertRenderer);
         withVerifyRowsListener(new VerifyRowsResultRenderer());
-        withRunListener(new RunResultRenderer());
+        withRunListener(new RunResultRenderer(source));
         withDocumentParsingListener(new DocumentStructureImprover());
         withDocumentParsingListener(new MetadataCreator());
         withSpecificationType("html", null);
@@ -244,6 +241,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "verifyRows", verifyRowsCommand);
         
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "echo", echoCommand);
+        withThrowableListener(new ThrowableRenderer(source));
 
         if (target == null) {
             target = new FileTarget(getBaseOutputDir());
@@ -385,21 +383,21 @@ public class ConcordionBuilder implements ConcordionExtender {
         	ResourceFinder resources = new ResourceFinder(fixture);
         	List<ResourceToCopy> sourceFiles = resources.getResourcesToCopy();
         	
-        	for (ResourceToCopy source : sourceFiles) {
-    			if (source.isStyleSheet()) {
-    				if (source.insertType == InsertType.EMBEDDED) {
-    					withEmbeddedCSS(IOUtil.readResourceAsString(source.getResourceName()));
+        	for (ResourceToCopy sourceFile : sourceFiles) {
+    			if (sourceFile.isStyleSheet()) {
+    				if (sourceFile.insertType == InsertType.EMBEDDED) {
+    					withEmbeddedCSS(source.readResourceAsString(sourceFile.getResourceName()));
     				} else {
-    					withLinkedCSS(source.getResourceName(), new Resource(source.getResourceName()));
+    					withLinkedCSS(sourceFile.getResourceName(), new Resource(sourceFile.getResourceName()));
     				}
-    			} else if (source.isScript()) {
-    				if (source.insertType == InsertType.EMBEDDED) {
-    					withEmbeddedJavaScript(IOUtil.readResourceAsString(source.getResourceName()));
+    			} else if (sourceFile.isScript()) {
+    				if (sourceFile.insertType == InsertType.EMBEDDED) {
+    					withEmbeddedJavaScript(source.readResourceAsString(sourceFile.getResourceName()));
     				} else {
-    					withLinkedJavaScript(source.getResourceName(), new Resource(source.getResourceName()));
+    					withLinkedJavaScript(sourceFile.getResourceName(), new Resource(sourceFile.getResourceName()));
     				}
     			} else {
-    				withResource(source.getResourceName(), new Resource(source.getResourceName()));
+    				withResource(sourceFile.getResourceName(), new Resource(sourceFile.getResourceName()));
     			}
     		}
         			
@@ -416,7 +414,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     }
     
 	private void addDefaultStyling() {
-    	String stylesheetContent = IOUtil.readResourceAsString(EMBEDDED_STYLESHEET_RESOURCE);    
+    	String stylesheetContent = source.readResourceAsString(EMBEDDED_STYLESHEET_RESOURCE);    
     	withEmbeddedCSS(stylesheetContent);
     }
 

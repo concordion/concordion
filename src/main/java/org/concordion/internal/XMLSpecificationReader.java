@@ -8,7 +8,6 @@ import java.util.Scanner;
 import nu.xom.Document;
 
 import org.concordion.api.*;
-import org.concordion.internal.util.IOUtil;
 
 public class XMLSpecificationReader implements SpecificationReader {
 
@@ -31,7 +30,7 @@ public class XMLSpecificationReader implements SpecificationReader {
             document = xmlParser.parse(inputStream, String.format("[%s: %s]", source, resource.getPath()));
         } catch (ParsingException e) {
             if (specificationConverter != null) {
-                System.err.println("Error parsing generated HTML:\n" + IOUtil.readAsString(asHtmlStream(resource)));
+                System.err.println("Error parsing generated HTML:\n" + source.readAsString(asHtmlStream(resource)));
             }
             throw e;
         }
