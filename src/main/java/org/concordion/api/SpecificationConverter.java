@@ -11,10 +11,11 @@ import java.io.InputStream;
 public interface SpecificationConverter {
 
     /**
-     * Convert the resource's input stream to an HTML input stream.
-     * @param inputStream the input stream containing the content of the resource
-     * @return converted resource's content
+     * Convert the specification's input stream to an HTML input stream.
+     * @param inputStream the input stream containing the content of the specification
+     * @param specificationName the filename of the specification (without the path)
+     * @return converted specification content
      * @throws IOException on i/o error
      */
-    InputStream convert(InputStream inputStream) throws IOException;
+    InputStream convert(InputStream inputStream, String specificationName) throws IOException;
 }

@@ -59,7 +59,7 @@ public class XMLSpecificationReader implements SpecificationReader {
     private InputStream asHtmlStream(Resource resource) throws IOException {
         InputStream inputStream = source.createInputStream(resource);
         if (specificationConverter != null) {
-            inputStream = specificationConverter.convert(inputStream);
+            inputStream = specificationConverter.convert(inputStream, resource.getName());
         }
         if (copySourceHtmlTarget != null) {
             inputStream = copySourceHtml(resource, inputStream);
