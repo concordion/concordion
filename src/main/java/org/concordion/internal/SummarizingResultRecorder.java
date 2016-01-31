@@ -1,15 +1,16 @@
 package org.concordion.internal;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.concordion.api.*;
 
 public class SummarizingResultRecorder extends AbstractResultSummary implements ResultRecorder, ResultSummary {
 
-    private final List<Result> recordedResults = new ArrayList<Result>();
+    private final List<Result> recordedResults = Collections.synchronizedList(new ArrayList<Result>());
     private FailFastException failFastException;
-    boolean forExample;
+    private boolean forExample;
 
     public SummarizingResultRecorder() {
         this(null);
@@ -50,8 +51,12 @@ public class SummarizingResultRecorder extends AbstractResultSummary implements 
     }
 
     private long getCount(Result result) {
+
+        // clone the list for the iterator
+        List<Result> listCopy = new ArrayList<Result>(recordedResults);
+
         int count = 0;
-        for (Result candidate : recordedResults) {
+        for (Result candidate : listCopy) {
             if (candidate == result) {
                 count++;
             }
