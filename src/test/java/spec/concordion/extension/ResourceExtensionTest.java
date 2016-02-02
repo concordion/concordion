@@ -23,8 +23,4 @@ public class ResourceExtensionTest extends AbstractExtensionTestCase {
     protected void configureTestRig(TestRig testRig) {
         testRig.withResource(new Resource(ResourceExtension.SOURCE_PATH), "0101");
     }
-    
-    public int getMeaningOfLife() {
-        return 42;
-    }
 }
