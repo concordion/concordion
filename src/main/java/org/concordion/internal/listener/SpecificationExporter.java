@@ -7,6 +7,7 @@ import org.concordion.api.Target;
 import org.concordion.api.listener.SpecificationProcessingEvent;
 import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.internal.SpecificationDescriber;
+import org.concordion.internal.util.SimpleFormatter;
 
 public class SpecificationExporter implements SpecificationProcessingListener, SpecificationDescriber {
 
@@ -34,7 +35,7 @@ public class SpecificationExporter implements SpecificationProcessingListener, S
     }
 
     public String getDescription(Resource resource, String exampleName) {
-        return String.format("%s#%s", getDescription(resource), exampleName);
+        return SimpleFormatter.format("%s#%s", getDescription(resource), exampleName);
     }
 
 }
