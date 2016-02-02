@@ -14,7 +14,7 @@ public class MarkdownConverter implements SpecificationConverter {
     private int pegdownExtensions;
 
     @Override
-    public InputStream convert(InputStream inputStream) throws IOException {
+    public InputStream convert(InputStream inputStream, String specificationName) throws IOException {
         String markdown = asString(inputStream);
         MarkdownParser markdownParser = new MarkdownParser(pegdownExtensions);
         String html = markdownParser.markdownToHtml(markdown, CONCORDION_NAMESPACE_PREFIX);

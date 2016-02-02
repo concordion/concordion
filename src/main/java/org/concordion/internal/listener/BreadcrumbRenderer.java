@@ -18,6 +18,7 @@ import org.concordion.api.listener.SpecificationProcessingEvent;
 import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.internal.SpecificationType;
 import org.concordion.internal.XMLParser;
+import org.concordion.internal.util.SimpleFormatter;
 
 public class BreadcrumbRenderer implements SpecificationProcessingListener {
 
@@ -109,9 +110,9 @@ public class BreadcrumbRenderer implements SpecificationProcessingListener {
         if (breadcrumbWording == null) {
             InputStream inputStream = source.createInputStream(indexPageResource);
             if (specificationConverter != null) {
-                inputStream = specificationConverter.convert(inputStream);
+                inputStream = specificationConverter.convert(inputStream, indexPageResource.getName());
             }
-            Document document = xmlParser.parse(inputStream, String.format("[%s: %s]", source, indexPageResource.getPath()));
+            Document document = xmlParser.parse(inputStream, SimpleFormatter.format("[%s: %s]", source, indexPageResource.getPath()));
 
             breadcrumbWording = getBreadcrumbWording(new Element(document.getRootElement()), indexPageResource);
             breadcrumbWordingCache.put(indexPageResource, breadcrumbWording);
@@ -146,7 +147,7 @@ public class BreadcrumbRenderer implements SpecificationProcessingListener {
         if (s.equals("")) {
             return "";
         }
-        return s.substring(0, 1).toUpperCase() + s.substring(1);
+        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
 
     private String stripExtension(String s) {

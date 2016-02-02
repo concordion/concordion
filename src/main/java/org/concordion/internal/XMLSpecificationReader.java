@@ -9,6 +9,7 @@ import nu.xom.Document;
 
 import org.concordion.api.*;
 import org.concordion.internal.util.IOUtil;
+import org.concordion.internal.util.SimpleFormatter;
 
 public class XMLSpecificationReader implements SpecificationReader {
 
@@ -28,7 +29,7 @@ public class XMLSpecificationReader implements SpecificationReader {
         InputStream inputStream = asHtmlStream(resource);
         Document document;
         try {
-            document = xmlParser.parse(inputStream, String.format("[%s: %s]", source, resource.getPath()));
+            document = xmlParser.parse(inputStream, SimpleFormatter.format("[%s: %s]", source, resource.getPath()));
         } catch (ParsingException e) {
             if (specificationConverter != null) {
                 System.err.println("Error parsing generated HTML:\n" + IOUtil.readAsString(asHtmlStream(resource)));
@@ -59,7 +60,7 @@ public class XMLSpecificationReader implements SpecificationReader {
     private InputStream asHtmlStream(Resource resource) throws IOException {
         InputStream inputStream = source.createInputStream(resource);
         if (specificationConverter != null) {
-            inputStream = specificationConverter.convert(inputStream);
+            inputStream = specificationConverter.convert(inputStream, resource.getName());
         }
         if (copySourceHtmlTarget != null) {
             inputStream = copySourceHtml(resource, inputStream);
@@ -82,7 +83,7 @@ public class XMLSpecificationReader implements SpecificationReader {
     
     private InputStream copySourceHtml(Resource resource, InputStream inputStream) throws IOException {
         Resource sourceHtmlResource = new Resource(resource.getPath() + ".html");
-        System.out.println(String.format("[Source: %s]", copySourceHtmlTarget.resolvedPathFor(sourceHtmlResource)));
+        System.out.println(SimpleFormatter.format("[Source: %s]", copySourceHtmlTarget.resolvedPathFor(sourceHtmlResource)));
         String html = asString(inputStream);
         copySourceHtmlTarget.write(sourceHtmlResource, html);
         inputStream = new ByteArrayInputStream(html.getBytes("UTF-8"));
