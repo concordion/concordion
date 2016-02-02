@@ -8,8 +8,8 @@ import org.concordion.api.listener.RunSuccessEvent;
 
 public class RunResultRenderer extends ThrowableRenderer implements RunListener {
 
-    public RunResultRenderer(Source source) {
-        super(source);
+    public RunResultRenderer(Source resourceSource) {
+        super(resourceSource);
     }
 
     public void successReported(RunSuccessEvent event) {

@@ -23,12 +23,12 @@ public class BreadcrumbRenderer implements SpecificationProcessingListener {
 
     private static Logger logger = Logger.getLogger(BreadcrumbRenderer.class.getName());
     private static Map<Resource, String> breadcrumbWordingCache = new ConcurrentHashMap<Resource, String>();
-    private final Source source;
+    private final Source specificationSource;
     private final XMLParser xmlParser;
     private List<SpecificationType> specificationTypes;
 
-    public BreadcrumbRenderer(Source source, XMLParser xmlParser, List<SpecificationType> specificationTypes) {
-        this.source = source;
+    public BreadcrumbRenderer(Source specificationSource, XMLParser xmlParser, List<SpecificationType> specificationTypes) {
+        this.specificationSource = specificationSource;
         this.xmlParser = xmlParser;
         this.specificationTypes = specificationTypes;
     }
@@ -67,7 +67,7 @@ public class BreadcrumbRenderer implements SpecificationProcessingListener {
         while (packageResource != null) {
             for (SpecificationType specificationType : specificationTypes) {
                 Resource indexPageResource = packageResource.getRelativeResource(getIndexPageName(packageResource, specificationType.getTypeSuffix()));
-                if (!indexPageResource.equals(documentResource) && source.canFind(indexPageResource)) {
+                if (!indexPageResource.equals(documentResource) && specificationSource.canFind(indexPageResource)) {
                     try {
                         prependBreadcrumb(breadcrumbSpan, createBreadcrumbElement(documentResource, indexPageResource, specificationType.getConverter()));
                     } catch (Exception e) {
@@ -107,14 +107,17 @@ public class BreadcrumbRenderer implements SpecificationProcessingListener {
             throws IOException {
         String breadcrumbWording = breadcrumbWordingCache.get(indexPageResource);
         if (breadcrumbWording == null) {
-            InputStream inputStream = source.createInputStream(indexPageResource);
-            if (specificationConverter != null) {
-                inputStream = specificationConverter.convert(inputStream);
+            InputStream inputStream = specificationSource.createInputStream(indexPageResource);
+            try {
+                if (specificationConverter != null) {
+                    inputStream = specificationConverter.convert(inputStream);
+                }
+                Document document = xmlParser.parse(inputStream, String.format("[%s: %s]", specificationSource, indexPageResource.getPath()));
+                breadcrumbWording = getBreadcrumbWording(new Element(document.getRootElement()), indexPageResource);
+                breadcrumbWordingCache.put(indexPageResource, breadcrumbWording);
+            } finally {
+                inputStream.close();
             }
-            Document document = xmlParser.parse(inputStream, String.format("[%s: %s]", source, indexPageResource.getPath()));
-
-            breadcrumbWording = getBreadcrumbWording(new Element(document.getRootElement()), indexPageResource);
-            breadcrumbWordingCache.put(indexPageResource, breadcrumbWording);
         }
         return breadcrumbWording;
     }

@@ -11,14 +11,14 @@ import org.concordion.api.*;
 
 public class XMLSpecificationReader implements SpecificationReader {
 
-    private final Source source;
+    private final Source specificationSource;
     private final XMLParser xmlParser;
     private final DocumentParser documentParser;
     private SpecificationConverter specificationConverter;
     private Target copySourceHtmlTarget;
 
-    public XMLSpecificationReader(Source source, XMLParser xmlParser, DocumentParser documentParser) {
-        this.source = source;
+    public XMLSpecificationReader(Source specificationSource, XMLParser xmlParser, DocumentParser documentParser) {
+        this.specificationSource = specificationSource;
         this.xmlParser = xmlParser;
         this.documentParser = documentParser;
     }
@@ -27,12 +27,14 @@ public class XMLSpecificationReader implements SpecificationReader {
         InputStream inputStream = asHtmlStream(resource);
         Document document;
         try {
-            document = xmlParser.parse(inputStream, String.format("[%s: %s]", source, resource.getPath()));
+            document = xmlParser.parse(inputStream, String.format("[%s: %s]", specificationSource, resource.getPath()));
         } catch (ParsingException e) {
             if (specificationConverter != null) {
-                System.err.println("Error parsing generated HTML:\n" + source.readAsString(asHtmlStream(resource)));
+                System.err.println("Error parsing generated HTML:\n" + specificationSource.readAsString(asHtmlStream(resource)));
             }
             throw e;
+        } finally {
+            inputStream.close();
         }
         if (specificationConverter != null) {
             resource = new Resource(resource.getPath().replaceFirst("\\..*$", "\\.html"));
@@ -42,7 +44,7 @@ public class XMLSpecificationReader implements SpecificationReader {
 
     @Override
     public boolean canFindSpecification(Resource resource) throws IOException {
-        return source.canFind(resource);
+        return specificationSource.canFind(resource);
     }
 
     @Override
@@ -56,7 +58,7 @@ public class XMLSpecificationReader implements SpecificationReader {
     }
     
     private InputStream asHtmlStream(Resource resource) throws IOException {
-        InputStream inputStream = source.createInputStream(resource);
+        InputStream inputStream = specificationSource.createInputStream(resource);
         if (specificationConverter != null) {
             inputStream = specificationConverter.convert(inputStream);
         }
