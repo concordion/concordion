@@ -111,7 +111,7 @@ public class BreadcrumbRenderer implements SpecificationProcessingListener {
             InputStream inputStream = specificationSource.createInputStream(indexPageResource);
             try {
                 if (specificationConverter != null) {
-                    inputStream = specificationConverter.convert(inputStream);
+                    inputStream = specificationConverter.convert(inputStream, indexPageResource.getName());
                 }
                 Document document = xmlParser.parse(inputStream, SimpleFormatter.format("[%s: %s]", specificationSource, indexPageResource.getPath()));
                 breadcrumbWording = getBreadcrumbWording(new Element(document.getRootElement()), indexPageResource);

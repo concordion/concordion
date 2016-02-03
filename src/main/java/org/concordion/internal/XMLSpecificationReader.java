@@ -28,7 +28,7 @@ public class XMLSpecificationReader implements SpecificationReader {
         InputStream inputStream = asHtmlStream(resource);
         Document document;
         try {
-            document = xmlParser.parse(inputStream, SimpleFormatter.format("[%s: %s]", source, resource.getPath()));
+            document = xmlParser.parse(inputStream, SimpleFormatter.format("[%s: %s]", specificationSource, resource.getPath()));
         } catch (ParsingException e) {
             if (specificationConverter != null) {
                 System.err.println("Error parsing generated HTML:\n" + specificationSource.readAsString(asHtmlStream(resource)));
