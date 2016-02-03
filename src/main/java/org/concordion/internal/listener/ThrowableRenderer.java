@@ -4,17 +4,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.concordion.api.Element;
+import org.concordion.api.Source;
 import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.internal.FailFastException;
 import org.concordion.internal.util.Check;
-import org.concordion.internal.util.IOUtil;
 
 public class ThrowableRenderer implements ThrowableCaughtListener {
 
     private static final String TOGGLING_SCRIPT_RESOURCE_PATH = "/org/concordion/internal/resource/visibility-toggler.js";
     private long buttonId = 0;
     private Set<Element> rootElementsWithScript = new HashSet<Element>();
+    private Source resourceSource;
+    
+    public ThrowableRenderer(Source resourceSource) {
+        this.resourceSource = resourceSource;
+    }
     
     public void throwableCaught(ThrowableCaughtEvent event) {
         Element element = event.getElement();
@@ -51,7 +56,7 @@ public class ThrowableRenderer implements ThrowableCaughtListener {
             if (head != null) {
                 Element script = new Element("script").addAttribute("type", "text/javascript");
                 head.prependChild(script);
-                script.appendText(IOUtil.readResourceAsString(TOGGLING_SCRIPT_RESOURCE_PATH, "UTF-8"));
+                script.appendText(resourceSource.readResourceAsString(TOGGLING_SCRIPT_RESOURCE_PATH));
             }
         }
     }

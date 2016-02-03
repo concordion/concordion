@@ -6,6 +6,7 @@ import java.util.List;
 import org.concordion.api.Element;
 import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.integration.junit4.ConcordionRunner;
+import org.concordion.internal.ClassPathSource;
 import org.concordion.internal.listener.ThrowableRenderer;
 import org.junit.runner.RunWith;
 
@@ -33,7 +34,7 @@ public class ExceptionTest {
             .query("//p")
             .get(0));
             
-        new ThrowableRenderer().throwableCaught(new ThrowableCaughtEvent(t, element, expression));
+        new ThrowableRenderer(new ClassPathSource()).throwableCaught(new ThrowableCaughtEvent(t, element, expression));
         
         return element.toXML();
     }

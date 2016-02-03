@@ -8,4 +8,8 @@ public interface Source {
     InputStream createInputStream(Resource resource) throws IOException;
     
     boolean canFind(Resource resource);
+
+    String readAsString(InputStream inputStream) throws IOException;
+
+    String readResourceAsString(String resourcePath);
 }

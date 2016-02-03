@@ -13,11 +13,11 @@ import java.io.Writer;
 import org.concordion.api.Resource;
 import org.concordion.api.Target;
 import org.concordion.internal.util.Check;
-import org.concordion.internal.util.IOUtil;
 
 public class FileTarget implements Target {
 
     private static final long FRESH_ENOUGH_MILLIS = 2000; // 2 secs
+    private static final int BUFFER_SIZE = 4096;
     private final File baseDir;
 
     public FileTarget(File baseDir) {
@@ -34,7 +34,7 @@ public class FileTarget implements Target {
         }
         OutputStream outputStream = createOutputStream(resource);
         try {
-            IOUtil.copy(inputStream, outputStream);
+            copy(inputStream, outputStream);
         } finally {
             outputStream.close();
         }
@@ -88,5 +88,13 @@ public class FileTarget implements Target {
     
     public String resolvedPathFor(Resource resource) {
         return "file://" + getFile(resource).getAbsolutePath();
+    }
+
+    private void copy(InputStream inputStream, OutputStream outputStream) throws IOException {
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int len = 0;
+        while ((len = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, len);
+        }
     }
 }
