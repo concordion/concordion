@@ -1,11 +1,14 @@
 package org.concordion.internal.command;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.concordion.api.*;
 import org.concordion.api.listener.SpecificationProcessingEvent;
 import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.internal.FailFastException;
 import org.concordion.internal.SpecificationDescriber;
-import org.concordion.internal.util.Announcer;
 
 public class SpecificationCommand extends AbstractCommand {
 
@@ -40,15 +43,15 @@ public class SpecificationCommand extends AbstractCommand {
         throw new IllegalStateException("Unexpected call to " + getClass().getSimpleName() + "'s verify() method. Only the execute() method should be called.");
     }
 
-    private Announcer<SpecificationProcessingListener> listeners = Announcer.to(SpecificationProcessingListener.class);
+    private List<SpecificationProcessingListener> listeners = new ArrayList<SpecificationProcessingListener>();
     private SpecificationDescriber specificationDescriber;
     
     public void addSpecificationListener(SpecificationProcessingListener listener) {
-        listeners.addListener(listener);
+        listeners.add(listener);
     }
 
     public void removeSpecificationListener(SpecificationProcessingListener listener) {
-        listeners.removeListener(listener);
+        listeners.remove(listener);
     }
 
     public void setSpecificationDescriber(SpecificationDescriber specificationDescriber) {
@@ -56,10 +59,14 @@ public class SpecificationCommand extends AbstractCommand {
     }
 
     private void announceAfterProcessingEvent(Resource resource, Element element) {
-        listeners.announce().afterProcessingSpecification(new SpecificationProcessingEvent(resource, element));
+    	for (SpecificationProcessingListener listener : listeners) {
+    		listener.afterProcessingSpecification(new SpecificationProcessingEvent(resource, element));
+		}
     }
 
     private void announceBeforeProcessingEvent(Resource resource, Element element) {
-        listeners.announce().beforeProcessingSpecification(new SpecificationProcessingEvent(resource, element));
+    	for (SpecificationProcessingListener listener : listeners) {
+    		listener.beforeProcessingSpecification(new SpecificationProcessingEvent(resource, element));
+		}
     }
 }

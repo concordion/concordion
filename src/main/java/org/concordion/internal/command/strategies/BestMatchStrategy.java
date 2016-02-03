@@ -1,17 +1,18 @@
 package org.concordion.internal.command.strategies;
 
+import java.util.List;
+
 import org.concordion.api.CommandCall;
 import org.concordion.api.Evaluator;
 import org.concordion.api.ResultRecorder;
 import org.concordion.api.listener.VerifyRowsListener;
 import org.concordion.internal.Row;
 import org.concordion.internal.SummarizingResultRecorder;
-import org.concordion.internal.util.Announcer;
 
 public class BestMatchStrategy extends AbstractChangingOrderRowsMatchStrategy {
 
     public BestMatchStrategy(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder,
-                             Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows) {
+                             List<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows) {
         super(commandCall, evaluator, resultRecorder, listeners, loopVariableName, actualRows);
     }
 

@@ -2,8 +2,11 @@ package org.concordion.internal.command;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,19 +14,18 @@ import org.concordion.api.*;
 import org.concordion.api.listener.VerifyRowsListener;
 import org.concordion.internal.command.strategies.DefaultMatchStrategy;
 import org.concordion.internal.command.strategies.RowsMatchStrategy;
-import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 
 public class VerifyRowsCommand extends AbstractCommand {
 
-    private Announcer<VerifyRowsListener> listeners = Announcer.to(VerifyRowsListener.class);
+    private List<VerifyRowsListener> listeners = new ArrayList<VerifyRowsListener>();
 
     public void addVerifyRowsListener(VerifyRowsListener listener) {
-        listeners.addListener(listener);
+        listeners.add(listener);
     }
 
     public void removeVerifyRowsListener(VerifyRowsListener listener) {
-        listeners.removeListener(listener);
+        listeners.remove(listener);
     }
     
     @SuppressWarnings("unchecked")
@@ -53,11 +55,11 @@ public class VerifyRowsCommand extends AbstractCommand {
                 CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, String loopVariableName, Iterable<Object> iterable) {
         Constructor<? extends RowsMatchStrategy> constructor;
         try {
-            constructor = strategyClass.getConstructor(CommandCall.class, Evaluator.class, ResultRecorder.class, Announcer.class, String.class, Iterable.class);
+            constructor = strategyClass.getConstructor(CommandCall.class, Evaluator.class, ResultRecorder.class, List.class, String.class, Iterable.class);
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(strategyClass.getName() + " must declare constructor with arguments: " +
                     "CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder,\n" +
-                    "Announcer<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows");
+                    "List<VerifyRowsListener> listeners, String loopVariableName, Iterable<Object> actualRows");
         }
         try {
             return constructor.newInstance(commandCall, evaluator, resultRecorder, listeners, loopVariableName, iterable);

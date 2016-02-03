@@ -1,24 +1,25 @@
 package org.concordion.internal.command;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.concordion.api.*;
 import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.internal.FailFastException;
-import org.concordion.internal.util.Announcer;
 
 public class ThrowableCatchingDecorator extends AbstractCommandDecorator {
 
-    private final Announcer<ThrowableCaughtListener> listeners = Announcer.to(ThrowableCaughtListener.class);
+    private final List<ThrowableCaughtListener> listeners = new ArrayList<ThrowableCaughtListener>();
     private final List<Class<? extends Throwable>> failFastExceptions;
     
     public void addThrowableListener(ThrowableCaughtListener listener) {
-        listeners.addListener(listener);
+        listeners.add(listener);
     }
 
     public void removeThrowableListener(ThrowableCaughtListener listener) {
-        listeners.removeListener(listener);
+        listeners.remove(listener);
     }
     
     public ThrowableCatchingDecorator(Command command, List<Class<? extends Throwable>> failFastExceptions) {
@@ -27,7 +28,9 @@ public class ThrowableCatchingDecorator extends AbstractCommandDecorator {
     }
 
     private void announceThrowableCaught(Element element, Throwable t, String expression) {
-        listeners.announce().throwableCaught(new ThrowableCaughtEvent(t, element, expression));
+    	for (ThrowableCaughtListener listener : listeners) {
+    		listener.throwableCaught(new ThrowableCaughtEvent(t, element, expression));
+		}
     }
 
     @Override

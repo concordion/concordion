@@ -1,5 +1,9 @@
 package org.concordion.internal.command;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.concordion.api.AbstractCommand;
 import org.concordion.api.CommandCall;
 import org.concordion.api.Element;
@@ -7,19 +11,18 @@ import org.concordion.api.Evaluator;
 import org.concordion.api.ResultRecorder;
 import org.concordion.api.listener.SetEvent;
 import org.concordion.api.listener.SetListener;
-import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 
 public class SetCommand extends AbstractCommand {
 
-    private Announcer<SetListener> listeners = Announcer.to(SetListener.class);
+    private List<SetListener> listeners = new ArrayList<SetListener>();
 
     public void addSetListener(SetListener listener) {
-        listeners.addListener(listener);
+        listeners.add(listener);
     }
 
     public void removeSetListener(SetListener listener) {
-        listeners.removeListener(listener);
+        listeners.remove(listener);
     }
 
     @Override
@@ -30,6 +33,8 @@ public class SetCommand extends AbstractCommand {
     }
 
     private void announceSetCompleted(Element element, String expression) {
-        listeners.announce().setCompleted(new SetEvent(element, expression));
+    	for (SetListener listener : listeners) {
+    		listener.setCompleted(new SetEvent(element, expression));
+		}
     }
 }

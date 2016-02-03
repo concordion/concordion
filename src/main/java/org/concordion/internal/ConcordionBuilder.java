@@ -21,12 +21,11 @@ import org.concordion.internal.command.*;
 import org.concordion.internal.extension.ExtensionChecker;
 import org.concordion.internal.listener.*;
 import org.concordion.internal.parser.markdown.MarkdownConverter;
-import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 
 public class ConcordionBuilder implements ConcordionExtender {
 
-    private Announcer<ConcordionBuildListener> listeners = Announcer.to(ConcordionBuildListener.class);
+    private List<ConcordionBuildListener> listeners = new ArrayList<ConcordionBuildListener>();
 
     public static final String NAMESPACE_CONCORDION_2007 = "http://www.concordion.org/2007/concordion";
     private static final String PROPERTY_OUTPUT_DIR = "concordion.output.dir";
@@ -166,7 +165,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     }
 
     public ConcordionBuilder withBuildListener(ConcordionBuildListener listener) {
-        listeners.addListener(listener);
+        listeners.add(listener);
         return this;
     }
     
@@ -278,7 +277,7 @@ public class ConcordionBuilder implements ConcordionExtender {
 
         exampleCommand.setSpecificationDescriber(exporter);
         
-        listeners.announce().concordionBuilt(new ConcordionBuildEvent(target));
+        announceBuildCompleted();
 
         try {
             if (specificationLocator instanceof SpecificationLocatorWithType) {
@@ -291,7 +290,13 @@ public class ConcordionBuilder implements ConcordionExtender {
         }
     }
 
-    private void addSpecificationListeners() {
+    private void announceBuildCompleted() {
+		for (ConcordionBuildListener buildListener : listeners) {
+			buildListener.concordionBuilt(new ConcordionBuildEvent(target));
+		}
+	}
+
+	private void addSpecificationListeners() {
         for (SpecificationProcessingListener listener : specificationProcessingListeners) {
             specificationCommand.addSpecificationListener(listener);
         }

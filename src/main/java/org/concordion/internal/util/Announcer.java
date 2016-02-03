@@ -9,10 +9,12 @@ import java.util.EventListener;
 import java.util.List;
 
 /**
+ * @deprecated Depricated due to performance issues - use java.util.List instead. When cross-compiled to Concordion.NET, the Announcers generate dynamic proxies that are realized by code compiled at run time. When profiled, the Announcer took 1460ms, vs 5ms for the list based solution.
  * <a href="http://nat.truemesh.com/archives/000710.html">Easy Java bean event notification</a>
  * courtesy of Nat Pryce.
  * [<a href="http://svn.jmock.codehaus.org/browse/jmock/trunk/jmock2/test/org/jmock/example/announcer/Announcer.java">Source</a>]
  */
+@Deprecated
 public class Announcer<T extends EventListener> {
     private final T proxy;
     private final List<T> listeners = new ArrayList<T>();
