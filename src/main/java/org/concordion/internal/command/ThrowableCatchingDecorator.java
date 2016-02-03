@@ -11,7 +11,7 @@ import org.concordion.internal.FailFastException;
 
 public class ThrowableCatchingDecorator extends AbstractCommandDecorator {
 
-    private final List<ThrowableCaughtListener> listeners = Collections.synchronizedList(new ArrayList<ThrowableCaughtListener>());
+    private final List<ThrowableCaughtListener> listeners = new ArrayList<ThrowableCaughtListener>();
     private final List<Class<? extends Throwable>> failFastExceptions;
     
     public void addThrowableListener(ThrowableCaughtListener listener) {

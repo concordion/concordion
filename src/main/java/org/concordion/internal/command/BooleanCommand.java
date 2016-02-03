@@ -17,7 +17,7 @@ import org.concordion.internal.InvalidExpressionException;
 
 public abstract class BooleanCommand extends AbstractCommand {
 
-    private List<AssertListener> listeners = Collections.synchronizedList(new ArrayList<AssertListener>());
+    private List<AssertListener> listeners = new ArrayList<AssertListener>();
     
     public void addAssertListener(AssertListener listener) {
         listeners.add(listener);

@@ -14,7 +14,7 @@ import org.concordion.internal.TableSupport;
 
 public class ExecuteCommand extends AbstractCommand {
 
-    private List<ExecuteListener> listeners = Collections.synchronizedList(new ArrayList<ExecuteListener>());
+    private List<ExecuteListener> listeners = new ArrayList<ExecuteListener>();
 
     public void addExecuteListener(ExecuteListener listener) {
         listeners.add(listener);

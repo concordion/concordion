@@ -18,7 +18,7 @@ import org.concordion.internal.util.Check;
 
 public class VerifyRowsCommand extends AbstractCommand {
 
-    private List<VerifyRowsListener> listeners = Collections.synchronizedList(new ArrayList<VerifyRowsListener>());
+    private List<VerifyRowsListener> listeners = new ArrayList<VerifyRowsListener>();
 
     public void addVerifyRowsListener(VerifyRowsListener listener) {
         listeners.add(listener);

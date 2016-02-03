@@ -26,7 +26,7 @@ import org.concordion.internal.util.IOUtil;
 
 public class ConcordionBuilder implements ConcordionExtender {
 
-    private List<ConcordionBuildListener> listeners = Collections.synchronizedList(new ArrayList<ConcordionBuildListener>());
+    private List<ConcordionBuildListener> listeners = new ArrayList<ConcordionBuildListener>();
 
     public static final String NAMESPACE_CONCORDION_2007 = "http://www.concordion.org/2007/concordion";
     private static final String PROPERTY_OUTPUT_DIR = "concordion.output.dir";

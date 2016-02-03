@@ -22,7 +22,7 @@ import java.util.Map;
 public class DocumentParser {
 
     private final CommandFactory commandFactory;
-    private final List<DocumentParsingListener> listeners = Collections.synchronizedList(new ArrayList<DocumentParsingListener>());
+    private final List<DocumentParsingListener> listeners = new ArrayList<DocumentParsingListener>();
     
     public DocumentParser(CommandFactory commandFactory) {
         this.commandFactory = commandFactory;

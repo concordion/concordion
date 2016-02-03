@@ -18,7 +18,7 @@ import org.concordion.internal.util.Check;
 
 public class RunCommand extends AbstractCommand {
 
-    private List<RunListener> listeners = Collections.synchronizedList(new ArrayList<RunListener>());
+    private List<RunListener> listeners = new ArrayList<RunListener>();
     private RunStrategy runStrategy = new SequentialRunStrategy();
 
     public void addRunListener(RunListener runListener) {

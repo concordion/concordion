@@ -8,7 +8,7 @@ import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
 
 public class ThrowableCaughtPublisher implements ThrowableCaughtListener {
-    private List<ThrowableCaughtListener> listeners = Collections.synchronizedList(new ArrayList<ThrowableCaughtListener>());
+    private List<ThrowableCaughtListener> listeners = new ArrayList<ThrowableCaughtListener>();
     
     public void addThrowableListener(ThrowableCaughtListener listener) {
         listeners.add(listener);

@@ -15,7 +15,7 @@ import org.concordion.internal.SummarizingResultRecorder;
 
 public class ExampleCommand extends AbstractCommand {
 
-	private List<ExampleListener> listeners = Collections.synchronizedList(new ArrayList<ExampleListener>());
+	private List<ExampleListener> listeners = new ArrayList<ExampleListener>();
     private SpecificationDescriber specificationDescriber;
 
     public List<CommandCall> getExamples(CommandCall command) {

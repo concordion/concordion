@@ -19,7 +19,7 @@ import org.concordion.internal.util.Check;
 
 public class AssertEqualsCommand extends AbstractCommand {
 
-    private List<AssertEqualsListener> listeners = Collections.synchronizedList(new ArrayList<AssertEqualsListener>());
+    private List<AssertEqualsListener> listeners = new ArrayList<AssertEqualsListener>();
     private final Comparator<Object> comparator;
 
     public AssertEqualsCommand() {

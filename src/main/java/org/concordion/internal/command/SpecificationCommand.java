@@ -43,7 +43,7 @@ public class SpecificationCommand extends AbstractCommand {
         throw new IllegalStateException("Unexpected call to " + getClass().getSimpleName() + "'s verify() method. Only the execute() method should be called.");
     }
 
-    private List<SpecificationProcessingListener> listeners = Collections.synchronizedList(new ArrayList<SpecificationProcessingListener>());
+    private List<SpecificationProcessingListener> listeners = new ArrayList<SpecificationProcessingListener>();
     private SpecificationDescriber specificationDescriber;
     
     public void addSpecificationListener(SpecificationProcessingListener listener) {

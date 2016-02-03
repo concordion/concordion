@@ -15,7 +15,7 @@ import org.concordion.internal.util.Check;
 
 public class SetCommand extends AbstractCommand {
 
-    private List<SetListener> listeners = Collections.synchronizedList(new ArrayList<SetListener>());
+    private List<SetListener> listeners = new ArrayList<SetListener>();
 
     public void addSetListener(SetListener listener) {
         listeners.add(listener);
