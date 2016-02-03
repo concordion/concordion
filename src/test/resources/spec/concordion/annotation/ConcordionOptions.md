@@ -27,7 +27,7 @@ To add markdown extensions, use the `@ConcordionOptions` annotation on the fixtu
     @ConcordionOptions(markdownExtensions={MarkdownExtensions.WIKILINKS, MarkdownExtensions.AUTOLINKS})
     public class ...
       
-See the `MarkdownExtension` javadoc for a definition of the available extensions. (Note, the underlying Markdown parser is [Pegdown](https://github.com/sirthias/pegdown), which defines the [available extensions](https://github.com/sirthias/pegdown/blob/master/README.markdown#introduction).)
+See the [MarkdownExtension](http://concordion.github.io/concordion/latest/javadoc/org/concordion/api/option/MarkdownExtensions.html) javadoc for a definition of the available extensions. (Note, the underlying Markdown parser is [Pegdown](https://github.com/sirthias/pegdown), which defines the [available extensions](https://github.com/sirthias/pegdown/blob/master/README.markdown#introduction).)
 
 ### [No extra extensions](- "no-extra-extensions")
 
