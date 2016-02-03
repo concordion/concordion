@@ -52,7 +52,7 @@ public class SimpleFormatterTest {
 	@Test
 	public void testFormatWithNullArgs() {
 		String format = "%s specifier";
-		String formattedString = SimpleFormatter.format(format, null);
+		String formattedString = SimpleFormatter.format(format, (Object[])null);
 		assertEquals(" specifier", formattedString);
 	}
 
