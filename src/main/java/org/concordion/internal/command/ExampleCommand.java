@@ -1,6 +1,8 @@
 package org.concordion.internal.command;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.concordion.api.*;
@@ -10,11 +12,10 @@ import org.concordion.internal.FailFastException;
 import org.concordion.internal.ImplementationStatusChecker;
 import org.concordion.internal.SpecificationDescriber;
 import org.concordion.internal.SummarizingResultRecorder;
-import org.concordion.internal.util.Announcer;
 
 public class ExampleCommand extends AbstractCommand {
 
-	private Announcer<ExampleListener> listeners = Announcer.to(ExampleListener.class);
+	private List<ExampleListener> listeners = Collections.synchronizedList(new ArrayList<ExampleListener>());
     private SpecificationDescriber specificationDescriber;
 
     public List<CommandCall> getExamples(CommandCall command) {
@@ -22,11 +23,11 @@ public class ExampleCommand extends AbstractCommand {
     }
 
     public void addExampleListener(ExampleListener exampleListener) {
-        listeners.addListener(exampleListener);
+        listeners.add(exampleListener);
     }
 
     public void removeExampleListener(ExampleListener exampleListener) {
-        listeners.removeListener(exampleListener);
+        listeners.remove(exampleListener);
     }
     
     public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
@@ -39,7 +40,7 @@ public class ExampleCommand extends AbstractCommand {
         resultRecorder.setSpecificationDescription(
                 specificationDescriber.getDescription(node.getResource(), exampleName));
 
-        listeners.announce().beforeExample(new ExampleEvent(exampleName, node.getElement(), (SummarizingResultRecorder)resultRecorder));
+        announceBeforeExample(exampleName, node.getElement(), resultRecorder);
         
         try {
             node.getChildren().processSequentially(evaluator, resultRecorder);
@@ -66,7 +67,7 @@ public class ExampleCommand extends AbstractCommand {
             node.getElement().prependChild(fixtureNode);
         }
 
-        listeners.announce().afterExample(new ExampleEvent(exampleName, node.getElement(), (SummarizingResultRecorder)resultRecorder));
+        announceAfterExample(exampleName, node.getElement(), resultRecorder);
     }
 
     public boolean isExample() {
@@ -76,4 +77,16 @@ public class ExampleCommand extends AbstractCommand {
     public void setSpecificationDescriber(SpecificationDescriber specificationDescriber) {
         this.specificationDescriber = specificationDescriber;
     }
+    
+    private void announceBeforeExample(String exampleName, Element element,	ResultRecorder resultRecorder) {
+		for (ExampleListener listener : listeners) {
+			listener.beforeExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder)resultRecorder));
+		}
+	}
+    
+    private void announceAfterExample(String exampleName, Element element, ResultRecorder resultRecorder) {
+		for (ExampleListener listener : listeners) {
+			listener.afterExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder)resultRecorder));
+		}
+	}
 }

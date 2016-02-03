@@ -1,6 +1,9 @@
 package org.concordion.internal.command;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.concordion.api.*;
 import org.concordion.api.listener.RunFailureEvent;
@@ -11,20 +14,19 @@ import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.internal.ConcordionAssertionError;
 import org.concordion.internal.FailFastException;
 import org.concordion.internal.runner.DefaultConcordionRunner;
-import org.concordion.internal.util.Announcer;
 import org.concordion.internal.util.Check;
 
 public class RunCommand extends AbstractCommand {
 
-    private Announcer<RunListener> listeners = Announcer.to(RunListener.class);
+    private List<RunListener> listeners = Collections.synchronizedList(new ArrayList<RunListener>());
     private RunStrategy runStrategy = new SequentialRunStrategy();
 
     public void addRunListener(RunListener runListener) {
-        listeners.addListener(runListener);
+        listeners.add(runListener);
     }
 
     public void removeRunListener(RunListener runListener) {
-        listeners.removeListener(runListener);
+        listeners.remove(runListener);
     }
     
     public void setRunStrategy(RunStrategy runStrategy) {
@@ -121,20 +123,40 @@ public class RunCommand extends AbstractCommand {
             public void announce(ResultSummary result) {
                 synchronized(resource) {
                     if (result.getFailureCount() + result.getExceptionCount() > 0) {
-                        listeners.announce().failureReported(new RunFailureEvent(element, result));
+                    	announceFailure(element, result);
                     } else if (result.getIgnoredCount() > 0) {
-                        listeners.announce().ignoredReported(new RunIgnoreEvent(element, result));
+                    	announceIgnored(element, result);
                     } else {
-                        listeners.announce().successReported(new RunSuccessEvent(element, result));
+                    	announceSuccess(element, result);
                     }
                 }
             }
 
-            public void announceException(Throwable throwable) {
+			public void announceException(Throwable throwable) {
                 synchronized (resource) {
-                    listeners.announce().throwableCaught(new ThrowableCaughtEvent(throwable, element, expression));
+                	for (RunListener listener : listeners) {
+                		listener.throwableCaught(new ThrowableCaughtEvent(throwable, element, expression));
+					}
                 }
             }
+			
+			private void announceFailure(Element element, ResultSummary result) {
+				for (RunListener listener : listeners) {
+					listener.failureReported(new RunFailureEvent(element, result));
+				}
+			}
+			
+			private void announceIgnored(Element element, ResultSummary result) {
+				for (RunListener listener : listeners) {
+					listener.ignoredReported(new RunIgnoreEvent(element, result));
+				}
+			}
+			
+			private void announceSuccess(Element element, ResultSummary result) {
+				for (RunListener listener : listeners) {
+					listener.successReported(new RunSuccessEvent(element, result));
+				}
+			}
         };
     }
 }

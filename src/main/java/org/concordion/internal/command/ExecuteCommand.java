@@ -1,5 +1,9 @@
 package org.concordion.internal.command;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.concordion.api.*;
 import org.concordion.api.listener.ExecuteEvent;
 import org.concordion.api.listener.ExecuteListener;
@@ -7,18 +11,17 @@ import org.concordion.internal.ListEntry;
 import org.concordion.internal.ListSupport;
 import org.concordion.internal.Row;
 import org.concordion.internal.TableSupport;
-import org.concordion.internal.util.Announcer;
 
 public class ExecuteCommand extends AbstractCommand {
 
-    private Announcer<ExecuteListener> listeners = Announcer.to(ExecuteListener.class);
+    private List<ExecuteListener> listeners = Collections.synchronizedList(new ArrayList<ExecuteListener>());
 
     public void addExecuteListener(ExecuteListener listener) {
-        listeners.addListener(listener);
+        listeners.add(listener);
     }
 
     public void removeExecuteListener(ExecuteListener listener) {
-        listeners.removeListener(listener);
+        listeners.remove(listener);
     }
     
     @Override
@@ -104,7 +107,9 @@ public class ExecuteCommand extends AbstractCommand {
     }
     
     private void announceExecuteCompleted(Element element) {
-        listeners.announce().executeCompleted(new ExecuteEvent(element));
+    	for (ExecuteListener listener : listeners) {
+    		listener.executeCompleted(new ExecuteEvent(element));
+		}
     }
 
 }
