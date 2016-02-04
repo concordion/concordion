@@ -55,5 +55,12 @@ public class SimpleFormatterTest {
 		String formattedString = SimpleFormatter.format(format, (Object[])null);
 		assertEquals(" specifier", formattedString);
 	}
+	
+	@Test
+	public void testWithoutSpecifiersButArgs() {
+		String format = "Unexpected match failure for ''";
+		String formattedString = SimpleFormatter.format(format, "commandValueAndAttributes");
+		assertEquals(format, formattedString);
+	}
 
 }

@@ -4,7 +4,7 @@ public class Check {
 
     public static void isTrue(boolean expression, String message, Object... args) {
         if (!expression) {
-            throw new RuntimeException(String.format(message, args));
+            throw new RuntimeException(SimpleFormatter.format(message, args));
         }
     }
 

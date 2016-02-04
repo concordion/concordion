@@ -12,6 +12,7 @@ import org.concordion.api.Fixture;
 import org.concordion.api.Scope;
 import org.concordion.api.ScopedObjectHolder;
 import org.concordion.api.extension.Extension;
+import org.concordion.internal.util.SimpleFormatter;
 
 public class ScopedFieldStore {
     /**
@@ -51,7 +52,7 @@ public class ScopedFieldStore {
 
     private void createScopedObjectField(Class<?> fixtureClass, Field field) {
         if (!field.getType().equals(ScopedObjectHolder.class)) {
-            throw new AnnotationFormatError(String.format("The '%s' annotation can only be applied to fields of type '%s'", ConcordionScoped.class.getSimpleName(), ScopedObjectHolder.class.getSimpleName()));
+            throw new AnnotationFormatError(SimpleFormatter.format("The '%s' annotation can only be applied to fields of type '%s'", ConcordionScoped.class.getSimpleName(), ScopedObjectHolder.class.getSimpleName()));
         }
     
         ConcordionScoped annotation = field.getAnnotation(ConcordionScoped.class);

@@ -22,6 +22,7 @@ import org.concordion.internal.extension.ExtensionChecker;
 import org.concordion.internal.listener.*;
 import org.concordion.internal.parser.markdown.MarkdownConverter;
 import org.concordion.internal.util.Check;
+import org.concordion.internal.util.SimpleFormatter;
 
 public class ConcordionBuilder implements ConcordionExtender {
 
@@ -349,7 +350,7 @@ public class ConcordionBuilder implements ConcordionExtender {
                 ConcordionExtensionFactory factory = (ConcordionExtensionFactory) extensionObject;
                 extension = factory.createExtension();
             } catch (ClassCastException e1) {
-                String message = String.format("Extension class '%s' must implement '%s' or '%s'", className,
+                String message = SimpleFormatter.format("Extension class '%s' must implement '%s' or '%s'", className,
                         ConcordionExtension.class.getName(), ConcordionExtensionFactory.class.getName());
                 throw new RuntimeException(message);
             }
@@ -468,7 +469,7 @@ public class ConcordionBuilder implements ConcordionExtender {
             String property = matcher.group(1);
             String value = System.getProperty(property);
             if (value == null) {
-                throw new RuntimeException(String.format("Unable to find system property '%s' in @ConcordionOptions setting copySourceHtmlToDir of '%s'", property, location));
+                throw new RuntimeException(SimpleFormatter.format("Unable to find system property '%s' in @ConcordionOptions setting copySourceHtmlToDir of '%s'", property, location));
             }
             matcher.appendReplacement(sb, value);
         }

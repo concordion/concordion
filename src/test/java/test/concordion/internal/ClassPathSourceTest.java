@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import org.concordion.api.Resource;
 import org.concordion.internal.ClassPathSource;
+import org.concordion.internal.util.SimpleFormatter;
 import org.junit.Test;
 
 public class ClassPathSourceTest {
@@ -24,7 +25,7 @@ public class ClassPathSourceTest {
             fail("Expected IOException");
         } catch (IOException e) {
             assertThat(e.getMessage(), containsString("not found"));
-            assertThat(e.getMessage(), containsString(String.format("[%s: %s]", EXPECTED_SOURCE_NAME, MISSING_RESOURCE_NAME)));
+            assertThat(e.getMessage(), containsString(SimpleFormatter.format("[%s: %s]", EXPECTED_SOURCE_NAME, MISSING_RESOURCE_NAME)));
         }
     }
 }
