@@ -14,7 +14,6 @@ import org.concordion.internal.extension.FixtureExtensionLoader;
 
 import spec.concordion.DummyFixture;
 
-
 public class TestRig {
 
     private Fixture fixture;
@@ -30,7 +29,7 @@ public class TestRig {
     }
 
     public ProcessingResult processFragment(String fragment) {
-        return processFragment(fragment, "/testrig");
+    	return process(wrapFragment(fragment));
     }
 
     public ProcessingResult processFragment(String fragment, String fixtureName) {
@@ -43,7 +42,7 @@ public class TestRig {
 
     public ProcessingResult process(Resource resource) {
         EventRecorder eventRecorder = new EventRecorder();
-        stubTarget = new StubTarget();
+        
         if (fixture == null) {
             fixture = new FixtureInstance(new DummyFixture());
             withResource(new Resource("/spec/concordion/Dummy.html"), "<html/>");
