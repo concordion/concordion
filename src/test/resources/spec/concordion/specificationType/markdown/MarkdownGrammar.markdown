@@ -500,7 +500,7 @@ The [Run command](http://concordion.org/Tutorial.html#concordion:run) is express
 
 `[Display text](spec.html "c:run")`
 
-where `spec.html` is the name of the specification. Note that currently it has to be suffixed with `.html` rather than `.md`. 
+where `spec.html` is the name of the specification. 
 
 To specify a custom runner, use:
 
