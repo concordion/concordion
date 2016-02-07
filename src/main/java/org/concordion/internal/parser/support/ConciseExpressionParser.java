@@ -47,6 +47,10 @@ public class ConciseExpressionParser {
         }
         String valueAndAttributes = components[1];
         
+        if (valueAndAttributes.contains("\"")) {
+            throw new ConcordionSyntaxException(String.format("Invalid statement '%s'. Expected the right hand side to not contain double quotes.", statement));
+        }
+        
         return parseCommandValueAndAttributes(commandName, valueAndAttributes);
     }
 

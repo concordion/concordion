@@ -146,12 +146,21 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
     public void visit(TableCellNode node) {
         if (inTableHeader) {
             for (Node child : node.getChildren()) {
+                String title;
                 if (child instanceof ExpLinkNode) {
                     ExpLinkNode linkNode = (ExpLinkNode) child;
-                    pendingCommand = statementParser.parse(linkNode.title, "");
+                    title = linkNode.title;
+                    if (title == null) {
+                        throw new IllegalStateException(String.format("No title found for link node with url '%s'", linkNode.url));
+                    }
+                    pendingCommand = statementParser.parse(title, "");
                 } else if (child instanceof RefLinkNode) {
                     LinkNode linkNode = toLinkNode((RefLinkNode) child);
-                    pendingCommand = statementParser.parse(linkNode.getTitle(), "");
+                    title = linkNode.getTitle();
+                    if (title == null) {
+                        throw new IllegalStateException(String.format("No title found for link node with reference '%s'. This can be caused by the associated link text being empty.", linkNode.getText()));
+                    }
+                    pendingCommand = statementParser.parse(title, "");
                 }
             }
         }
