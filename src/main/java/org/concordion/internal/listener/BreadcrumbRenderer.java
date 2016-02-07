@@ -5,8 +5,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import nu.xom.Document;
 
@@ -22,7 +20,6 @@ import org.concordion.internal.util.SimpleFormatter;
 
 public class BreadcrumbRenderer implements SpecificationProcessingListener {
 
-    private static Logger logger = Logger.getLogger(BreadcrumbRenderer.class.getName());
     private static Map<Resource, String> breadcrumbWordingCache = new ConcurrentHashMap<Resource, String>();
     private final Source specificationSource;
     private final XMLParser xmlParser;
@@ -72,7 +69,7 @@ public class BreadcrumbRenderer implements SpecificationProcessingListener {
                     try {
                         prependBreadcrumb(breadcrumbSpan, createBreadcrumbElement(documentResource, indexPageResource, specificationType.getConverter()));
                     } catch (Exception e) {
-                        logger.log(Level.WARNING, "Failed to generate breadcrumb", e);
+                        System.err.println("Failed to generate breadcrumb: " + e.getMessage());
                     }
                     break;
                 }

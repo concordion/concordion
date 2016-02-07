@@ -2,7 +2,7 @@ package org.concordion.internal.listener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Logger;
+
 import org.concordion.api.Element;
 import org.concordion.api.Resource;
 import org.concordion.api.Target;
@@ -13,8 +13,7 @@ public class PageFooterRenderer implements SpecificationProcessingListener {
 
     private static final String CONCORDION_WEBSITE_URL = "http://www.concordion.org";
     private long startMillis;
-    private static Logger logger = Logger.getLogger(PageFooterRenderer.class.getName());
-
+    
     public PageFooterRenderer(Target target) {
     }
 
@@ -28,7 +27,7 @@ public class PageFooterRenderer implements SpecificationProcessingListener {
             addFooterToDocument(event.getRootElement(), event.getResource(), millisTaken);
         } catch (Throwable t) {
             t.printStackTrace();
-            logger.warning("Failed to write page footer. " + t.getMessage());
+            System.err.println("Failed to write page footer. " + t.getMessage());
         }
     }
 

@@ -12,18 +12,10 @@ import org.concordion.api.ResultSummary;
 import org.concordion.api.Unimplemented;
 import org.concordion.internal.FixtureType;
 import org.concordion.internal.runner.DefaultConcordionRunner;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.Result;
 
-import test.concordion.ConsoleLogGobbler;
-import test.concordion.StubLogger;
-
 public class DefaultConcordionRunnerTest {
-
-    @Rule
-    public ConsoleLogGobbler logGobbler = new ConsoleLogGobbler(); // Ensure error log messages don't appear on console
-    private final StubLogger stubLogger = new StubLogger();
 
     private final TestDefaultConcordionRunner runner = new TestDefaultConcordionRunner();
 
@@ -127,43 +119,6 @@ public class DefaultConcordionRunnerTest {
         assertThat(myresult.getIgnoredCount(), is(1L));
         assertThat(myresult.getExceptionCount(), is(0L));
         assertThat(myresult.getSuccessCount(), is(0L));
-    }
-
-    @Test
-    public void logsExceptions() throws Exception {
-        Throwable error = new IOException("dummy IO exception");
-        try {
-            runner.decodeJUnitResult(UnannotatedClass.class, new StubResult().withFailure(error));
-        } catch (IOException e) {
-        }
-        assertThat(stubLogger.getNewLogMessages(), containsString("java.io.IOException: dummy IO exception"));
-    }
-
-    @Test
-    public void doesNotLogAssertionErrors() throws Exception {
-        Throwable error = new AssertionError("dummy assertion error");
-        runner.decodeJUnitResult(UnannotatedClass.class, new StubResult().withFailure(error));
-        assertThat(stubLogger.getNewLogMessages(), is(""));
-    }
-
-    @Test
-    public void doesNotLogAssertionErrorsWhenExpectedToFailEither() throws Exception {
-        Throwable error = new AssertionError("dummy assertion error");
-        try {
-            runner.decodeJUnitResult(ExpectedToFailClass.class, new StubResult().withFailure(error));
-        } catch (AssertionError e) {
-        }
-        assertThat(stubLogger.getNewLogMessages(), is(""));
-    }
-
-    @Test
-    public void doesNotLogAssertionErrorsWhenUnimplementedEither() throws Exception {
-        Throwable error = new AssertionError("dummy assertion error");
-        try {
-            runner.decodeJUnitResult(ExpectedToFailClass.class, new StubResult().withFailure(error));
-        } catch (AssertionError e) {
-        }
-        assertThat(stubLogger.getNewLogMessages(), is(""));
     }
 
     private static final class UnannotatedClass {
