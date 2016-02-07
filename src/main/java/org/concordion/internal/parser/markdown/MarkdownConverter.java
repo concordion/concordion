@@ -3,6 +3,7 @@ package org.concordion.internal.parser.markdown;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import org.concordion.api.SpecificationConverter;
@@ -29,6 +30,8 @@ public class MarkdownConverter implements SpecificationConverter {
         try {
             scanner = new Scanner(inputStream, "UTF-8");
             markdown = scanner.useDelimiter("\\A").next();
+        } catch (NoSuchElementException e) { // empty spec
+            markdown = "";
         } finally {
             scanner.close();
         }
