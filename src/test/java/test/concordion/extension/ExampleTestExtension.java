@@ -7,6 +7,7 @@ import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.api.listener.ExampleEvent;
 import org.concordion.api.listener.ExampleListener;
+import org.concordion.internal.util.SimpleFormatter;
 
 public class ExampleTestExtension implements ConcordionExtension, ExampleListener {
 
@@ -23,13 +24,13 @@ public class ExampleTestExtension implements ConcordionExtension, ExampleListene
 
 	@Override
 	public void beforeExample(ExampleEvent event) {
-		stream.println(String.format("Before example '%s'", event.getExampleName()));
+		stream.println(SimpleFormatter.format("Before example '%s'", event.getExampleName()));
 	}
 
 	@Override
 	public void afterExample(ExampleEvent event) {
 		ResultSummary summary = event.getResultSummary();
 		
-		stream.println(String.format("After example '%s' - passed: %s, failed: %s, exceptions: %s", event.getExampleName(), summary.getSuccessCount(), summary.getFailureCount(), summary.getExceptionCount()));
+		stream.println(SimpleFormatter.format("After example '%s' - passed: %s, failed: %s, exceptions: %s", event.getExampleName(), summary.getSuccessCount(), summary.getFailureCount(), summary.getExceptionCount()));
 	}
 }

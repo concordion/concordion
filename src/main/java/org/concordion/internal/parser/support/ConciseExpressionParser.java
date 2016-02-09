@@ -3,6 +3,8 @@ package org.concordion.internal.parser.support;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.concordion.internal.util.SimpleFormatter;
+
 /**
  * Parses the concise Concordion expression syntax into {@link ConcordionStatement}s.
  *
@@ -43,7 +45,7 @@ public class ConciseExpressionParser {
         String[] components = statement.split("=", 2);
         String commandName = components[0];
         if (components.length != 2) {
-            throw new ConcordionSyntaxException(String.format("Invalid statement '%s'. Expected an = sign and a right hand side to the statement.", statement));
+            throw new ConcordionSyntaxException(SimpleFormatter.format("Invalid statement '%s'. Expected an = sign and a right hand side to the statement.", statement));
         }
         String valueAndAttributes = components[1];
         
@@ -57,7 +59,7 @@ public class ConciseExpressionParser {
     public ConcordionStatement parseCommandValueAndAttributes(String commandName, String commandValueAndAttributes) {
         Matcher commandValueMatcher = COMMAND_VALUE_PATTERN.matcher(commandValueAndAttributes);
         if (!commandValueMatcher.matches()) {
-            throw new IllegalStateException(String.format("Unexpected match failure for ''", commandValueAndAttributes));
+            throw new IllegalStateException(SimpleFormatter.format("Unexpected match failure for ''", commandValueAndAttributes));
         }
         
         String match = commandValueMatcher.group(1);

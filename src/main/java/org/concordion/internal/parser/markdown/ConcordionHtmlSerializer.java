@@ -5,6 +5,7 @@ import java.util.List;
 import org.concordion.internal.parser.support.Attribute;
 import org.concordion.internal.parser.support.ConcordionStatement;
 import org.concordion.internal.parser.support.ConciseExpressionParser;
+import org.concordion.internal.util.SimpleFormatter;
 import org.pegdown.ToHtmlSerializer;
 import org.pegdown.ast.ExpLinkNode;
 import org.pegdown.ast.HeaderNode;
@@ -118,7 +119,7 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
                     }
                     if (linkNode != null) {
                         if (linkNode.getTitle() == null) {
-                            throw new IllegalStateException(String.format("No title found for link node '%s'", linkNode.getText()));
+                            throw new IllegalStateException(SimpleFormatter.format("No title found for link node '%s'", linkNode.getText()));
                         }
                         pendingCommand = statementParser.parse(linkNode.getTitle(), linkNode.getText());
                         cell.getChildren().remove(0);

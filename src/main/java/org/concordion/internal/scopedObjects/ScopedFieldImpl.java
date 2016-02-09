@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.concordion.api.ScopedObjectHolder;
+import org.concordion.internal.util.SimpleFormatter;
 
 public class ScopedFieldImpl implements ScopedField {
     private final ScopedObject scopedObject;
@@ -72,7 +73,7 @@ public class ScopedFieldImpl implements ScopedField {
             }
             throw new RuntimeException(e.getCause());
         } catch (Exception e) {
-            String msg = String.format("Unexpected exception while destroying scoped object '%s' on class '%s'", field.getName(), fixtureObject.getClass().getName());
+            String msg = SimpleFormatter.format("Unexpected exception while destroying scoped object '%s' on class '%s'", field.getName(), fixtureObject.getClass().getName());
             throw new RuntimeException(msg, e);
         }
     }

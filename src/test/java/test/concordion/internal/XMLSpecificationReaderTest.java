@@ -8,6 +8,7 @@ import org.concordion.api.Resource;
 import org.concordion.internal.ParsingException;
 import org.concordion.internal.XMLParser;
 import org.concordion.internal.XMLSpecificationReader;
+import org.concordion.internal.util.SimpleFormatter;
 import org.junit.Test;
 
 import test.concordion.StubSource;
@@ -29,7 +30,7 @@ public class XMLSpecificationReaderTest {
             fail("Expected ParsingException");
         } catch (ParsingException e) {
             assertThat(e.getMessage(), containsString("Failed to parse XML document"));
-            assertThat(e.getMessage(), containsString(String.format("[%s: %s]", EXPECTED_SOURCE_NAME, SPEC_RESOURCE_NAME)));
+            assertThat(e.getMessage(), containsString(SimpleFormatter.format("[%s: %s]", EXPECTED_SOURCE_NAME, SPEC_RESOURCE_NAME)));
         }
     }
 }
