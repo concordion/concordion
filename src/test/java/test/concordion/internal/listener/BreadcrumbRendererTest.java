@@ -1,6 +1,5 @@
 package test.concordion.internal.listener;
 
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -15,11 +14,6 @@ import org.concordion.api.listener.SpecificationProcessingEvent;
 import org.concordion.internal.SpecificationType;
 import org.concordion.internal.XMLParser;
 import org.concordion.internal.listener.BreadcrumbRenderer;
-<<<<<<< HEAD
-=======
-import org.concordion.internal.util.SimpleFormatter;
-import org.junit.Rule;
->>>>>>> master
 import org.junit.Test;
 
 import test.concordion.StubSource;
@@ -41,20 +35,6 @@ public class BreadcrumbRendererTest {
     }
 
     @Test
-<<<<<<< HEAD
-=======
-    public void logsNameOfErroneousHtmlFileOnParseError() {
-        stubSource.addResource(BAD_PACKAGE_RESOURCE_NAME, ERRONEOUS_HTML);
-        SpecificationProcessingEvent event = new SpecificationProcessingEvent(new Resource(BAD_SPEC_RESOURCE_NAME), null);
-        renderer.afterProcessingSpecification(event);
-
-        String logMessage = stubLogger.getNewLogMessages();
-        assertThat(logMessage, containsString("Failed to parse XML document"));
-        assertThat(logMessage, containsString(SimpleFormatter.format("[%s: %s]", EXPECTED_SOURCE_NAME, BAD_PACKAGE_RESOURCE_NAME)));
-    }
-
-    @Test
->>>>>>> master
     public void createsBodyIfNoneExists() {
         stubSource.addResource(PACKAGE_RESOURCE_NAME, GOOD_HTML);
         Element rootElement = new Element("html");
