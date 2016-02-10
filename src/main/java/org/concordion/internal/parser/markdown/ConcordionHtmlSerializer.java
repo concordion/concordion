@@ -5,6 +5,7 @@ import java.util.List;
 import org.concordion.internal.parser.support.Attribute;
 import org.concordion.internal.parser.support.ConcordionStatement;
 import org.concordion.internal.parser.support.ConciseExpressionParser;
+import org.concordion.internal.util.SimpleFormatter;
 import org.pegdown.ToHtmlSerializer;
 import org.pegdown.ast.ExpLinkNode;
 import org.pegdown.ast.HeaderNode;
@@ -118,7 +119,7 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
                     }
                     if (linkNode != null) {
                         if (linkNode.getTitle() == null) {
-                            throw new IllegalStateException(String.format("No title found for link node '%s'", linkNode.getText()));
+                            throw new IllegalStateException(SimpleFormatter.format("No title found for link node '%s'", linkNode.getText()));
                         }
                         pendingCommand = statementParser.parse(linkNode.getTitle(), linkNode.getText());
                         cell.getChildren().remove(0);
@@ -146,12 +147,21 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
     public void visit(TableCellNode node) {
         if (inTableHeader) {
             for (Node child : node.getChildren()) {
+                String title;
                 if (child instanceof ExpLinkNode) {
                     ExpLinkNode linkNode = (ExpLinkNode) child;
-                    pendingCommand = statementParser.parse(linkNode.title, "");
+                    title = linkNode.title;
+                    if (title == null) {
+                        throw new IllegalStateException(String.format("No title found for link node with url '%s'", linkNode.url));
+                    }
+                    pendingCommand = statementParser.parse(title, "");
                 } else if (child instanceof RefLinkNode) {
                     LinkNode linkNode = toLinkNode((RefLinkNode) child);
-                    pendingCommand = statementParser.parse(linkNode.getTitle(), "");
+                    title = linkNode.getTitle();
+                    if (title == null) {
+                        throw new IllegalStateException(String.format("No title found for link node with reference '%s'. This can be caused by the associated link text being empty.", linkNode.getText()));
+                    }
+                    pendingCommand = statementParser.parse(title, "");
                 }
             }
         }

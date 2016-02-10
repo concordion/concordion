@@ -4,13 +4,14 @@ import java.io.*;
 
 import org.concordion.api.Resource;
 import org.concordion.api.Source;
+import org.concordion.internal.util.SimpleFormatter;
 
 public class ClassPathSource implements Source {
 
     public InputStream createInputStream(Resource resource) throws IOException {
         InputStream inputStream = getResourceAsStream(resource.getPath());
         if (inputStream == null) {
-            throw new IOException(String.format("Resource '[%s: %s]' not found", this, resource.getPath()));
+            throw new IOException(SimpleFormatter.format("Resource '[%s: %s]' not found", this, resource.getPath()));
         }
         return inputStream;
     }

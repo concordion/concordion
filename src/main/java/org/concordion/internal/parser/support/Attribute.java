@@ -1,5 +1,7 @@
 package org.concordion.internal.parser.support;
 
+import org.concordion.internal.util.SimpleFormatter;
+
 public class Attribute {
     public final String name;
     public final String value;
@@ -11,6 +13,6 @@ public class Attribute {
     
     @Override
     public String toString() {
-        return String.format("%s='%s\'", name, value);
+        return SimpleFormatter.format("%s='%s\'", name, value);
     }
 }

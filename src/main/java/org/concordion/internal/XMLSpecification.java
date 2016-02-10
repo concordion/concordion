@@ -2,6 +2,7 @@ package org.concordion.internal;
 
 import org.concordion.api.*;
 import org.concordion.internal.command.SpecificationCommand;
+import org.concordion.internal.util.SimpleFormatter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,7 +47,7 @@ public class XMLSpecification implements SpecificationByExample {
                 before.getCommand().executeAsExample(before, evaluator, beforeResultRecorder);
                 if (beforeResultRecorder.getTotalCount() > 0) {
                     beforeResultRecorder.setSpecificationDescription("Running before for example " + node.getExpression());
-                    String errorText = String.format("Assertions were made in the 'before' example in '%s'.\n"
+                    String errorText = SimpleFormatter.format("Assertions were made in the 'before' example in '%s'.\n"
                             + "Assertions are not supported in the 'before' example.\n",
                             testDescription
                     );

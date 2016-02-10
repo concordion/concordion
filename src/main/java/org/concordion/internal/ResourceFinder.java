@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import org.concordion.api.ConcordionResources;
 import org.concordion.api.Fixture;
+import org.concordion.internal.util.SimpleFormatter;
 
 /**
  * Find resources to be copied to the destination when specification is built. 
@@ -77,7 +78,7 @@ public class ResourceFinder {
 			
 			if (!found) {
 				StringBuilder msg = new StringBuilder();
-				msg.append(String.format("No file found matching '%s' in:", sourceFile));
+				msg.append(SimpleFormatter.format("No file found matching '%s' in:", sourceFile));
 				
 				for (File root : rootPaths) {
 					msg.append("\r\n\t* ").append(root.getPath());

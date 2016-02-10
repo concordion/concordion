@@ -7,6 +7,7 @@ import org.concordion.api.*;
 import org.concordion.internal.SpecificationToSpecificationByExampleAdaptor;
 import org.concordion.internal.SpecificationType;
 import org.concordion.internal.SummarizingResultRecorder;
+import org.concordion.internal.util.SimpleFormatter;
 
 public class Concordion {
 
@@ -117,8 +118,9 @@ public class Concordion {
 
 
     private String createMultipleSpecsMessage(Fixture fixture, SpecificationType type1, SpecificationType type2) {
-        return String.format("Found multiple matching specifications: '%s.%s' and '%1$s.%s'",
-            fixture.getFixturePathWithoutSuffix(), type1.getTypeSuffix(), type2.getTypeSuffix());
+        String fixturePathWithoutSuffix = fixture.getFixturePathWithoutSuffix();
+		return SimpleFormatter.format("Found multiple matching specifications: '%s.%s' and '%s.%s'",
+            fixturePathWithoutSuffix, type1.getTypeSuffix(), fixturePathWithoutSuffix, type2.getTypeSuffix());
     }
 
     private String createUnableToFindSpecMessage(Fixture fixture, List<SpecificationType> specificationTypes) {

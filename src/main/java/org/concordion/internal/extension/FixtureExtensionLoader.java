@@ -12,6 +12,7 @@ import org.concordion.api.extension.ConcordionExtensionFactory;
 import org.concordion.api.extension.Extension;
 import org.concordion.api.extension.Extensions;
 import org.concordion.internal.ConcordionBuilder;
+import org.concordion.internal.util.SimpleFormatter;
 
 public class FixtureExtensionLoader {
     
@@ -47,7 +48,7 @@ public class FixtureExtensionLoader {
                     extensions.add(factory.createExtension());
                 } else {
                     throw new ExtensionInitialisationException(
-                            String.format("Class %s specified in @Extensions annotation in class %s must implement %s or %s",
+                            SimpleFormatter.format("Class %s specified in @Extensions annotation in class %s must implement %s or %s",
                             class2.getCanonicalName(), class1.getCanonicalName(),
                             ConcordionExtension.class.getCanonicalName(), ConcordionExtensionFactory.class.getCanonicalName()));
                 }
@@ -63,10 +64,10 @@ public class FixtureExtensionLoader {
         try {
             object = type.newInstance();
         } catch (InstantiationException e) {
-            throw new ExtensionInitialisationException(String.format("Unable to instantiate %s of class %s",
+            throw new ExtensionInitialisationException(SimpleFormatter.format("Unable to instantiate %s of class %s",
                     description, type.getCanonicalName()) , e);
         } catch (IllegalAccessException e) {
-            throw new ExtensionInitialisationException(String.format("Unable to access no-args constructor of %s class %s",
+            throw new ExtensionInitialisationException(SimpleFormatter.format("Unable to access no-args constructor of %s class %s",
                     description, type.getCanonicalName()) , e);
         }
         return object;
