@@ -106,7 +106,7 @@ public class DefaultConcordionRunner implements Runner {
 
     private void logExceptionIfNotAssertionError(Throwable exception) {
         if (!(exception instanceof AssertionError)) {
-            System.err.println(exception.getMessage());
+            System.err.println(exception.getClass().getName() + ": " + exception.getLocalizedMessage());
         }
     }
 

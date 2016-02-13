@@ -25,6 +25,8 @@ dependencies {
     testCompile ('org.concordion:concordion-embed-extension:1.1.2') {
         exclude group: 'org.concordion', module: 'concordion'
     }
+	
+	testCompile 'com.github.stefanbirkner:system-rules:1.16.0'
 }
 
 sourceSets {
