@@ -15,6 +15,7 @@ import org.concordion.api.listener.SpecificationProcessingEvent;
 import org.concordion.internal.SpecificationType;
 import org.concordion.internal.XMLParser;
 import org.concordion.internal.listener.BreadcrumbRenderer;
+import org.concordion.internal.util.SimpleFormatter;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.SystemErrRule;
@@ -52,7 +53,7 @@ public class BreadcrumbRendererTest {
 
         String logMessage = systemErrRule.getLog();
         assertThat(logMessage, containsString("Failed to parse XML document"));
-        assertThat(logMessage, containsString(String.format("[%s: %s]", EXPECTED_SOURCE_NAME, BAD_PACKAGE_RESOURCE_NAME)));
+        assertThat(logMessage, containsString(SimpleFormatter.format("[%s: %s]", EXPECTED_SOURCE_NAME, BAD_PACKAGE_RESOURCE_NAME)));
     }
 
     @Test
