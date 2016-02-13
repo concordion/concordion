@@ -16,8 +16,6 @@ import java.util.logging.Logger;
 
 public class DefaultConcordionRunner implements Runner {
 
-    private static Logger logger = Logger.getLogger(DefaultConcordionRunner.class.getName());
-
     public ResultSummary execute(Resource resource, String href) throws Exception {
         Class<?> fixtureClass = findTestClass(resource, href);
         return runTestClass(fixtureClass);
@@ -108,7 +106,7 @@ public class DefaultConcordionRunner implements Runner {
 
     private void logExceptionIfNotAssertionError(Throwable exception) {
         if (!(exception instanceof AssertionError)) {
-            logger.log(Level.WARNING, "", exception);
+            System.err.println(exception.getClass().getName() + ": " + exception.getLocalizedMessage());
         }
     }
 

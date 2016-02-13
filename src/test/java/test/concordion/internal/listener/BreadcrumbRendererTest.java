@@ -18,9 +18,8 @@ import org.concordion.internal.listener.BreadcrumbRenderer;
 import org.concordion.internal.util.SimpleFormatter;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.SystemErrRule;
 
-import test.concordion.ConsoleLogGobbler;
-import test.concordion.StubLogger;
 import test.concordion.StubSource;
 
 public class BreadcrumbRendererTest {
@@ -34,11 +33,11 @@ public class BreadcrumbRendererTest {
     private static final String GOOD_HTML = "<html><head></head><body></body></html>";
     
     private StubSource stubSource = new StubSource();
-    private StubLogger stubLogger = new StubLogger();
     private BreadcrumbRenderer renderer;
     
-    @Rule 
-    public ConsoleLogGobbler logGobbler = new ConsoleLogGobbler();  // Ensure error log messages don't appear on console
+    @Rule
+    public final SystemErrRule systemErrRule = 
+    	new SystemErrRule().enableLog().muteForSuccessfulTests(); // Ensure error log messages don't appear on console
 
     public BreadcrumbRendererTest() {
         List<SpecificationType> specificationTypes = new ArrayList<SpecificationType>();
@@ -52,7 +51,7 @@ public class BreadcrumbRendererTest {
         SpecificationProcessingEvent event = new SpecificationProcessingEvent(new Resource(BAD_SPEC_RESOURCE_NAME), null);
         renderer.afterProcessingSpecification(event);
 
-        String logMessage = stubLogger.getNewLogMessages();
+        String logMessage = systemErrRule.getLog();
         assertThat(logMessage, containsString("Failed to parse XML document"));
         assertThat(logMessage, containsString(SimpleFormatter.format("[%s: %s]", EXPECTED_SOURCE_NAME, BAD_PACKAGE_RESOURCE_NAME)));
     }
@@ -64,7 +63,7 @@ public class BreadcrumbRendererTest {
         SpecificationProcessingEvent event = new SpecificationProcessingEvent(new Resource(SPEC_RESOURCE_NAME), new org.concordion.api.Element(rootElement));
         renderer.afterProcessingSpecification(event);
 
-        String logMessage = stubLogger.getNewLogMessages();
+        String logMessage = systemErrRule.getLog();
         assertThat(logMessage, is(""));
         assertThat(rootElement.getChildElements("body").size(), is(1));
     }
