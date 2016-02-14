@@ -288,11 +288,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         announceBuildCompleted();
 
         try {
-            if (specificationLocator instanceof SpecificationLocatorWithType) {
-                return new Concordion(specificationTypes, (SpecificationLocatorWithType)specificationLocator, specificationReader, evaluatorFactory, fixture);
-            } else {
-                return new Concordion(specificationLocator, specificationReader, evaluatorFactory, fixture);
-            }
+            return new Concordion(specificationTypes, specificationLocator, specificationReader, evaluatorFactory, fixture);
         } catch (IOException e) {
             throw new UnableToBuildConcordionException(e);
         }

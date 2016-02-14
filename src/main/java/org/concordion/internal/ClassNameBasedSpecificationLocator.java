@@ -21,4 +21,10 @@ public class ClassNameBasedSpecificationLocator implements SpecificationLocator 
         Check.notNull(fixture, "Fixture is null");
         return FixtureSpecificationMapper.toSpecificationResource(fixture, specificationSuffix);
     }
+
+    @Override
+    public Resource locateSpecification(Object fixture, String typeSuffix) {
+        Check.notNull(fixture, "Fixture is null");
+        return FixtureSpecificationMapper.toSpecificationResource(fixture, typeSuffix);
+    }
 }
