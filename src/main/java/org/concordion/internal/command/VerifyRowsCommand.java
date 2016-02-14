@@ -3,14 +3,16 @@ package org.concordion.internal.command;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.concordion.api.*;
+import org.concordion.api.AbstractCommand;
+import org.concordion.api.CommandCall;
+import org.concordion.api.Evaluator;
+import org.concordion.api.ResultRecorder;
 import org.concordion.api.listener.VerifyRowsListener;
 import org.concordion.internal.command.strategies.DefaultMatchStrategy;
 import org.concordion.internal.command.strategies.RowsMatchStrategy;
