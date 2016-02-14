@@ -1,23 +1,17 @@
 package org.concordion.internal;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import nu.xom.Attribute;
 import nu.xom.Document;
 import nu.xom.Elements;
 
-import org.concordion.api.Command;
-import org.concordion.api.CommandCall;
-import org.concordion.api.CommandFactory;
-import org.concordion.api.Element;
-import org.concordion.api.Resource;
-import org.concordion.api.Specification;
+import org.concordion.api.*;
 import org.concordion.api.listener.DocumentParsingListener;
 import org.concordion.internal.util.Check;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class DocumentParser {
 

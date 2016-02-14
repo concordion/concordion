@@ -16,6 +16,15 @@ public class Concordion {
     private Resource resource;
     private SpecificationByExample specification;
 
+    /**
+     * @deprecated use {@link #Concordion(List, SpecificationLocator, SpecificationReader, EvaluatorFactory, Fixture)} instead
+     * @param specificationLocator locates the specification based on the specification type
+     * @param specificationReader specification reader
+     * @param evaluatorFactory evaluator factory
+     * @param fixture fixture instance 
+     * @throws IOException on i/o error
+     */
+    @Deprecated
     public Concordion(SpecificationLocator specificationLocator, SpecificationReader specificationReader, EvaluatorFactory evaluatorFactory, Fixture fixture) throws IOException {
         this.specificationReader = specificationReader;
         this.evaluatorFactory = evaluatorFactory;
@@ -34,15 +43,14 @@ public class Concordion {
      * @param fixture fixture instance 
      * @throws IOException on i/o error
      */
-    public Concordion(List<SpecificationType> specificationTypes, SpecificationLocatorWithType specificationLocator, SpecificationReader specificationReader, EvaluatorFactory evaluatorFactory, Fixture fixture) throws IOException {
+    public Concordion(List<SpecificationType> specificationTypes, SpecificationLocator specificationLocator, SpecificationReader specificationReader, EvaluatorFactory evaluatorFactory, Fixture fixture) throws IOException {
         this.specificationReader = specificationReader;
         this.evaluatorFactory = evaluatorFactory;
 
         SpecificationType specificationType = null;
 
-        SpecificationLocatorWithType specificationTypeLocator = (SpecificationLocatorWithType)specificationLocator;
         for (SpecificationType currentType : specificationTypes) {
-            Resource currentResource = specificationTypeLocator.locateSpecification(fixture.getFixtureObject(), currentType.getTypeSuffix());
+            Resource currentResource = specificationLocator.locateSpecification(fixture.getFixtureObject(), currentType.getTypeSuffix());
             if (specificationReader.canFindSpecification(currentResource)) {
                 if (specificationType != null) {
                     throw new RuntimeException(createMultipleSpecsMessage(fixture, specificationType, currentType));

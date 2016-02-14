@@ -1,14 +1,9 @@
 package org.concordion.internal.command;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import org.concordion.api.AbstractCommand;
-import org.concordion.api.CommandCall;
-import org.concordion.api.Element;
-import org.concordion.api.Evaluator;
-import org.concordion.api.ResultRecorder;
+import org.concordion.api.*;
 import org.concordion.api.listener.SetEvent;
 import org.concordion.api.listener.SetListener;
 import org.concordion.internal.util.Check;

@@ -5,7 +5,6 @@ import java.util.Date;
 
 import org.concordion.api.Element;
 import org.concordion.api.Resource;
-import org.concordion.api.Target;
 import org.concordion.api.listener.SpecificationProcessingEvent;
 import org.concordion.api.listener.SpecificationProcessingListener;
 

@@ -1,18 +1,16 @@
 package org.concordion.internal.runner;
 
+import java.util.List;
+
 import org.concordion.api.*;
-import org.concordion.internal.cache.RunResultsCache;
 import org.concordion.internal.FailFastException;
-import org.concordion.internal.FixtureType;
 import org.concordion.internal.FixtureSpecificationMapper;
+import org.concordion.internal.FixtureType;
 import org.concordion.internal.SummarizingResultRecorder;
 import org.concordion.internal.cache.ConcordionRunOutput;
+import org.concordion.internal.cache.RunResultsCache;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.notification.Failure;
-
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class DefaultConcordionRunner implements Runner {
 
