@@ -35,6 +35,7 @@ public class RunTotalsFixture {
 		File parentFile = new FileTarget(ConcordionBuilder.getBaseOutputDir()).getFile(resource).getParentFile();
 
 		final RunCommand command = new RunCommand();
+		command.setRunnerFactory(new SystemPropertiesRunnerFactory());
 
 		final CommandCall commandCall = new CommandCall(command, element, "concordion", resource);
 

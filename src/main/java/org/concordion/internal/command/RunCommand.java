@@ -9,13 +9,16 @@ import org.concordion.api.listener.*;
 import org.concordion.internal.ConcordionAssertionError;
 import org.concordion.internal.FailFastException;
 import org.concordion.api.RunnerFactory;
+import org.concordion.internal.SystemPropertiesRunnerFactory;
 import org.concordion.internal.util.Check;
 
 public class RunCommand extends AbstractCommand {
 
     private List<RunListener> listeners = new ArrayList<RunListener>();
     private RunStrategy runStrategy = new SequentialRunStrategy();
-    private RunnerFactory runnerFactory;
+
+    // give the factory a default value. It can be overwritten later.
+    private RunnerFactory runnerFactory = new SystemPropertiesRunnerFactory();
 
     public void addRunListener(RunListener runListener) {
         listeners.add(runListener);
