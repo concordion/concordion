@@ -2,7 +2,7 @@ package org.concordion.api;
 
 import org.concordion.internal.util.Check;
 
-public final class Resource {
+public class Resource {
 
     private final String path;
     private final String[] parts;
