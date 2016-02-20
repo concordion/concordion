@@ -8,13 +8,17 @@ import org.concordion.api.*;
 import org.concordion.api.listener.*;
 import org.concordion.internal.ConcordionAssertionError;
 import org.concordion.internal.FailFastException;
-import org.concordion.internal.runner.DefaultConcordionRunner;
+import org.concordion.api.RunnerFactory;
+import org.concordion.internal.SystemPropertiesRunnerFactory;
 import org.concordion.internal.util.Check;
 
 public class RunCommand extends AbstractCommand {
 
     private List<RunListener> listeners = new ArrayList<RunListener>();
     private RunStrategy runStrategy = new SequentialRunStrategy();
+
+    // give the factory a default value. It can be overwritten later.
+    private RunnerFactory runnerFactory = new SystemPropertiesRunnerFactory();
 
     public void addRunListener(RunListener runListener) {
         listeners.add(runListener);
@@ -26,6 +30,10 @@ public class RunCommand extends AbstractCommand {
     
     public void setRunStrategy(RunStrategy runStrategy) {
         this.runStrategy = runStrategy;
+    }
+
+    public RunCommand() {
+
     }
 
     @Override
@@ -46,29 +54,10 @@ public class RunCommand extends AbstractCommand {
 
         ResultAnnouncer resultAnnouncer = newRunResultAnnouncer(commandCall.getResource(), element, expression);
 
-        String concordionRunner = null;
-
-        concordionRunner = System.getProperty("concordion.runner." + runnerType);
-
-        if (concordionRunner == null && "concordion".equals(runnerType)) {
-            concordionRunner = DefaultConcordionRunner.class.getName();
-        }
-        if (concordionRunner == null) {
-            try {
-                Class.forName(runnerType);
-                concordionRunner = runnerType;
-            } catch (ClassNotFoundException e1) {
-                // OK, we're reporting this in a second.
-            }
-        }
-
-        Check.notNull(concordionRunner, "The runner '" + runnerType + "' cannot be found. "
-                + "Choices: (1) Use 'concordion' as your runner (2) Ensure that the 'concordion.runner." + runnerType
-                + "' System property is set to a name of an org.concordion.Runner implementation "
-                + "(3) Specify a full class name of an org.concordion.Runner implementation");
         try {
-            Class<?> clazz = Class.forName(concordionRunner);
-            Runner runner = (Runner) clazz.newInstance();
+
+            Runner runner = runnerFactory.createRunner(runnerType);
+
             for (Method method : runner.getClass().getMethods()) {
                 String methodName = method.getName();
                 if (methodName.startsWith("set") && methodName.length() > 3 && method.getParameterTypes().length == 1) {
@@ -87,6 +76,7 @@ public class RunCommand extends AbstractCommand {
                         }
                     }
                 }
+
             }
 
             runStrategy.call(runner, commandCall.getResource(), href, resultAnnouncer, resultRecorder);
@@ -153,5 +143,9 @@ public class RunCommand extends AbstractCommand {
 				}
 			}
         };
+    }
+
+    public void setRunnerFactory(RunnerFactory runnerFactory) {
+        this.runnerFactory = runnerFactory;
     }
 }
