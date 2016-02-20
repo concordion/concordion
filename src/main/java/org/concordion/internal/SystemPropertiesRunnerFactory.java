@@ -1,14 +1,14 @@
 package org.concordion.internal;
 
 import org.concordion.api.Runner;
-import org.concordion.api.RunnerRegistry;
+import org.concordion.api.RunnerFactory;
 import org.concordion.internal.runner.DefaultConcordionRunner;
 import org.concordion.internal.util.Check;
 
 /**
  * Created by tim on 20/02/16.
  */
-public class SystemPropertiesRunnerRegistry implements RunnerRegistry {
+public class SystemPropertiesRunnerFactory implements RunnerFactory {
     @Override
     public Runner createRunner(String runnerType) throws Exception {
         String concordionRunner = null;

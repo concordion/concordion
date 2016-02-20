@@ -64,7 +64,7 @@ public class ConcordionBuilder implements ConcordionExtender {
 
     private FileTarget copySourceHtmlTarget;
     private SpecificationProcessingListener pageFooterRenderer ;
-    private RunnerRegistry runnerRegistry;
+    private RunnerFactory runnerFactory;
 
     {
         ExtensionChecker.checkForOutdatedExtensions();
@@ -84,7 +84,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         withSpecificationType("md", markdownConverter);
         withSpecificationType("markdown", markdownConverter);
         withPageFooterRenderer(new PageFooterRenderer());
-        withRunnerRegistry(new SystemPropertiesRunnerRegistry());
+        withRunnerFactory(new SystemPropertiesRunnerFactory());
     }
 
     public ConcordionBuilder withSource(Source source) {
@@ -109,8 +109,8 @@ public class ConcordionBuilder implements ConcordionExtender {
         return this;
     }
 
-    public ConcordionBuilder withRunnerRegistry(RunnerRegistry runnerRegistry) {
-        this.runnerRegistry = runnerRegistry;
+    public ConcordionBuilder withRunnerFactory(RunnerFactory runnerFactory) {
+        this.runnerFactory = runnerFactory;
         return this;
     }
 
@@ -291,7 +291,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         specificationCommand.setSpecificationDescriber(exporter);
 
         exampleCommand.setSpecificationDescriber(exporter);
-        runCommand.setRunnerRegistry(runnerRegistry);
+        runCommand.setRunnerFactory(runnerFactory);
 
         announceBuildCompleted();
 

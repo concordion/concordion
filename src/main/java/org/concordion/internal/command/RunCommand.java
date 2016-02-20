@@ -8,14 +8,14 @@ import org.concordion.api.*;
 import org.concordion.api.listener.*;
 import org.concordion.internal.ConcordionAssertionError;
 import org.concordion.internal.FailFastException;
-import org.concordion.api.RunnerRegistry;
+import org.concordion.api.RunnerFactory;
 import org.concordion.internal.util.Check;
 
 public class RunCommand extends AbstractCommand {
 
     private List<RunListener> listeners = new ArrayList<RunListener>();
     private RunStrategy runStrategy = new SequentialRunStrategy();
-    private RunnerRegistry runnerRegistry;
+    private RunnerFactory runnerFactory;
 
     public void addRunListener(RunListener runListener) {
         listeners.add(runListener);
@@ -53,7 +53,7 @@ public class RunCommand extends AbstractCommand {
 
         try {
 
-            Runner runner = runnerRegistry.createRunner(runnerType);
+            Runner runner = runnerFactory.createRunner(runnerType);
 
             for (Method method : runner.getClass().getMethods()) {
                 String methodName = method.getName();
@@ -142,7 +142,7 @@ public class RunCommand extends AbstractCommand {
         };
     }
 
-    public void setRunnerRegistry(RunnerRegistry runnerRegistry) {
-        this.runnerRegistry = runnerRegistry;
+    public void setRunnerFactory(RunnerFactory runnerFactory) {
+        this.runnerFactory = runnerFactory;
     }
 }
