@@ -18,6 +18,7 @@ public class SystemPropertiesRunnerFactory implements RunnerFactory {
         if (concordionRunner == null && "concordion".equals(runnerType)) {
             concordionRunner = DefaultConcordionRunner.class.getName();
         }
+
         if (concordionRunner == null) {
             try {
                 Class.forName(runnerType);
