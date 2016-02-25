@@ -63,7 +63,8 @@ public class ConcordionBuilder implements ConcordionExtender {
     private Set<SpecificationConverter> specificationConverters = new HashSet<SpecificationConverter>();
 
     private FileTarget copySourceHtmlTarget;
-    private SpecificationProcessingListener pageFooterRenderer ;
+    private SpecificationProcessingListener pageFooterRenderer;
+    private BreadcrumbRenderer breadcrumbRenderer;
     private RunnerFactory runnerFactory;
 
     {
@@ -107,6 +108,11 @@ public class ConcordionBuilder implements ConcordionExtender {
     public ConcordionBuilder withPageFooterRenderer(SpecificationProcessingListener pageFooterRenderer) {
         this.pageFooterRenderer = pageFooterRenderer;
         return this;
+    }
+    
+    public ConcordionBuilder withBreadcrumbRenderer(BreadcrumbRenderer breadcrumbRenderer) {
+    	this.breadcrumbRenderer = breadcrumbRenderer;
+    	return this;
     }
 
     public ConcordionBuilder withRunnerFactory(RunnerFactory runnerFactory) {
@@ -275,7 +281,10 @@ public class ConcordionBuilder implements ConcordionExtender {
         }
         XMLParser xmlParser = new XMLParser();
         
-        specificationCommand.addSpecificationListener(new BreadcrumbRenderer(specificationSource, xmlParser, specificationTypes));
+        if (breadcrumbRenderer == null) {
+        	breadcrumbRenderer = new BreadcrumbRenderer(specificationSource, xmlParser, specificationTypes);
+        }
+        specificationCommand.addSpecificationListener(breadcrumbRenderer);
         specificationCommand.addSpecificationListener(pageFooterRenderer);
 
         specificationReader = new XMLSpecificationReader(specificationSource, xmlParser, documentParser);

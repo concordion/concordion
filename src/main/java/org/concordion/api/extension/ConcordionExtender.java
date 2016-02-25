@@ -3,6 +3,7 @@ package org.concordion.api.extension;
 import org.concordion.api.*;
 import org.concordion.api.listener.*;
 import org.concordion.internal.command.RunCommand;
+import org.concordion.internal.listener.BreadcrumbRenderer;
 
 /**
  * Allows {@link ConcordionExtension}s to add features to Concordion.
@@ -180,6 +181,13 @@ public interface ConcordionExtender {
      * @return this
      */
     ConcordionExtender withRunStrategy(RunStrategy runStrategy);
+    
+    /**
+     * Overrides the listener for rendering bread crumbs.
+     * @param breadcrumbRenderer the new bread crumb renderer
+     * @return this
+     */
+    ConcordionExtender withBreadcrumbRenderer(BreadcrumbRenderer breadcrumbRenderer);
 
     /**
      * Adds a new specification type to the types that can be handled (by default HTML and Markdown are supported). 
