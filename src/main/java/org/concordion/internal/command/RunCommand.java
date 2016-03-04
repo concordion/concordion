@@ -40,11 +40,7 @@ public class RunCommand extends AbstractCommand {
 
         String runnerType = commandCall.getExpression();
 
-        String expression = commandCall.getParameter("params");
-        if (expression != null)
-            evaluator.evaluate(expression);
-
-        ResultAnnouncer resultAnnouncer = newRunResultAnnouncer(commandCall.getResource(), element, expression);
+        ResultAnnouncer resultAnnouncer = newRunResultAnnouncer(commandCall.getResource(), element);
 
         String concordionRunner = null;
 
@@ -113,7 +109,7 @@ public class RunCommand extends AbstractCommand {
         }
     }
 
-    private ResultAnnouncer newRunResultAnnouncer(final Resource resource, final Element element, final String expression) {
+    private ResultAnnouncer newRunResultAnnouncer(final Resource resource, final Element element) {
         return new ResultAnnouncer() {
             public void announce(ResultSummary result) {
                 synchronized(resource) {
@@ -130,7 +126,7 @@ public class RunCommand extends AbstractCommand {
 			public void announceException(Throwable throwable) {
                 synchronized (resource) {
                 	for (RunListener listener : listeners) {
-                		listener.throwableCaught(new ThrowableCaughtEvent(throwable, element, expression));
+                		listener.throwableCaught(new ThrowableCaughtEvent(throwable, element, null));
 					}
                 }
             }
