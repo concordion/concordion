@@ -6,7 +6,7 @@ import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
-public class FixtureWithoutExamplesInitialisationFixture {
+public class FixtureWithoutExampleInitialisationFixture {
 
     private static AtomicInteger staticCounter = new AtomicInteger();
     

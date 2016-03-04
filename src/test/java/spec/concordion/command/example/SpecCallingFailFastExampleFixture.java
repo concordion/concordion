@@ -6,5 +6,5 @@ import org.junit.runner.RunWith;
 import spec.concordion.results.runTotals.RunTotalsFixture;
 
 @RunWith(ConcordionRunner.class)
-public class SpecCallingFailFastExamplesFixture extends RunTotalsFixture {
+public class SpecCallingFailFastExampleFixture extends RunTotalsFixture {
 }

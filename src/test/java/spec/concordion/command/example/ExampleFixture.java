@@ -10,7 +10,7 @@ import spec.concordion.results.runTotals.RunTotalsFixture;
 
 @RunWith(ConcordionRunner.class)
 @FullOGNL
-public class ExamplesFixture extends SpecWithBeforeSpec {
+public class ExampleFixture extends SpecWithBeforeSpec {
 
     private int counter = 0;
 
