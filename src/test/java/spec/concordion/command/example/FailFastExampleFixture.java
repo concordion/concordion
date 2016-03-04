@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 @RunWith(ConcordionRunner.class)
 @FullOGNL
 @FailFast
-public class FailFastExamplesFixture {
+public class FailFastExampleFixture {
 
     private int counter = 0;
 

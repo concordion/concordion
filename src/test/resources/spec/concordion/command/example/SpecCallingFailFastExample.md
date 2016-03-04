@@ -2,4 +2,4 @@
 
 This specification calls another specification that fails fast on an example that is expected to fail.
 
-Running [FailFastExamples.html](- "#result=simulateRun(#TEXT)"), we expect [1](- "?=#result.successCount") success and [1](- "?=#result.ignoredCount") ignored.
+Running [FailFastExample.html](- "#result=simulateRun(#TEXT)"), we expect [1](- "?=#result.successCount") success and [1](- "?=#result.ignoredCount") ignored.

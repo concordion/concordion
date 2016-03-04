@@ -1,7 +1,7 @@
 <html xmlns:c="http://www.concordion.org/2007/concordion">
 <link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
 <body>
-<h1>Examples</h1>
+<h1>Example</h1>
 
 <p><i>Since</i> Concordion 2.0.0</p>
 
@@ -10,8 +10,8 @@
 <p>The example command also supports the <a c:run="concordion" href="../../extension/listener/ExampleListener.html">example listener</a>.</p>
 
 <p>A new fixture instance is created for each example, in keeping with the way that JUnit creates a <a href="http://martinfowler.com/bliki/JunitNewInstance.html">new instance per test</a>.
-For classes without examples, only <a c:run="concordion" href="FixtureWithoutExamplesInitialisation.html">1 instance is created</a>.
-For classes with examples, <a c:run="concordion" href="FixtureWithExamplesInitialisation.html">n+1 instances are created</a> where n is the number of examples.</p>  
+For classes without examples, only <a c:run="concordion" href="FixtureWithoutExampleInitialisation.html">1 instance is created</a>.
+For classes with examples, <a c:run="concordion" href="FixtureWithExampleInitialisation.html">n+1 instances are created</a> where n is the number of examples.</p>  
 <p>Fixture fields can be <a c:run="concordion" href="ScopedField.html">scoped</a> for reuse across a specification, in addition to the default example scope.</p>
 
 <div c:example="before">
