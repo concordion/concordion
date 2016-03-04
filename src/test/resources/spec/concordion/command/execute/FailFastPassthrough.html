@@ -41,7 +41,7 @@
 			<span concordion:execute="#result=simulateRun('NotFailFastRunningFailFast.html')"></span>
 			If just the lower level test was annotated with <code>@FailFast</code>, we would expect
 			<span concordion:assertEquals="#result.successCount">1</span>
-			successfull command (from the higher level test) and
+			successful command (from the higher level test) and
 			<span concordion:assertEquals="#result.exceptionCount">1</span>
 			exception.
 		</p>
@@ -54,7 +54,7 @@
 			<span concordion:execute="#result=simulateRun('FailFastRunningFailFast.html')"></span>
 			If both tests are annotated with <code>@FailFast</code>, we would expect
 			<span concordion:assertEquals="#result.successCount">0</span>
-			successfull command (from the higher level test) and
+			successful command (from the higher level test) and
 			<span concordion:assertEquals="#result.exceptionCount">1</span>
 			exception.
 		</p>
