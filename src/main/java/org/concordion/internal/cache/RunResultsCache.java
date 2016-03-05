@@ -5,7 +5,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.concordion.api.Fixture;
 import org.concordion.api.ResultSummary;
-import org.concordion.internal.SingleResultSummary;
 import org.concordion.internal.SummarizingResultRecorder;
 import org.concordion.internal.XMLSpecification;
 
@@ -141,11 +140,11 @@ public enum RunResultsCache {
     }
 
     private void addResults(SummarizingResultRecorder accumulator, ResultSummary resultsToAdd) {
-        if (resultsToAdd.isForExample()) {
-            accumulator.record(new SingleResultSummary(resultsToAdd));
-        } else {
+//        if (resultsToAdd.isForExample()) {
+//            accumulator.record(new SingleResultSummary(resultsToAdd));
+//        } else {
             accumulator.record(resultsToAdd);
-        }
+//        }
     }
 
     private ConcordionRunOutput getExampleFromCache(Fixture fixture, String example) {
