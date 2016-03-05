@@ -2,6 +2,9 @@ package org.concordion.internal.parser.support;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.concordion.internal.parser.support.ConcordionStatement;
 import org.concordion.internal.parser.support.ConciseExpressionParser;
 import org.junit.Test;
@@ -122,4 +125,17 @@ public class ConciseExpressionParserTest {
         assertEquals("concordion:status", statement.attributes.get(0).name);
         assertEquals("Incomplete", statement.attributes.get(0).value);
     }
+
+    @Test
+    public void commandWithNamepace() {
+        Map<String, String> namespaces = new HashMap<String, String>();
+        namespaces.put("ext", "whatever");
+        ConciseExpressionParser parserWithNamespace = new ConciseExpressionParser("c", "concordion", namespaces);
+        ConcordionStatement statement = parserWithNamespace.parse("ext:embed=foo()", "bar");
+        assertEquals("ext:embed", statement.command.name);
+        assertEquals("foo()", statement.command.value);
+        assertEquals("bar", statement.text);
+    }
+
+
 }

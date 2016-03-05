@@ -1,25 +1,14 @@
 package org.concordion.internal.parser.markdown;
 
 import java.util.List;
+import java.util.Map;
 
 import org.concordion.internal.parser.support.Attribute;
-import org.concordion.internal.parser.support.ConcordionStatement;
 import org.concordion.internal.parser.support.ConciseExpressionParser;
+import org.concordion.internal.parser.support.ConcordionStatement;
 import org.concordion.internal.util.SimpleFormatter;
 import org.pegdown.ToHtmlSerializer;
-import org.pegdown.ast.ExpLinkNode;
-import org.pegdown.ast.HeaderNode;
-import org.pegdown.ast.Node;
-import org.pegdown.ast.RefLinkNode;
-import org.pegdown.ast.ReferenceNode;
-import org.pegdown.ast.RootNode;
-import org.pegdown.ast.StrikeNode;
-import org.pegdown.ast.SuperNode;
-import org.pegdown.ast.TableCellNode;
-import org.pegdown.ast.TableColumnNode;
-import org.pegdown.ast.TableHeaderNode;
-import org.pegdown.ast.TableNode;
-import org.pegdown.ast.TableRowNode;
+import org.pegdown.ast.*;
 
 public class ConcordionHtmlSerializer extends ToHtmlSerializer {
     private static final String URL_FOR_CONCORDION = "-";
@@ -32,10 +21,12 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
     private String currentExampleHeading;
     private int currentExampleLevel;
     private int depth;
+    private Map<String, String> namespaces;
     
-    public ConcordionHtmlSerializer(String targetConcordionNamespacePrefix) {
+    public ConcordionHtmlSerializer(String targetConcordionNamespacePrefix, Map<String, String> namespaces) {
         super(new RunCommandLinkRenderer(SOURCE_CONCORDION_NAMESPACE_PREFIX, targetConcordionNamespacePrefix));
-        statementParser = new ConciseExpressionParser(SOURCE_CONCORDION_NAMESPACE_PREFIX, targetConcordionNamespacePrefix);
+        this.namespaces = namespaces;
+        statementParser = new ConciseExpressionParser(SOURCE_CONCORDION_NAMESPACE_PREFIX, targetConcordionNamespacePrefix, namespaces);
     }
    
 //=======================================================================================================================
@@ -187,7 +178,7 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
                     String expression = ((ExpLinkNode)child).title;
                     currentExampleHeading = printChildrenToString(node);
                     currentExampleLevel = node.getLevel();
-                    ConcordionStatement command = statementParser.parseCommandValueAndAttributes("example", expression);
+                    ConcordionStatement command = statementParser.parseCommandValueAndAttributes("example", expression, true);
                     printer.println();
                     printer.print("<div");
                     printConcordionCommand(command);

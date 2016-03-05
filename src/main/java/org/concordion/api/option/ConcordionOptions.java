@@ -33,4 +33,14 @@ public @interface ConcordionOptions {
      * @return the directory to log a copy of the HTML source to, optionally including system properties wrapped in `${` and `}`
      */
     String copySourceHtmlToDir() default "";
+
+    /**
+     * Additional namespaces to be declared in the input specification.
+     * This is used when the specification uses commands from extensions that have different namespaces to the normal Concordion commands.
+     * Currently this only applies to the Markdown format, since
+     * namespaces are declared directly in the HTML when using HTML specifications.
+     *
+     * @return list of pairs of Strings to be applied, where each pair contains a namespace prefix followed by the namespace 
+     */
+    String[] declareNamespaces() default {};
 }

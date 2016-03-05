@@ -782,6 +782,31 @@ The set, assert-equals and execute commands require the link URL to be set to `-
   </table>
 </div>
 
+## Support for Concordion commands in other namespaces, eg extensions
+In order to include Concordion commands with namespaces other than the default Concordion namespaces, such as those available in extensions, you must declare the namespace.
+
+Add the `@ConcordionOptions` annotation to the fixture class, with the `declareNamespaces` element set to a list of strings, where the values alternate between namespace prefixes and the namespace they are mapped to. For example:
+
+    @RunWith(ConcordionRunner.class)
+    @ConcordionOptions(declareNamespaces={"ext", "urn:concordion-extensions:2010"})
+    public class MyFixture
+
+The namespaced command can then be included in the title of the Markdown link, using the prefix declared in the annotation.
+
+<div class="example">
+  <h3>Examples</h3>
+  <table concordion:execute="#html=translate(#md)">
+    <tr>
+      <th concordion:set="#md">Markdown</th>
+      <th concordion:assert-equals="#html">Resultant HTML</th>
+    </tr>
+    <tr>
+      <td>[-](- "ext:embed=getDetails()")</td>
+      <td>&lt;span ext:embed="getDetails()"&gt;-&lt;/span&gt;</td>
+    </tr>
+  </table>
+</div>
+
 ## Additional checks
 
 ### Multiple commands on a single line
@@ -839,9 +864,10 @@ HTML entities in the text value are encoded correctly.
   </table>
 </div>
 
-##TODO
 
-### Support for Concordion commands in other namespaces, eg extensions
+
+
+##TODO
 
 ### Document embedded HTML for execute on a list and complex sentence structures 
 

@@ -73,4 +73,28 @@ Given the method `withPegdownExtensions(int options)` has been [called](- "withW
   </table>
 </div>
 
+## Additional namespace declarations
+In order to include Concordion commands with namespaces other than the default Concordion namespaces, such as those available in extensions, you must declare the namespace.
 
+This is only applicable to Markdown specifications. In HTML specifications, the namespaces are declared directly in the HTML.
+
+Add the `@ConcordionOptions` annotation to the fixture class, with the `declareNamespaces` element set to a list of strings, where the values alternate between namespace prefixes and the namespace they are mapped to. For example:
+
+    @RunWith(ConcordionRunner.class)
+    @ConcordionOptions(declareNamespaces={"ext", "urn:concordion-extensions:2010"})
+    public class MyFixture
+
+### [Valid declarations](- "valid-namespace-declarations")
+
+|[_parse_](- "#mappings=parse(#value)")[declareNamespaces value](- "#value")|[Namespace mappings](- "?=#mappings")|
+| ------------------------------------------ | --------------- |
+| {"ext", "urn:concordion-extensions:2010"} | {"ext"= "urn:concordion-extensions:2010"} |
+| {"foo", "http://bar", "x", "urn:baz"} | {"foo"= "http://bar", "x"= "urn:baz"} |
+
+### [Invalid declarations](- "invalid-namespace-declarations")
+
+If passing an odd number of arguments, an error will occur:
+
+|[_parse_](- "#message=parseAndReturnExceptionMessage(#value)")[declareNamespaces value](- "#value")|[Exception message](- "?=#message")|
+| ------------------------------------------ | --------------- |
+| {"foo", "http://bar", "x"} | The declareNamespaces element of @ConcordionOptions must include an even number of arguments, alternating between a namespace prefix and the namespace it maps to |

@@ -1,6 +1,10 @@
 package spec.concordion.annotation;
 
+import java.util.Collections;
+
 import org.concordion.integration.junit4.ConcordionRunner;
+import org.concordion.internal.ConcordionOptionsParser;
+import org.concordion.internal.ConfigurationException;
 import org.concordion.internal.parser.markdown.MarkdownParser;
 import org.junit.runner.RunWith;
 
@@ -9,7 +13,7 @@ public class ConcordionOptionsFixture {
     private int pegdownExtensions;
     
     public String translate(String markdown) {
-        MarkdownParser markdownParser = new MarkdownParser(pegdownExtensions);
+        MarkdownParser markdownParser = new MarkdownParser(pegdownExtensions, Collections.<String, String> emptyMap());
         String html = markdownParser.markdownToHtml(markdown, "concordion");
         if (html.startsWith("<p>") && html.endsWith("</p>")) {
             html = html.substring(3, html.length()-4);
@@ -19,5 +23,19 @@ public class ConcordionOptionsFixture {
     
     public void withWikilinkAndAutolink() {
         pegdownExtensions = org.pegdown.Extensions.WIKILINKS | org.pegdown.Extensions.AUTOLINKS;
+    }
+    
+    public String parse(String declareNamespaces) {
+        String[] namespacePairs = declareNamespaces.substring(1, declareNamespaces.length()-2).split(",");
+        return ConcordionOptionsParser.convertNamespacePairsToMap(namespacePairs).toString();
+    }
+
+    public String parseAndReturnExceptionMessage(String declareNamespaces) {
+        try {
+            parse(declareNamespaces);
+            return "";
+        } catch (ConfigurationException e) {
+            return e.getMessage();
+        }
     }
 }
