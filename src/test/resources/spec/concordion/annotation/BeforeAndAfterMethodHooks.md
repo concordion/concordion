@@ -30,9 +30,9 @@ Running the specification [BeforeAndAfterLogging](BeforeAndAfterLogging.md "c:ru
 |[checkRows][] [text][]|
 |----------------------|
 |Before specification  |
-|Before [Concordion Specification for 'BeforeAndAfterLogging']|
+|Before [Outer]        |
 |In specification      |
-|After [Concordion Specification for 'BeforeAndAfterLogging']|
+|After [Outer]         |
 |Before example1       |
 |In example 1          |
 |After example1        |

@@ -10,6 +10,9 @@ import java.util.List;
 
 public class XMLSpecification implements SpecificationByExample {
 
+    private static final String OUTER_DESCRIPTION = "[Outer]";
+    public static final String OUTER_EXAMPLE_DESCRIPTION_SUFFIX = " " + OUTER_DESCRIPTION;
+
     private String testDescription;
 
     private final CommandCall rootCommandNode;
@@ -79,12 +82,21 @@ public class XMLSpecification implements SpecificationByExample {
     }
 
     public void setFixture(Fixture fixture) {
-        testDescription = fixture.getSpecificationDescription();
+        if (examples.size() > 0) {
+            testDescription = OUTER_DESCRIPTION;
+        } else {
+            testDescription = fixture.getSpecificationDescription();
+        }
     }
 
-    public void processExample(Evaluator evaluator, String example, ResultRecorder resultRecorder) {
+    public void processExample(Evaluator evaluator, String example, SummarizingResultRecorder resultRecorder) {
         if (testDescription.equals(example)) {
             processNode(rootCommandNode, evaluator, resultRecorder);
+
+            if (examples.size() > 0) {
+                resultRecorder.setSpecificationDescription(resultRecorder.getSpecificationDescription() + OUTER_EXAMPLE_DESCRIPTION_SUFFIX);
+            }
+
             return;
         }
 
@@ -102,7 +114,6 @@ public class XMLSpecification implements SpecificationByExample {
 
         // Add the main spec first to increase the chance that it will be run first by jUnit.
         commands.add(testDescription);
-
 
         for (CommandCall exampleCall: examples) {
             commands.add(makeJunitTestName(exampleCall));

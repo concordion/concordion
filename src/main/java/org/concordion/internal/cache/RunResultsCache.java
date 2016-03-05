@@ -7,6 +7,7 @@ import org.concordion.api.Fixture;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.SingleResultSummary;
 import org.concordion.internal.SummarizingResultRecorder;
+import org.concordion.internal.XMLSpecification;
 
 /**
  * A thread-safe class to provide caching of run results.
@@ -105,7 +106,7 @@ public enum RunResultsCache {
         exampleResults.setModifiedResultSummary(modifiedResultSummary);
 
         // now accumulate into the parent
-        ConcordionRunOutput parentResults = getParentFromCacheOrCreate(fixture); 
+        ConcordionRunOutput parentResults = getParentFromCacheOrCreate(fixture, actualSummary.getSpecificationDescription()); 
         ResultSummary totalActualResults = addResults(parentResults.getActualResultSummary(), actualSummary);
         parentResults.setActualResultSummary(totalActualResults);
         ResultSummary totalModifiedResults = addResults(parentResults.getModifiedResultSummary(), modifiedResultSummary);
@@ -129,16 +130,23 @@ public enum RunResultsCache {
         return recorder;
     }
 
-    private ConcordionRunOutput getParentFromCacheOrCreate(Fixture fixture) {
+    private ConcordionRunOutput getParentFromCacheOrCreate(Fixture fixture, String specificationDescription) {
         ConcordionRunOutput output = map.get(getID(fixture, null));
         if (output == null) {
-            String specificationDescription = fixture.getSpecificationDescription();
+            specificationDescription = createSummaryDescription(specificationDescription);
             SummarizingResultRecorder totalActualResults = new SummarizingResultRecorder(specificationDescription);
             SummarizingResultRecorder totalModifiedResults = new SummarizingResultRecorder(specificationDescription);
             output = new ConcordionRunOutput(totalActualResults, totalModifiedResults);
             map.put(getID(fixture, null), output);
         }
         return output;
+    }
+
+    private String createSummaryDescription(String specificationDescription) {
+        if (specificationDescription.endsWith(XMLSpecification.OUTER_EXAMPLE_DESCRIPTION_SUFFIX)) {
+            specificationDescription = specificationDescription.substring(0, specificationDescription.length() - XMLSpecification.OUTER_EXAMPLE_DESCRIPTION_SUFFIX.length());
+        }
+        return specificationDescription + " (Summary)";
     }
 
     private ConcordionRunOutput getExampleFromCache(Fixture fixture, String example) {
