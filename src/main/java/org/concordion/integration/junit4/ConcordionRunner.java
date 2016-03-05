@@ -134,36 +134,38 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
             setupFixture.beforeSuite();
         }
 
-        // we figure out if the spec has been run before by checking if there are any
-        // prior results in the cache
-        boolean firstRun = null ==RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
+        try {
+            // we figure out if the spec has been run before by checking if there are any
+            // prior results in the cache
+            boolean firstRun = null ==RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
 
-        // only setup the fixture if it hasn't been run before
-        if (firstRun) {
-            setupFixture.beforeSpecification();
-        }
+            // only setup the fixture if it hasn't been run before
+            if (firstRun) {
+                setupFixture.beforeSpecification();
+            }
 
-        super.run(notifier);
+            super.run(notifier);
 
-        // only actually finish the specification if this is the first time it was run
-        if (firstRun) {
-            setupFixture.afterSpecification();
-            concordion.finish();
-        }
+            // only actually finish the specification if this is the first time it was run
+            if (firstRun) {
+                setupFixture.afterSpecification();
+                concordion.finish();
+            }
 
-        ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
+            ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
 
-        if (results != null) {
-            // we only print meta-results when the spec has multiple examples.
-            if (concordionFrameworkMethods.size() > 1) {
-                synchronized (System.out) {
-                    results.getActualResultSummary().print(System.out, setupFixture);
+            if (results != null) {
+                // we only print meta-results when the spec has multiple examples.
+                if (concordionFrameworkMethods.size() > 1) {
+                    synchronized (System.out) {
+                        results.getActualResultSummary().print(System.out, setupFixture);
+                    }
                 }
             }
-        }
-
-        if (suiteDepth.decrementAndGet() == 0) {
-            setupFixture.afterSuite();
+        } finally {
+            if (suiteDepth.decrementAndGet() == 0) {
+                setupFixture.afterSuite();
+            }
         }
 
         if (failFastException != null) {
