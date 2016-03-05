@@ -19,6 +19,12 @@ public class ConcordionRunOutput {
         this.modifiedResultSummary = singleResultSummary;
     }
 
+    public ConcordionRunOutput(ResultSummary actualResultSummary, ResultSummary modifiedResultSummary) {
+        super();
+        this.actualResultSummary = actualResultSummary;
+        this.modifiedResultSummary = modifiedResultSummary;
+    }
+
     public ResultSummary getActualResultSummary() {
         return actualResultSummary;
     }
