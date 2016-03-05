@@ -15,6 +15,7 @@ import org.concordion.internal.*;
 import org.concordion.internal.cache.ConcordionRunOutput;
 import org.concordion.internal.cache.RunResultsCache;
 import org.junit.runner.Description;
+import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
@@ -162,6 +163,9 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
                     }
                 }
             }
+        } catch (RuntimeException e) {
+            notifier.fireTestFailure(new Failure(getDescription(), e));
+            throw e;
         } finally {
             if (suiteDepth.decrementAndGet() == 0) {
                 setupFixture.afterSuite();
