@@ -61,7 +61,6 @@ public enum RunResultsCache {
     public synchronized ConcordionRunOutput startRun(Fixture fixture, String example) {
         assert fixture.getFixtureClass() != null;
 
-
         // check to see if there is a result in the cache
         ConcordionRunOutput runSummary = getExampleFromCache(fixture, example);
         if (runSummary != null) {
@@ -86,67 +85,67 @@ public enum RunResultsCache {
      * Updates the cache with the results of a run.
      * @param fixture the fixture to update
      * @param example the name of the example that is being finished (null ok)
-     * @param actualSummary the results as reported from the spec
+     * @param actualResultSummary the results as reported from the spec
      * @param modifiedResultSummary the results as post processed by any fixture annotations
      */
     public synchronized void finishRun(Fixture fixture,
                                        String example,
-                                       ResultSummary actualSummary,
+                                       ResultSummary actualResultSummary,
                                        ResultSummary modifiedResultSummary) {
         assert fixture.getFixtureClass() != null;
-        assert actualSummary != null;
+        assert actualResultSummary != null;
         assert modifiedResultSummary != null;
 
+        setResultsForExample(fixture, example, actualResultSummary, modifiedResultSummary);
+
+        addResultsToFixtureTotal(fixture, actualResultSummary, modifiedResultSummary);
+    }
+
+    private void setResultsForExample(Fixture fixture, String example, ResultSummary actualResultSummary, ResultSummary modifiedResultSummary) {
         ConcordionRunOutput exampleResults = getExampleFromCache(fixture, example);
         if (exampleResults == null) {
             throw new IllegalStateException("Internal error: startRun must always be called before finishRun");
         }
-        
-        exampleResults.setActualResultSummary(actualSummary);
+        if (isOuterExample(example)) {
+            // Clone since the outer example is also used for the total result summary
+            actualResultSummary = clone(actualResultSummary);
+            modifiedResultSummary = clone(modifiedResultSummary);
+        }
+        exampleResults.setActualResultSummary(actualResultSummary);
         exampleResults.setModifiedResultSummary(modifiedResultSummary);
-
-        // now accumulate into the parent
-        ConcordionRunOutput parentResults = getParentFromCacheOrCreate(fixture, actualSummary.getSpecificationDescription()); 
-        ResultSummary totalActualResults = addResults(parentResults.getActualResultSummary(), actualSummary);
-        parentResults.setActualResultSummary(totalActualResults);
-        ResultSummary totalModifiedResults = addResults(parentResults.getModifiedResultSummary(), modifiedResultSummary);
-        parentResults.setModifiedResultSummary(totalModifiedResults);
     }
 
-    private ResultSummary addResults(ResultSummary accumulator, ResultSummary resultsToAdd) {
-        SummarizingResultRecorder recorder;
-        if (accumulator instanceof SummarizingResultRecorder) {
-            recorder = (SummarizingResultRecorder) accumulator; 
+    private boolean isOuterExample(String example) {
+        return XMLSpecification.OUTER_EXAMPLE_NAME.equals(example);
+    }
+
+    private void addResultsToFixtureTotal(Fixture fixture, ResultSummary actualResultSummary, ResultSummary modifiedResultSummary) {
+        ConcordionRunOutput fixtureTotalResults = map.get(getID(fixture, null));
+        if (fixtureTotalResults == null) {
+            if (actualResultSummary == modifiedResultSummary) {
+                // Clone so that we don't add the results twice to the same summary
+                modifiedResultSummary = clone(modifiedResultSummary);  
+            }
+            fixtureTotalResults = new ConcordionRunOutput(actualResultSummary, modifiedResultSummary);
+            map.put(getID(fixture, null), fixtureTotalResults);
         } else {
-            recorder = new SummarizingResultRecorder();
-            recorder.record(accumulator);
+            addResults((SummarizingResultRecorder) fixtureTotalResults.getActualResultSummary(), actualResultSummary);
+            addResults((SummarizingResultRecorder) fixtureTotalResults.getModifiedResultSummary(), modifiedResultSummary);
         }
-        
+    }
+
+    private ResultSummary clone(ResultSummary resultSummary) {
+        SummarizingResultRecorder clone = new SummarizingResultRecorder(resultSummary.getSpecificationDescription());
+        clone.record(resultSummary);
+        return clone;
+    }
+
+    private void addResults(SummarizingResultRecorder accumulator, ResultSummary resultsToAdd) {
         if (resultsToAdd.isForExample()) {
-            recorder.record(new SingleResultSummary(resultsToAdd));
+            accumulator.record(new SingleResultSummary(resultsToAdd));
         } else {
-            recorder.record(resultsToAdd);
+            accumulator.record(resultsToAdd);
         }
-        return recorder;
-    }
-
-    private ConcordionRunOutput getParentFromCacheOrCreate(Fixture fixture, String specificationDescription) {
-        ConcordionRunOutput output = map.get(getID(fixture, null));
-        if (output == null) {
-            specificationDescription = createSummaryDescription(specificationDescription);
-            SummarizingResultRecorder totalActualResults = new SummarizingResultRecorder(specificationDescription);
-            SummarizingResultRecorder totalModifiedResults = new SummarizingResultRecorder(specificationDescription);
-            output = new ConcordionRunOutput(totalActualResults, totalModifiedResults);
-            map.put(getID(fixture, null), output);
-        }
-        return output;
-    }
-
-    private String createSummaryDescription(String specificationDescription) {
-        if (specificationDescription.endsWith(XMLSpecification.OUTER_EXAMPLE_DESCRIPTION_SUFFIX)) {
-            specificationDescription = specificationDescription.substring(0, specificationDescription.length() - XMLSpecification.OUTER_EXAMPLE_DESCRIPTION_SUFFIX.length());
-        }
-        return specificationDescription + " (Summary)";
     }
 
     private ConcordionRunOutput getExampleFromCache(Fixture fixture, String example) {

@@ -9,7 +9,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.concordion.Concordion;
 import org.concordion.api.Fixture;
-import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.*;
 import org.concordion.internal.cache.ConcordionRunOutput;
@@ -148,11 +147,8 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
 
         if (results != null) {
-            // we only print meta-results when the spec has multiple examples.
-            if (concordionFrameworkMethods.size() > 1) {
-                synchronized (System.out) {
-                    results.getActualResultSummary().print(System.out, setupFixture);
-                }
+            synchronized (System.out) {
+                results.getActualResultSummary().print(System.out, setupFixture);
             }
         }
 

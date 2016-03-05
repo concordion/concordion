@@ -10,8 +10,8 @@ import java.util.List;
 
 public class XMLSpecification implements SpecificationByExample {
 
-    private static final String OUTER_DESCRIPTION = "[Outer]";
-    public static final String OUTER_EXAMPLE_DESCRIPTION_SUFFIX = " " + OUTER_DESCRIPTION;
+    public static final String OUTER_EXAMPLE_NAME = "[Outer]";
+    public static final String OUTER_EXAMPLE_SUFFIX = " " + OUTER_EXAMPLE_NAME;
 
     private String testDescription;
 
@@ -82,8 +82,8 @@ public class XMLSpecification implements SpecificationByExample {
     }
 
     public void setFixture(Fixture fixture) {
-        if (examples.size() > 0) {
-            testDescription = OUTER_DESCRIPTION;
+        if (hasExamples()) {
+            testDescription = OUTER_EXAMPLE_NAME;
         } else {
             testDescription = fixture.getSpecificationDescription();
         }
@@ -92,11 +92,6 @@ public class XMLSpecification implements SpecificationByExample {
     public void processExample(Evaluator evaluator, String example, SummarizingResultRecorder resultRecorder) {
         if (testDescription.equals(example)) {
             processNode(rootCommandNode, evaluator, resultRecorder);
-
-            if (examples.size() > 0) {
-                resultRecorder.setSpecificationDescription(resultRecorder.getSpecificationDescription() + OUTER_EXAMPLE_DESCRIPTION_SUFFIX);
-            }
-
             return;
         }
 
@@ -106,6 +101,10 @@ public class XMLSpecification implements SpecificationByExample {
                 processNode(commandCall, evaluator, resultRecorder);
             }
         }
+    }
+
+    private boolean hasExamples() {
+        return examples.size() > 0;
     }
 
     public List<String> getExampleNames() {
