@@ -2,8 +2,6 @@ package org.concordion.api;
 
 import java.util.List;
 
-import org.concordion.internal.SummarizingResultRecorder;
-
 /**
  * Extension interface for {@link Specification}s that contain Concordion examples.
  * 
@@ -34,7 +32,7 @@ public interface SpecificationByExample extends Specification {
      * @param example name of the example
      * @param resultRecorder result recorder
      */
-    void processExample(Evaluator evaluator, String example, SummarizingResultRecorder resultRecorder);
+    void processExample(Evaluator evaluator, String example, ResultRecorder resultRecorder);
 
     /**
      * Called once all examples have been executed so the spec can do things like "save HTML results to file".
