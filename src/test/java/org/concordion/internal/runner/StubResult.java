@@ -1,4 +1,4 @@
-package test.concordion.internal.runner;
+package org.concordion.internal.runner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.junit.runner.notification.Failure;
 /**
  * Stub for {@link Result}. Defaults to a successful result.
  */
-public class StubResult extends Result {
+class StubResult extends Result {
 
     private static final long serialVersionUID = 6102153773248794468L;
     public static final StubResult SUCCESS = new StubResult();

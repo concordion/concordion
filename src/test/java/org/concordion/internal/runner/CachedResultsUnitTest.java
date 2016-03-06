@@ -1,4 +1,4 @@
-package test.concordion.internal.runner;
+package org.concordion.internal.runner;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;

@@ -1,4 +1,4 @@
-package test.concordion.internal.listener;
+package org.concordion.internal.listener;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;

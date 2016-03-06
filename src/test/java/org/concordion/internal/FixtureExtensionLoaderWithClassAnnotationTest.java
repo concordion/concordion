@@ -1,4 +1,4 @@
-package test.concordion.internal;
+package org.concordion.internal;
 
 import static org.junit.Assert.fail;
 import static org.hamcrest.CoreMatchers.allOf;

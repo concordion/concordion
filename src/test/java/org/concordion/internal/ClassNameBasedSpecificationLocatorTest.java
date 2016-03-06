@@ -1,4 +1,4 @@
-package test.concordion.internal;
+package org.concordion.internal;
 
 import junit.framework.TestCase;
 
@@ -9,7 +9,7 @@ public class ClassNameBasedSpecificationLocatorTest extends TestCase {
 
     public void testRemovesWordTestFromEndOfClassNameAndAppendsDotHTML() throws Exception {
         SpecificationLocator locator = new ClassNameBasedSpecificationLocator();
-        assertEquals("/test/concordion/internal/ClassNameBasedSpecificationLocator.html", locator.locateSpecification(this, "html").getPath());
+        assertEquals("/org/concordion/internal/ClassNameBasedSpecificationLocator.html", locator.locateSpecification(this, "html").getPath());
     }
 
     public void testRemovesWordFixtureFromEndOfClassNameAndAppendsDotHTML() throws Exception {
@@ -20,6 +20,6 @@ public class ClassNameBasedSpecificationLocatorTest extends TestCase {
 
     public void testCanAppendDotXHTMLWhenConstructedWithXHTMLArgument() throws Exception {
         SpecificationLocator locator = new ClassNameBasedSpecificationLocator("xhtml");
-        assertEquals("/test/concordion/internal/ClassNameBasedSpecificationLocator.xhtml", locator.locateSpecification(this, "xhtml").getPath());
+        assertEquals("/org/concordion/internal/ClassNameBasedSpecificationLocator.xhtml", locator.locateSpecification(this, "xhtml").getPath());
     }
 }

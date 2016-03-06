@@ -1,4 +1,4 @@
-package test.concordion.internal.listener;
+package org.concordion.internal.listener;
 
 import nu.xom.Document;
 import nu.xom.Element;

@@ -1,4 +1,4 @@
-package test.concordion.internal;
+package org.concordion.internal;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;

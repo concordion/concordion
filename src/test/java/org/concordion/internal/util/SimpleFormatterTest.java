@@ -1,4 +1,4 @@
-package test.org.concordion.internal.util;
+package org.concordion.internal.util;
 
 import static org.junit.Assert.*;
 

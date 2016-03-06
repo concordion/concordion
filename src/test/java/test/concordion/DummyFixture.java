@@ -1,4 +1,4 @@
-package spec.concordion;
+package test.concordion;
 
 public class DummyFixture {
 

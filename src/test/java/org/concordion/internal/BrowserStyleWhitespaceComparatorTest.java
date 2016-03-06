@@ -1,4 +1,4 @@
-package test.concordion.internal;
+package org.concordion.internal;
 
 import org.concordion.internal.BrowserStyleWhitespaceComparator;
 import org.junit.Assert;
