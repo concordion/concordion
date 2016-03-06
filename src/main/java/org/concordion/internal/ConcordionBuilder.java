@@ -474,6 +474,11 @@ public class ConcordionBuilder implements ConcordionExtender {
             markdownConverter.withPegdownExtensions(markdownExtensions);
         }
 
+        if (options.declareNamespaces().length > 0) {
+            Map<String, String> namespaces = ConcordionOptionsParser.convertNamespacePairsToMap(options.declareNamespaces());
+            markdownConverter.withNamespaceDeclarations(namespaces);
+        }
+
         String location = options.copySourceHtmlToDir();
         if (!location.isEmpty()) {
             location = expandSystemProperties(location);
