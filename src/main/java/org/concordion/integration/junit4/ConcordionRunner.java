@@ -161,12 +161,6 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
                 setupFixture.afterSuite();
             }
         }
-
-        if (failFastException != null) {
-            if (setupFixture.declaresFailFast()) {
-                throw new FailFastException("Failing Fast", failFastException);
-            }
-        }
     }
 
     @Override
