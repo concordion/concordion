@@ -5,15 +5,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.concordion.api.Fixture;
 import org.concordion.api.ResultSummary;
-import org.concordion.internal.SingleResultSummary;
 import org.concordion.internal.SummarizingResultRecorder;
+import org.concordion.internal.XMLSpecification;
 
 /**
- *
  * A thread-safe class to provide caching of run results.
- *
- * @author Tim Wright &lt;tim@tfwright.co.nz&gt;
- *
  */
 public enum RunResultsCache {
     SINGLETON;
@@ -30,7 +26,6 @@ public enum RunResultsCache {
     }
 
     /**
-    *
     * Provides a direct method to access the cache
     *
     * @param fixture fixture containing class to retrieve from the cache
@@ -42,7 +37,6 @@ public enum RunResultsCache {
     }
     
     /**
-     *
      * Provides a direct method to access the cache
      *
      * @param fixtureClass class to retrieve from the cache
@@ -56,7 +50,8 @@ public enum RunResultsCache {
 
     /**
      * Searches for a match in the cache. If there is no match, it marks the test as "in progress".
-     * This is done in one method to avoid thread synchronization issues
+     * This is done in one method to avoid thread synchronization issues.
+     * 
      * @param fixture the fixture to retrieve
      * @param example the name of the example that is being started (null OK)
      *
@@ -65,9 +60,8 @@ public enum RunResultsCache {
     public synchronized ConcordionRunOutput startRun(Fixture fixture, String example) {
         assert fixture.getFixtureClass() != null;
 
-
         // check to see if there is a result in the cache
-        ConcordionRunOutput runSummary = map.get(getID(fixture, example));
+        ConcordionRunOutput runSummary = getExampleFromCache(fixture, example);
         if (runSummary != null) {
             return runSummary;
         }
@@ -87,66 +81,74 @@ public enum RunResultsCache {
     }
 
     /**
-     * Updates the cache with the results of a run
-     *
+     * Updates the cache with the results of a run.
      * @param fixture the fixture to update
      * @param example the name of the example that is being finished (null ok)
-     * @param actualSummary the results as reported from the spec
-     * @param postProcessedResultSummary the results as post processed by any fixture annotations
+     * @param actualResultSummary the results as reported from the spec
+     * @param modifiedResultSummary the results as post processed by any fixture annotations
      */
     public synchronized void finishRun(Fixture fixture,
                                        String example,
-                                       ResultSummary actualSummary,
-                                       ResultSummary postProcessedResultSummary) {
+                                       ResultSummary actualResultSummary,
+                                       ResultSummary modifiedResultSummary) {
         assert fixture.getFixtureClass() != null;
-        assert actualSummary != null;
-        assert postProcessedResultSummary != null;
+        assert actualResultSummary != null;
+        assert modifiedResultSummary != null;
 
-        // check if there is already a result
-        ConcordionRunOutput runSummary = map.get(getID(fixture, example));
-        if (runSummary == null) {
-            // no result? Create one. This should never happen because startRun should always be called before
-            // finishRun
-            runSummary = new ConcordionRunOutput(fixture);
-            map.put(getID(fixture, example), runSummary);
+        setResultsForExample(fixture, example, actualResultSummary, modifiedResultSummary);
+
+        addResultsToFixtureTotal(fixture, actualResultSummary, modifiedResultSummary);
+    }
+
+    private void setResultsForExample(Fixture fixture, String example, ResultSummary actualResultSummary, ResultSummary modifiedResultSummary) {
+        ConcordionRunOutput exampleResults = getExampleFromCache(fixture, example);
+        if (exampleResults == null) {
+            throw new IllegalStateException("Internal error: startRun must always be called before finishRun");
         }
-
-        // update the cached value
-        runSummary.setActualResultSummary(actualSummary);
-        runSummary.setModifiedResultSummary(postProcessedResultSummary);
-
-        String specificationDescription = fixture.getSpecificationDescription();
-
-
-        // now accumulate into the parent
-        ConcordionRunOutput output = map.get(getID(fixture, null));
-        if (output == null) {
-            output = new ConcordionRunOutput(fixture);
-            map.put(getID(fixture, null), output);
-            // give them empty result summaries by default
-            output.setActualResultSummary(new SummarizingResultRecorder(specificationDescription));
-            output.setModifiedResultSummary(new SummarizingResultRecorder(specificationDescription));
+        if (isOuterExample(example)) {
+            // Clone since the outer example is also used for the total result summary
+            actualResultSummary = clone(actualResultSummary);
+            modifiedResultSummary = clone(modifiedResultSummary);
         }
+        exampleResults.setActualResultSummary(actualResultSummary);
+        exampleResults.setModifiedResultSummary(modifiedResultSummary);
+    }
 
-        // and now accumulate
-        SummarizingResultRecorder totalActualResults = new SummarizingResultRecorder(specificationDescription);
-        totalActualResults.record(output.getActualResultSummary());
-        if (actualSummary.isForExample()) {
-            totalActualResults.record(new SingleResultSummary(actualSummary));
+    private boolean isOuterExample(String example) {
+        return XMLSpecification.OUTER_EXAMPLE_NAME.equals(example);
+    }
+
+    private void addResultsToFixtureTotal(Fixture fixture, ResultSummary actualResultSummary, ResultSummary modifiedResultSummary) {
+        ConcordionRunOutput fixtureTotalResults = map.get(getID(fixture, null));
+        if (fixtureTotalResults == null) {
+            if (actualResultSummary == modifiedResultSummary) {
+                // Clone so that we don't add the results twice to the same summary
+                modifiedResultSummary = clone(modifiedResultSummary);  
+            }
+            fixtureTotalResults = new ConcordionRunOutput(actualResultSummary, modifiedResultSummary);
+            map.put(getID(fixture, null), fixtureTotalResults);
         } else {
-            totalActualResults.record(actualSummary);
+            addResults((SummarizingResultRecorder) fixtureTotalResults.getActualResultSummary(), actualResultSummary);
+            addResults((SummarizingResultRecorder) fixtureTotalResults.getModifiedResultSummary(), modifiedResultSummary);
         }
-        output.setActualResultSummary(totalActualResults);
+    }
 
-        SummarizingResultRecorder totalConvertedResults = new SummarizingResultRecorder(specificationDescription);
-        totalConvertedResults.record(output.getModifiedResultSummary());
-        if (postProcessedResultSummary.isForExample()) {
-            totalConvertedResults.record(new SingleResultSummary(postProcessedResultSummary));
-        } else {
-            totalConvertedResults.record(postProcessedResultSummary);
-        }
-        output.setModifiedResultSummary(totalConvertedResults);
+    private ResultSummary clone(ResultSummary resultSummary) {
+        SummarizingResultRecorder clone = new SummarizingResultRecorder(resultSummary.getSpecificationDescription());
+        clone.record(resultSummary);
+        return clone;
+    }
 
+    private void addResults(SummarizingResultRecorder accumulator, ResultSummary resultsToAdd) {
+//        if (resultsToAdd.isForExample()) {
+//            accumulator.record(new SingleResultSummary(resultsToAdd));
+//        } else {
+            accumulator.record(resultsToAdd);
+//        }
+    }
+
+    private ConcordionRunOutput getExampleFromCache(Fixture fixture, String example) {
+        return map.get(getID(fixture, example));
     }
 
     public void failRun(Fixture fixture, String example) {
@@ -201,4 +203,3 @@ public enum RunResultsCache {
         }
     }
 }
-

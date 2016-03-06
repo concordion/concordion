@@ -29,7 +29,7 @@ public class FixtureRunner {
                 null:
                 runOutput.getActualResultSummary();
 
-        ResultSummary postProcessedResultSummary = runOutput==null?
+        ResultSummary modifiedResultSummary = runOutput==null?
                 null:
                 runOutput.getModifiedResultSummary();
 
@@ -56,12 +56,12 @@ public class FixtureRunner {
                 }
                 // we want to make sure all the annotations are considered when storing the result summary
                 // converting for the cache doesn't need the example - it just does annotation based conversions
-                postProcessedResultSummary=  statusChecker.convertForCache(actualResultSummary);
+                modifiedResultSummary = statusChecker.convertForCache(actualResultSummary);
 
                 runResultsCache.finishRun(fixture,
                         example,
                         actualResultSummary,
-                        postProcessedResultSummary);
+                        modifiedResultSummary);
 
             } catch (RuntimeException e) {
                 // the run failed miserably. Tell the cache that the run failed
@@ -73,7 +73,9 @@ public class FixtureRunner {
             additionalInformation = "\nFrom cache: ";
         }
 
-        printResultSummary(fixture, example, actualResultSummary, additionalInformation);
+        if (actualResultSummary.isForExample()) {
+            printResultSummary(fixture, example, actualResultSummary, additionalInformation);
+        }
 
         return actualResultSummary;
     }

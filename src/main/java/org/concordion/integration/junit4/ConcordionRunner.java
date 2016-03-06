@@ -9,7 +9,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.concordion.Concordion;
 import org.concordion.api.Fixture;
-import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.*;
 import org.concordion.internal.cache.ConcordionRunOutput;
@@ -34,8 +33,6 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
     private final FixtureRunner fixtureRunner;
     private final Concordion concordion;
     private final List<ConcordionFrameworkMethod> concordionFrameworkMethods;
-    private SummarizingResultRecorder accumulatedResultSummary;
-
 
     private FailFastException failFastException = null;
     private Fixture setupFixture;
@@ -46,7 +43,6 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
     public ConcordionRunner(Class<?> fixtureClass) throws InitializationError {
         super(fixtureClass);
         this.fixtureClass = fixtureClass;
-        this.accumulatedResultSummary = new SummarizingResultRecorder();
 
         try {
             setupFixture = createFixture(super.createTest());
@@ -54,7 +50,6 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         } catch (Exception e) {
             throw new InitializationError(e);
         }
-        accumulatedResultSummary.setSpecificationDescription(setupFixture.getSpecificationDescription());
 
         try {
             fixtureRunner = new FixtureRunner(setupFixture);
@@ -75,8 +70,6 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         } catch (IOException e) {
             throw new InitializationError(e);
         }
-
-
     }
 
     private void verifyUniqueExampleMethods(List<String> exampleNames) throws InitializationError {
@@ -154,11 +147,8 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
 
         if (results != null) {
-            // we only print meta-results when the spec has multiple examples.
-            if (concordionFrameworkMethods.size() > 1) {
-                synchronized (System.out) {
-                    results.getActualResultSummary().print(System.out, setupFixture);
-                }
+            synchronized (System.out) {
+                results.getActualResultSummary().print(System.out, setupFixture);
             }
         }
 
@@ -209,14 +199,11 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
             result.assertIsSatisfied(fixture);
 
         } catch (ConcordionAssertionError e) {
-            accumulatedResultSummary.record(e.getResultSummary());
             throw e;
         } catch (FailFastException e){
-            accumulatedResultSummary.record(Result.EXCEPTION);
             failFastException = e;
             throw e;
         } catch (IOException e) {
-            accumulatedResultSummary.record(Result.EXCEPTION);
             throw e;
         }
     }

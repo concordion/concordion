@@ -101,22 +101,14 @@ For classes with examples, <a c:run="concordion" href="FixtureWithExampleInitial
 <div c:example="runresults">
     <h3>Run Results</h3>
 
-    <p>When reporting run results for the specification as a whole, concordion follows the following rules:</p>
-    <ol>
-        <li>Each example contributes 1 success, failure, ignored, or exception to the total count.</li>
-        <li>If an example has any exceptions, then it contributes 1 exception.</li>
-        <li>If the example has no exceptions, but some failures, then it contributes 1 failure.</li>
-        <li>If the example has no exceptions, no failures, and some success, then it contributes 1 success.</li>
-        <li>If the example has no exceptions, no failures, no successes, but some ignores, then it contributes 1 ignored</li>
-        <li>If the example has an empty result summary, it is treated as success.</li>
-    </ol>
+    <p>When reporting run results for the specification as a whole, Concordion sums the success, failure, ignored, or exception counts from each example in the specification.</p>
 
     <p>
         For example, a spec (<a href="LotsOfExamples.html" c:execute="#result=runTestDummySpec(#TEXT)">LotsOfExamples.html</a>)
-        with two successful examples, a failed example, an an exception example,
-        returns <span c:assertEquals="#result.successCount">2</span> successes,
-        <span c:assertEquals="#result.failureCount">1</span> failure,
-        <span c:assertEquals="#result.exceptionCount">1</span> exceptions, and
+        with two successful examples, a failed example, an an exception example with a total of 10 successes, 2 failures and 2 exceptions 
+        returns <span c:assertEquals="#result.successCount">10</span> successes,
+        <span c:assertEquals="#result.failureCount">2</span> failure,
+        <span c:assertEquals="#result.exceptionCount">2</span> exceptions, and
         <span c:assertEquals="#result.ignoredCount">0</span> ignores
     </p>
 </div>
@@ -131,8 +123,8 @@ For classes with examples, <a c:run="concordion" href="FixtureWithExampleInitial
 
     <p>
             A spec (<a href="AssertsOutsideExamples.html" c:execute="#result=runTestDummySpec(#TEXT)">AssertsOutsideExamples.html</a>)
-        with a successful example and two tests outside the example, one of which
-            fails, returns <span c:assertEquals="#result.successCount">2</span> successes,
+        with a successful example containing 2 successful assertions and two assertions outside the example, one of which
+            fails, returns <span c:assertEquals="#result.successCount">3</span> successes,
         <span c:assertEquals="#result.failureCount">1</span> failure,
             <span c:assertEquals="#result.exceptionCount">0</span> exceptions, and
                 <span c:assertEquals="#result.ignoredCount">0</span> ignores
