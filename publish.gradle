@@ -61,6 +61,9 @@ task publishRelease(dependsOn: ['publishDocs', 'release'])
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from sourceSets.main.allSource
+    from (sourceSets.test.allSource) {
+        include 'test/**'
+    }
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -71,6 +74,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 task testJar(type: Jar, dependsOn: testClasses) {
     classifier = 'tests'
     from sourceSets.test.output
+    include 'test/**'
 }
 
 publishing {
