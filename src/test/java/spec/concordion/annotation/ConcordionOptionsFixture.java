@@ -1,6 +1,8 @@
 package spec.concordion.annotation;
 
 import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.concordion.internal.ConcordionOptionsParser;
@@ -27,7 +29,8 @@ public class ConcordionOptionsFixture {
     
     public String parse(String declareNamespaces) {
         String[] namespacePairs = declareNamespaces.substring(1, declareNamespaces.length()-2).split(",");
-        return ConcordionOptionsParser.convertNamespacePairsToMap(namespacePairs).toString();
+        Map<String, String> namespaceMap = ConcordionOptionsParser.convertNamespacePairsToMap(namespacePairs);
+        return new TreeMap<String, String>(namespaceMap).toString();
     }
 
     public String parseAndReturnExceptionMessage(String declareNamespaces) {
