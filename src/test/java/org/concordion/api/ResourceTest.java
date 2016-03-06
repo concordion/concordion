@@ -1,4 +1,4 @@
-package test.concordion.api;
+package org.concordion.api;
 
 import org.concordion.api.Resource;
 

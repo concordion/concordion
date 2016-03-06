@@ -1,4 +1,4 @@
-package test.concordion.internal.runner;
+package org.concordion.internal.runner;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;

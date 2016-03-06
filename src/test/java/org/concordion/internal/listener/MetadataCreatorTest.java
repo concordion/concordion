@@ -1,4 +1,4 @@
-package test.concordion.internal.listener;
+package org.concordion.internal.listener;
 
 import junit.framework.TestCase;
 import nu.xom.Attribute;

@@ -12,8 +12,6 @@ import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.internal.*;
 import org.concordion.internal.extension.FixtureExtensionLoader;
 
-import spec.concordion.DummyFixture;
-
 public class TestRig {
 
     private Fixture fixture;
@@ -45,7 +43,7 @@ public class TestRig {
         
         if (fixture == null) {
             fixture = new FixtureInstance(new DummyFixture());
-            withResource(new Resource("/spec/concordion/Dummy.html"), "<html/>");
+            withResource(new Resource("/test/concordion/Dummy.html"), "<html/>");
         } else {
             withResource(new ClassNameBasedSpecificationLocator("html").locateSpecification(fixture.getFixtureObject()), "<html/>");
         }
