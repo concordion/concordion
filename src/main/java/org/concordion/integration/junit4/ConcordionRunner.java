@@ -14,6 +14,7 @@ import org.concordion.internal.*;
 import org.concordion.internal.cache.ConcordionRunOutput;
 import org.concordion.internal.cache.RunResultsCache;
 import org.junit.runner.Description;
+import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
@@ -127,33 +128,38 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
             setupFixture.beforeSuite();
         }
 
-        // we figure out if the spec has been run before by checking if there are any
-        // prior results in the cache
-        boolean firstRun = null ==RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
+        try {
+            // we figure out if the spec has been run before by checking if there are any
+            // prior results in the cache
+            boolean firstRun = null ==RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
 
-        // only setup the fixture if it hasn't been run before
-        if (firstRun) {
-            setupFixture.beforeSpecification();
-        }
-
-        super.run(notifier);
-
-        // only actually finish the specification if this is the first time it was run
-        if (firstRun) {
-            setupFixture.afterSpecification();
-            concordion.finish();
-        }
-
-        ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
-
-        if (results != null) {
-            synchronized (System.out) {
-                results.getActualResultSummary().print(System.out, setupFixture);
+            // only setup the fixture if it hasn't been run before
+            if (firstRun) {
+                setupFixture.beforeSpecification();
             }
-        }
 
-        if (suiteDepth.decrementAndGet() == 0) {
-            setupFixture.afterSuite();
+            super.run(notifier);
+
+            // only actually finish the specification if this is the first time it was run
+            if (firstRun) {
+                setupFixture.afterSpecification();
+                concordion.finish();
+            }
+
+            ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
+
+            if (results != null) {
+                synchronized (System.out) {
+                    results.getActualResultSummary().print(System.out, setupFixture);
+                }
+            }
+        } catch (RuntimeException e) {
+            notifier.fireTestFailure(new Failure(getDescription(), e));
+            throw e;
+        } finally {
+            if (suiteDepth.decrementAndGet() == 0) {
+                setupFixture.afterSuite();
+            }
         }
 
         if (failFastException != null) {
