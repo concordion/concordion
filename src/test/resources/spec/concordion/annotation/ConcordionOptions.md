@@ -89,7 +89,7 @@ Add the `@ConcordionOptions` annotation to the fixture class, with the `declareN
 |[_parse_](- "#mappings=parse(#value)")[declareNamespaces value](- "#value")|[Namespace mappings](- "?=#mappings")|
 | ------------------------------------------ | --------------- |
 | {"ext", "urn:concordion-extensions:2010"} | {"ext"= "urn:concordion-extensions:2010"} |
-| {"foo", "http://bar", "x", "urn:baz"} | {"foo"= "http://bar", "x"= "urn:baz"} |
+| {"foo", "http://bar", "x", "urn:baz"} | { "x"= "urn:baz", "foo"= "http://bar"} |
 
 ### [Invalid declarations](- "invalid-namespace-declarations")
 
