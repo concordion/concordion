@@ -21,6 +21,7 @@ import org.concordion.internal.command.*;
 import org.concordion.internal.extension.ExtensionChecker;
 import org.concordion.internal.listener.*;
 import org.concordion.internal.parser.markdown.MarkdownConverter;
+import org.concordion.internal.parser.markdown.XhtmlConverter;
 import org.concordion.internal.util.Check;
 import org.concordion.internal.util.SimpleFormatter;
 
@@ -58,6 +59,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private boolean builtAlready;
     private Fixture fixture;
     private MarkdownConverter markdownConverter = new MarkdownConverter();
+    private XhtmlConverter xhtmlConverter = new XhtmlConverter();
 
     private List<SpecificationType> specificationTypes = new ArrayList<SpecificationType>();
     private Set<SpecificationConverter> specificationConverters = new HashSet<SpecificationConverter>();
@@ -81,7 +83,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         withDocumentParsingListener(new DocumentStructureImprover());
         withDocumentParsingListener(new MetadataCreator());
         withSpecificationType("html", null);
-        withSpecificationType("xhtml", null);
+        withSpecificationType("xhtml", xhtmlConverter);
         withSpecificationType("md", markdownConverter);
         withSpecificationType("markdown", markdownConverter);
         withPageFooterRenderer(new PageFooterRenderer());

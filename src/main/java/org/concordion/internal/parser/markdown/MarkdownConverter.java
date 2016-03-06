@@ -10,7 +10,6 @@ import org.concordion.api.SpecificationConverter;
 
 public class MarkdownConverter implements SpecificationConverter {
 
-    public static final SpecificationConverter INSTANCE = new MarkdownConverter();
     private static final String CONCORDION_NAMESPACE_PREFIX = "concordion";
     private Map<String, String> namespaces = Collections.emptyMap();
     private int pegdownExtensions;
