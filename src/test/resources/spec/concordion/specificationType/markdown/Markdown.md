@@ -115,6 +115,12 @@ or
 
 will create an example named `exampleName` with the H2 heading `Example 1`.
 
+If the example name is not specified, it will be generated from the heading title. For example:
+
+    # Check 3 items
+
+will create an example named `check-3-items` with the H1 heading `Check 3 items`.
+
 ##### Closing an example
 The example block continues until it is closed either implicitly or explicitly.
 
