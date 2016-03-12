@@ -21,11 +21,9 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
     private String currentExampleHeading;
     private int currentExampleLevel;
     private int depth;
-    private Map<String, String> namespaces;
     
     public ConcordionHtmlSerializer(String targetConcordionNamespacePrefix, Map<String, String> namespaces) {
         super(new RunCommandLinkRenderer(SOURCE_CONCORDION_NAMESPACE_PREFIX, targetConcordionNamespacePrefix));
-        this.namespaces = namespaces;
         statementParser = new ConciseExpressionParser(SOURCE_CONCORDION_NAMESPACE_PREFIX, targetConcordionNamespacePrefix, namespaces);
     }
    
@@ -178,14 +176,15 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
                     String expression = ((ExpLinkNode)child).title;
                     currentExampleHeading = printChildrenToString(node);
                     currentExampleLevel = node.getLevel();
-                    ConcordionStatement command = statementParser.parseCommandValueAndAttributes("example", expression, true);
+                    String exampleName = toExampleName(expression);
+                    ConcordionStatement command = statementParser.parseCommandValueAndAttributes("example", exampleName, true);
                     printer.println();
                     printer.print("<div");
                     printConcordionCommand(command);
                     printer.print(">");
                     inExample = true;
                 }
-            } if (inExample) {
+            } else if (inExample) {
                 if (child instanceof StrikeNode) {
                     String exampleHeading = printChildrenToString(node).replace("<del>", "").replace("</del>", "");
                     if (currentExampleHeading != null && currentExampleHeading.equals(exampleHeading)) {
@@ -226,6 +225,32 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
         inExample = false;
         currentExampleHeading = "";
         currentExampleLevel = 0;
+    }
+    
+    private String toExampleName(String expression) {
+        String exampleName = expression;
+        if (exampleName == null || exampleName.trim().isEmpty()) {
+            exampleName = generateName(currentExampleHeading);
+        } else {
+            exampleName = exampleName.trim();
+        }
+        return exampleName;
+    }
+    
+    private String generateName(String headingText) {
+        StringBuilder sb = new StringBuilder(headingText.length());
+        for (char c : headingText.toCharArray()) {
+            if (Character.isLetterOrDigit(c)) {
+                sb.append(Character.toLowerCase(c));
+            } else if (sb.length() > 0 && sb.charAt(sb.length() - 1) != '-') {
+                sb.append('-');
+            }
+        }
+        String name = sb.toString();
+        if (name.endsWith("-")) {
+            name = name.substring(0, name.length() - 1);
+        }
+        return name;
     }
 
 //=======================================================================================================================

@@ -584,13 +584,13 @@ x
       <td>h1 example using setext-style syntax</td>
       <td>
         <pre>      
-[Example 3](- "setext")
+[Example 2](- "setext")
 =====================================================
 x
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="setext"> <h1>Example 3</h1> <p>x</p>]]>&lt;/div>   
+<![CDATA[<div concordion:example="setext"> <h1>Example 2</h1> <p>x</p>]]>&lt;/div>   
       </td>
     </tr>
     <tr>
@@ -605,6 +605,60 @@ x
       </td>
     </tr>
     
+  </table>
+</div>  
+    
+#### Auto-generated example name
+If the example name is not specified, it will be generated from the header text. All alphanumeric characters from the header name will be included, with the alphabetic characters lowercased. Other characters will be converted to hyphens, with hyphens removed from the start and end of the header name.
+    
+<div class="example">
+  <h3>Examples</h3>
+  <table concordion:execute="#html=translate(#md)">
+    <tr>
+      <th>Description</th>
+      <th concordion:set="#md">Markdown</th>
+      <th concordion:assert-equals="#html">Resultant HTML</th>
+    </tr>
+
+    <tr>
+      <td>Example with empty name</td>
+      <td>
+        <pre>      
+## [Example 3](- "")
+x
+        </pre>
+      </td>
+      <td>
+<![CDATA[<div concordion:example="example-3"> <h2>Example 3</h2> <p>x</p>]]>&lt;/div>   
+      </td>
+    </tr>
+    
+    <tr>
+      <td>Example with weird characters</td>
+      <td>
+        <pre>      
+## [3. Hmmm !@#$%^*( ](- "")
+x
+        </pre>
+      </td>
+      <td>
+<![CDATA[<div concordion:example="3-hmmm"> <h2>3. Hmmm !@#$%^*( </h2> <p>x</p>]]>&lt;/div>   
+      </td>
+    </tr>
+
+    <tr>
+      <td>Example with multiple dashes</td>
+      <td>
+        <pre>      
+## [- A - B - - C -- -D - ](- "")
+x
+        </pre>
+      </td>
+      <td>
+<![CDATA[<div concordion:example="a-b-c-d"> <h2>- A - B - - C -- -D - </h2> <p>x</p>]]>&lt;/div>   
+      </td>
+    </tr>
+
   </table>
 </div>  
 
