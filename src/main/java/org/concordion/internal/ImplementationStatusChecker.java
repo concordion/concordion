@@ -55,7 +55,7 @@ public enum ImplementationStatusChecker {
 
         @Override
         public String printNoteToString() {
-            return "   <-- Note: This test has been marked as UNIMPLEMENTED";
+            return "   <-- Note: This example has been marked as UNIMPLEMENTED";
         }
 
     },
@@ -87,7 +87,7 @@ public enum ImplementationStatusChecker {
 
         @Override
         public String printNoteToString() {
-            return "   <-- Note: This test has been marked as EXPECTED_TO_FAIL";
+            return "   <-- Note: This example has been marked as EXPECTED_TO_FAIL";
         }
     },
     EXPECTED_TO_PASS(ImplementationStatus.EXPECTED_TO_PASS) {
