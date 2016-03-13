@@ -795,6 +795,48 @@ Note that, unlike HTML format specifications, the expression is not enclosed in 
   </table>
 </div>
 
+### Embedding HTML
+
+For cases where the Markdown syntax is too restrictive, you can [inline HTML](https://daringfireball.net/projects/markdown/syntax#html).
+
+This can be used to embed Concordion structures that are not currently supported by the Markdown syntax.
+
+<a id="execute-on-a-list"/>
+#### Execute on a list
+
+The [execute on a list](http://concordion.github.io/concordion/latest/spec/command/execute/ExecutingList.html) command can be implemented using the HTML list structure, wrapped in a `<div>` element. For example:
+
+    <div>
+        <ol concordion:execute="parseNode(#TEXT, #LEVEL)">
+            <li>Europe</li>
+            <ul>
+                <li>Austria</li>
+                <ol>
+                    <li>Vienna</li>
+                </ol>
+                <li>UK</li>
+                <ul>
+                    <li>England</li>
+                    <li>Scotland</li>
+                </ul>
+                <li>France</li>
+            </ul>
+            <li>Australia</li>
+        </ol>
+    </div>
+
+#### Handling unusual sentence structures
+
+In order to [handle unusual sentence structures](http://concordion.org/Tutorial.html#executeUnusualSentences), Concordion allows you to use an `execute` command on an outer HTML element. When using Markdown, this can be implemented using the HTML structure wrapped in a `<div>`.
+
+    <div>
+        <p concordion:execute="#greeting = greetingFor(#firstName)">
+            The greeting "<span concordion:assertEquals="#greeting">Hello Bob!</span>"
+            should be given to user <span concordion:set="#firstName">Bob</span>
+            when he logs in.
+        </p>
+    </div>
+
 ## Non-Concordion links
 The set, assert-equals and execute commands require the link URL to be set to `-`. Links with other URLs are not modified. For example:
 
@@ -917,11 +959,3 @@ HTML entities in the text value are encoded correctly.
     </tr>
   </table>
 </div>
-
-
-
-
-##TODO
-
-### Document embedded HTML for execute on a list and complex sentence structures 
-
