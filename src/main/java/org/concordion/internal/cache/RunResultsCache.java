@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.concordion.api.Fixture;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.SummarizingResultRecorder;
-import org.concordion.internal.XMLSpecification;
 
 /**
  * A thread-safe class to provide caching of run results.
