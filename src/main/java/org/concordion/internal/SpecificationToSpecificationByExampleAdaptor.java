@@ -36,4 +36,9 @@ public class SpecificationToSpecificationByExampleAdaptor implements Specificati
         list.add(testDescription);
         return list;
     }
+
+    @Override
+    public boolean hasExampleCommandNodes() {
+        return false;
+    }
 }

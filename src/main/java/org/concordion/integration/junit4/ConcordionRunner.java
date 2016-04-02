@@ -60,6 +60,8 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         concordion = fixtureRunner.getConcordion();
 
         try {
+            concordion.checkValidStatus(setupFixture);
+            
             List<String> examples = concordion.getExampleNames(setupFixture);
 
             verifyUniqueExampleMethods(examples);

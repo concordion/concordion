@@ -144,4 +144,11 @@ public class Concordion {
         msg += "'";
         return msg;
     }
+
+    public void checkValidStatus(Fixture fixture) throws IOException {
+        if (getSpecification(fixture).hasExampleCommandNodes() && fixture.getDeclaredImplementationStatus() != ImplementationStatus.EXPECTED_TO_PASS) {
+            throw new IllegalStateException("Error: Implementation Status (ExpectedToFail or Unimplemented) must be set on the example command in the specification, "
+                    + "and not as an annotation on the fixture, when the specification contains examples."); 
+        }
+    }
 }

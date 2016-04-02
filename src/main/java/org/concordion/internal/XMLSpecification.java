@@ -89,7 +89,7 @@ public class XMLSpecification implements SpecificationByExample {
     }
 
     public void setFixture(Fixture fixture) {
-        if (hasExamples()) {
+        if (hasExampleCommandNodes()) {
             testDescription = OUTER_EXAMPLE_NAME;
         } else {
             testDescription = fixture.getSpecificationDescription();
@@ -110,7 +110,8 @@ public class XMLSpecification implements SpecificationByExample {
         }
     }
 
-    private boolean hasExamples() {
+    @Override
+    public boolean hasExampleCommandNodes() {
         return examples.size() > 0;
     }
 
