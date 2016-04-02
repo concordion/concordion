@@ -149,22 +149,29 @@
 </ul>  
 </div>
 
-<div c:example="expectedToFail" c:status="ExpectedToFail">
+<p>
+</p>
+
+<div c:example="expectedToFail">
     <h3>Expected to Fail</h3>
 
-    <p>Concordion examples can be marked as expected to <span c:assertFalse="isTrue()">fail</span>:</p>
+    <p>Concordion examples can be marked as expected to fail:</p>
 
     <code><pre>
 &lt;div concordion:example="example3" concordion:status="ExpectedToFail"&gt;
         Example goes here
 &lt;/div&gt;</pre></code>
 
-<p>In these cases, the example will return 0 success, 1 failures, 0 ignored, and 0 exceptions back to the specification
-as a whole, but the specification will still pass.</p>
-
+<p>
+A spec (<a href="ExamplesMarkedExpectedToFail.html" c:execute="#result=runTestDummySpec(#TEXT)">ExamplesMarkedExpectedToFail.html</a>)
+with an unimplemented example, a successful example and a failing example all marked as ExpectedToFail, returns <span c:assertEquals="#result.successCount">0</span> successes,
+<span c:assertEquals="#result.failureCount">2</span> failures,
+<span c:assertEquals="#result.exceptionCount">0</span> exceptions, and
+<span c:assertEquals="#result.ignoredCount">1</span> ignores.
+</p>
 </div>
 
-<div c:example="unimplemented" c:status="Unimplemented">
+<div c:example="unimplemented">
     <h3>Unimplemented</h3>
 
     <p>Concordion examples can be marked as unimplemented.</p>
@@ -176,8 +183,13 @@ as a whole, but the specification will still pass.</p>
 
     <p>Any asserts done in the example will cause the example to fail the spec.</p>
 
-    <p>In these cases, the example will return 1 success, 0 failures, 0 ignored, and 0 exceptions back to the specification
-        as a whole.</p>
+<p>
+A spec (<a href="ExamplesMarkedUnimplemented.html" c:execute="#result=runTestDummySpec(#TEXT)">ExamplesMarkedUnimplemented.html</a>)
+with an unimplemented example, a successful example and a failing example all marked as Unimplemented, returns <span c:assertEquals="#result.successCount">0</span> successes,
+<span c:assertEquals="#result.failureCount">2</span> failure,
+<span c:assertEquals="#result.exceptionCount">0</span> exceptions, and
+<span c:assertEquals="#result.ignoredCount">1</span> ignores.
+</p>
 
 </div>
 
