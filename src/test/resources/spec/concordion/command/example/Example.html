@@ -9,11 +9,6 @@
 
 <p>The example command also supports the <a c:run="concordion" href="../../extension/listener/ExampleListener.html">example listener</a>.</p>
 
-<p>A new fixture instance is created for each example, in keeping with the way that JUnit creates a <a href="http://martinfowler.com/bliki/JunitNewInstance.html">new instance per test</a>.
-For classes without examples, only <a c:run="concordion" href="FixtureWithoutExampleInitialisation.html">1 instance is created</a>.
-For classes with examples, <a c:run="concordion" href="FixtureWithExampleInitialisation.html">n+1 instances are created</a> where n is the number of examples.</p>  
-<p>Fixture fields can be <a c:run="concordion" href="ScopedField.html">scoped</a> for reuse across a specification, in addition to the default example scope.</p>
-
 <div c:example="before">
     <h3>Before</h3>
     <p>To specify that a piece of HTML should be run before each example, annotate the enclosing
@@ -129,6 +124,29 @@ For classes with examples, <a c:run="concordion" href="FixtureWithExampleInitial
             <span c:assertEquals="#result.exceptionCount">0</span> exceptions, and
                 <span c:assertEquals="#result.ignoredCount">0</span> ignores
     </p>
+</div>
+
+<div c:example="instances">
+<h3>Fixture Instances</h3>
+<p>A new fixture instance is created for each example, in keeping with the way that JUnit creates a <a href="http://martinfowler.com/bliki/JunitNewInstance.html">new instance per test</a>.</p>
+<ul>
+<li>For classes without examples, only <a c:run="concordion" href="FixtureWithoutExampleInitialisation.html">1 instance is created</a>.</li>
+<li>For classes with examples with commands also outside of the examples, <a c:run="concordion" href="FixtureWithExampleInitialisation.html">n+1 instances are created</a> where n is the number of examples.</li>
+<li>For classes with examples with no commands outside of the examples <a c:run="concordion" href="FixtureWithExampleWithoutOuterExampleInitialisation.html">n instances are created</a> where n is the number of examples.</li>
+</ul>  
+
+<h4>Field reuse</h4>
+<p>Fixture fields can be <a c:run="concordion" href="ScopedField.html">scoped</a> for reuse across a specification, in addition to the default example scope.</p>
+</div>
+
+<div c:example="hooks">
+<h3>Method hooks</h3>
+<p><code>@BeforeExample</code> and <code>@AfterExample</code> methods are called for each example, including the "outer" example.</p>
+<ul>
+<li>For classes without examples, the hook methods are called <a c:run="concordion" href="FixtureWithoutExampleHookMethods.html">1 time</a>.</li>
+<li>For classes with examples with commands also outside of the examples, the hook methods are called <a c:run="concordion" href="FixtureWithExampleHookMethods.html">n+1 times</a> where n is the number of examples.</li>
+<li>For classes with examples with no commands outside of the examples, the hook methods are called <a c:run="concordion" href="FixtureWithExampleWithoutOuterExampleHookMethods.html">n times</a> where n is the number of examples.</li>
+</ul>  
 </div>
 
 <div c:example="expectedToFail" c:status="ExpectedToFail">

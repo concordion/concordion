@@ -4,15 +4,14 @@
 
 <h1>Field initialisation in fixtures with examples, but nothing in the "outer" example</h1>
 
-<p>Unlike the "Field initialisation in fixtures with examples" specification, this specification has no commands outside of the named
-examples.</p>
+<p>Unlike the "Field initialisation in fixtures with examples" specification, this specification has no commands outside of the named examples.</p>
 
 <div c:example="example1">
-<p>Since this part of the specification is in the first example and there is no "outer" example, the instance fields should have been created <span c:assertEquals="getCounter()">1</span> times.</p>
+<p>Since this part of the specification is in the first example and there is no "outer" example, the instance fields should have been created <span c:assertEquals="getFieldInitialisationCounter()">1</span> times.</p>
 </div>
 
 <div c:example="example2">
-<p>Since this part of the specification is in the second example, the instance fields should have been created <span c:assertEquals="getCounter()">2</span> times.</p>
+<p>Since this part of the specification is in the second example, the instance fields should have been created <span c:assertEquals="getFieldInitialisationCounter()">2</span> times.</p>
 </div>
 </body>
 </html>
