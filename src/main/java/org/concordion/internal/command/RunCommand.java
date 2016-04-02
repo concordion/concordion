@@ -93,9 +93,12 @@ public class RunCommand extends AbstractCommand {
     /* For non-html format specs, update the href to reference the html output */
     private void updateHrefSuffix(Element element, String href) {
         if (!(href.endsWith(".html"))) {
-            String modifiedHref = href.substring(0, href.lastIndexOf(".")) + ".html";
-            element.removeAttribute("href");
-            element.addAttribute("href", modifiedHref);
+            int dot = href.lastIndexOf(".");
+            if (dot > 0) {
+                String modifiedHref = href.substring(0, dot) + ".html";
+                element.removeAttribute("href");
+                element.addAttribute("href", modifiedHref);
+            }
         }
     }
 
