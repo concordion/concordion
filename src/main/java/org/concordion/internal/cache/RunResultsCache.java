@@ -128,9 +128,10 @@ public enum RunResultsCache {
             fixtureTotalResults = new ConcordionRunOutput(actualResultSummary, modifiedResultSummary);
             map.put(getID(fixture, null), fixtureTotalResults);
         } else {
-            addResults((SummarizingResultRecorder) fixtureTotalResults.getActualResultSummary(), actualResultSummary);
-            addResults((SummarizingResultRecorder) fixtureTotalResults.getModifiedResultSummary(), modifiedResultSummary);
-        }
+            ResultSummary totalActualResults = addResults(fixtureTotalResults.getActualResultSummary(), actualResultSummary);
+            fixtureTotalResults.setActualResultSummary(totalActualResults);
+            ResultSummary totalModifiedResults = addResults(fixtureTotalResults.getModifiedResultSummary(), modifiedResultSummary);
+            fixtureTotalResults.setModifiedResultSummary(totalModifiedResults);                  }
     }
 
     private ResultSummary clone(ResultSummary resultSummary) {
@@ -139,12 +140,17 @@ public enum RunResultsCache {
         return clone;
     }
 
-    private void addResults(SummarizingResultRecorder accumulator, ResultSummary resultsToAdd) {
-//        if (resultsToAdd.isForExample()) {
-//            accumulator.record(new SingleResultSummary(resultsToAdd));
-//        } else {
-            accumulator.record(resultsToAdd);
-//        }
+
+    private ResultSummary addResults(ResultSummary accumulator, ResultSummary resultsToAdd) {
+        SummarizingResultRecorder recorder;
+        if (accumulator instanceof SummarizingResultRecorder) {
+            recorder = (SummarizingResultRecorder) accumulator;
+        } else {
+            recorder = new SummarizingResultRecorder();
+            recorder.record(accumulator);
+        }
+        recorder.record(resultsToAdd);
+        return recorder;
     }
 
     private ConcordionRunOutput getExampleFromCache(Fixture fixture, String example) {
