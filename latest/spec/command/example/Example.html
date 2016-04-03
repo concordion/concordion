@@ -172,11 +172,6 @@ ins {
 
 <p>The example command also supports the <a c:run="concordion" href="../../extension/listener/ExampleListener.html" class="success">example listener</a>.</p>
 
-<p>A new fixture instance is created for each example, in keeping with the way that JUnit creates a <a href="http://martinfowler.com/bliki/JunitNewInstance.html">new instance per test</a>.
-For classes without examples, only <a c:run="concordion" href="FixtureWithoutExampleInitialisation.html" class="success">1 instance is created</a>.
-For classes with examples, <a c:run="concordion" href="FixtureWithExampleInitialisation.html" class="success">n+1 instances are created</a> where n is the number of examples.</p>  
-<p>Fixture fields can be <a c:run="concordion" href="ScopedField.html" class="success">scoped</a> for reuse across a specification, in addition to the default example scope.</p>
-
 <div c:example="before" id="before">
     <h3>Before</h3>
     <p>To specify that a piece of HTML should be run before each example, annotate the enclosing
@@ -294,23 +289,52 @@ For classes with examples, <a c:run="concordion" href="FixtureWithExampleInitial
     </p>
 </div>
 
-<div c:example="expectedToFail" c:status="ExpectedToFail" id="expectedToFail"><p>   &lt;-- Note: This example has been marked as EXPECTED_TO_FAIL</p>
+<div c:example="instances" id="instances">
+<h3>Fixture Instances</h3>
+<p>A new fixture instance is created for each example, in keeping with the way that JUnit creates a <a href="http://martinfowler.com/bliki/JunitNewInstance.html">new instance per test</a>.</p>
+<ul>
+<li>For classes without examples, only <a c:run="concordion" href="FixtureWithoutExampleInitialisation.html" class="success">1 instance is created</a>.</li>
+<li>For classes with examples with commands also outside of the examples, <a c:run="concordion" href="FixtureWithExampleInitialisation.html" class="success">n+1 instances are created</a> where n is the number of examples.</li>
+<li>For classes with examples with no commands outside of the examples <a c:run="concordion" href="FixtureWithExampleWithoutOuterExampleInitialisation.html" class="success">n instances are created</a> where n is the number of examples.</li>
+</ul>  
+
+<h4>Field reuse</h4>
+<p>Fixture fields can be <a c:run="concordion" href="ScopedField.html" class="success">scoped</a> for reuse across a specification, in addition to the default example scope.</p>
+</div>
+
+<div c:example="hooks" id="hooks">
+<h3>Method hooks</h3>
+<p><code>@BeforeExample</code> and <code>@AfterExample</code> methods are called for each example, including the "outer" example.</p>
+<ul>
+<li>For classes without examples, the hook methods are called <a c:run="concordion" href="FixtureWithoutExampleHookMethods.html" class="success">1 time</a>.</li>
+<li>For classes with examples with commands also outside of the examples, the hook methods are called <a c:run="concordion" href="FixtureWithExampleHookMethods.html" class="success">n+1 times</a> where n is the number of examples.</li>
+<li>For classes with examples with no commands outside of the examples, the hook methods are called <a c:run="concordion" href="FixtureWithExampleWithoutOuterExampleHookMethods.html" class="success">n times</a> where n is the number of examples.</li>
+</ul>  
+</div>
+
+<p>
+</p>
+
+<div c:example="expectedToFail" id="expectedToFail">
     <h3>Expected to Fail</h3>
 
-    <p>Concordion examples can be marked as expected to <span c:assertFalse="isTrue()" class="failure"><del class="expected">fail</del>
-<ins class="actual">== true</ins></span>:</p>
+    <p>Concordion examples can be marked as expected to fail:</p>
 
     <code><pre>
 &lt;div concordion:example="example3" concordion:status="ExpectedToFail"&gt;
         Example goes here
 &lt;/div&gt;</pre></code>
 
-<p>In these cases, the example will return 0 success, 1 failures, 0 ignored, and 0 exceptions back to the specification
-as a whole, but the specification will still pass.</p>
-
+<p>
+A spec (<a href="ExamplesMarkedExpectedToFail.html" c:execute="#result=runTestDummySpec(#TEXT)">ExamplesMarkedExpectedToFail.html</a>)
+with an unimplemented example, a successful example and a failing example all marked as ExpectedToFail, returns <span c:assertEquals="#result.successCount" class="success">0</span> successes,
+<span c:assertEquals="#result.failureCount" class="success">2</span> failures,
+<span c:assertEquals="#result.exceptionCount" class="success">0</span> exceptions, and
+<span c:assertEquals="#result.ignoredCount" class="success">1</span> ignores.
+</p>
 </div>
 
-<div c:example="unimplemented" c:status="Unimplemented" id="unimplemented"><p>   &lt;-- Note: This example has been marked as UNIMPLEMENTED</p>
+<div c:example="unimplemented" id="unimplemented">
     <h3>Unimplemented</h3>
 
     <p>Concordion examples can be marked as unimplemented.</p>
@@ -322,10 +346,15 @@ as a whole, but the specification will still pass.</p>
 
     <p>Any asserts done in the example will cause the example to fail the spec.</p>
 
-    <p>In these cases, the example will return 1 success, 0 failures, 0 ignored, and 0 exceptions back to the specification
-        as a whole.</p>
+<p>
+A spec (<a href="ExamplesMarkedUnimplemented.html" c:execute="#result=runTestDummySpec(#TEXT)">ExamplesMarkedUnimplemented.html</a>)
+with an unimplemented example, a successful example and a failing example all marked as Unimplemented, returns <span c:assertEquals="#result.successCount" class="success">0</span> successes,
+<span c:assertEquals="#result.failureCount" class="success">2</span> failure,
+<span c:assertEquals="#result.exceptionCount" class="success">0</span> exceptions, and
+<span c:assertEquals="#result.ignoredCount" class="success">1</span> ignores.
+</p>
 
 </div>
 
-<div class="footer">Results generated by <a href="http://www.concordion.org" style="font-weight: bold; text-decoration: none; color: #89C;">Concordion</a><div class="testTime">in 129 ms on 03-Apr-2016 at 15:06:40 NZST</div></div></body>
+<div class="footer">Results generated by <a href="http://www.concordion.org" style="font-weight: bold; text-decoration: none; color: #89C;">Concordion</a><div class="testTime">in 185 ms on 03-Apr-2016 at 18:35:57 NZST</div></div></body>
 </html>
