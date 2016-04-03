@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.concordion.api.Fixture;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.SummarizingResultRecorder;
-import org.concordion.internal.XMLSpecification;
 
 /**
  * A thread-safe class to provide caching of run results.
@@ -105,46 +104,41 @@ public enum RunResultsCache {
         if (exampleResults == null) {
             throw new IllegalStateException("Internal error: startRun must always be called before finishRun");
         }
-        if (isOuterExample(example)) {
-            // Clone since the outer example is also used for the total result summary
-            actualResultSummary = clone(actualResultSummary);
-            modifiedResultSummary = clone(modifiedResultSummary);
-        }
         exampleResults.setActualResultSummary(actualResultSummary);
         exampleResults.setModifiedResultSummary(modifiedResultSummary);
-    }
-
-    private boolean isOuterExample(String example) {
-        return XMLSpecification.OUTER_EXAMPLE_NAME.equals(example);
     }
 
     private void addResultsToFixtureTotal(Fixture fixture, ResultSummary actualResultSummary, ResultSummary modifiedResultSummary) {
         ConcordionRunOutput fixtureTotalResults = map.get(getID(fixture, null));
         if (fixtureTotalResults == null) {
-            if (actualResultSummary == modifiedResultSummary) {
-                // Clone so that we don't add the results twice to the same summary
-                modifiedResultSummary = clone(modifiedResultSummary);  
-            }
-            fixtureTotalResults = new ConcordionRunOutput(actualResultSummary, modifiedResultSummary);
+            fixtureTotalResults = createTotalResultSummary(actualResultSummary);
             map.put(getID(fixture, null), fixtureTotalResults);
-        } else {
-            addResults((SummarizingResultRecorder) fixtureTotalResults.getActualResultSummary(), actualResultSummary);
-            addResults((SummarizingResultRecorder) fixtureTotalResults.getModifiedResultSummary(), modifiedResultSummary);
         }
+        ResultSummary totalActualResults = addResults(fixtureTotalResults.getActualResultSummary(), actualResultSummary);
+        fixtureTotalResults.setActualResultSummary(totalActualResults);
+        ResultSummary totalModifiedResults = addResults(fixtureTotalResults.getModifiedResultSummary(), modifiedResultSummary);
+        fixtureTotalResults.setModifiedResultSummary(totalModifiedResults); 
     }
 
-    private ResultSummary clone(ResultSummary resultSummary) {
-        SummarizingResultRecorder clone = new SummarizingResultRecorder(resultSummary.getSpecificationDescription());
-        clone.record(resultSummary);
-        return clone;
+    public ConcordionRunOutput createTotalResultSummary(ResultSummary actualResultSummary) {
+        String specificationDescription = actualResultSummary.getSpecificationDescription();
+        int lastHash = specificationDescription.indexOf('#');
+        if (lastHash > 0) {
+            specificationDescription = specificationDescription.substring(0, lastHash);
+        }
+        return new ConcordionRunOutput(new SummarizingResultRecorder(specificationDescription), new SummarizingResultRecorder(specificationDescription));
     }
 
-    private void addResults(SummarizingResultRecorder accumulator, ResultSummary resultsToAdd) {
-//        if (resultsToAdd.isForExample()) {
-//            accumulator.record(new SingleResultSummary(resultsToAdd));
-//        } else {
-            accumulator.record(resultsToAdd);
-//        }
+    private ResultSummary addResults(ResultSummary accumulator, ResultSummary resultsToAdd) {
+        SummarizingResultRecorder recorder;
+        if (accumulator instanceof SummarizingResultRecorder) {
+            recorder = (SummarizingResultRecorder) accumulator;
+        } else {
+            recorder = new SummarizingResultRecorder();
+            recorder.record(accumulator);
+        }
+        recorder.record(resultsToAdd);
+        return recorder;
     }
 
     private ConcordionRunOutput getExampleFromCache(Fixture fixture, String example) {

@@ -122,7 +122,14 @@ public class Concordion {
     public void finish() {
         specification.finish();
     }
-
+    
+    public void checkValidStatus(Fixture fixture) throws IOException {
+        if (getSpecification(fixture).hasExampleCommandNodes() && fixture.getDeclaredImplementationStatus() != ImplementationStatus.EXPECTED_TO_PASS) {
+            throw new IllegalStateException("Error: When the specification contains examples, "
+                    + "the Implementation Status (ExpectedToFail or Unimplemented) must be set on the example command in the specification, "
+                    + "and not as an annotation on the fixture."); 
+        }
+    }
 
     private String createMultipleSpecsMessage(Fixture fixture, SpecificationType type1, SpecificationType type2) {
         String fixturePathWithoutSuffix = fixture.getFixturePathWithoutSuffix();

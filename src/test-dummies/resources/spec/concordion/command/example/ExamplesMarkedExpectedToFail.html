@@ -1,0 +1,28 @@
+<html xmlns:c="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+
+<div c:example="example-1" c:status="ExpectedToFail">
+    <h3>Unimplemented example marked as ExpectedToFail</h3>
+    <ul>
+        <li>No assertions here!</li>
+    </ul>
+</div>
+
+<div c:example="example-2" c:status="ExpectedToFail">
+    <h3>Failing example marked as ExpectedToFail</h3>
+    <ul>
+        <li><span c:assertTrue="false">Fail</span></li>
+    </ul>
+</div>
+
+<div c:example="example-3" c:status="ExpectedToFail">
+    <h3>Passing example marked as ExpectedToFail</h3>
+    <ul>
+        <li><span c:assertTrue="true">Pass</span></li>
+    </ul>
+</div>
+
+</body>
+</html>

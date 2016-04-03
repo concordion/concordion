@@ -17,6 +17,12 @@ public interface SpecificationByExample extends Specification {
 	 */
     void setFixture(Fixture fixture);
 
+    /**
+     * Returns whether the specification contains example nodes.
+     * 
+     * @return true if specification has one or more nodes with an example command on
+     */
+    boolean hasExampleCommandNodes();
 
     /**
      * Gets all the examples in the specification.

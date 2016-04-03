@@ -89,7 +89,7 @@ public class XMLSpecification implements SpecificationByExample {
     }
 
     public void setFixture(Fixture fixture) {
-        if (hasExamples()) {
+        if (hasExampleCommandNodes()) {
             testDescription = OUTER_EXAMPLE_NAME;
         } else {
             testDescription = fixture.getSpecificationDescription();
@@ -110,7 +110,8 @@ public class XMLSpecification implements SpecificationByExample {
         }
     }
 
-    private boolean hasExamples() {
+    @Override
+    public boolean hasExampleCommandNodes() {
         return examples.size() > 0;
     }
 
@@ -118,11 +119,18 @@ public class XMLSpecification implements SpecificationByExample {
 
         List<String> commands = new ArrayList<String>();
 
-        // Add the main spec first to increase the chance that it will be run first by jUnit.
-        commands.add(testDescription);
+        if (hasNonExampleChildren(rootCommandNode)) {
+            // Add the main spec first to increase the chance that it will be run first by jUnit.
+            commands.add(testDescription);
+        }
 
         for (CommandCall exampleCall: examples) {
             commands.add(makeJunitTestName(exampleCall));
+        }
+
+        // If there are no examples and no commands, let's add the outer test so you have 1 test in the fixture
+        if (commands.isEmpty()) {
+            commands.add(testDescription);
         }
 
         return commands;

@@ -8,15 +8,15 @@ import org.junit.runner.RunWith;
 @RunWith(ConcordionRunner.class)
 public class FixtureWithExampleInitialisationFixture {
 
-    private static AtomicInteger staticCounter = new AtomicInteger();
+    private static AtomicInteger staticFieldCounter = new AtomicInteger();
     
     private int counter = incrementOnEachCall();
 
     private int incrementOnEachCall() {
-        return staticCounter.incrementAndGet();
+        return staticFieldCounter.incrementAndGet();
     }
-
-    public int getCounter() {
+    
+    public int getFieldInitialisationCounter() {
         return counter;
     }
 }

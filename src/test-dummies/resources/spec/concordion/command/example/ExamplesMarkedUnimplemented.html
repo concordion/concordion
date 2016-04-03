@@ -1,0 +1,31 @@
+<html xmlns:c="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+
+<div c:example="example-1" c:status="Unimplemented">
+    <h3>Example marked as Unimplemented</h3>
+    <ul>
+        <li>No assertions here!</li>
+    </ul>
+
+</div>
+
+<div c:example="example-2" c:status="Unimplemented">
+    <h3>Example marked as Unimplemented but has passing assertion</h3>
+    <ul>
+        <li>Oops, I made a successful <span c:assertTrue="true">assertion</span></li>
+    </ul>
+
+</div>
+
+<div c:example="example-3" c:status="Unimplemented">
+    <h3>Example marked as Unimplemented but has failing assertion</h3>
+    <ul>
+        <li>Oops, I made a failing <span c:assertTrue="false">assertion</span></li>
+    </ul>
+
+</div>
+
+</body>
+</html>

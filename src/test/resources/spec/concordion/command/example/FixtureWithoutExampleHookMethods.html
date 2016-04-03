@@ -1,0 +1,15 @@
+<html xmlns:c="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+<h1>Hook Methods in Fixtures</h1>
+
+<p>When running a specification without examples, the specification is run as a single "outer" example
+ and the @BeforeExample and @AfterExample hook methods are called for this outer example.
+</p>
+<p>The @BeforeExample methods should have been called <span c:assertEquals="getBeforeExampleCounter()">1</span> time,
+and the @AfterExample methods should have been called <span c:assertEquals="getAfterExampleCounter()">0</span> times.
+</p> 
+
+</body>
+</html>
