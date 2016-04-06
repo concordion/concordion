@@ -57,7 +57,7 @@ task publishDocs(dependsOn: ['publishGhPages'])
 
 task publishSnapshot(dependsOn: ['test', 'publishMainPublicationToMavenRepository'])
 
-task publishRelease(dependsOn: ['publishDocs', 'release'])
+task publishRelease(dependsOn: ['sourcesJar', 'javadocJar', 'publishDocs', 'release'])
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
