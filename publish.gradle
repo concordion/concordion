@@ -1,14 +1,13 @@
 plugins {
     id 'net.researchgate.release' version '2.3.0'
     id 'org.ajoberstar.github-pages' version '1.3.1'
+    id "com.jfrog.bintray" version "1.6"
 }
 
 apply from: 'build.gradle'
 
 apply plugin: 'maven-publish'
 apply plugin: 'java-library-distribution'
-//apply plugin: com.jfrog.bintray.gradle.BintrayPlugin
-//apply plugin: org.ajoberstar.gradle.git.ghpages.GithubPagesPlugin
 
 ext {
     githubUrl = "https://github.com/concordion/${project.name}"
@@ -33,6 +32,8 @@ ext {
     }
 }
 
+group='org.concordion'
+
 distributions {
 //    version = version - "-SNAPSHOT"
     main {
@@ -45,8 +46,8 @@ distributions {
     }
 }
 
-// 'gradle release' will also upload release to Nexus
-createReleaseTag.dependsOn uploadArchives
+// 'gradle release' will also upload release to Bintray
+createReleaseTag.dependsOn bintrayUpload
 createReleaseTag.dependsOn clean
 
 publishGhPages.dependsOn test
@@ -205,4 +206,37 @@ githubPages {
             }
         }
     }  
+}
+
+bintray {
+    user = bintrayUsername   // set this in your ~/.gradle/gradle.properties file
+    key = bintrayApiKey         // set this in your ~/.gradle/gradle.properties file 
+    publications = ['main'] // see publications closure
+//    dryRun = true
+    publish = true
+    pkg {
+        repo = 'maven'
+        userOrg = 'concordion'
+        name = project.name
+        desc = project.description
+        licenses = ['Apache-2.0']
+        issueTrackerUrl = issuesUrl
+        vcsUrl = vcsUrl
+        websiteUrl = 'http://concordion.org'
+        version  {
+            name = project.version
+            released = new Date()
+            vcsTag = project.version
+            gpg {
+                sign = true
+                passphrase = bintrayPassphrase // set this in your ~/.gradle/gradle.properties file 
+            }
+            mavenCentralSync {
+                sync = true
+                user = sonatypeUsername              // set this in your ~/.gradle/gradle.properties file 
+                password = sonatypePassword          // OSS user password// set this in your ~/.gradle/gradle.properties file 
+                close = '1'
+            }
+        }
+    }
 }
