@@ -15,13 +15,14 @@ public class Concordion {
     private final SpecificationReader specificationReader;
     private Resource resource;
     private SpecificationByExample specification;
+    private String specificationDescription;
 
     /**
      * @deprecated use {@link #Concordion(List, SpecificationLocator, SpecificationReader, EvaluatorFactory, Fixture)} instead
      * @param specificationLocator locates the specification based on the specification type
      * @param specificationReader specification reader
      * @param evaluatorFactory evaluator factory
-     * @param fixture fixture instance 
+     * @param fixture fixture instance
      * @throws IOException on i/o error
      */
     @Deprecated
@@ -33,14 +34,14 @@ public class Concordion {
     }
 
     /**
-     * Constructor. Locates the specification with a type from the <code>specificationTypes</code> list. 
-     * Errors if unable to find exactly one specification of all the specified types. 
-     * 
+     * Constructor. Locates the specification with a type from the <code>specificationTypes</code> list.
+     * Errors if unable to find exactly one specification of all the specified types.
+     *
      * @param specificationTypes a list of types that this Concordion instance will check for (eg. html, md), with a converter for each type
      * @param specificationLocator locates the specification based on the specification type
      * @param specificationReader specification reader
      * @param evaluatorFactory evaluator factory
-     * @param fixture fixture instance 
+     * @param fixture fixture instance
      * @throws IOException on i/o error
      */
     public Concordion(List<SpecificationType> specificationTypes, SpecificationLocator specificationLocator, SpecificationReader specificationReader, EvaluatorFactory evaluatorFactory, Fixture fixture) throws IOException {
@@ -64,16 +65,16 @@ public class Concordion {
         }
         specificationReader.setSpecificationConverter(specificationType.getConverter());
     }
-    
-    /** 
+
+    /**
      * For TestRig use only
      * @param resource test resource to override the specification resource with
-     * @throws IOException on i/o error 
+     * @throws IOException on i/o error
      */
     public void override(Resource resource) throws IOException {
         this.resource = resource;
     }
- 
+
     public ResultSummary process(Fixture fixture) throws IOException {
         SummarizingResultRecorder resultRecorder = new SummarizingResultRecorder();
         resultRecorder.setSpecificationDescription(fixture.getSpecificationDescription());
@@ -84,12 +85,17 @@ public class Concordion {
     private SpecificationByExample getSpecification(Fixture fixture) throws IOException {
         if (specification == null) {
             specification = loadSpecificationFromResource(fixture, resource);
+            specificationDescription = specification.getSpecificationDescription();
         }
         return specification;
     }
 
     public List<String> getExampleNames(Fixture fixture) throws IOException {
         return getSpecification(fixture).getExampleNames();
+    }
+
+    public boolean hasExampleCommands(Fixture fixture) throws IOException {
+        return getSpecification(fixture).hasExampleCommandNodes();
     }
 
     public ResultSummary processExample(Fixture fixture, String example) throws IOException {
@@ -122,12 +128,12 @@ public class Concordion {
     public void finish() {
         specification.finish();
     }
-    
+
     public void checkValidStatus(Fixture fixture) throws IOException {
         if (getSpecification(fixture).hasExampleCommandNodes() && fixture.getDeclaredImplementationStatus() != ImplementationStatus.EXPECTED_TO_PASS) {
             throw new IllegalStateException("Error: When the specification contains examples, "
                     + "the Implementation Status (ExpectedToFail or Unimplemented) must be set on the example command in the specification, "
-                    + "and not as an annotation on the fixture."); 
+                    + "and not as an annotation on the fixture.");
         }
     }
 
@@ -150,5 +156,9 @@ public class Concordion {
         }
         msg += "'";
         return msg;
+    }
+
+    public String getSpecificationDescription() {
+        return specificationDescription;
     }
 }

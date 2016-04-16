@@ -23,15 +23,11 @@ public class FixtureRunner {
     }
 
     public ResultSummary run(String example, Fixture fixture) throws IOException {
-    	
+
     	ConcordionRunOutput runOutput = runResultsCache.startRun(fixture, example);
         ResultSummary actualResultSummary = runOutput==null?
                 null:
                 runOutput.getActualResultSummary();
-
-        ResultSummary modifiedResultSummary = runOutput==null?
-                null:
-                runOutput.getModifiedResultSummary();
 
         String additionalInformation = null;
     	if (runOutput == null) {
@@ -47,21 +43,18 @@ public class FixtureRunner {
                                 actualResultSummary.getImplementationStatus());
                     } finally {
                         fixture.afterExample(example);
-                    } 
+                    }
                 } else {
                     actualResultSummary = concordion.process(fixture);
                     statusChecker = ImplementationStatusChecker.getImplementationStatusChecker(
                             fixture,
                             null);
                 }
-                // we want to make sure all the annotations are considered when storing the result summary
-                // converting for the cache doesn't need the example - it just does annotation based conversions
-                modifiedResultSummary = statusChecker.convertForCache(actualResultSummary);
 
                 runResultsCache.finishRun(fixture,
                         example,
                         actualResultSummary,
-                        modifiedResultSummary);
+                        statusChecker);
 
             } catch (RuntimeException e) {
                 // the run failed miserably. Tell the cache that the run failed
@@ -107,7 +100,7 @@ public class FixtureRunner {
         ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixture, null);
 
         ResultSummary resultSummary = run(null, fixture);
-        
+
         // only actually finish the specification if it has not already been run.
         if (results == null) {
             concordion.finish();

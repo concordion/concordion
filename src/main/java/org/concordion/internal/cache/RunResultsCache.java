@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.concordion.api.Fixture;
 import org.concordion.api.ResultSummary;
-import org.concordion.internal.SummarizingResultRecorder;
+import org.concordion.internal.ImplementationStatusChecker;
 
 /**
  * A thread-safe class to provide caching of run results.
@@ -34,7 +34,7 @@ public enum RunResultsCache {
     public ConcordionRunOutput getFromCache(Fixture fixture, String example) {
         return getFromCache(fixture.getFixtureClass(), example);
     }
-    
+
     /**
      * Provides a direct method to access the cache
      *
@@ -50,7 +50,7 @@ public enum RunResultsCache {
     /**
      * Searches for a match in the cache. If there is no match, it marks the test as "in progress".
      * This is done in one method to avoid thread synchronization issues.
-     * 
+     *
      * @param fixture the fixture to retrieve
      * @param example the name of the example that is being started (null OK)
      *
@@ -84,61 +84,35 @@ public enum RunResultsCache {
      * @param fixture the fixture to update
      * @param example the name of the example that is being finished (null ok)
      * @param actualResultSummary the results as reported from the spec
-     * @param modifiedResultSummary the results as post processed by any fixture annotations
+     * @param statusChecker modifier that updates results dependent on ImplementationStatus (ExpectedToFail etc)
      */
     public synchronized void finishRun(Fixture fixture,
                                        String example,
                                        ResultSummary actualResultSummary,
-                                       ResultSummary modifiedResultSummary) {
+                                       ImplementationStatusChecker statusChecker) {
         assert fixture.getFixtureClass() != null;
         assert actualResultSummary != null;
-        assert modifiedResultSummary != null;
 
-        setResultsForExample(fixture, example, actualResultSummary, modifiedResultSummary);
+        ConcordionRunOutput exampleRunOutput = setResultsForExample(fixture, example, actualResultSummary, statusChecker);
 
-        addResultsToFixtureTotal(fixture, actualResultSummary, modifiedResultSummary);
+        if (example != null) {
+            addResultsToFixtureTotal(fixture, exampleRunOutput);
+        }
     }
 
-    private void setResultsForExample(Fixture fixture, String example, ResultSummary actualResultSummary, ResultSummary modifiedResultSummary) {
+    private ConcordionRunOutput setResultsForExample(Fixture fixture, String example, ResultSummary actualResultSummary, ImplementationStatusChecker statusChecker) {
         ConcordionRunOutput exampleResults = getExampleFromCache(fixture, example);
         if (exampleResults == null) {
             throw new IllegalStateException("Internal error: startRun must always be called before finishRun");
         }
+        exampleResults.setStatusChecker(statusChecker);
         exampleResults.setActualResultSummary(actualResultSummary);
-        exampleResults.setModifiedResultSummary(modifiedResultSummary);
+        return exampleResults;
     }
 
-    private void addResultsToFixtureTotal(Fixture fixture, ResultSummary actualResultSummary, ResultSummary modifiedResultSummary) {
-        ConcordionRunOutput fixtureTotalResults = map.get(getID(fixture, null));
-        if (fixtureTotalResults == null) {
-            fixtureTotalResults = createTotalResultSummary(actualResultSummary);
-            map.put(getID(fixture, null), fixtureTotalResults);
-        }
-        ResultSummary totalActualResults = addResults(fixtureTotalResults.getActualResultSummary(), actualResultSummary);
-        fixtureTotalResults.setActualResultSummary(totalActualResults);
-        ResultSummary totalModifiedResults = addResults(fixtureTotalResults.getModifiedResultSummary(), modifiedResultSummary);
-        fixtureTotalResults.setModifiedResultSummary(totalModifiedResults); 
-    }
-
-    public ConcordionRunOutput createTotalResultSummary(ResultSummary actualResultSummary) {
-        String specificationDescription = actualResultSummary.getSpecificationDescription();
-        int lastHash = specificationDescription.indexOf('#');
-        if (lastHash > 0) {
-            specificationDescription = specificationDescription.substring(0, lastHash);
-        }
-        return new ConcordionRunOutput(new SummarizingResultRecorder(specificationDescription), new SummarizingResultRecorder(specificationDescription));
-    }
-
-    private ResultSummary addResults(ResultSummary accumulator, ResultSummary resultsToAdd) {
-        SummarizingResultRecorder recorder;
-        if (accumulator instanceof SummarizingResultRecorder) {
-            recorder = (SummarizingResultRecorder) accumulator;
-        } else {
-            recorder = new SummarizingResultRecorder();
-            recorder.record(accumulator);
-        }
-        recorder.record(resultsToAdd);
-        return recorder;
+    private void addResultsToFixtureTotal(Fixture fixture, ConcordionRunOutput exampleRunOutput) {
+        CompositeRunOutput fixtureRunOutput = (CompositeRunOutput) getFromCache(fixture, null);
+        fixtureRunOutput.add(exampleRunOutput);
     }
 
     private ConcordionRunOutput getExampleFromCache(Fixture fixture, String example) {
@@ -157,7 +131,12 @@ public enum RunResultsCache {
             }
         }
     }
-    
+
+    public void startSpecificationRun(Fixture fixture, String specificationDescription) {
+        CompositeRunOutput fixtureRunOutput = new CompositeRunOutput(specificationDescription);
+        map.put(getID(fixture, null), fixtureRunOutput);
+    }
+
     private static class CacheKey {
         final String example;
         final Class<?> clas;

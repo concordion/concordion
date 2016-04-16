@@ -61,7 +61,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
         try {
             concordion.checkValidStatus(setupFixture);
-            
+
             List<String> examples = concordion.getExampleNames(setupFixture);
 
             verifyUniqueExampleMethods(examples);
@@ -137,6 +137,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
             // only setup the fixture if it hasn't been run before
             if (firstRun) {
+                RunResultsCache.SINGLETON.startSpecificationRun(setupFixture, concordion.getSpecificationDescription());
                 setupFixture.beforeSpecification();
             }
 

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import org.concordion.internal.FixtureInstance;
+import org.concordion.internal.ImplementationStatusChecker;
 import org.concordion.internal.cache.ConcordionRunOutput;
 import org.concordion.internal.cache.RunResultsCache;
 import org.junit.Before;
@@ -16,7 +17,7 @@ public class CachedResultsUnitTest {
 
     public static final String EXAMPLE_1_NAME = "eg1";
     public static final String EXAMPLE_2_NAME = "eg2";
-    
+
     private RunResultsCache runResults = RunResultsCache.SINGLETON;
 
     @Before
@@ -38,6 +39,7 @@ public class CachedResultsUnitTest {
         assertThat(concordionRunOutput.getActualResultSummary().getFailureCount(), is(equalTo(0L)));
         assertThat(concordionRunOutput.getActualResultSummary().getIgnoredCount(), is(equalTo(1L)));
 
+        concordionRunOutput.setStatusChecker(ImplementationStatusChecker.EXPECTED_TO_PASS);
         assertThat(concordionRunOutput.getModifiedResultSummary().getExceptionCount(), is(equalTo(0L)));
         assertThat(concordionRunOutput.getModifiedResultSummary().getSuccessCount(), is(equalTo(0L)));
         assertThat(concordionRunOutput.getModifiedResultSummary().getFailureCount(), is(equalTo(0L)));
@@ -59,6 +61,7 @@ public class CachedResultsUnitTest {
         assertThat(concordionRunOutput.getActualResultSummary().getFailureCount(), is(equalTo(0L)));
         assertThat(concordionRunOutput.getActualResultSummary().getIgnoredCount(), is(equalTo(1L)));
 
+        concordionRunOutput.setStatusChecker(ImplementationStatusChecker.EXPECTED_TO_PASS);
         assertThat(concordionRunOutput.getModifiedResultSummary().getExceptionCount(), is(equalTo(0L)));
         assertThat(concordionRunOutput.getModifiedResultSummary().getSuccessCount(), is(equalTo(0L)));
         assertThat(concordionRunOutput.getModifiedResultSummary().getFailureCount(), is(equalTo(0L)));
