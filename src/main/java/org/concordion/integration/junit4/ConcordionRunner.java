@@ -54,6 +54,10 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
             throw new InitializationError(e);
         }
 
+        if (suiteDepth.getAndIncrement() == 0) {
+            setupFixture.beforeSuite();
+        }
+
         try {
             fixtureRunner = new FixtureRunner(setupFixture);
         } catch (UnableToBuildConcordionException e) {
@@ -127,10 +131,6 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
     @Override
     public void run(RunNotifier notifier) {
-
-        if (suiteDepth.getAndIncrement() == 0) {
-            setupFixture.beforeSuite();
-        }
 
         try {
             // we figure out if the spec has been run before by checking if there are any
