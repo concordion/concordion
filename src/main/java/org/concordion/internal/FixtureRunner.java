@@ -102,6 +102,7 @@ public class FixtureRunner {
         if (results == null) {
             concordion.finish();
         }
+        resultSummary.print(System.out, fixture);
         return resultSummary;
     }
 }
