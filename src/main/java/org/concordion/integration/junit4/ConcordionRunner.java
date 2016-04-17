@@ -204,7 +204,6 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
             result.assertIsSatisfied(fixture);
 
         } catch (ConcordionAssertionError e) {
-            throw e;
         } catch (FailFastException e){
             failFastException = e;
             throw e;
