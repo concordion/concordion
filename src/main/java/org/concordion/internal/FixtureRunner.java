@@ -4,27 +4,24 @@ import org.concordion.Concordion;
 import org.concordion.api.Fixture;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.cache.RunResultsCache;
-import org.concordion.internal.cache.ConcordionRunOutput;
 import org.concordion.internal.extension.FixtureExtensionLoader;
 
 import java.io.IOException;
 
 public class FixtureRunner {
     private static RunResultsCache runResultsCache = RunResultsCache.SINGLETON;
-    private final FixtureExtensionLoader fixtureExtensionLoader = new FixtureExtensionLoader();
-    private final FixtureOptionsLoader fixtureOptionsLoader = new FixtureOptionsLoader();
     private Concordion concordion;
 
     public FixtureRunner(Fixture fixture) throws UnableToBuildConcordionException {
         ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture);
-        fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
-        fixtureOptionsLoader.addOptions(fixture, concordionBuilder);
+        new FixtureExtensionLoader().addExtensions(fixture, concordionBuilder);
+        new FixtureOptionsLoader().addOptions(fixture, concordionBuilder);
         concordion = concordionBuilder.build();
     }
 
     public ResultSummary run(String example, Fixture fixture) throws IOException {
 
-    	ConcordionRunOutput runOutput = runResultsCache.startRun(fixture, example);
+        RunOutput runOutput = runResultsCache.startRun(fixture, example);
         ResultSummary actualResultSummary = runOutput==null?
                 null:
                 runOutput.getActualResultSummary();
@@ -97,7 +94,7 @@ public class FixtureRunner {
      */
     @Deprecated
     public ResultSummary run(Fixture fixture) throws IOException {
-        ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixture, null);
+        RunOutput results = RunResultsCache.SINGLETON.getFromCache(fixture, null);
 
         ResultSummary resultSummary = run(null, fixture);
 

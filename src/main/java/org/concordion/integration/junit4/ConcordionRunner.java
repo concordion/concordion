@@ -11,7 +11,7 @@ import org.concordion.Concordion;
 import org.concordion.api.Fixture;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.*;
-import org.concordion.internal.cache.ConcordionRunOutput;
+import org.concordion.internal.RunOutput;
 import org.concordion.internal.cache.RunResultsCache;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
@@ -21,6 +21,8 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 
 public class ConcordionRunner extends BlockJUnit4ClassRunner {
+
+    private final RunResultsCache runResultsCache = RunResultsCache.SINGLETON;
 
     // this sort of thing is so much easier with Java 8!
     public ConcordionFrameworkMethod.ConcordionRunnerInterface concordionRunnerInterface =
@@ -133,11 +135,11 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         try {
             // we figure out if the spec has been run before by checking if there are any
             // prior results in the cache
-            boolean firstRun = null ==RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
+            boolean firstRun = null == runResultsCache.getFromCache(fixtureClass, null);
 
             // only setup the fixture if it hasn't been run before
             if (firstRun) {
-                RunResultsCache.SINGLETON.startSpecificationRun(setupFixture, concordion.getSpecificationDescription());
+                runResultsCache.startFixtureRun(setupFixture, concordion.getSpecificationDescription());
                 setupFixture.beforeSpecification();
             }
 
@@ -149,7 +151,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
                 concordion.finish();
             }
 
-            ConcordionRunOutput results = RunResultsCache.SINGLETON.getFromCache(fixtureClass, null);
+            RunOutput results = runResultsCache.getFromCache(fixtureClass, null);
 
             if (results != null) {
                 synchronized (System.out) {

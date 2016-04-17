@@ -7,8 +7,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import org.concordion.internal.FixtureInstance;
-import org.concordion.internal.ImplementationStatusChecker;
-import org.concordion.internal.cache.ConcordionRunOutput;
+import org.concordion.internal.RunOutput;
 import org.concordion.internal.cache.RunResultsCache;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,14 +31,13 @@ public class CachedResultsUnitTest {
         assertNull(runResults.startRun(new FixtureInstance(this), null));
 
         // but if it's called again, we'll get some "in progress" results
-        ConcordionRunOutput concordionRunOutput = runResults.startRun(new FixtureInstance(this), null);
+        RunOutput concordionRunOutput = runResults.startRun(new FixtureInstance(this), null);
         assertNotNull(concordionRunOutput);
         assertThat(concordionRunOutput.getActualResultSummary().getExceptionCount(), is(equalTo(0L)));
         assertThat(concordionRunOutput.getActualResultSummary().getSuccessCount(), is(equalTo(0L)));
         assertThat(concordionRunOutput.getActualResultSummary().getFailureCount(), is(equalTo(0L)));
         assertThat(concordionRunOutput.getActualResultSummary().getIgnoredCount(), is(equalTo(1L)));
 
-        concordionRunOutput.setStatusChecker(ImplementationStatusChecker.EXPECTED_TO_PASS);
         assertThat(concordionRunOutput.getModifiedResultSummary().getExceptionCount(), is(equalTo(0L)));
         assertThat(concordionRunOutput.getModifiedResultSummary().getSuccessCount(), is(equalTo(0L)));
         assertThat(concordionRunOutput.getModifiedResultSummary().getFailureCount(), is(equalTo(0L)));
@@ -54,19 +52,17 @@ public class CachedResultsUnitTest {
         assertNull(runResults.startRun(new FixtureInstance(this), EXAMPLE_1_NAME));
 
         // but if it's called again, we'll get some "in progress" results
-        ConcordionRunOutput concordionRunOutput = runResults.startRun(new FixtureInstance(this), EXAMPLE_1_NAME);
+        RunOutput concordionRunOutput = runResults.startRun(new FixtureInstance(this), EXAMPLE_1_NAME);
         assertNotNull(concordionRunOutput);
         assertThat(concordionRunOutput.getActualResultSummary().getExceptionCount(), is(equalTo(0L)));
         assertThat(concordionRunOutput.getActualResultSummary().getSuccessCount(), is(equalTo(0L)));
         assertThat(concordionRunOutput.getActualResultSummary().getFailureCount(), is(equalTo(0L)));
         assertThat(concordionRunOutput.getActualResultSummary().getIgnoredCount(), is(equalTo(1L)));
 
-        concordionRunOutput.setStatusChecker(ImplementationStatusChecker.EXPECTED_TO_PASS);
         assertThat(concordionRunOutput.getModifiedResultSummary().getExceptionCount(), is(equalTo(0L)));
         assertThat(concordionRunOutput.getModifiedResultSummary().getSuccessCount(), is(equalTo(0L)));
         assertThat(concordionRunOutput.getModifiedResultSummary().getFailureCount(), is(equalTo(0L)));
         assertThat(concordionRunOutput.getModifiedResultSummary().getIgnoredCount(), is(equalTo(1L)));
-
     }
 
 

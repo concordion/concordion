@@ -1,28 +1,29 @@
 package org.concordion.internal.cache;
 
 import org.concordion.api.ResultSummary;
+import org.concordion.internal.RunOutput;
 import org.concordion.internal.SummarizingResultRecorder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompositeRunOutput extends ConcordionRunOutput {
-    private List<ConcordionRunOutput> results = new ArrayList<ConcordionRunOutput>();
+class CompositeRunOutput implements RunOutput {
+    private List<RunOutput> results = new ArrayList<RunOutput>();
     private String specificationDescription;
 
     public CompositeRunOutput(String specificationDescription) {
-        super(null);
+        super();
         this.specificationDescription = specificationDescription;
     }
 
-    public void add(ConcordionRunOutput exampleRunOutput) {
+    public void add(RunOutput exampleRunOutput) {
         results.add(exampleRunOutput);
     }
 
     @Override
     public ResultSummary getActualResultSummary() {
         SummarizingResultRecorder totalResultSummary = new SummarizingResultRecorder(specificationDescription);
-        for (ConcordionRunOutput result : results) {
+        for (RunOutput result : results) {
             totalResultSummary.record(result.getActualResultSummary());
         }
         return totalResultSummary;
@@ -31,7 +32,7 @@ public class CompositeRunOutput extends ConcordionRunOutput {
     @Override
     public ResultSummary getModifiedResultSummary() {
         SummarizingResultRecorder totalResultSummary = new SummarizingResultRecorder(specificationDescription);
-        for (ConcordionRunOutput result : results) {
+        for (RunOutput result : results) {
             totalResultSummary.record(result.getModifiedResultSummary());
         }
         return totalResultSummary;
