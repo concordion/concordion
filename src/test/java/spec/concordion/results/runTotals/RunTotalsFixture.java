@@ -49,7 +49,7 @@ public class RunTotalsFixture {
 		}
 
 		File fileName = new File(parentFile, href);
-		System.out.println(fileName.getAbsolutePath());
+//		System.out.println(fileName.getAbsolutePath());
         boolean isOutputGenerated = fileName.exists();
 
 		Map<String, String> result = createMap(recorder, isOutputGenerated);

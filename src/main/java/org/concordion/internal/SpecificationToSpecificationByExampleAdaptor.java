@@ -13,7 +13,7 @@ public class SpecificationToSpecificationByExampleAdaptor implements Specificati
     public SpecificationToSpecificationByExampleAdaptor(Specification s) {
         specification = s;
     }
-    
+
     public void finish() {
     }
 
@@ -40,5 +40,10 @@ public class SpecificationToSpecificationByExampleAdaptor implements Specificati
     @Override
     public boolean hasExampleCommandNodes() {
         return false;
+    }
+
+    @Override
+    public String getSpecificationDescription() {
+        return testDescription;
     }
 }

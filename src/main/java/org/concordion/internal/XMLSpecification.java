@@ -14,11 +14,12 @@ public class XMLSpecification implements SpecificationByExample {
     public static final String OUTER_EXAMPLE_SUFFIX = " " + OUTER_EXAMPLE_NAME;
 
     private String testDescription;
-
     private final CommandCall rootCommandNode;
+
     private final SpecificationCommand specificationCommand;
     private final List<CommandCall> examples;
     private final List<CommandCall> beforeExamples;
+    private final String specificationDescription;
 
     public XMLSpecification(CommandCall rootCommandNode) {
         this.rootCommandNode = rootCommandNode;
@@ -27,6 +28,7 @@ public class XMLSpecification implements SpecificationByExample {
         }
         specificationCommand = (SpecificationCommand) rootCommandNode.getCommand();
         specificationCommand.start(rootCommandNode);
+        specificationDescription = specificationCommand.getSpecificationDescription(rootCommandNode);
 
         examples = new ArrayList<CommandCall>();
         beforeExamples = new ArrayList<CommandCall>();
@@ -66,7 +68,7 @@ public class XMLSpecification implements SpecificationByExample {
                 }
             }
         }
-        
+
         if (node.getCommand().isExample()) {
             node.getCommand().executeAsExample(node, evaluator, resultRecorder);
         } else {
@@ -115,6 +117,11 @@ public class XMLSpecification implements SpecificationByExample {
         return examples.size() > 0;
     }
 
+    @Override
+    public String getSpecificationDescription() {
+        return specificationDescription;
+    }
+
     public List<String> getExampleNames() {
 
         List<String> commands = new ArrayList<String>();
@@ -157,7 +164,7 @@ public class XMLSpecification implements SpecificationByExample {
 
         return commands;
     }
-    
+
     public void finish() {
         specificationCommand.finish(rootCommandNode);
     }

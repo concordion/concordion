@@ -1,28 +1,25 @@
 package org.concordion.internal.cache;
 
-import org.concordion.api.FixtureDeclarations;
 import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
+import org.concordion.internal.ImplementationStatusChecker;
+import org.concordion.internal.RunOutput;
 
 /**
  * Data to store in the cache
  */
-public class ConcordionRunOutput {
+class ConcordionRunOutput implements RunOutput {
     private static final CacheResultSummary IN_PROGRESS_RESULT_SUMMARY = new CacheResultSummary(Result.IGNORED,
             "No current results as the specification is currently being executed");
     private ResultSummary actualResultSummary;
-    private ResultSummary modifiedResultSummary;
+    private ImplementationStatusChecker statusChecker;
 
-    public ConcordionRunOutput(FixtureDeclarations fixture) {
+    public ConcordionRunOutput() {
         this.actualResultSummary = IN_PROGRESS_RESULT_SUMMARY;
-        this.modifiedResultSummary = IN_PROGRESS_RESULT_SUMMARY;
+        statusChecker = ImplementationStatusChecker.EXPECTED_TO_PASS;
     }
 
-    public ConcordionRunOutput(ResultSummary actualResultSummary, ResultSummary modifiedResultSummary) {
-        this.actualResultSummary = actualResultSummary;
-        this.modifiedResultSummary = modifiedResultSummary;
-    }
-
+    @Override
     public ResultSummary getActualResultSummary() {
         return actualResultSummary;
     }
@@ -31,11 +28,12 @@ public class ConcordionRunOutput {
         this.actualResultSummary = actualResultSummary;
     }
 
+    @Override
     public ResultSummary getModifiedResultSummary() {
-        return modifiedResultSummary;
+        return statusChecker.convertForCache(getActualResultSummary());
     }
 
-    public void setModifiedResultSummary(ResultSummary modifiedResultSummary) {
-        this.modifiedResultSummary = modifiedResultSummary;
+    public void setStatusChecker(ImplementationStatusChecker statusChecker) {
+        this.statusChecker = statusChecker;
     }
 }

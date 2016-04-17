@@ -7,7 +7,7 @@ import org.concordion.internal.FailFastException;
 import org.concordion.internal.FixtureSpecificationMapper;
 import org.concordion.internal.FixtureType;
 import org.concordion.internal.SummarizingResultRecorder;
-import org.concordion.internal.cache.ConcordionRunOutput;
+import org.concordion.internal.RunOutput;
 import org.concordion.internal.cache.RunResultsCache;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.notification.Failure;
@@ -49,7 +49,7 @@ public class DefaultConcordionRunner implements Runner {
 
         // check the cache - if the test was a concordion test, it will have stuck the results
         // in the cache. Use "null" for the example to get the accumulated values from all examples
-        ConcordionRunOutput concordionRunOutput = cache.getFromCache(fixtureClass, null);
+        RunOutput concordionRunOutput = cache.getFromCache(fixtureClass, null);
 
         // check the test actually put something in the cache
         if (concordionRunOutput == null) {
