@@ -31,7 +31,7 @@ public class ScopedObjectHolderTest {
 
     @Test
     public void returnsCurrentValueAfterGet() {
-        Integer expected = 2;
+        Integer expected = 1;
         Integer actual = holder.get();
         assertEquals(expected, actual);
     }
