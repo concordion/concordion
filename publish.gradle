@@ -48,7 +48,6 @@ distributions {
 
 // 'gradle release' will also upload release to Bintray
 createReleaseTag.dependsOn bintrayUpload
-createReleaseTag.dependsOn clean
 
 publishGhPages.dependsOn test
 publishGhPages.dependsOn javadoc
@@ -57,7 +56,7 @@ task publishDocs(dependsOn: ['publishGhPages'])
 
 task publishSnapshot(dependsOn: ['test', 'publishMainPublicationToMavenRepository'])
 
-task publishRelease(dependsOn: ['sourcesJar', 'javadocJar', 'publishDocs', 'release'])
+task publishRelease(dependsOn: ['clean', 'test', 'javadoc', 'sourcesJar', 'javadocJar', 'publishDocs', 'release'])
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
