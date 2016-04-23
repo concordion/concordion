@@ -23,7 +23,7 @@ public class ProcessingResult {
         this.eventRecorder = eventRecorder;
         this.documentXML = documentXML;
     }
-    
+
     public long getSuccessCount() {
         return resultSummary.getSuccessCount();
     }
@@ -35,7 +35,7 @@ public class ProcessingResult {
     public long getExceptionCount() {
         return resultSummary.getExceptionCount();
     }
-    
+
     public AssertFailureEvent getLastAssertFailureEvent() {
         return (AssertFailureEvent) eventRecorder.getLast(AssertFailureEvent.class);
     }
@@ -47,11 +47,11 @@ public class ProcessingResult {
             throw new RuntimeException("Failed to parse resultant XML document", e);
         }
     }
-    
+
     public Element getRootElement() {
         return new Element(getXOMDocument().getRootElement());
     }
-    
+
     public String getFooterText() {
         Element[] childDivs = getRootElement().getDescendantElements("div");
         return textOfElementWithClass(childDivs, "footer");
@@ -72,8 +72,8 @@ public class ProcessingResult {
         Element[] childSpans = getRootElement().getDescendantElements("span");
         return textOfElementWithClass(childSpans, "exceptionMessage");
     }
-    
-    
+
+
     public String getStackTraceMessage() {
         String clazz = "stackTraceExceptionMessage";
         Element[] childDivs = getRootElement().getDescendantElements("div");   // was changed from span to div in Concordion 1.4.2
@@ -84,7 +84,7 @@ public class ProcessingResult {
         }
         return message;
     }
-    
+
     private String textOfElementWithClass(Element[] elements, String clazz) {
         for (Element div : elements) {
             if (clazz.equals(div.getAttributeValue("class"))) {
@@ -93,7 +93,7 @@ public class ProcessingResult {
         }
         return "";
     }
-    
+
     public String toXML() {
         return getRootElement().toXML();
     }
@@ -121,14 +121,14 @@ public class ProcessingResult {
     private Element getHeadElement() {
         return getRootElement().getFirstChildElement("head");
     }
-    
+
     public boolean hasCSSDeclaration(String cssFilename) {
         Element head = getHeadElement();
         for (Element link : head.getChildElements("link")) {
             String href = link.getAttributeValue("href");
             String type = link.getAttributeValue("type");
             String rel = link.getAttributeValue("rel");
-            if (cssFilename.equals(href) 
+            if (cssFilename.equals(href)
                     && "text/css".equals(type)
                     && "stylesheet".equals(rel)) {
                 return true;
@@ -155,7 +155,7 @@ public class ProcessingResult {
         }
         return false;
     }
-    
+
     public String getLinkedCSS(String baseOutputDir, String css) throws IOException {
     	for (Element style : getHeadElement().getChildElements("link")) {
     		if ("stylesheet".equals(style.getAttributeValue("rel")) && css.endsWith(style.getAttributeValue("href"))) {
@@ -164,7 +164,7 @@ public class ProcessingResult {
     	}
     	return "";
     }
-    
+
     public boolean hasJavaScriptDeclaration(String cssFilename) {
         Element head = getHeadElement();
         for (Element script : head.getChildElements("script")) {
@@ -187,7 +187,7 @@ public class ProcessingResult {
         }
         return false;
     }
-    
+
     public boolean hasLinkedJavaScript(String baseOutputDir, String javaScript) {
         for (Element style : getHeadElement().getChildElements("script")) {
             if ("text/javascript".equals(style.getAttributeValue("type")) && javaScript.equals(style.getAttributeValue("src"))) {
@@ -205,7 +205,11 @@ public class ProcessingResult {
     	}
     	return "";
     }
-    
+
+    public boolean hasJavaScriptFunction(String functionName) {
+        return hasEmbeddedJavaScript("function " + functionName + "(");
+    }
+
     private String readFile(String fileName) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(fileName));
         try {
@@ -222,12 +226,12 @@ public class ProcessingResult {
             br.close();
         }
     }
-    
+
     private File combine(String path1, String path2)
 	{
 	    File file1 = new File(path1);
 	    File file2 = new File(file1, path2);
-	    
+
 	    return file2;
 	}
 }
