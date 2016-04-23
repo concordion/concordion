@@ -19,10 +19,16 @@ public class TestRig {
     private StubSource stubSource = new StubSource();
     private StubTarget stubTarget = new StubTarget();
     private FixtureExtensionLoader fixtureExtensionLoader = new FixtureExtensionLoader();
-    private ConcordionExtension extension; 
+    private ConcordionExtension extension;
+    private String namespaceDeclaration = "xmlns:concordion='" + ConcordionBuilder.NAMESPACE_CONCORDION_2007 + "'";
 
     public TestRig withFixture(Object fixture) {
         this.fixture = new FixtureInstance(fixture);
+        return this;
+    }
+
+    public TestRig withNamespaceDeclaration(String prefix, String namespace) {
+        namespaceDeclaration += " " + String.format("xmlns:%s='%s'", prefix, namespace);
         return this;
     }
 
@@ -40,7 +46,7 @@ public class TestRig {
 
     public ProcessingResult process(Resource resource) {
         EventRecorder eventRecorder = new EventRecorder();
-        
+
         if (fixture == null) {
             fixture = new FixtureInstance(new DummyFixture());
             withResource(new Resource("/test/concordion/Dummy.html"), "<html/>");
@@ -54,7 +60,7 @@ public class TestRig {
             .withEvaluatorFactory(evaluatorFactory)
             .withTarget(stubTarget)
             .withFixture(fixture);
-        
+
         fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
         if (extension != null) {
             extension.addTo(concordionBuilder);
@@ -82,13 +88,13 @@ public class TestRig {
             return new ProcessingResult(resultSummary, eventRecorder, xml);
         } catch (IOException e) {
             throw new RuntimeException("Test rig failed to process specification", e);
-        } 
+        }
     }
 
     public ProcessingResult process(String html) {
         return process("/testrig", html);
     }
-    
+
     public ProcessingResult process(String resourceLocation, String html) {
         Resource resource = new Resource(resourceLocation);
         return process(html, resource);
@@ -103,29 +109,28 @@ public class TestRig {
         fragment = "<body><fragment>" + fragment + "</fragment></body>";
         return wrapWithNamespaceDeclaration(fragment);
     }
-    
+
     private String wrapFragment(String head, String fragment) {
         fragment = head + "<body><fragment>" + fragment + "</fragment></body>";
         return wrapWithNamespaceDeclaration(fragment);
     }
-    
+
     private String wrapWithNamespaceDeclaration(String fragment) {
-        return "<html xmlns:concordion='"
-            + ConcordionBuilder.NAMESPACE_CONCORDION_2007 + "'>"
-            + fragment
-            + "</html>";
+        return "<html " + namespaceDeclaration + ">"
+                + fragment
+                + "</html>";
     }
 
     public TestRig withStubbedEvaluationResult(Object evaluationResult) {
         this.evaluatorFactory = new StubEvaluator().withStubbedResult(evaluationResult);
         return this;
     }
-    
+
     public TestRig withResource(Resource resource, String content) {
         stubSource.addResource(resource, content);
         return this;
     }
-    
+
     public boolean hasCopiedResource(Resource resource) {
         return stubTarget.hasCopiedResource(resource);
     }
@@ -133,12 +138,12 @@ public class TestRig {
     public List<Resource> getCopiedResources() {
     	return stubTarget.getCopiedResources();
     }
-    
+
     public TestRig withExtension(ConcordionExtension extension) {
         this.extension = extension;
         return this;
     }
-    
+
     public TestRig withOutputStreamer(OutputStreamer streamer) {
         stubTarget.setOutputStreamer(streamer);
         return this;
