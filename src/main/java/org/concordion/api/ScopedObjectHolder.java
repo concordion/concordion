@@ -18,20 +18,20 @@ package org.concordion.api;
  *     protected Browser create() {
  *         return new Browser();
  *     }
- *     
+ *
  *     &#064;Override
  *     protected void destroy(Browser browser) {
  *         browser.close();
  *     };
  * };
- * </pre> 
+ * </pre>
  * <p>
- * The browser will be constructed in the first method that calls <code>browserHolder.get()</code>. 
+ * The browser will be constructed in the first method that calls <code>browserHolder.get()</code>.
  * </p>
  * <p>
- * The browser will be destroyed when the specification completes. 
+ * The browser will be destroyed when the specification completes.
  * </p>
- * 
+ *
  * @since 2.0.0
  *
  * @param <T> type of wrapped object
@@ -46,7 +46,7 @@ public abstract class ScopedObjectHolder<T> {
     }
 
     /**
-     * Return the value of the variable. 
+     * Return the value of the variable.
      * Uses lazy initialisation to call the {@link #create()} method (implemented safely for Java 5.0+, see
      * http://www.oracle.com/technetwork/articles/javase/bloch-effective-08-qa-140880.html).
      * @return value of scoped variable
@@ -62,5 +62,14 @@ public abstract class ScopedObjectHolder<T> {
             }
         }
         return result;
+    }
+
+    /**
+     * Returns a value that indicates whether the current scoped object has been created.
+     * @return <code>true</code> if the scoped object has been created (by calling {@link #get()}),
+     * <code>false</code> otherwise.
+     */
+    public boolean isCreated() {
+        return value != null;
     }
 }
