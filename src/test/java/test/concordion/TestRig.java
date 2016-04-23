@@ -4,10 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.concordion.Concordion;
-import org.concordion.api.EvaluatorFactory;
-import org.concordion.api.Fixture;
-import org.concordion.api.Resource;
-import org.concordion.api.ResultSummary;
+import org.concordion.api.*;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.internal.*;
 import org.concordion.internal.extension.FixtureExtensionLoader;
@@ -17,6 +14,7 @@ public class TestRig {
     private Fixture fixture;
     private EvaluatorFactory evaluatorFactory = new SimpleEvaluatorFactory();
     private StubSource stubSource = new StubSource();
+    private Source source = stubSource;
     private StubTarget stubTarget = new StubTarget();
     private FixtureExtensionLoader fixtureExtensionLoader = new FixtureExtensionLoader();
     private ConcordionExtension extension;
@@ -56,7 +54,7 @@ public class TestRig {
         ConcordionBuilder concordionBuilder = new ConcordionBuilder()
             .withAssertEqualsListener(eventRecorder)
             .withThrowableListener(eventRecorder)
-            .withSource(stubSource)
+            .withSource(source)
             .withEvaluatorFactory(evaluatorFactory)
             .withTarget(stubTarget)
             .withFixture(fixture);
@@ -123,6 +121,11 @@ public class TestRig {
 
     public TestRig withStubbedEvaluationResult(Object evaluationResult) {
         this.evaluatorFactory = new StubEvaluator().withStubbedResult(evaluationResult);
+        return this;
+    }
+
+    public TestRig withSourceFilter(String filterPrefix) {
+        this.source = new FilterSource(source, filterPrefix);
         return this;
     }
 
