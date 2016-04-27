@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?><html xmlns:concordion="http://www.concordion.org/2007/concordion"><head><style>* {
+  font-family: Arial;
+}
+body {
+  padding: 32px;  
+}
+pre {
+  padding: 6px 28px 6px 28px;
+  background-color: #E8EEF7;
+}
+pre, pre *, code, code *, kbd {
+  font-family: Courier New, Courier;
+  font-size: 10pt;
+}
+h1, h1 * {
+  font-size: 24pt;	
+}
+p, td, th, li, .breadcrumbs {
+  font-size: 10pt;
+}
+p, li {
+  line-height: 140%;
+  max-width: 720px;
+}
+table {
+  border-collapse: collapse;
+  empty-cells: show;
+  margin: 8px 0px 8px 0px;
+}
+th, td {
+  border: 1px solid black;
+  padding: 3px;
+}
+td {
+  background-color: white;
+  vertical-align: top;
+}
+th {
+  background-color: #C3D9FF;
+}
+li {
+  margin-top: 6px;
+  margin-bottom: 6px; 
+}
+
+.example, [concordion\:example] {
+  padding: 6px 16px 6px 16px;
+  border: 1px solid #C3D9FF;
+  margin: 6px 0px 28px 0px;
+  background-color: #F5F9FD;
+}
+.example h3, [concordion\:example] h3 {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  font-size: 12pt;
+}
+
+p.success {
+  padding: 2px;
+}
+.success, .success * {
+  background-color: #afa !important;
+}
+.success pre {
+  background-color: #bbffbb;
+}
+.failure, .failure * {
+  background-color: #ffb0b0;
+  padding: 1px;
+}
+.failure .expected {
+  text-decoration: line-through;
+  color: #bb5050;
+}
+.ignored, .ignored * {
+  background-color: #f0f0f0 !important;	
+}
+
+ins {
+  text-decoration: none;	
+}
+
+.exceptionMessage {
+  background-color: #fdd;
+  font-family: Courier New, Courier, Monospace;
+  font-size: 10pt;
+  display: block;
+  font-weight: normal;
+  padding: 4px;
+  text-decoration: none !important;
+}
+.stackTrace, .stackTrace * {
+  font-weight: normal;
+}
+.stackTrace {
+  display: none;
+  padding: 1px 4px 4px 4px;
+  background-color: #fdd;
+  border-top: 1px dotted black;
+}
+.stackTraceExceptionMessage {
+  display: block;
+  font-family: Courier New, Courier, Monospace;
+  font-size: 8pt;
+  white-space: wrap;
+  padding: 1px 0px 1px 0px;
+}
+.stackTraceEntry {
+  white-space: nowrap;
+  font-family: Courier New, Courier, Monospace;
+  display: block;
+  font-size: 8pt;
+  padding: 1px 0px 1px 32px;
+}
+.stackTraceButton {
+  font-size: 8pt;
+  margin: 2px 8px 2px 0px;
+  font-weight: normal;
+  font-family: Arial;
+}
+
+.special {
+  font-style: italic;
+}
+.missing, .missing * {
+  background-color: #ff9999;
+  color:#bb5050;
+  text-decoration: line-through;
+}
+.surplus, .surplus * {
+  background-color: #ff9999;
+}
+.footer {
+  text-align: right;
+  margin-top: 40px;
+  font-size: 8pt;
+  width: 100%;
+  color: #999;
+}
+.footer .testTime {
+  padding: 2px 10px 0px 0px;
+}
+
+.idea {
+  font-size: 9pt;
+  color: #888;
+  font-style: italic;	
+}
+.tight li {
+  margin-top: 1px;
+  margin-bottom: 1px; 
+}
+.commentary {
+  float: right;
+  width: 200px;
+  background-color: #ffffd0;
+  padding:8px;
+  border: 3px solid #eeeeb0;	 
+  margin: 10px 0px 10px 10px;	 
+}
+.commentary, .commentary * {
+  font-size: 8pt;
+}
+</style><meta http-equiv="content-type" content="text/html; charset=UTF-8" /></head><body><span class="breadcrumbs"><a href="../../Concordion.html">Concordion</a> &gt; <a href="../SpecificationType.html">Specification Types</a> &gt; <a href="Markdown.html">Markdown</a> &gt;</span><h1>Markdown execute command</h1>
+<p><em>Since</em>: Concordion 2.0.0</p>
+<p>The <a href="../../command/execute/Execute.html">execute command</a> is expressed using the syntax: <code>[value](- "expression")</code> or <code>[value](- 'expression')</code></p>
+<p>which executes the <code>expression</code> (as long as <code>expression</code> doesn't start with <code>c:</code> as described below). </p>
+<p>You can also use the long-hand <code>[value](- 'c:execute=expression')</code> variant if you wish. </p>
+<div class="example">
+  <h3>Examples</h3>
+  <table concordion:execute="#html=translate(#md)">
+    <tr>
+      <th concordion:set="#md">Markdown</th>
+      <th concordion:assert-equals="#html">Resultant HTML</th>
+    </tr>
+    <tr>
+      <td>[When I apply](- "apply()")</td>
+      <td class="success">&lt;span concordion:execute="apply()"&gt;When I apply&lt;/span&gt;</td>
+    </tr>
+    <tr>
+      <td>[the time is](- "setTime(#date, #time)")</td>
+      <td class="success">&lt;span concordion:execute="setTime(#date, #time)"&gt;the time is&lt;/span&gt;</td>
+    </tr>
+    <tr>
+      <td>[The greeting for](- "#msg=getGreeting()")</td>
+      <td class="success">&lt;span concordion:execute="#msg=getGreeting()"&gt;The greeting for&lt;/span&gt;</td>
+    </tr>
+    <tr>
+      <td>[The greeting for](- "#msg=greeting")</td>
+      <td class="success">&lt;span concordion:execute="#msg=greeting"&gt;The greeting for&lt;/span&gt;</td>
+    </tr>
+    <tr>
+      <td>[Do something](- 'c:execute=doSomething()')</td>
+      <td class="success">&lt;span concordion:execute="doSomething()"&gt;Do something&lt;/span&gt;</td>
+    </tr>
+  </table>
+</div>
+<p>If the special variable <code>#TEXT</code> is used as a parameter within the <em>expression</em>, Concordion will pass the <em>value</em> as the parameter.</p>
+<div class="example">
+  <h3>Example</h3>
+  <table concordion:execute="#html=translate(#md)">
+    <tr>
+      <th concordion:set="#md">Markdown</th>
+      <th concordion:assert-equals="#html">Resultant HTML</th>
+    </tr>
+    <tr>
+      <td>[09:00AM](- "setCurrentTime(#TEXT)")</td>
+      <td class="success">&lt;span concordion:execute="setCurrentTime(#TEXT)"&gt;09:00AM&lt;/span&gt;</td>
+    </tr>
+  </table>
+</div>
+<a id="execute-on-a-table" />
+<h3>Execute on a table</h3>
+<p>To run the <a href="http://concordion.org/Tutorial.html#executeTable">execute command on a table</a>, the execute command is specified in the first table header column, followed by the command for that column (if any), with the commands for each column of the table specified in the table header.</p>
+<div class="example">
+  <h3>Example</h3>
+  <table concordion:execute="#html=translate(#md)">
+    <tr>
+      <th concordion:set="#md">Markdown</th>
+      <th concordion:assert-equals="#html">Resultant HTML</th>
+    </tr>
+    <tr>
+      <td>
+<pre>      
+|[_add_](- "#z=add(#x, #y)")[Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
+| ------------------------------------------: | ---------------: | ---------------: |
+|                                            1|                 0|                 1|
+|                                            1|                -3|                -2|
+</pre>
+      </td>
+      <td class="success">
+&lt;table concordion:execute="#z=add(#x, #y)"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th align="right" concordion:set="#x"&gt;Number 1&lt;/th&gt;
+      &lt;th align="right" concordion:set="#y"&gt;Number 2&lt;/th&gt;
+      &lt;th align="right" concordion:assert-equals="#z"&gt;Result&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td align="right"&gt;1&lt;/td&gt;
+      &lt;td align="right"&gt;0&lt;/td&gt;
+      &lt;td align="right"&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td align="right"&gt;1&lt;/td&gt;
+      &lt;td align="right"&gt;-3&lt;/td&gt;
+      &lt;td align="right"&gt;-2&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;     
+      </td>
+    </tr>
+  </table>
+</div>
+<p>Using reference style links can make the Markdown source for the table more readable:</p>
+<div class="example">
+  <h3>Example</h3>
+  <table concordion:execute="#html=translate(#md)">
+    <tr>
+      <th concordion:set="#md">Markdown</th>
+      <th concordion:assert-equals="#html">Resultant HTML</th>
+    </tr>
+    <tr>
+      <td>
+<pre>      
+|[add][][Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
+| ----------------------: | ---------------: | ---------------: |
+|                        4|                 3|                 7|
+
+[add]: - "#z=add(#x, #y)"
+</pre>
+      </td>
+      <td class="success">
+&lt;table concordion:execute="#z=add(#x, #y)"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th align="right" concordion:set="#x"&gt;Number 1&lt;/th&gt;
+      &lt;th align="right" concordion:set="#y"&gt;Number 2&lt;/th&gt;
+      &lt;th align="right" concordion:assert-equals="#z"&gt;Result&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td align="right"&gt;4&lt;/td&gt;
+      &lt;td align="right"&gt;3&lt;/td&gt;
+      &lt;td align="right"&gt;7&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;     
+      </td>
+    </tr>
+  </table>
+</div>
+<p>or even:</p>
+<div class="example">
+  <h3>Example</h3>
+  <table concordion:execute="#html=translate(#md)">
+    <tr>
+      <th concordion:set="#md">Markdown</th>
+      <th concordion:assert-equals="#html">Resultant HTML</th>
+    </tr>
+    <tr>
+      <td>
+<pre>      
+|[add][][Number 1][]|[Number 2][]|[Result][]|
+| ----------------: | ---------: | -------: |
+|                  4|           3|         7|
+
+[Number 1]: - "#x"
+[Number 2]: - "#y"
+[add]:      - "#z=add(#x, #y)"
+[Result]:   - "?=#z"
+</pre>
+      </td>
+      <td class="success">
+&lt;table concordion:execute="#z=add(#x, #y)"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th align="right" concordion:set="#x"&gt;Number 1&lt;/th&gt;
+      &lt;th align="right" concordion:set="#y"&gt;Number 2&lt;/th&gt;
+      &lt;th align="right" concordion:assert-equals="#z"&gt;Result&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td align="right"&gt;4&lt;/td&gt;
+      &lt;td align="right"&gt;3&lt;/td&gt;
+      &lt;td align="right"&gt;7&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;     
+      </td>
+    </tr>
+  </table>
+</div>
+<p>The first column doesn't have to have a concordion command associated with it:</p>
+<div class="example">
+  <h3>Example</h3>
+  <table concordion:execute="#html=translate(#md)">
+    <tr>
+      <th concordion:set="#md">Markdown</th>
+      <th concordion:assert-equals="#html">Resultant HTML</th>
+    </tr>
+    <tr>
+      <td>
+<pre>      
+|[add][]Description|[Number 1][]|[Number 2][]|[Result][]|
+| ---------------- | ---------------- | --------- | ------- |
+| Simple sum       |                 4|          3|        7|
+
+[Number 1]: - "#x"
+[Number 2]: - "#y"
+[add]:      - "#z=add(#x, #y)"
+[Result]:   - "?=#z"
+</pre>
+      </td>
+      <td class="success">
+&lt;table concordion:execute="#z=add(#x, #y)"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Description&lt;/th&gt;
+      &lt;th concordion:set="#x"&gt;Number 1&lt;/th&gt;
+      &lt;th concordion:set="#y"&gt;Number 2&lt;/th&gt;
+      &lt;th concordion:assert-equals="#z"&gt;Result&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Simple sum &lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;7&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;     
+      </td>
+    </tr>
+  </table>
+</div><div class="footer">Results generated by <a href="http://www.concordion.org" style="font-weight: bold; text-decoration: none; color: #89C;">Concordion</a><div class="testTime">in 62 ms on 27-Apr-2016 at 21:42:39 NZST</div></div></body></html>
