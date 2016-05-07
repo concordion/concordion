@@ -33,7 +33,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private static final String PROPERTY_OUTPUT_DIR = "concordion.output.dir";
     private static final String PROPERTY_EXTENSIONS = "concordion.extensions";
     private static final String EMBEDDED_STYLESHEET_RESOURCE = "/org/concordion/internal/resource/embedded.css";
-    
+
     private static File baseOutputDir;
     private SpecificationLocator specificationLocator = new ClassNameAndTypeBasedSpecificationLocator();
     private Map<SourceType, Source> sources = new HashMap<SourceType, Source>();
@@ -72,9 +72,9 @@ public class ConcordionBuilder implements ConcordionExtender {
     {
         ExtensionChecker.checkForOutdatedExtensions();
         commandRegistry.register("", "specification", specificationCommand);
-        
+
         withSource(new ClassPathSource());
-        
+
         AssertResultRenderer assertRenderer = new AssertResultRenderer();
         withAssertEqualsListener(assertRenderer);
         withAssertTrueListener(assertRenderer);
@@ -111,7 +111,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         this.pageFooterRenderer = pageFooterRenderer;
         return this;
     }
-    
+
     public ConcordionBuilder withBreadcrumbRenderer(BreadcrumbRenderer breadcrumbRenderer) {
     	this.breadcrumbRenderer = breadcrumbRenderer;
     	return this;
@@ -131,7 +131,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         this.evaluatorFactory = evaluatorFactory;
         return this;
     }
-    
+
     public ConcordionBuilder withThrowableListener(ThrowableCaughtListener throwableListener) {
         throwableListenerPublisher.addThrowableListener(throwableListener);
         return this;
@@ -141,27 +141,27 @@ public class ConcordionBuilder implements ConcordionExtender {
         assertEqualsCommand.addAssertEqualsListener(listener);
         return this;
     }
-    
+
     public ConcordionBuilder withAssertTrueListener(AssertTrueListener listener) {
         assertTrueCommand.addAssertListener(listener);
         return this;
     }
-    
+
     public ConcordionBuilder withAssertFalseListener(AssertFalseListener listener) {
         assertFalseCommand.addAssertListener(listener);
         return this;
     }
-    
+
     public ConcordionBuilder withVerifyRowsListener(VerifyRowsListener listener) {
         verifyRowsCommand.addVerifyRowsListener(listener);
         return this;
     }
-    
+
     public ConcordionBuilder withRunListener(RunListener listener) {
         runCommand.addRunListener(listener);
         return this;
     }
-    
+
     public ConcordionExtender withRunStrategy(RunStrategy runStrategy) {
         runCommand.setRunStrategy(runStrategy);
         return this;
@@ -191,7 +191,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         listeners.add(listener);
         return this;
     }
-    
+
     private ConcordionBuilder withApprovedCommand(String namespaceURI, String commandName, Command command) {
         ThrowableCatchingDecorator throwableCatchingDecorator = new ThrowableCatchingDecorator(new LocalTextDecorator(command), failFastExceptions);
         throwableCatchingDecorator.addThrowableListener(throwableListenerPublisher);
@@ -209,7 +209,7 @@ public class ConcordionBuilder implements ConcordionExtender {
                         + "must not contain 'concordion.org'. Use your own domain name instead.");
         return withApprovedCommand(namespaceURI, commandName, command);
     }
-    
+
     public ConcordionBuilder withResource(String sourcePath, Resource targetResource) {
         resourceToCopyMap.put(sourcePath, targetResource);
         return this;
@@ -220,13 +220,13 @@ public class ConcordionBuilder implements ConcordionExtender {
         withDocumentParsingListener(embedder);
         return this;
     }
-    
+
     public ConcordionBuilder withEmbeddedCSS(String css, boolean append) {
         StylesheetEmbedder embedder = new StylesheetEmbedder(css, append);
         withDocumentParsingListener(embedder);
         return this;
     }
-    
+
     public ConcordionBuilder withLinkedCSS(String cssPath, Resource targetResource) {
         withResource(cssPath, targetResource);
         StylesheetLinker cssLinker = new StylesheetLinker(targetResource);
@@ -248,11 +248,11 @@ public class ConcordionBuilder implements ConcordionExtender {
         withSpecificationProcessingListener(javaScriptLinker);
         return this;
     }
-    
+
     public Concordion build() throws UnableToBuildConcordionException {
         Check.isFalse(builtAlready, "ConcordionBuilder currently does not support calling build() twice");
         builtAlready = true;
-        
+
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "run", runCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "execute", executeCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "set", setCommand);
@@ -263,18 +263,18 @@ public class ConcordionBuilder implements ConcordionExtender {
 
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "assert-true", assertTrueCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "assertTrue", assertTrueCommand);
-        
+
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "assert-false", assertFalseCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "assertFalse", assertFalseCommand);
-        
+
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "verify-rows", verifyRowsCommand);
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "verifyRows", verifyRowsCommand);
-        
+
         withApprovedCommand(NAMESPACE_CONCORDION_2007, "echo", echoCommand);
-        
+
         Source resourceSource = sources.get(SourceType.RESOURCE);
         Source specificationSource = sources.get(SourceType.SPECIFICATION);
-        
+
         withThrowableListener(new ThrowableRenderer(resourceSource));
         withRunListener(new RunResultRenderer(resourceSource));
 
@@ -282,7 +282,7 @@ public class ConcordionBuilder implements ConcordionExtender {
             target = new FileTarget(getBaseOutputDir());
         }
         XMLParser xmlParser = new XMLParser();
-        
+
         if (breadcrumbRenderer == null) {
         	breadcrumbRenderer = new BreadcrumbRenderer(specificationSource, xmlParser, specificationTypes);
         }
@@ -387,7 +387,7 @@ public class ConcordionBuilder implements ConcordionExtender {
                 baseOutputDir = new File(outputPath);
             } else {
                 baseOutputDir = new File(System.getProperty("java.io.tmpdir"), "concordion");
-            } 
+            }
         }
         return baseOutputDir;
     }
@@ -399,9 +399,9 @@ public class ConcordionBuilder implements ConcordionExtender {
 
     public ConcordionBuilder withFixture(Fixture fixture) {
         this.fixture = fixture;
-        
+
         withResources(fixture);
-        
+
         if (fixture.declaresFailFast()) {
             withFailFast(fixture.getDeclaredFailFastExceptions());
         }
@@ -411,20 +411,25 @@ public class ConcordionBuilder implements ConcordionExtender {
 
         return this;
     }
-    
+
     public ConcordionExtender withExampleListener(ExampleListener listener) {
 		exampleCommand.addExampleListener(listener);
 		return this;
 	}
-	
+
+    public ConcordionExtender withOuterExampleListener(OuterExampleListener listener) {
+        specificationCommand.addOuterExampleListener(listener);
+        return this;
+    }
+
     public ConcordionBuilder withResources(Fixture fixture) {
         boolean includeDefaultStyling = true;
-        
+
         Source resourceSource = sources.get(SourceType.RESOURCE);
         if (fixture.declaresResources()) {
         	ResourceFinder resources = new ResourceFinder(fixture);
         	List<ResourceToCopy> sourceFiles = resources.getResourcesToCopy();
-        	
+
         	for (ResourceToCopy sourceFile : sourceFiles) {
     			if (sourceFile.isStyleSheet()) {
     				if (sourceFile.insertType == InsertType.EMBEDDED) {
@@ -442,21 +447,21 @@ public class ConcordionBuilder implements ConcordionExtender {
     				withResource(sourceFile.getResourceName(), new Resource(sourceFile.getResourceName()));
     			}
     		}
-        			
+
         	includeDefaultStyling = resources.includeDefaultStyling();
-        	
+
         	withDocumentParsingListener(new ResourceReferenceRemover(sourceFiles));
-        } 
-        
+        }
+
         if (includeDefaultStyling) {
         	addDefaultStyling(resourceSource);
         }
-        
+
         return this;
     }
-    
+
 	private void addDefaultStyling(Source resourceSource) {
-    	String stylesheetContent = resourceSource.readResourceAsString(EMBEDDED_STYLESHEET_RESOURCE);    
+    	String stylesheetContent = resourceSource.readResourceAsString(EMBEDDED_STYLESHEET_RESOURCE);
     	withEmbeddedCSS(stylesheetContent);
     }
 
