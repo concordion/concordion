@@ -50,8 +50,8 @@ distributions {
 // 'gradle release' will also upload release to Bintray
 createReleaseTag.dependsOn bintrayUpload
 
-publishGhPages.dependsOn test
-publishGhPages.dependsOn javadoc
+prepareGhPages.dependsOn test
+prepareGhPages.dependsOn javadoc
 
 task publishDocs(dependsOn: ['publishGhPages'])
 
