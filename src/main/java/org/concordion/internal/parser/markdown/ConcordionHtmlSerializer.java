@@ -21,7 +21,8 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
     private String currentExampleHeading;
     private int currentExampleLevel;
     private int depth;
-    
+    private boolean escapeHtmlNodes;
+
     public ConcordionHtmlSerializer(String targetConcordionNamespacePrefix, Map<String, String> namespaces) {
         super(new RunCommandLinkRenderer(SOURCE_CONCORDION_NAMESPACE_PREFIX, targetConcordionNamespacePrefix));
         statementParser = new ConciseExpressionParser(SOURCE_CONCORDION_NAMESPACE_PREFIX, targetConcordionNamespacePrefix, namespaces);
@@ -64,7 +65,7 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
     }
 
     private LinkNode toLinkNode(ExpLinkNode node) {
-        return new LinkNode(node.url, node.title, printChildrenToString(node));
+        return  new LinkNode(node.url, node.title, printChildrenToString(node));
     }
     
     private void visit(LinkNode linkNode) {
@@ -156,7 +157,9 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
         }
         
         // Call the super visit(TableCellNode) method and override visit(TableColumnNode) below, so that the concordion commands are added to the <th> tag
+        escapeHtmlNodes = true;
         super.visit(node);
+        escapeHtmlNodes = true;
     }
 
     public void visit(TableColumnNode node) {
@@ -285,5 +288,22 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
 
     private boolean firstChildIsInstanceOf(Node node, Class<?> clazz) {
         return node.getChildren().size() > 0 && clazz.isAssignableFrom(firstChildOf(node).getClass());
+    }
+
+
+    @Override
+    protected String printChildrenToString(SuperNode node) {
+        escapeHtmlNodes = true;
+        String s = super.printChildrenToString(node);
+        escapeHtmlNodes = false;
+        return s;
+    }
+
+    public void visit(InlineHtmlNode node) {
+        if (escapeHtmlNodes) {
+            this.printer.printEncoded(node.getText());
+        } else {
+            super.visit(node);
+        }
     }
 }

@@ -280,10 +280,11 @@ Multiple commands on the same line are supported.
 
 
 ### HTML entities
-HTML entities in the text value are encoded correctly.
+HTML entities in the text value are automatically escaped.
 
 <div class="example">
   <h3>Examples</h3>
+  
   <table concordion:execute="#html=translate(#md)">
     <tr>
       <th concordion:set="#md">Markdown</th>
@@ -292,6 +293,34 @@ HTML entities in the text value are encoded correctly.
     <tr>
       <td>[&amp; &lt; 3](- "#x")</td>
       <td>&lt;span concordion:set="#x"&gt;&amp;amp; &amp;lt; 3&lt;/span&gt;</td>
+    </tr>
+    <tr>
+      <td>[&lt;div&gt;](- "#d")</td>
+      <td>&lt;span concordion:set="#d"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;</td>
+    </tr>
+    <tr>
+      <td>[&lt;div class="x"&gt;](- "#d")</td>
+      <td>&lt;span concordion:set="#d"&gt;&amp;lt;div class=&amp;quot;x&amp;quot;&amp;gt;&lt;/span&gt;</td>
+    </tr>
+    <tr>
+      <td>[&lt;request&gt;](- "#d")</td>
+      <td>&lt;span concordion:set="#d"&gt;&amp;lt;request&amp;gt;&lt;/span&gt;</td>
+    </tr>
+    <tr>
+      <td>[&lt;div&gt;&lt;br/&gt;&lt;/div&gt;](- "#d")</td>
+      <td>&lt;span concordion:set="#d"&gt;&amp;lt;div&amp;gt;&amp;lt;br/&amp;gt;&amp;lt;/div&amp;gt;&lt;/span&gt;</td>
+    </tr>
+    <tr>
+      <td>[&lt;?xml version="1.0" encoding="UTF-8"?&gt;](- "#decl")</td>
+      <td>&lt;span concordion:set="#decl"&gt;&amp;lt;?xml version="1.0" encoding="UTF-8"?&amp;gt;&lt;/span&gt;</td>
+    </tr>
+    <tr>
+      <td>[&amp; &lt; 3](- "c:set=#x")</td>
+      <td>&lt;span concordion:set="#x"&gt;&amp;amp; &amp;lt; 3&lt;/span&gt;</td>
+    </tr>
+    <tr>
+      <td>[&lt;div&gt;](- "c:set=#d")</td>
+      <td>&lt;span concordion:set="#d"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;</td>
     </tr>
   </table>
 </div>
