@@ -8,6 +8,6 @@ import org.junit.runner.RunWith;
 public class DemoTest {
 
     public String greetingFor(String firstName) {
-        return SimpleFormatter.format("Hello %s!", firstName);
+        return String.format("Hello %s!", firstName);
     }
 }
