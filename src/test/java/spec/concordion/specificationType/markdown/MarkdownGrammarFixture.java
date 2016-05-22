@@ -23,4 +23,8 @@ public class MarkdownGrammarFixture {
         }
         return html;
     }
+
+    public String foo() {
+        return "foo";
+    }
 }

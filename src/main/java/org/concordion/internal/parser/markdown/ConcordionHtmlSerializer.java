@@ -21,7 +21,9 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
     private String currentExampleHeading;
     private int currentExampleLevel;
     private int depth;
-    
+    private boolean escapeHtmlNodes;
+    private boolean escapeText;
+
     public ConcordionHtmlSerializer(String targetConcordionNamespacePrefix, Map<String, String> namespaces) {
         super(new RunCommandLinkRenderer(SOURCE_CONCORDION_NAMESPACE_PREFIX, targetConcordionNamespacePrefix));
         statementParser = new ConciseExpressionParser(SOURCE_CONCORDION_NAMESPACE_PREFIX, targetConcordionNamespacePrefix, namespaces);
@@ -50,8 +52,10 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
     }
 
     private LinkNode toLinkNode(RefLinkNode node) {
+        escapeHtmlNodes = true;
         String text = printChildrenToString(node);
         String key = node.referenceKey != null ? printChildrenToString(node.referenceKey) : text;
+        escapeHtmlNodes = false;
         ReferenceNode refNode = references.get(normalize(key));
         String title = null;
         String url = null;
@@ -64,7 +68,12 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
     }
 
     private LinkNode toLinkNode(ExpLinkNode node) {
-        return new LinkNode(node.url, node.title, printChildrenToString(node));
+        if (!inHeaderNode) {
+            escapeHtmlNodes = true;
+        }
+        String text = printChildrenToString(node);
+        escapeHtmlNodes = false;
+        return new LinkNode(node.url, node.title, text);
     }
     
     private void visit(LinkNode linkNode) {
@@ -75,7 +84,7 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
             text = "";
         };
         if (inHeaderNode || inTableHeader) {
-            printer.printEncoded(text);
+            printer.print(text);
         } else {
             String expression = linkNode.getTitle();
             if (expression.equals("c:run")) {
@@ -156,7 +165,9 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
         }
         
         // Call the super visit(TableCellNode) method and override visit(TableColumnNode) below, so that the concordion commands are added to the <th> tag
+        escapeHtmlNodes = true;
         super.visit(node);
+        escapeHtmlNodes = false;
     }
 
     public void visit(TableColumnNode node) {
@@ -199,7 +210,11 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
             }
         }
         if (printHeaderNode) {
+            escapeText = true;
+            escapeHtmlNodes = true;
             super.visit(node);
+            escapeHtmlNodes = false;
+            escapeText = false;
         }
         inHeaderNode = false;
     }
@@ -285,5 +300,21 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
 
     private boolean firstChildIsInstanceOf(Node node, Class<?> clazz) {
         return node.getChildren().size() > 0 && clazz.isAssignableFrom(firstChildOf(node).getClass());
+    }
+
+    public void visit(InlineHtmlNode node) {
+        if (escapeHtmlNodes) {
+            this.printer.printEncoded(node.getText());
+        } else {
+            super.visit(node);
+        }
+    }
+
+    public void visit(TextNode node) {
+        if (escapeText) {
+            this.printer.printEncoded(node.getText());
+        } else {
+            super.visit(node);
+        }
     }
 }
