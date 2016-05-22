@@ -322,6 +322,33 @@ HTML entities in the text value are automatically escaped.
       <td>[&lt;div&gt;](- "c:set=#d")</td>
       <td>&lt;span concordion:set="#d"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;</td>
     </tr>
+
+    <tr>
+<td><pre>
+[&amp; &lt; 3][]
+
+[&amp; &lt; 3]: - "c:set=#x"
+</pre></td>
+      <td>&lt;span concordion:set="#x"&gt;&amp;amp; &amp;lt; 3&lt;/span&gt;</td>
+    </tr>
+
+    <tr>
+<td><pre>
+[&lt;div&gt;][xx]
+
+[xx]: - "#d"
+</pre></td>
+       <td>&lt;span concordion:set="#d"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;</td>
+    </tr>
+
+    <tr>
+<td><pre>
+|[foo](- "foo()")|[a &lt; b](- "#d")|[&lt;x&gt;](- "?=#d")|
+| -------------- | ------------- | ------------- |
+| bar            |       a &lt; b   |            &lt;x&gt;|
+</pre></td>
+      <td>&lt;table concordion:execute="foo()"&gt; &lt;thead&gt; &lt;tr&gt; &lt;th&gt;&lt;/th&gt; &lt;th concordion:set="#d"&gt;a &amp;lt; b&lt;/th&gt; &lt;th concordion:assert-equals="#d"&gt;&amp;lt;x&amp;gt;&lt;/th&gt; &lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td&gt;bar &lt;/td&gt; &lt;td&gt;a &amp;lt; b &lt;/td&gt; &lt;td&gt;&amp;lt;x&amp;gt;&lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt;</td>
+    </tr>
   </table>
 </div>
 

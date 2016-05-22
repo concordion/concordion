@@ -207,5 +207,37 @@ y
 &lt;p>y&lt;/p>     
       </td>
     </tr>
+
+    <tr>
+      <td>Example with single quote in name ended by a strikethrough heading with the same title as the example</td>
+      <td>
+        <pre>
+# [Example 'One'](-)
+x
+# ~~Example 'One'~~
+y
+        </pre>
+      </td>
+      <td>
+<![CDATA[<div concordion:example="example-one"> <h1>Example &#39;One&#39;</h1> <p>x</p>]]>&lt;/div>
+&lt;p>y&lt;/p>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Example with XML element in name ended by a strikethrough heading with the same title as the example</td>
+      <td>
+        <pre>
+# [Example &lt;One&gt;](-)
+x
+# ~~Example &lt;One&gt;~~
+y
+        </pre>
+      </td>
+      <td>
+<![CDATA[<div concordion:example="example-one"> <h1>Example &lt;One&gt;</h1> <p>x</p>]]>&lt;/div>
+&lt;p>y&lt;/p>
+      </td>
+    </tr>
   </table>
 </div>
