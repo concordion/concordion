@@ -22,8 +22,9 @@ public class ExampleFixture extends SpecWithBeforeSpec {
         return counter;
     }
 
-    public void incrementCounter() {
+    public synchronized int incrementCounter() {
         counter++;
+        return counter;
     }
 
     public boolean isTrue() {

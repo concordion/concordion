@@ -17,4 +17,5 @@ public interface Command {
 
     void executeAsExample(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder);
 
+    boolean alwaysRunEvenIfNoNonExampleChildren();
 }

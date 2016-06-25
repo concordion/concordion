@@ -2,6 +2,7 @@ package org.concordion.api;
 
 import org.concordion.internal.util.Check;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -89,5 +90,19 @@ public class CommandCall {
             return spinalCaseParameter;
         }
         return null;
+    }
+
+    public boolean hasNonExampleChildren() {
+        if (this.command.alwaysRunEvenIfNoNonExampleChildren()) {
+            return true;
+        }
+
+        Collection<CommandCall> children = getChildren().asCollection();
+        for (CommandCall child : children) {
+            if (!(child.getCommand().isExample())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

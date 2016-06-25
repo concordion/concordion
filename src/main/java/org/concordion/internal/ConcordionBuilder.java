@@ -18,6 +18,7 @@ import org.concordion.api.listener.*;
 import org.concordion.api.option.ConcordionOptions;
 import org.concordion.api.option.MarkdownExtensions;
 import org.concordion.internal.command.*;
+import org.concordion.internal.command.executeCommand.ExecuteCommand;
 import org.concordion.internal.extension.ExtensionChecker;
 import org.concordion.internal.listener.*;
 import org.concordion.internal.parser.markdown.MarkdownConverter;
@@ -46,12 +47,12 @@ public class ConcordionBuilder implements ConcordionExtender {
     private AssertEqualsCommand assertEqualsCommand = new AssertEqualsCommand();
     private AssertTrueCommand assertTrueCommand = new AssertTrueCommand();
     private AssertFalseCommand assertFalseCommand = new AssertFalseCommand();
+    private ExampleCommand exampleCommand = new ExampleCommand();
     private ExecuteCommand executeCommand = new ExecuteCommand();
     private SetCommand setCommand = new SetCommand();
     private RunCommand runCommand = new RunCommand();
     private VerifyRowsCommand verifyRowsCommand = new VerifyRowsCommand();
     private EchoCommand echoCommand = new EchoCommand();
-    private ExampleCommand exampleCommand = new ExampleCommand();
     private ThrowableCaughtPublisher throwableListenerPublisher = new ThrowableCaughtPublisher();
     private LinkedHashMap<String, Resource> resourceToCopyMap = new LinkedHashMap<String, Resource>();
     private List<SpecificationProcessingListener> specificationProcessingListeners = new ArrayList<SpecificationProcessingListener>();
@@ -414,6 +415,7 @@ public class ConcordionBuilder implements ConcordionExtender {
 
     public ConcordionExtender withExampleListener(ExampleListener listener) {
 		exampleCommand.addExampleListener(listener);
+        executeCommand.addExampleListener(listener);
 		return this;
 	}
 

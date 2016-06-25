@@ -93,6 +93,58 @@
 
 </div>
 
+
+<div class="example">
+    <h3>Tables</h3>
+
+    <p>
+        Concordion can execute each row in a table as an example. To do this, use the c:exampleName tag in one of the table header rows.
+    </p>
+
+    <p>For example:</p>
+
+    <code><pre>
+    &lt;table c:execute="#counter = incrementCounter()"&gt;
+        &lt;tr&gt;
+            &lt;th c:exampleName="#TEXT"&gt;Example Name&lt;/th&gt;
+            &lt;th c:assertEquals="#counter"&gt;Counter value&lt;/th&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;1st Table Example&lt;/td&gt;
+            &lt;td&gt;11&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;2nd Table Example&lt;/td&gt;
+            &lt;td&gt;11&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;3rd Table Example&lt;/td&gt;
+            &lt;td&gt;11&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+</pre></code>
+
+
+    <table c:execute="#counter = incrementCounter()">
+        <tr>
+            <th c:exampleName="#TEXT">Example Name</th>
+            <th c:assertEquals="#counter">Counter value</th>
+        </tr>
+        <tr>
+            <td>1st Table Example</td>
+            <td>11</td>
+        </tr>
+        <tr>
+            <td>2nd Table Example</td>
+            <td>11</td>
+        </tr>
+        <tr>
+            <td>3rd Table Example</td>
+            <td>11</td>
+        </tr>
+    </table>
+</div>
+
 <div c:example="runresults">
     <h3>Run Results</h3>
 
@@ -100,7 +152,7 @@
 
     <p>
         For example, a spec (<a href="LotsOfExamples.html" c:execute="#result=runTestDummySpec(#TEXT)">LotsOfExamples.html</a>)
-        with two successful examples, a failed example, an an exception example with a total of 10 successes, 2 failures and 2 exceptions 
+        with two successful examples, a failed example, an an exception example with a total of 10 successes, 2 failures and 2 exceptions
         returns <span c:assertEquals="#result.successCount">10</span> successes,
         <span c:assertEquals="#result.failureCount">2</span> failure,
         <span c:assertEquals="#result.exceptionCount">2</span> exceptions, and
@@ -133,7 +185,7 @@
 <li>For classes without examples, only <a c:run="concordion" href="FixtureWithoutExampleInitialisation.html">1 instance is created</a>.</li>
 <li>For classes with examples with commands also outside of the examples, <a c:run="concordion" href="FixtureWithExampleInitialisation.html">n+1 instances are created</a> where n is the number of examples.</li>
 <li>For classes with examples with no commands outside of the examples <a c:run="concordion" href="FixtureWithExampleWithoutOuterExampleInitialisation.html">n instances are created</a> where n is the number of examples.</li>
-</ul>  
+</ul>
 
 <h4>Field reuse</h4>
 <p>Fixture fields can be <a c:run="concordion" href="ScopedField.html">scoped</a> for reuse across a specification, in addition to the default example scope.</p>
@@ -146,7 +198,7 @@
 <li>For classes without examples, the hook methods are called <a c:run="concordion" href="FixtureWithoutExampleHookMethods.html">1 time</a>.</li>
 <li>For classes with examples with commands also outside of the examples, the hook methods are called <a c:run="concordion" href="FixtureWithExampleHookMethods.html">n+1 times</a> where n is the number of examples.</li>
 <li>For classes with examples with no commands outside of the examples, the hook methods are called <a c:run="concordion" href="FixtureWithExampleWithoutOuterExampleHookMethods.html">n times</a> where n is the number of examples.</li>
-</ul>  
+</ul>
 </div>
 
 <p>
