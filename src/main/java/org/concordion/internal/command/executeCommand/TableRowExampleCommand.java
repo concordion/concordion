@@ -61,9 +61,7 @@ public class TableRowExampleCommand implements Command {
         if (detailRow.getCells().length != tableSupport.getColumnCount()) {
             throw new RuntimeException("The <table> 'execute' command only supports rows with an equal number of columns.");
         }
-
-        System.err.println(evaluator.evaluate("getCounter()"));
-
+        
         tableExecuteCommand.setElement(detailRow.getElement());
         tableSupport.copyCommandCallsTo(detailRow);
         tableExecuteCommand.execute(evaluator, resultRecorder);
