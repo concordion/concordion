@@ -92,11 +92,11 @@ public class CommandCall {
         return null;
     }
 
-    public boolean hasNonExampleChildren() {
-        if (this.command.alwaysRunEvenIfNoNonExampleChildren()) {
-            return true;
-        }
+    public boolean shouldExecuteWithNonExampleChildren() {
+        return this.command.alwaysExecuteEvenIfNoNonExampleChildren();
+    }
 
+    public boolean hasNonExampleChildren() {
         Collection<CommandCall> children = getChildren().asCollection();
         for (CommandCall child : children) {
             if (!(child.getCommand().isExample())) {

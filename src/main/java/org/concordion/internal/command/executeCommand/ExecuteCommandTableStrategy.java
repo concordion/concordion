@@ -48,7 +48,7 @@ public class ExecuteCommandTableStrategy implements ExecuteCommandStrategy {
     private int getExampleColumn(TableSupport tableSupport) {
         Row headerRow = tableSupport.getLastHeaderRow();
         for (Element e : headerRow.getCells()) {
-            String exampleText = e.getAttributeValue("exampleName", ConcordionBuilder.NAMESPACE_CONCORDION_2007);
+            String exampleText = e.getAttributeValue("example", ConcordionBuilder.NAMESPACE_CONCORDION_2007);
             if (exampleText != null) {
                 // OK. This is an "examplised" table. Return this column index.
                 int exampleNameIndex = headerRow.getIndexOfCell(e);

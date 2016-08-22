@@ -45,7 +45,7 @@ public class XMLSpecification implements SpecificationByExample {
 
     public void processNode(CommandCall node, Evaluator evaluator, ResultRecorder resultRecorder) {
 
-        if (node.hasNonExampleChildren()) {
+        if (node.shouldExecuteWithNonExampleChildren() || node.hasNonExampleChildren()) {
             for (CommandCall before: beforeExamples) {
                 SummarizingResultRecorder beforeResultRecorder = new SummarizingResultRecorder();
                 beforeResultRecorder.setSpecificationDescription("Running before for example " + node.getExpression());
@@ -115,7 +115,7 @@ public class XMLSpecification implements SpecificationByExample {
 
         List<String> commands = new ArrayList<String>();
 
-        if (rootCommandNode.hasNonExampleChildren()) {
+        if (rootCommandNode.shouldExecuteWithNonExampleChildren() || rootCommandNode.hasNonExampleChildren()) {
             // Add the main spec first to increase the chance that it will be run first by jUnit.
             commands.add(testDescription);
         }
