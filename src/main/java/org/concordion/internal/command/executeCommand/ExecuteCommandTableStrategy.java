@@ -24,6 +24,8 @@ public class ExecuteCommandTableStrategy implements ExecuteCommandStrategy {
     public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
         TableSupport tableSupport = new TableSupport(commandCall);
 
+        Element initialElement = commandCall.getElement();
+
         // check if this table is in "example" mode.
         if (hasExamples(tableSupport)) {
             return;
@@ -37,7 +39,10 @@ public class ExecuteCommandTableStrategy implements ExecuteCommandStrategy {
             commandCall.setElement(detailRow.getElement());
             tableSupport.copyCommandCallsTo(detailRow);
             commandCall.execute(evaluator, resultRecorder);
+            tableSupport.removeCommandCallsFrom(detailRow);
         }
+
+        commandCall.setElement(initialElement);
     }
 
     private boolean hasExamples(TableSupport tableSupport) {

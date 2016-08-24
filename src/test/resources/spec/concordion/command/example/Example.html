@@ -27,6 +27,15 @@
         <pre>
 <code c:set="#are = 'are'">&lt;span c:set="#are = 'are'"/&gt;</code></pre>
 
+    <p>Of course, you can have tables in a before example - this can be useful for populating
+    a database with data</p>
+
+    <table c:execute="addTableRow(#description)">
+        <tr><th>Table Row</th><th c:set="#description">Description</th></tr>
+        <tr><td>1</td><td>A database row</td></tr>
+        <tr><td>2</td><td>Another database row</td></tr>
+    </table>
+
 </div>
 
 <div c:example="example1">
@@ -60,6 +69,7 @@
         <span c:assertTrue="beforeSpecRunOnce()">exactly once</span> before
         any examples are run. Methods annotated with @AfterSpecification are executed after the specification has executed.</p>
 
+    <p>Finally, we assert that <span c:assertEquals="numberTableRowsInserted()">2</span> table rows were added to our database.</p>
 </div>
 
 <div c:example="example2">
@@ -90,6 +100,8 @@
     <p>Note that methods in the fixture class annotated with @BeforeSpecification are executed
         <span c:assertTrue="beforeSpecRunOnce()">exactly once</span> before
         any examples are run. Methods annotated with @AfterSpecification are executed after the specification has executed.</p>
+
+    <p>Finally, we assert that <span c:assertEquals="numberTableRowsInserted()">2</span> table rows were added to our database.</p>
 
 </div>
 
@@ -176,6 +188,9 @@
             <span c:assertEquals="#result.exceptionCount">0</span> exceptions, and
                 <span c:assertEquals="#result.ignoredCount">0</span> ignores
     </p>
+
+    <p>Finally, we assert that <span c:assertEquals="numberTableRowsInserted()">2</span> table rows were added to our database.</p>
+
 </div>
 
 <div c:example="instances">

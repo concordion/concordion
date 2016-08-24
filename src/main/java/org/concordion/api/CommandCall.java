@@ -72,7 +72,6 @@ public class CommandCall {
         this.element = element;
     }
 
-
     public void setParameters(Map<String, String> parameters) {
         this.parameters = new HashMap<String, String>(parameters);
     }

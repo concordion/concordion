@@ -13,6 +13,7 @@ import spec.concordion.results.runTotals.RunTotalsFixture;
 public class ExampleFixture extends SpecWithBeforeSpec {
 
     private int counter = 0;
+    private int numberRowsInserted = 0;
 
     public void setCounter(String val) {
         counter = Integer.parseInt(val);
@@ -37,5 +38,13 @@ public class ExampleFixture extends SpecWithBeforeSpec {
 
     public Map<String, String> runTestDummySpec(String href) throws Exception {
         return new RunTotalsFixture().withTestClass(this.getClass()).simulateRun(href);
+    }
+
+    public int numberTableRowsInserted() {
+        return numberRowsInserted;
+    }
+
+    public void addTableRow(String description) {
+        numberRowsInserted++;
     }
 }

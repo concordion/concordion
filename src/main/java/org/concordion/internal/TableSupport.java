@@ -9,6 +9,7 @@ import org.concordion.api.Element;
 public class TableSupport {
     private final CommandCall tableCommandCall;
     private final Map<Integer, CommandCall> commandCallByColumn = new HashMap<Integer, CommandCall>();
+    private final Map<Integer, Element> overrides = new HashMap<Integer, Element>();
     private Table table;
 
     public TableSupport(CommandCall tableCommandCall) {
@@ -26,11 +27,23 @@ public class TableSupport {
         return table.getDetailRows();
     }
 
+    public void removeCommandCallsFrom(Row detailRow) {
+        int columnIndex = 0;
+        for (Element cell : detailRow.getCells()) {
+            CommandCall cellCall = commandCallByColumn.get(columnIndex);
+            if (cellCall != null) {
+                cellCall.setElement(overrides.get(columnIndex));
+            }
+            columnIndex++;
+        }
+    }
+
     public void copyCommandCallsTo(Row detailRow) {
         int columnIndex = 0;
         for (Element cell : detailRow.getCells()) {
             CommandCall cellCall = commandCallByColumn.get(columnIndex);
             if (cellCall != null) {
+                overrides.put(columnIndex, cellCall.getElement());
                 cellCall.setElement(cell);
             }
             columnIndex++;
@@ -55,4 +68,5 @@ public class TableSupport {
     public Row addDetailRow() {
         return table.addDetailRow();
     }
+
 }
