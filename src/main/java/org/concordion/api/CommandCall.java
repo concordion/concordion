@@ -91,17 +91,25 @@ public class CommandCall {
         return null;
     }
 
-    public boolean shouldExecuteWithNonExampleChildren() {
-        return this.command.alwaysExecuteEvenIfNoNonExampleChildren();
+    public boolean shouldExecuteEvenWhenAllChildCommandsAreExamples() {
+        return this.getCommand().shouldExecuteEvenWhenAllChildCommandsAreExamples();
     }
 
-    public boolean hasNonExampleChildren() {
+    /**
+     *
+     * Generally, examples are not executable. This method returns true if there is
+     * nothing to execute - ie that there are only example children. Note that 'no children' is true
+     * for 'only example children'
+     *
+     * @return true if all children are examples.
+     */
+    public boolean allChildCommandsAreExamples() {
         Collection<CommandCall> children = getChildren().asCollection();
         for (CommandCall child : children) {
             if (!(child.getCommand().isExample())) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 }

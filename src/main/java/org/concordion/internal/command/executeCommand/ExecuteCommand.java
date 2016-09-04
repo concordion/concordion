@@ -9,21 +9,20 @@ import org.concordion.api.listener.ExampleListener;
 import org.concordion.api.listener.ExecuteEvent;
 import org.concordion.api.listener.ExecuteListener;
 import org.concordion.internal.SummarizingResultRecorder;
-import org.concordion.internal.command.ExampleCommand;
 
 public class ExecuteCommand extends AbstractCommand {
-    private List<ExecuteListener> listeners = new ArrayList<ExecuteListener>();
+    private List<ExecuteListener> executeListeners = new ArrayList<ExecuteListener>();
     private List<ExampleListener> exampleListeners = new ArrayList<ExampleListener>();
 
     public ExecuteCommand() {
     }
 
     public void addExecuteListener(ExecuteListener listener) {
-        listeners.add(listener);
+        executeListeners.add(listener);
     }
 
     public void removeExecuteListener(ExecuteListener listener) {
-        listeners.remove(listener);
+        executeListeners.remove(listener);
     }
 
     public void addExampleListener(ExampleListener listener) {
@@ -68,7 +67,7 @@ public class ExecuteCommand extends AbstractCommand {
     }
 
     void announceExecuteCompleted(Element element) {
-    	for (ExecuteListener listener : listeners) {
+    	for (ExecuteListener listener : executeListeners) {
     		listener.executeCompleted(new ExecuteEvent(element));
 		}
     }

@@ -31,5 +31,5 @@ public interface Command {
      *
      * @return true if Concordion should not check for any non-example children and just run the command anyway
      */
-    boolean alwaysExecuteEvenIfNoNonExampleChildren();
+    boolean shouldExecuteEvenWhenAllChildCommandsAreExamples();
 }

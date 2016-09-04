@@ -69,7 +69,7 @@ public class TableRowExampleCommand implements Command {
         executeCommand.announceAfterExample(exampleName, detailRow.getElement(), resultRecorder);
     }
 
-    public boolean alwaysExecuteEvenIfNoNonExampleChildren() {
+    public boolean shouldExecuteEvenWhenAllChildCommandsAreExamples() {
         return true;
     }
 

@@ -54,7 +54,7 @@ public abstract class AbstractCommandDecorator implements Command {
 
     protected abstract void process(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Runnable runnable);
 
-    public boolean alwaysExecuteEvenIfNoNonExampleChildren() {
+    public boolean shouldExecuteEvenWhenAllChildCommandsAreExamples() {
         return false;
     }
 

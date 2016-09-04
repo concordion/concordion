@@ -26,7 +26,7 @@ public abstract class AbstractCommand implements Command {
     public void executeAsExample(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
     }
 
-    public boolean alwaysExecuteEvenIfNoNonExampleChildren() {
+    public boolean shouldExecuteEvenWhenAllChildCommandsAreExamples() {
         return false;
     }
 
