@@ -107,12 +107,22 @@ public class FixtureInstance extends FixtureType implements Fixture, FixtureDecl
     
     @Override
     public void beforeExample(final String exampleName) {
-        invokeMethods(BeforeExample.class, new SingleParameterSupplier(BeforeExample.class, ExampleName.class, exampleName));
+    	//invokeBeforeExample(exampleName);
     }
+
+	@Override
+	public void invokeBeforeExample(String exampleName) {
+		invokeMethods(BeforeExample.class, new SingleParameterSupplier(BeforeExample.class, ExampleName.class, exampleName));
+	}
+    
+    @Override
+	public void invokeAfterExample(String exampleName) {
+    	invokeMethods(AfterExample.class, new SingleParameterSupplier(AfterExample.class, ExampleName.class, exampleName));
+	}
     
     @Override
     public void afterExample(String exampleName) {
-        invokeMethods(AfterExample.class, new SingleParameterSupplier(AfterExample.class, ExampleName.class, exampleName));
+    	//invokeAfterExample(exampleName);
         scopedFieldStore.destroyFields(fixtureObject, Scope.EXAMPLE);
     }
     
@@ -121,11 +131,11 @@ public class FixtureInstance extends FixtureType implements Fixture, FixtureDecl
         return super.getClassHierarchyParentFirst();
     }
     
-    private void invokeMethods(Class<? extends Annotation> methodAnnotation) {
+    public void invokeMethods(Class<? extends Annotation> methodAnnotation) {
         invokeMethods(methodAnnotation, null);
     }
     
-    private void invokeMethods(Class<? extends Annotation> methodAnnotation, ParameterSupplier parameterSupplier) {
+    public void invokeMethods(Class<? extends Annotation> methodAnnotation, ParameterSupplier parameterSupplier) {
         for (Class<?> clazz : getClassHierarchyParentFirst()) {
             Method[] methods = clazz.getDeclaredMethods();
             

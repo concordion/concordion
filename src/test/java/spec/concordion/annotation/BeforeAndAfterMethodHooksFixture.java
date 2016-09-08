@@ -10,4 +10,8 @@ public class BeforeAndAfterMethodHooksFixture {
     public List<String> getLog() {
         return BeforeAndAfterLoggingFixture.getLog();
     }
+    
+    public List<String> getListenerLog() {
+        return BeforeAndAfterLoggingWithListenerFixture.getLog();
+    }
 }

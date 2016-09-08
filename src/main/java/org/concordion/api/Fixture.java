@@ -72,10 +72,12 @@ public interface Fixture extends FixtureDeclarations {
      * @param exampleName the name of the example being invoked  
      */
     void beforeExample(String exampleName);
+    void invokeBeforeExample(String exampleName);
 
     /**
      * Call methods annotated with <code>@AfterExample</code> and destroy example scoped fields.   
      * @param exampleName the name of the example being invoked  
      */
     void afterExample(String exampleName);
+    void invokeAfterExample(String exampleName);
 }

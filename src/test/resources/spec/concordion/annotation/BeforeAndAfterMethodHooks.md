@@ -44,3 +44,38 @@ Running the specification [BeforeAndAfterLogging](BeforeAndAfterLogging.md "c:ru
 
 [checkRows]: - "c:verifyRows=#line : getLog()"
 [text]:      - "?=#line"
+
+
+## [Example With Listener] (- "example-listener-hooks")
+
+Running the specification [BeforeAndAfterLoggingWithListener](BeforeAndAfterLoggingWithListener.md "c:run") which in addition logging the before and after methods, also has two extensions which listen out for the same events and logs those, results in the following : 
+
+|[checkRows2][] [text][]|
+|----------------------|
+|Extension 1: beforeProcessingSpecification |
+|Extension 2: beforeProcessingSpecification |
+|Before specification  |
+|Before [Outer]        |
+|In specification      |
+|After [Outer]         |
+|Extension 1: Before example example1 |
+|Extension 2: Before example example1 |
+|Before example1       |
+|In example 1          |
+|After example1        |
+|Extension 2: After example example1 |
+|Extension 1: After example example1 |
+|Extension 1: Before example example2 |
+|Extension 2: Before example example2 |
+|Before example2       |
+|In example 2          |
+|After example2        |
+|Extension 2: After example example2 |
+|Extension 1: After example example2 |
+|After specification   |
+|Extension 2: afterProcessingSpecification |
+|Extension 1: afterProcessingSpecification |
+ 
+
+[checkRows2]: - "c:verifyRows=#line : getListenerLog()"
+[text]:      - "?=#line"

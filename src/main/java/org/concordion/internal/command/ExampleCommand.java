@@ -84,8 +84,8 @@ public class ExampleCommand extends AbstractCommand {
 	}
     
     private void announceAfterExample(String exampleName, Element element, ResultRecorder resultRecorder) {
-		for (ExampleListener listener : listeners) {
-			listener.afterExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder)resultRecorder));
+    	for (int i = listeners.size() - 1; i >= 0; i--) {
+			listeners.get(i).afterExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder)resultRecorder));
 		}
 	}
 }
