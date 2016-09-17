@@ -1,11 +1,10 @@
 package org.concordion.internal.command.executeCommand;
 
-import org.concordion.api.Command;
-import org.concordion.api.CommandCall;
-import org.concordion.api.Evaluator;
-import org.concordion.api.ResultRecorder;
+import org.concordion.api.*;
+import org.concordion.internal.ImplementationStatusChecker;
 import org.concordion.internal.Row;
 import org.concordion.internal.TableSupport;
+import org.concordion.internal.command.ExampleCommand;
 
 import java.util.Collections;
 import java.util.List;
@@ -64,8 +63,10 @@ public class TableRowExampleCommand implements Command {
 
         tableExecuteCommand.setElement(detailRow.getElement());
         tableSupport.copyCommandCallsTo(detailRow);
+
+        ExampleCommand.setupCommandForExample(tableExecuteCommand, resultRecorder, exampleName);
+
         tableExecuteCommand.execute(evaluator, resultRecorder);
-        detailRow.getElement().addAttribute("id", exampleName);
 
         executeCommand.announceAfterExample(exampleName, detailRow.getElement(), resultRecorder);
     }
