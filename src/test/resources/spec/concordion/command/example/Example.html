@@ -118,7 +118,7 @@
     <code><pre>
     &lt;table c:execute="#counter = incrementCounter()"&gt;
         &lt;tr&gt;
-            &lt;th c:example="#TEXT"&gt;Example Name&lt;/th&gt;
+            &lt;th c:example=""&gt;Example Name&lt;/th&gt;
             &lt;th c:assertEquals="#counter"&gt;Counter value&lt;/th&gt;
         &lt;/tr&gt;
         &lt;tr&gt;
@@ -139,7 +139,7 @@
 
     <table c:execute="#counter = incrementCounter()">
         <tr>
-            <th c:example="#TEXT">Example Name</th>
+            <th c:example="">Example Name</th>
             <th c:assertEquals="#counter">Counter value</th>
         </tr>
         <tr>
@@ -214,6 +214,9 @@
 <li>For classes with examples with commands also outside of the examples, the hook methods are called <a c:run="concordion" href="FixtureWithExampleHookMethods.html">n+1 times</a> where n is the number of examples.</li>
 <li>For classes with examples with no commands outside of the examples, the hook methods are called <a c:run="concordion" href="FixtureWithExampleWithoutOuterExampleHookMethods.html">n times</a> where n is the number of examples.</li>
 </ul>
+
+    <p>In addition, you can use <a c:run="concordion" href="../../extension/listener/ExampleListener.html">example listeners</a>.</p>
+
 </div>
 
 <p>

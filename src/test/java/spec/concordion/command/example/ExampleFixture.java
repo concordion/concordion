@@ -2,6 +2,8 @@ package spec.concordion.command.example;
 
 import java.util.Map;
 
+import org.concordion.api.AfterExample;
+import org.concordion.api.BeforeExample;
 import org.concordion.api.FullOGNL;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;

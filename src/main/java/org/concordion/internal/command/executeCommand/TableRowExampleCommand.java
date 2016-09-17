@@ -65,6 +65,7 @@ public class TableRowExampleCommand implements Command {
         tableExecuteCommand.setElement(detailRow.getElement());
         tableSupport.copyCommandCallsTo(detailRow);
         tableExecuteCommand.execute(evaluator, resultRecorder);
+        detailRow.getElement().addAttribute("id", exampleName);
 
         executeCommand.announceAfterExample(exampleName, detailRow.getElement(), resultRecorder);
     }
