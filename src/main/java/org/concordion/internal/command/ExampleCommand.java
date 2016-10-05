@@ -46,6 +46,12 @@ public class ExampleCommand extends AbstractCommand {
         } catch (FailFastException f) {
             // Ignore - it'll be re-thrown later by the implementation status checker if necessary.
         }
+        setupCommandForExample(node, resultRecorder, exampleName);
+
+        announceAfterExample(exampleName, node.getElement(), resultRecorder);
+    }
+
+    public static void setupCommandForExample(CommandCall node, ResultRecorder resultRecorder, String exampleName) {
         node.getElement().addAttribute("id", exampleName);
 
         String params = node.getParameter("status");
@@ -65,8 +71,6 @@ public class ExampleCommand extends AbstractCommand {
             fixtureNode.appendText(note);
             node.getElement().prependChild(fixtureNode);
         }
-
-        announceAfterExample(exampleName, node.getElement(), resultRecorder);
     }
 
     public boolean isExample() {

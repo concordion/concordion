@@ -2,6 +2,8 @@ package spec.concordion.command.example;
 
 import java.util.Map;
 
+import org.concordion.api.AfterExample;
+import org.concordion.api.BeforeExample;
 import org.concordion.api.FullOGNL;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
@@ -13,6 +15,7 @@ import spec.concordion.results.runTotals.RunTotalsFixture;
 public class ExampleFixture extends SpecWithBeforeSpec {
 
     private int counter = 0;
+    private int numberRowsInserted = 0;
 
     public void setCounter(String val) {
         counter = Integer.parseInt(val);
@@ -22,8 +25,9 @@ public class ExampleFixture extends SpecWithBeforeSpec {
         return counter;
     }
 
-    public void incrementCounter() {
+    public synchronized int incrementCounter() {
         counter++;
+        return counter;
     }
 
     public boolean isTrue() {
@@ -36,5 +40,13 @@ public class ExampleFixture extends SpecWithBeforeSpec {
 
     public Map<String, String> runTestDummySpec(String href) throws Exception {
         return new RunTotalsFixture().withTestClass(this.getClass()).simulateRun(href);
+    }
+
+    public int numberTableRowsInserted() {
+        return numberRowsInserted;
+    }
+
+    public void addTableRow(String description) {
+        numberRowsInserted++;
     }
 }

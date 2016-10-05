@@ -2,6 +2,7 @@ package org.concordion.api;
 
 import org.concordion.internal.util.Check;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -71,7 +72,6 @@ public class CommandCall {
         this.element = element;
     }
 
-
     public void setParameters(Map<String, String> parameters) {
         this.parameters = new HashMap<String, String>(parameters);
     }
@@ -89,5 +89,27 @@ public class CommandCall {
             return spinalCaseParameter;
         }
         return null;
+    }
+
+    public boolean shouldExecuteEvenWhenAllChildCommandsAreExamples() {
+        return this.getCommand().shouldExecuteEvenWhenAllChildCommandsAreExamples();
+    }
+
+    /**
+     *
+     * Generally, examples are not executable. This method returns true if there is
+     * nothing to execute - ie that there are only example children. Note that 'no children' is true
+     * for 'only example children'
+     *
+     * @return true if all children are examples.
+     */
+    public boolean allChildCommandsAreExamples() {
+        Collection<CommandCall> children = getChildren().asCollection();
+        for (CommandCall child : children) {
+            if (!(child.getCommand().isExample())) {
+                return false;
+            }
+        }
+        return true;
     }
 }

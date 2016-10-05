@@ -5,7 +5,6 @@ import org.concordion.internal.command.SpecificationCommand;
 import org.concordion.internal.util.SimpleFormatter;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class XMLSpecification implements SpecificationByExample {
@@ -46,7 +45,7 @@ public class XMLSpecification implements SpecificationByExample {
 
     public void processNode(CommandCall node, Evaluator evaluator, ResultRecorder resultRecorder) {
 
-        if (hasNonExampleChildren(node)) {
+        if (node.shouldExecuteEvenWhenAllChildCommandsAreExamples() || !node.allChildCommandsAreExamples()) {
             for (CommandCall before: beforeExamples) {
                 SummarizingResultRecorder beforeResultRecorder = new SummarizingResultRecorder();
                 beforeResultRecorder.setSpecificationDescription("Running before for example " + node.getExpression());
@@ -74,16 +73,6 @@ public class XMLSpecification implements SpecificationByExample {
         } else {
             node.execute(evaluator, resultRecorder);
         }
-    }
-
-    private boolean hasNonExampleChildren(CommandCall node) {
-        Collection<CommandCall> children = node.getChildren().asCollection();
-        for (CommandCall child : children) {
-            if (!(child.getCommand().isExample())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public void process(Evaluator evaluator, ResultRecorder resultRecorder) {
@@ -126,7 +115,7 @@ public class XMLSpecification implements SpecificationByExample {
 
         List<String> commands = new ArrayList<String>();
 
-        if (hasNonExampleChildren(rootCommandNode)) {
+        if (rootCommandNode.shouldExecuteEvenWhenAllChildCommandsAreExamples() || !rootCommandNode.allChildCommandsAreExamples()) {
             // Add the main spec first to increase the chance that it will be run first by jUnit.
             commands.add(testDescription);
         }
