@@ -36,9 +36,9 @@ public class ResourceFinder {
         List<Class<?>> classes = fixture.getClassHierarchyParentFirst();
 		
         for (Class<?> class1 : classes) {
-            if (class1.isAnnotationPresent(ConcordionResources.class)) {
-                ConcordionResources annotation = class1.getAnnotation(ConcordionResources.class);
-                
+        	ConcordionResources annotation = class1.getDeclaredAnnotation(ConcordionResources.class);
+            
+        	if (annotation != null) {
                 if (!annotation.includeDefaultStyling()) {
                     includeDefaultStyling = false;
                 }
