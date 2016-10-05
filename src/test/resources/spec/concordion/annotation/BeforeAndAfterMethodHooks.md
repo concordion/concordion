@@ -73,8 +73,8 @@ Running the specification [BeforeAndAfterLoggingWithListener](BeforeAndAfterLogg
 |Extension 2: After example example2 |
 |Extension 1: After example example2 |
 |After specification   |
-|Extension 2: afterProcessingSpecification |
 |Extension 1: afterProcessingSpecification |
+|Extension 2: afterProcessingSpecification |
  
 
 [checkRows2]: - "c:verifyRows=#line : getListenerLog()"

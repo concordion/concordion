@@ -80,21 +80,9 @@ public class SpecificationCommand extends AbstractCommand {
     }
 
     private void announceAfterProcessingEvent(Resource resource, Element element) {
-    	SpecificationExporter exporter = null;
-    	
-    	for (int i = listeners.size() - 1; i >= 0; i--) {
-    		SpecificationProcessingListener listener = (SpecificationProcessingListener) listeners.get(i);
-    		
-    		if (listener instanceof SpecificationExporter) {
-    			exporter = (SpecificationExporter) listener;
-    		} else {
-    			listener.afterProcessingSpecification(new SpecificationProcessingEvent(resource, element));
-    		}
-    	}
-    	
-    	if (exporter != null) {
-    		exporter.afterProcessingSpecification(new SpecificationProcessingEvent(resource, element));
-    	}
+    	for (SpecificationProcessingListener listener : listeners) {
+    		listener.afterProcessingSpecification(new SpecificationProcessingEvent(resource, element));
+		}
     }
 
     private void announceBeforeProcessingEvent(Resource resource, Element element) {
