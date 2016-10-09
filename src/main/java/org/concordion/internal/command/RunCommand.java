@@ -75,6 +75,8 @@ public class RunCommand extends AbstractCommand {
 
             }
 
+            announceRunStarted(element, href);
+
             runStrategy.call(runner, commandCall.getResource(), href, resultAnnouncer, resultRecorder);
             updateHrefSuffix(element, href);
 
@@ -88,6 +90,12 @@ public class RunCommand extends AbstractCommand {
             resultRecorder.record(Result.FAILURE);
         }
 
+    }
+
+    private void announceRunStarted(Element element, String href) {
+        for (RunListener listener : listeners) {
+            listener.runStarted(new RunStartedEvent(element, href));
+        }
     }
 
     /* For non-html format specs, update the href to reference the html output */
