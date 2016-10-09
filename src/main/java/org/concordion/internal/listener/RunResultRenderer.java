@@ -1,15 +1,16 @@
 package org.concordion.internal.listener;
 
 import org.concordion.api.Source;
-import org.concordion.api.listener.RunFailureEvent;
-import org.concordion.api.listener.RunIgnoreEvent;
-import org.concordion.api.listener.RunListener;
-import org.concordion.api.listener.RunSuccessEvent;
+import org.concordion.api.listener.*;
 
 public class RunResultRenderer extends ThrowableRenderer implements RunListener {
 
     public RunResultRenderer(Source resourceSource) {
         super(resourceSource);
+    }
+
+    @Override
+    public void runStarted(RunStartedEvent runStartedEvent) {
     }
 
     public void successReported(RunSuccessEvent event) {
