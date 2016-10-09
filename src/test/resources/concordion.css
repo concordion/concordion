@@ -43,7 +43,7 @@ li {
   margin-bottom: 6px; 
 }
 
-.example, [concordion\:example], [c\:example] {
+.example, :not(th)[concordion\:example], :not(th)[c\:example] {
   padding: 6px 16px 6px 16px;
   border: 1px solid #C3D9FF;
   margin: 6px 0px 28px 0px;
