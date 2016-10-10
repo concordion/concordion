@@ -230,3 +230,105 @@ The first column doesn't have to have a concordion command associated with it:
     </tr>
   </table>
 </div>
+
+#### Concise Table Syntax
+To run each row of the table as an example, where the first column contains the example name, 
+a shortened syntax is available (which combines the execute command and the example command into one). 
+
+To do this, prefix the header text with the `@` symbol, which will be removed from the Concordion output. 
+
+For example:
+
+<div class="example">
+  <h3>Example</h3>
+  <table concordion:execute="#html=translate(#md)">
+    <tr>
+      <th concordion:set="#md">Markdown</th>
+      <th concordion:assert-equals="#html">Resultant HTML</th>
+    </tr>
+    <tr>
+      <td>
+<pre>      
+|[@Example Name](- "#z=add(#x, #y)") | [Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
+| --------------------------         | ----------------: | ---------------: | ---------------: |
+| Positive numbers                   |                  1|                 0|                 1|
+| Negative numbers                   |                  1|                -3|                -2|
+</pre>
+      </td>
+      <td>
+<![CDATA[<table concordion:execute="#z=add(#x, #y)">
+    <thead>
+        <tr>
+            <th concordion:example=""> Example Name</th>
+            <th align="right" concordion:set="#x">Number 1</th>
+            <th align="right" concordion:set="#y">Number 2</th>
+            <th align="right" concordion:assert-equals="#z">Result</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Positive numbers </td>
+            <td align="right">1</td>
+            <td align="right">0</td>
+            <td align="right">1</td>
+        </tr>
+        <tr>
+            <td>Negative numbers </td>
+            <td align="right">1</td>
+            <td align="right">-3</td>
+            <td align="right">-2</td>
+        </tr>
+    </tbody>
+</table>]]>     
+      </td>
+    </tr>
+  </table>
+</div>
+
+Without the concise syntax this would need to be written as:
+
+<div class="example">
+  <h3>Example</h3>
+  <table concordion:execute="#html=translate(#md)">
+    <tr>
+      <th concordion:set="#md">Markdown</th>
+      <th concordion:assert-equals="#html">Resultant HTML</th>
+    </tr>
+    <tr>
+      <td>
+<pre>      
+|[_add_](- "#z=add(#x, #y)") [Example Name](- "c:example=") | [Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
+| --------------------------                           | ----------------: | ---------------: | ---------------: |
+| Positive numbers                                     |                  1|                 0|                 1|
+| Negative numbers                                     |                  1|                -3|                -2|
+</pre>
+      </td>
+      <td>
+<![CDATA[<table concordion:execute="#z=add(#x, #y)">
+    <thead>
+        <tr>
+            <th concordion:example=""> Example Name </th>
+            <th align="right" concordion:set="#x">Number 1</th>
+            <th align="right" concordion:set="#y">Number 2</th>
+            <th align="right" concordion:assert-equals="#z">Result</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Positive numbers </td>
+            <td align="right">1</td>
+            <td align="right">0</td>
+            <td align="right">1</td>
+        </tr>
+        <tr>
+            <td>Negative numbers </td>
+            <td align="right">1</td>
+            <td align="right">-3</td>
+            <td align="right">-2</td>
+        </tr>
+    </tbody>
+</table>]]>     
+      </td>
+    </tr>
+  </table>
+</div>
