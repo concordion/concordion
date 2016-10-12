@@ -121,6 +121,9 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
                         }
                         pendingCommand = statementParser.parse(linkNode.getTitle(), linkNode.getText());
                         cell.getChildren().remove(0);
+                        if (linkNode.getText().startsWith("@")) {
+                            cell.getChildren().add(new ExpLinkNode("c:example=", URL_FOR_CONCORDION, new TextNode(linkNode.getText().substring(1))));
+                        }
                     }
                 }
             }

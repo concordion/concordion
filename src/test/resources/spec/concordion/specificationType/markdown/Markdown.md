@@ -87,6 +87,30 @@ Reference-style links can be used for one or more of the links to improve readab
 
     [_add_]: - "#z=add(#x, #y)"
 
+###### Run each row as an example
+_Since:_ Concordion 2.1.0
+
+Concordion can execute each row in a table as an example. 
+To do this, use the c:example tag in one of the table header columns and specify the example name in the corresponding column of each row.
+
+For example:
+
+    |[_add_](- "#z=add(#x, #y)") [Example Name](- "c:example=") | [Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
+    | --------------------------                                | ----------------: | ---------------: | ---------------: |
+    | Positive numbers                                          |                  1|                 0|                 1|
+    | Negative numbers                                          |                  1|                -3|                -2|
+
+__Concise syntax__
+
+To shorten the syntax when the first column of the table contains the example name, you can combine the execute command and the example command into one. 
+
+To do this, prefix the header text with the `@` symbol, which will be removed from the Concordion output. For example:
+
+    |[@Example Name](- "#z=add(#x, #y)") | [Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
+    | --------------------------         | ----------------: | ---------------: | ---------------: |
+    | Positive numbers                   |                  1|                 0|                 1|
+    | Negative numbers                   |                  1|                -3|                -2|
+
 ##### Verify Rows
 The verifyRows command is specified in the first table header column, followed by the command for that column (if any), with the commands for each column of the table specified in the relevant table header column.
 
