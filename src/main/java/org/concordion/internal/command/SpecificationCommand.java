@@ -97,8 +97,8 @@ public class SpecificationCommand extends AbstractCommand {
     }
 
     private void announceAfterOuterExampleEvent(Element element, ResultSummary resultSummary) {
-        for (OuterExampleListener listener : outerExampleListeners) {
-            listener.afterOuterExample(new OuterExampleEvent(OUTER_EXAMPLE_NAME, element, resultSummary));
+        for (int i = outerExampleListeners.size() - 1; i >= 0; i--) {
+            outerExampleListeners.get(i).afterOuterExample(new OuterExampleEvent(OUTER_EXAMPLE_NAME, element, resultSummary));
         }
     }
 }
