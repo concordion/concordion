@@ -64,10 +64,14 @@ public class ConciseExpressionParser {
     private ConcordionStatement parseStatement(String statement, boolean includeConcordionPrefix) throws ConcordionSyntaxException {
         String[] components = statement.split("=", 2);
         String commandName = components[0];
-        if (components.length != 2) {
+        String valueAndAttributes;
+        if (components.length == 2) {
+            valueAndAttributes = components[1];
+        } else if (components.length == 1 && commandName.equals("example")) {
+            valueAndAttributes = "";
+        } else {
             throw new ConcordionSyntaxException(SimpleFormatter.format("Invalid statement '%s'. Expected an = sign and a right hand side to the statement.", statement));
         }
-        String valueAndAttributes = components[1];
 
         if (valueAndAttributes.contains("\"")) {
             throw new ConcordionSyntaxException(String.format("Invalid statement '%s'. Expected the right hand side to not contain double quotes.", statement));
