@@ -249,7 +249,7 @@ Without the concise syntax this would need to be written as:
     <tr>
       <td>
 <pre>      
-|[_add_](- "#z=add(#x, #y)") [Example Name](- "c:example=") | [Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
+|[_add_](- "#z=add(#x, #y)") [Example Name](- "c:example") | [Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
 | --------------------------                           | ----------------: | ---------------: | ---------------: |
 | Positive numbers                                     |                  1|                 0|                 1|
 | Negative numbers                                     |                  1|                -3|                -2|
