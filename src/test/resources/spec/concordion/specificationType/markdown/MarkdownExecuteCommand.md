@@ -185,57 +185,9 @@ or even:
   </table>
 </div>
 
-The first column doesn't have to have a concordion command associated with it:
-
-<div class="example">
-  <h3>Example</h3>
-  <table concordion:execute="#html=translate(#md)">
-    <tr>
-      <th concordion:set="#md">Markdown</th>
-      <th concordion:assert-equals="#html">Resultant HTML</th>
-    </tr>
-    <tr>
-      <td>
-<pre>      
-|[add][]Description|[Number 1][]|[Number 2][]|[Result][]|
-| ---------------- | ---------------- | --------- | ------- |
-| Simple sum       |                 4|          3|        7|
-
-[Number 1]: - "#x"
-[Number 2]: - "#y"
-[add]:      - "#z=add(#x, #y)"
-[Result]:   - "?=#z"
-</pre>
-      </td>
-      <td>
-<![CDATA[<table concordion:execute="#z=add(#x, #y)">
-  <thead>
-    <tr>
-      <th>Description</th>
-      <th concordion:set="#x">Number 1</th>
-      <th concordion:set="#y">Number 2</th>
-      <th concordion:assert-equals="#z">Result</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Simple sum </td>
-      <td>4</td>
-      <td>3</td>
-      <td>7</td>
-    </tr>
-  </tbody>
-</table>]]>     
-      </td>
-    </tr>
-  </table>
-</div>
-
 #### Concise Table Syntax
-To run each row of the table as an example, where the first column contains the example name, 
-a shortened syntax is available (which combines the execute command and the example command into one). 
-
-To do this, prefix the header text with the `@` symbol, which will be removed from the Concordion output. 
+To run each row of the table as an example, include only the execute command in the first column header, and
+specify the example name as the first column in each row. The markdown parser will automatically add an example command. 
 
 For example:
 
@@ -249,7 +201,7 @@ For example:
     <tr>
       <td>
 <pre>      
-|[@Example Name](- "#z=add(#x, #y)") | [Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
+|[Example Name](- "#z=add(#x, #y)") | [Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
 | --------------------------         | ----------------: | ---------------: | ---------------: |
 | Positive numbers                   |                  1|                 0|                 1|
 | Negative numbers                   |                  1|                -3|                -2|
