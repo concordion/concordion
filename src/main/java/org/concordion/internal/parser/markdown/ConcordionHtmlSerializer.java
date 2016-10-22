@@ -13,8 +13,8 @@ import org.pegdown.ast.*;
 public class ConcordionHtmlSerializer extends ToHtmlSerializer {
     private static final String URL_FOR_CONCORDION = "-";
     private static final String SOURCE_CONCORDION_NAMESPACE_PREFIX = "c";
-    private final ConciseExpressionParser statementParser; 
-    
+    private final ConciseExpressionParser statementParser;
+
     private ConcordionStatement pendingCommand = null;
     private boolean inHeaderNode;
     private boolean inExample;
@@ -28,9 +28,9 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
         super(new RunCommandLinkRenderer(SOURCE_CONCORDION_NAMESPACE_PREFIX, targetConcordionNamespacePrefix));
         statementParser = new ConciseExpressionParser(SOURCE_CONCORDION_NAMESPACE_PREFIX, targetConcordionNamespacePrefix, namespaces);
     }
-   
+
 //=======================================================================================================================
-// 
+//
     @Override
     public void visit(ExpLinkNode node) {
         if (URL_FOR_CONCORDION.equals(node.url)) {
@@ -75,7 +75,7 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
         escapeHtmlNodes = false;
         return new LinkNode(node.url, node.title, text);
     }
-    
+
     private void visit(LinkNode linkNode) {
         // Some commands only require an expression and don't need a text value to be passed. However, Markdown links always require link text.
         // Any text value that starts with italics will be set to an empty text value.
@@ -99,32 +99,24 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
 //=======================================================================================================================
 // concordion:execute on a table and concordion:verifyRows
 // The concordion:execute command is in the first (and only) cell of the first header row.
-// The header row containing the command has to be removed, and the command needs to be printed on the table row.    
-    
+// The header row containing the command has to be removed, and the command needs to be printed on the table row.
+// If the first column contains only the execute command, we assume that each row is to be executed as an example
+// (with the first column of each table row containing the example name) and we add the example command.
+
     @Override
     public void visit(TableNode tableNode) {
-        if (firstChildIsInstanceOf(tableNode, TableHeaderNode.class)) {
-            Node header = firstChildOf(tableNode);
-            if (firstChildIsInstanceOf(header, TableRowNode.class)) {
-                Node row = firstChildOf(header);
-                if (firstChildIsInstanceOf(row, TableCellNode.class)) {
-                    Node cell = firstChildOf(row);
-                    LinkNode linkNode = null;
-                    if (firstChildIsInstanceOf(cell, ExpLinkNode.class)) {
-                        linkNode = toLinkNode((ExpLinkNode) firstChildOf(cell));
-                    } else if (firstChildIsInstanceOf(cell, RefLinkNode.class)) {
-                        linkNode = toLinkNode((RefLinkNode) firstChildOf(cell));
-                    }
-                    if (linkNode != null) {
-                        if (linkNode.getTitle() == null) {
-                            throw new IllegalStateException(SimpleFormatter.format("No title found for link node '%s'", linkNode.getText()));
-                        }
-                        pendingCommand = statementParser.parse(linkNode.getTitle(), linkNode.getText());
-                        cell.getChildren().remove(0);
-                        if (linkNode.getText().startsWith("@")) {
-                            cell.getChildren().add(new ExpLinkNode("c:example=", URL_FOR_CONCORDION, new TextNode(linkNode.getText().substring(1))));
-                        }
-                    }
+        Node cell = firstColumnOfHeaderRow(tableNode);
+        if (cell != null) {
+            LinkNode linkNode = asLinkNode(cell);
+            if (linkNode != null && linkNode.getUrl().equals(URL_FOR_CONCORDION)) {
+                if (linkNode.getTitle() == null) {
+                    throw new IllegalStateException(SimpleFormatter.format("No title found for link node '%s'", linkNode.getText()));
+                }
+                int numberOfLinkNodesInFirstColumn = numberOfLinkNodeChildren(cell);
+                pendingCommand = statementParser.parse(linkNode.getTitle(), linkNode.getText());
+                cell.getChildren().remove(0);
+                if (numberOfLinkNodesInFirstColumn == 1 && statementParser.isExecuteCommand(pendingCommand)) {
+                    addExampleCommand(cell, linkNode);
                 }
             }
         }
@@ -141,9 +133,13 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
         visitChildren(node);
         printer.indent(-2).println().print('<').print('/').print(tag).print('>');
     }
-    
-//-----------------------------------------------------------------------------------------------------------------------
-// The concordion:set and concordion:assertEquals commands have to be on the TableColumnNode <th> tags, rather than child ExpLinkNodes.     
+
+    private void addExampleCommand(Node cell, LinkNode linkNode) {
+        cell.getChildren().add(new ExpLinkNode("c:example=", URL_FOR_CONCORDION, new TextNode(linkNode.getText())));
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+// The concordion:set and concordion:assertEquals commands have to be on the TableColumnNode <th> tags, rather than child ExpLinkNodes.
     @Override
     public void visit(TableCellNode node) {
         if (inTableHeader) {
@@ -166,7 +162,7 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
                 }
             }
         }
-        
+
         // Call the super visit(TableCellNode) method and override visit(TableColumnNode) below, so that the concordion commands are added to the <th> tag
         escapeHtmlNodes = true;
         super.visit(node);
@@ -244,7 +240,7 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
         currentExampleHeading = "";
         currentExampleLevel = 0;
     }
-    
+
     private String toExampleName(String expression) {
         String exampleName = expression;
         if (exampleName == null || exampleName.trim().isEmpty()) {
@@ -254,7 +250,7 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
         }
         return exampleName;
     }
-    
+
     private String generateName(String headingText) {
         StringBuilder sb = new StringBuilder(headingText.length());
         for (char c : headingText.toCharArray()) {
@@ -272,7 +268,7 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
     }
 
 //=======================================================================================================================
-// support methods    
+// support methods
     private void printConcordionCommandElement(ConcordionStatement command) {
         printer.print('<').print("span");
         printConcordionCommand(command);
@@ -290,19 +286,30 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
 
     private void printConcordionCommand(ConcordionStatement command) {
         printAttribute(command.command.name, command.command.value);
-        
+
         List<Attribute> attributes = command.attributes;
         for (Attribute attribute : attributes) {
             printAttribute(attribute.name, attribute.value);
         }
     }
-    
+
     private Node firstChildOf(Node node) {
         return node.getChildren().get(0);
     }
 
     private boolean firstChildIsInstanceOf(Node node, Class<?> clazz) {
         return node.getChildren().size() > 0 && clazz.isAssignableFrom(firstChildOf(node).getClass());
+    }
+
+    private int numberOfLinkNodeChildren(Node cell) {
+        int linkNodeCount = 0;
+        List<Node> children = cell.getChildren();
+        for (Node child : children) {
+            if (ExpLinkNode.class.isAssignableFrom(child.getClass()) || RefLinkNode.class.isAssignableFrom(child.getClass())) {
+                linkNodeCount ++;
+            }
+        }
+        return linkNodeCount;
     }
 
     public void visit(InlineHtmlNode node) {
@@ -319,5 +326,29 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
         } else {
             super.visit(node);
         }
+    }
+
+    private Node firstColumnOfHeaderRow(TableNode tableNode) {
+        Node cell = null;
+        if (firstChildIsInstanceOf(tableNode, TableHeaderNode.class)) {
+            Node header = firstChildOf(tableNode);
+            if (firstChildIsInstanceOf(header, TableRowNode.class)) {
+                Node row = firstChildOf(header);
+                if (firstChildIsInstanceOf(row, TableCellNode.class)) {
+                    cell = firstChildOf(row);
+                }
+            }
+        }
+        return cell;
+    }
+
+    private LinkNode asLinkNode(Node cell) {
+        LinkNode linkNode = null;
+        if (firstChildIsInstanceOf(cell, ExpLinkNode.class)) {
+            linkNode = toLinkNode((ExpLinkNode) firstChildOf(cell));
+        } else if (firstChildIsInstanceOf(cell, RefLinkNode.class)) {
+            linkNode = toLinkNode((RefLinkNode) firstChildOf(cell));
+        }
+        return linkNode;
     }
 }
