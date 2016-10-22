@@ -8,6 +8,10 @@
 <p>Since this part of the specification is in the outer example (ie. outside of the named examples), 
 the instance fields should have been created <span c:assertEquals="getFieldInitialisationCounter()">1</span> time.</p>
 
+<div c:example="before">
+    <p>A before method shouldn't affect anything</p>
+</div>
+
 <div c:example="example1">
 <p>Since this part of the specification is in the first example, the instance fields should have been created <span c:assertEquals="getFieldInitialisationCounter()">2</span> times.</p>
 </div>
