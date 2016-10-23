@@ -3,6 +3,10 @@
 ## Before and After method hooks
     
 The [before and after](BeforeAndAfterMethodHooks.md "c:run") annotations provide hooks to invoke fixture methods before or after an __example__, __specification__ or __suite__.
+
+## Field scoping
+    
+The [ConcordionScoped](ConcordionScoped.md "c:run") annotation allows you to share fields across a specification when the field is expensive to initialise, for example a browser instance or database connection.
         
 ## Configuration
     
