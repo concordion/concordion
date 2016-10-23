@@ -55,9 +55,13 @@ Running the specification [BeforeAndAfterLoggingWithListener](BeforeAndAfterLogg
 |Extension 1: beforeProcessingSpecification |
 |Extension 2: beforeProcessingSpecification |
 |Before specification  |
+|Extension 1: Before outer example [Outer]  |
+|Extension 2: Before outer example [Outer]  |
 |Before [Outer]        |
 |In specification      |
 |After [Outer]         |
+|Extension 2: After outer example [Outer]  |
+|Extension 1: After outer example [Outer]  |
 |Extension 1: Before example example1 |
 |Extension 2: Before example example1 |
 |Before example1       |

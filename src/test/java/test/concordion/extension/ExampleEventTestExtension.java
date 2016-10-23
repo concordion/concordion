@@ -1,24 +1,25 @@
 package test.concordion.extension;
 
-import java.io.PrintStream;
 import java.util.List;
 
-import org.concordion.api.ResultSummary;
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.api.listener.ExampleEvent;
 import org.concordion.api.listener.ExampleListener;
+import org.concordion.api.listener.OuterExampleEvent;
+import org.concordion.api.listener.OuterExampleListener;
 import org.concordion.api.listener.SpecificationProcessingEvent;
 import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.internal.util.SimpleFormatter;
 
-public class ExampleEventTestExtension implements ConcordionExtension, SpecificationProcessingListener, ExampleListener {
+public class ExampleEventTestExtension implements ConcordionExtension, SpecificationProcessingListener, OuterExampleListener, ExampleListener {
 	private String name;
 	private List<String> log;
 	    
 	@Override
 	public void addTo(ConcordionExtender concordionExtender) {
 		concordionExtender.withSpecificationProcessingListener(this);
+		concordionExtender.withOuterExampleListener(this);
 		concordionExtender.withExampleListener(this);
 		
 	}
@@ -43,6 +44,16 @@ public class ExampleEventTestExtension implements ConcordionExtension, Specifica
 		log("afterProcessingSpecification");		
 	}
 	
+    @Override
+    public void beforeOuterExample(OuterExampleEvent event) {
+        log(SimpleFormatter.format("Before outer example %s", event.getExampleName()));
+    }
+
+    @Override
+    public void afterOuterExample(OuterExampleEvent event) {
+        log(SimpleFormatter.format("After outer example %s", event.getExampleName()));
+    }
+    
 	@Override
 	public void beforeExample(ExampleEvent event) {
 		log(SimpleFormatter.format("Before example %s", event.getExampleName()));
