@@ -64,15 +64,19 @@ public class ConciseExpressionParser {
     private ConcordionStatement parseStatement(String statement, boolean includeConcordionPrefix) throws ConcordionSyntaxException {
         String[] components = statement.split("=", 2);
         String commandName = components[0];
-        if (components.length != 2) {
+        String valueAndAttributes;
+        if (components.length == 2) {
+            valueAndAttributes = components[1];
+        } else if (components.length == 1 && commandName.equals("example")) {
+            valueAndAttributes = "";
+        } else {
             throw new ConcordionSyntaxException(SimpleFormatter.format("Invalid statement '%s'. Expected an = sign and a right hand side to the statement.", statement));
         }
-        String valueAndAttributes = components[1];
-        
+
         if (valueAndAttributes.contains("\"")) {
             throw new ConcordionSyntaxException(String.format("Invalid statement '%s'. Expected the right hand side to not contain double quotes.", statement));
         }
-        
+
         return parseCommandValueAndAttributes(commandName, valueAndAttributes, includeConcordionPrefix);
     }
 
@@ -85,15 +89,15 @@ public class ConciseExpressionParser {
         if (!commandValueMatcher.matches()) {
             throw new IllegalStateException(SimpleFormatter.format("Unexpected match failure for ''", commandValueAndAttributes));
         }
-        
+
         String match = commandValueMatcher.group(1);
         String commandValue = match;
         ConcordionStatement statement = new ConcordionStatement((includeConcordionPrefix ? targetPrefix : "") + commandName, commandValue);
-        
+
         if (match.length() < commandValueAndAttributes.length()) {
             String attributesStr = commandValueAndAttributes.substring(match.length());
             String[] attributes = attributesStr.trim().split("\\s+");
-            
+
             for (String attribute : attributes) {
                 String[] parts = attribute.split("=", 2);
                 String attributeName = parts[0];
@@ -104,5 +108,9 @@ public class ConciseExpressionParser {
             }
         }
         return statement;
+    }
+
+    public boolean isExecuteCommand(ConcordionStatement commandStatement) {
+        return commandStatement.command.name.equals(targetPrefix + "execute");
     }
 }
