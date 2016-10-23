@@ -39,7 +39,7 @@ public class FixtureRunner {
                                 fixture,
                                 actualResultSummary.getImplementationStatus());
                     } finally {
-                       fixture.afterProcessExample(example);
+                        fixture.afterProcessExample(example);
                     }
                 } else {
                     actualResultSummary = concordion.process(fixture);
