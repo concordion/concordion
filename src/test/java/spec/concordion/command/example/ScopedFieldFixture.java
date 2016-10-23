@@ -10,13 +10,19 @@ import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
 public class ScopedFieldFixture {
-    
+
     @ConcordionScoped(Scope.EXAMPLE)
     private ScopedObjectHolder<AtomicInteger> exampleScopedCounter = new ScopedObjectHolder<AtomicInteger>() {
         @Override
         protected AtomicInteger create() {
             return new AtomicInteger();
         }
+
+        @Override
+        protected void destroy(AtomicInteger counter) {
+            counter.set(-1);
+        }
+
     };
 
     @ConcordionScoped(Scope.SPECIFICATION)
@@ -24,6 +30,11 @@ public class ScopedFieldFixture {
         @Override
         protected AtomicInteger create() {
             return new AtomicInteger();
+        }
+
+        @Override
+        protected void destroy(AtomicInteger counter) {
+            counter.set(-1);
         }
     };
 
