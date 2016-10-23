@@ -32,17 +32,14 @@ public class FixtureRunner {
             try {
                 ImplementationStatusChecker statusChecker;
                 if (example != null) {
-                    // TODO Nigel: Is it safe to move this to the AnnounceExampleListener?
-                    // I'm worried about management of scoped object holder
-                    // fixture.beforeExample(example);
+                    fixture.beforeProcessExample(example);
                     try {
                         actualResultSummary = concordion.processExample(fixture, example);
                         statusChecker = ImplementationStatusChecker.getImplementationStatusChecker(
                                 fixture,
                                 actualResultSummary.getImplementationStatus());
                     } finally {
-                       // TODO Nigel: Is it safe to move this to the AnnounceExampleListener?
-                       // fixture.afterExample(example);
+                       fixture.afterProcessExample(example);
                     }
                 } else {
                     actualResultSummary = concordion.process(fixture);

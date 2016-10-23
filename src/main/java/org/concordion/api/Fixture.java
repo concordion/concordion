@@ -68,14 +68,26 @@ public interface Fixture extends FixtureDeclarations {
     void afterSpecification();
 
     /**
+     * Not currently used.
+     * @param exampleName
+     */
+    void beforeProcessExample(String exampleName);
+
+    /**
      * Call methods annotated with <code>@BeforeExample</code>.
      * @param exampleName the name of the example being invoked  
      */
     void beforeExample(String exampleName);
-
+    
     /**
-     * Call methods annotated with <code>@AfterExample</code> and destroy example scoped fields.   
+     * Call methods annotated with <code>@AfterExample</code>.   
      * @param exampleName the name of the example being invoked  
      */
     void afterExample(String exampleName);
+    
+    /**
+     * Destroy example scoped fields.
+     * @param exampleName
+     */
+    void afterProcessExample(String exampleName);
 }
