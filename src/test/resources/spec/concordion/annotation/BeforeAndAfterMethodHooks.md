@@ -31,12 +31,15 @@ Running the specification [BeforeAndAfterLogging](BeforeAndAfterLogging.md "c:ru
 |----------------------|
 |Before specification  |
 |Before [Outer]        |
+|In before example     |
 |In specification      |
 |After [Outer]         |
 |Before example1       |
+|In before example     |
 |In example 1          |
 |After example1        |
 |Before example2       |
+|In before example     |
 |In example 2          |
 |After example2        |
 |After specification   |
