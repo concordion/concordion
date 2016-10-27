@@ -347,7 +347,7 @@ HTML entities in the text value are automatically escaped.
 | -------------- | ------------- | ------------- |
 | bar            |       a &lt; b   |            &lt;x&gt;|
 </pre></td>
-      <td>&lt;table concordion:execute="foo()"&gt; &lt;thead&gt; &lt;tr&gt; &lt;th&gt;&lt;/th&gt; &lt;th concordion:set="#d"&gt;a &amp;lt; b&lt;/th&gt; &lt;th concordion:assert-equals="#d"&gt;&amp;lt;x&amp;gt;&lt;/th&gt; &lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td&gt;bar &lt;/td&gt; &lt;td&gt;a &amp;lt; b &lt;/td&gt; &lt;td&gt;&amp;lt;x&amp;gt;&lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt;</td>
+      <td>&lt;table concordion:execute="foo()"&gt; &lt;thead&gt; &lt;tr&gt; &lt;th concordion:example=""&gt;foo&lt;/th&gt; &lt;th concordion:set="#d"&gt;a &amp;lt; b&lt;/th&gt; &lt;th concordion:assert-equals="#d"&gt;&amp;lt;x&amp;gt;&lt;/th&gt; &lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td&gt;bar &lt;/td&gt; &lt;td&gt;a &amp;lt; b &lt;/td&gt; &lt;td&gt;&amp;lt;x&amp;gt;&lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt;</td>
     </tr>
   </table>
 </div>

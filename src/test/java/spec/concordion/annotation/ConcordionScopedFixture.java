@@ -1,4 +1,4 @@
-package spec.concordion.command.example;
+package spec.concordion.annotation;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -9,21 +9,32 @@ import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
-public class ScopedFieldFixture {
-    
-    @ConcordionScoped(Scope.EXAMPLE)
+public class ConcordionScopedFixture {
+
+    @org.concordion.api.ConcordionScoped(Scope.EXAMPLE)
     private ScopedObjectHolder<AtomicInteger> exampleScopedCounter = new ScopedObjectHolder<AtomicInteger>() {
         @Override
         protected AtomicInteger create() {
             return new AtomicInteger();
         }
+
+        @Override
+        protected void destroy(AtomicInteger counter) {
+            counter.set(-1);
+        }
+
     };
 
-    @ConcordionScoped(Scope.SPECIFICATION)
+    @org.concordion.api.ConcordionScoped(Scope.SPECIFICATION)
     private ScopedObjectHolder<AtomicInteger> specScopedCounter = new ScopedObjectHolder<AtomicInteger>() {
         @Override
         protected AtomicInteger create() {
             return new AtomicInteger();
+        }
+
+        @Override
+        protected void destroy(AtomicInteger counter) {
+            counter.set(-1);
         }
     };
 

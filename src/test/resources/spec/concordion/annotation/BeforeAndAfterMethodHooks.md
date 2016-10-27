@@ -25,18 +25,21 @@ Note that for the suite hooks to be run, they must exist on the fixture that is 
 
 ## [Example] (- "example-hooks")
 
-Running the specification [BeforeAndAfterLogging](BeforeAndAfterLogging.md "c:run") which logs messages in its `@BeforeSpecification`, `@BeforeExample`, `@AfterExample` and `@AfterSpecification` methods, as well as in the specification and examples, results in the following : 
+Running the specification [BeforeAndAfterLogging.md](- "simulateRun(#TEXT)") ([output](BeforeAndAfterLogging.html)) which logs messages in its `@BeforeSpecification`, `@BeforeExample`, `@AfterExample` and `@AfterSpecification` methods, as well as in the specification and examples, results in the following : 
 
 |[checkRows][] [text][]|
 |----------------------|
 |Before specification  |
 |Before [Outer]        |
+|In before example     |
 |In specification      |
 |After [Outer]         |
 |Before example1       |
+|In before example     |
 |In example 1          |
 |After example1        |
 |Before example2       |
+|In before example     |
 |In example 2          |
 |After example2        |
 |After specification   |
