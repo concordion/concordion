@@ -26,8 +26,7 @@ public class CommandExtension implements ConcordionExtension {
             public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
             }
 
-            public List<CommandCall> getExamples(CommandCall command) {
-                return Collections.emptyList();
+            public void modifyCommandCallTree(CommandCall element, List<CommandCall> examples, List<CommandCall> beforeExamples) {
             }
 
             public void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
@@ -35,17 +34,6 @@ public class CommandExtension implements ConcordionExtension {
             
             public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
                 stream.println(commandCall.getElement().getText());
-            }
-
-            public boolean isExample() {
-                return false;
-            }
-
-            public void executeAsExample(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
-            }
-
-            public boolean shouldExecuteEvenWhenAllChildCommandsAreExamples() {
-                return false;
             }
         });
     }

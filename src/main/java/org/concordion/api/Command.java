@@ -11,25 +11,11 @@ public interface Command {
 
     void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder);
 
-    List<CommandCall> getExamples(CommandCall command);
-
-    boolean isExample();
-
-    void executeAsExample(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder);
-
     /**
-     *
-     * Basically we have a rule to only run examples if there are execute statements
-     * in the example. However, with the table execute command, the execute statement
-     * is part of the table header - so the "one example per row" examples were not
-     * executing. This method was my work-around on top of a work-around.
-     *
-     * I do actually prefer a marker interface in this case. However, I don't actually
-     * like marker interfaces because there is no way for a sub-class to remove the marker.
-     *
-     * In general, this method should return false.
-     *
-     * @return true if Concordion should not check for any non-example children and just run the command anyway
+     *  Used to modify the command call tree post parsing and before execution. Some things that might be done are:
+     *  * Remove the example command from the parent object and put it in the examples list (or before examples)
+     *  * Add new commands to examples or before examples
+     *  * Modify the tree to put table or list execute commands on the right children elements.
      */
-    boolean shouldExecuteEvenWhenAllChildCommandsAreExamples();
+    void modifyCommandCallTree(CommandCall element, List<CommandCall> examples, List<CommandCall> beforeExamples);
 }

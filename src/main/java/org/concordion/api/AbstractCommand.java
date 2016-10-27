@@ -19,15 +19,7 @@ public abstract class AbstractCommand implements Command {
     public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
     }
 
-    public boolean isExample() {
-        return false;
-    }
-
-    public void executeAsExample(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
-    }
-
-    public boolean shouldExecuteEvenWhenAllChildCommandsAreExamples() {
-        return false;
+    public void modifyCommandCallTree(CommandCall element, List<CommandCall> examples, List<CommandCall> beforeExamples) {
     }
 
 }

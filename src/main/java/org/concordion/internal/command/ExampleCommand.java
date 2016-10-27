@@ -2,6 +2,7 @@ package org.concordion.internal.command;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.concordion.api.*;
@@ -29,12 +30,9 @@ public class ExampleCommand extends AbstractCommand {
         listeners.remove(exampleListener);
     }
     
-    public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
-    }
+    public void execute(CommandCall node, Evaluator evaluator, ResultRecorder resultRecorder) {
 
-    public void executeAsExample(CommandCall node, Evaluator evaluator, ResultRecorder resultRecorder) {
-        
-        String exampleName = node.getExpression();
+        String exampleName = getExampleName(node);
         
         resultRecorder.setSpecificationDescription(
                 specificationDescriber.getDescription(node.getResource(), exampleName));
@@ -49,6 +47,28 @@ public class ExampleCommand extends AbstractCommand {
         setupCommandForExample(node, resultRecorder, exampleName);
 
         announceAfterExample(exampleName, node.getElement(), resultRecorder);
+    }
+
+    private String getExampleName(CommandCall node) {
+        return node.getExpression();
+    }
+
+    @Override
+    public void modifyCommandCallTree(CommandCall element, List<CommandCall> examples, List<CommandCall> beforeExamples) {
+        super.modifyCommandCallTree(element, examples, beforeExamples);
+
+        element.getParent().getChildren().remove(element);
+        element.setParent(null);
+
+        if (this.isBeforeExample(element)) {
+            beforeExamples.add(element);
+        } else {
+            examples.add(element);
+        }
+    }
+
+    protected boolean isBeforeExample(CommandCall element) {
+        return element.getExpression().equals("before");
     }
 
     public static void setupCommandForExample(CommandCall node, ResultRecorder resultRecorder, String exampleName) {
@@ -71,10 +91,6 @@ public class ExampleCommand extends AbstractCommand {
             fixtureNode.appendText(note);
             node.getElement().prependChild(fixtureNode);
         }
-    }
-
-    public boolean isExample() {
-        return true;
     }
 
     public void setSpecificationDescriber(SpecificationDescriber specificationDescriber) {

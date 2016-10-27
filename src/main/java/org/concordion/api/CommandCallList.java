@@ -34,7 +34,7 @@ public class CommandCallList {
             call.verify(evaluator, resultRecorder);
         }
     }
-    
+
     public void append(CommandCall commandCall) {
         commandCalls.add(commandCall);
     }
@@ -49,5 +49,9 @@ public class CommandCallList {
 
     public Collection<CommandCall> asCollection() {
         return unmodifiableList(commandCalls);
+    }
+
+    public void remove(CommandCall element) {
+        commandCalls.remove(element);
     }
 }

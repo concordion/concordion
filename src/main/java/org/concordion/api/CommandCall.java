@@ -2,10 +2,7 @@ package org.concordion.api;
 
 import org.concordion.internal.util.Check;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Nested CommandCalls form an abstract syntax tree. (The XML is the concrete
@@ -15,18 +12,24 @@ public class CommandCall {
 
     private final CommandCallList children = new CommandCallList();
     private final Command command;
+    private CommandCall parent;
     private final String expression;
     private final Resource resource;
     private Element element;
     private Map<String, String> parameters = Collections.emptyMap();
 
-    public CommandCall(Command command, Element element, String expression, Resource resource) {
+    public CommandCall(CommandCall parent, Command command, Element element, String expression, Resource resource) {
         this.command = command;
+        this.parent = parent;
         this.element = element;
         this.expression = expression;
         this.resource = resource;
     }
-    
+
+    public CommandCall getParent() {
+        return this.parent;
+    }
+
     public void setUp(Evaluator evaluator, ResultRecorder resultRecorder) {
         command.setUp(this, evaluator, resultRecorder);
     }
@@ -91,25 +94,19 @@ public class CommandCall {
         return null;
     }
 
-    public boolean shouldExecuteEvenWhenAllChildCommandsAreExamples() {
-        return this.getCommand().shouldExecuteEvenWhenAllChildCommandsAreExamples();
+    public void modifyTree(List<CommandCall> examples, List<CommandCall> beforeExamples) {
+        this.getCommand().modifyCommandCallTree(this, examples, beforeExamples);
     }
 
-    /**
-     *
-     * Generally, examples are not executable. This method returns true if there is
-     * nothing to execute - ie that there are only example children. Note that 'no children' is true
-     * for 'only example children'
-     *
-     * @return true if all children are examples.
-     */
-    public boolean allChildCommandsAreExamples() {
-        Collection<CommandCall> children = getChildren().asCollection();
-        for (CommandCall child : children) {
-            if (!(child.getCommand().isExample())) {
-                return false;
-            }
+    public void setParent(CommandCall parent) {
+        if (getParent() != null) {
+            getParent().getChildren().remove(this);
         }
-        return true;
+
+        this.parent = parent;
+
+        if (parent != null) {
+            parent.appendChild(this);
+        }
     }
 }

@@ -35,7 +35,6 @@
         <tr><td>1</td><td>A database row</td></tr>
         <tr><td>2</td><td>Another database row</td></tr>
     </table>
-
 </div>
 
 <div c:example="example1">
@@ -155,6 +154,26 @@
             <td>11</td>
         </tr>
     </table>
+
+    <table c:execute="#counter = incrementCounter()">
+        <tr>
+            <th c:example="">Example Name</th>
+            <th c:assertEquals="#counter">Counter value</th>
+        </tr>
+        <tr>
+            <td>4th Table Example</td>
+            <td>11</td>
+        </tr>
+        <tr>
+            <td>5th Table Example</td>
+            <td>11</td>
+        </tr>
+        <tr>
+            <td>6th Table Example</td>
+            <td>11</td>
+        </tr>
+    </table>
+
 </div>
 
 <div c:example="runresults">

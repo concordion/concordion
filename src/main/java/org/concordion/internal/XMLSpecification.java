@@ -20,7 +20,7 @@ public class XMLSpecification implements SpecificationByExample {
     private final List<CommandCall> beforeExamples;
     private final String specificationDescription;
 
-    public XMLSpecification(CommandCall rootCommandNode) {
+    public XMLSpecification(CommandCall rootCommandNode, List<CommandCall> examples, List<CommandCall> beforeExamples) {
         this.rootCommandNode = rootCommandNode;
         if (!(rootCommandNode.getCommand() instanceof SpecificationCommand)) {
             throw new IllegalStateException("Expected root command to be a SpecificationCommand");
@@ -29,27 +29,17 @@ public class XMLSpecification implements SpecificationByExample {
         specificationCommand.start(rootCommandNode);
         specificationDescription = specificationCommand.getSpecificationDescription(rootCommandNode);
 
-        examples = new ArrayList<CommandCall>();
-        beforeExamples = new ArrayList<CommandCall>();
-
-        List<CommandCall> allExamples = findExamples(rootCommandNode);
-
-        for (CommandCall call: allExamples) {
-            if (call.getExpression().equalsIgnoreCase("before")) {
-                beforeExamples.add(call);
-            } else {
-                examples.add(call);
-            }
-        }
+        this.examples = new ArrayList<CommandCall>(examples);
+        this.beforeExamples = new ArrayList(beforeExamples);
     }
 
     public void processNode(CommandCall node, Evaluator evaluator, ResultRecorder resultRecorder) {
 
-        if (node.shouldExecuteEvenWhenAllChildCommandsAreExamples() || !node.allChildCommandsAreExamples()) {
+        if (!node.getChildren().isEmpty()) {
             for (CommandCall before: beforeExamples) {
                 SummarizingResultRecorder beforeResultRecorder = new SummarizingResultRecorder();
                 beforeResultRecorder.setSpecificationDescription("Running before for example " + node.getExpression());
-                before.getCommand().executeAsExample(before, evaluator, beforeResultRecorder);
+                before.getCommand().execute(before, evaluator, beforeResultRecorder);
                 String errorText = null;
                 if (beforeResultRecorder.hasExceptions()) {
                     errorText = SimpleFormatter.format("Exceptions occurred in the 'before' example in '%s'. See the output specification for details.\n",
@@ -68,11 +58,7 @@ public class XMLSpecification implements SpecificationByExample {
             }
         }
 
-        if (node.getCommand().isExample()) {
-            node.getCommand().executeAsExample(node, evaluator, resultRecorder);
-        } else {
-            node.execute(evaluator, resultRecorder);
-        }
+        node.execute(evaluator, resultRecorder);
     }
 
     public void process(Evaluator evaluator, ResultRecorder resultRecorder) {
@@ -115,7 +101,7 @@ public class XMLSpecification implements SpecificationByExample {
 
         List<String> commands = new ArrayList<String>();
 
-        if (rootCommandNode.shouldExecuteEvenWhenAllChildCommandsAreExamples() || !rootCommandNode.allChildCommandsAreExamples()) {
+        if (!rootCommandNode.getChildren().isEmpty()) {
             // Add the main spec first to increase the chance that it will be run first by jUnit.
             commands.add(testDescription);
         }
@@ -134,24 +120,6 @@ public class XMLSpecification implements SpecificationByExample {
 
     private String makeJunitTestName(CommandCall exampleCall) {
         return exampleCall.getExpression();
-    }
-
-    private List<CommandCall> findExamples(CommandCall node) {
-
-        List<CommandCall> commands = new ArrayList<CommandCall>();
-
-        List<CommandCall> thisNodeCommands = node.getCommand().getExamples(node);
-        for (CommandCall command: thisNodeCommands) {
-            commands.add(command);
-        }
-
-        if (node.hasChildCommands()) {
-            for (CommandCall child : node.getChildren().asCollection()) {
-                commands.addAll(findExamples(child));
-            }
-        }
-
-        return commands;
     }
 
     public void finish() {

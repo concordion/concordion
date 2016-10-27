@@ -37,7 +37,7 @@ public class RunTotalsFixture {
 		final RunCommand command = new RunCommand();
 		command.setRunnerFactory(new SystemPropertiesRunnerFactory());
 
-		final CommandCall commandCall = new CommandCall(command, element, "concordion", resource);
+		final CommandCall commandCall = new CommandCall(null, command, element, "concordion", resource);
 
 		final SummarizingResultRecorder recorder = new SummarizingResultRecorder();
 		recorder.setSpecificationDescription("");

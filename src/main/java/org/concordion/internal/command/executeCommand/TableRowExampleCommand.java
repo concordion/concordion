@@ -33,27 +33,17 @@ public class TableRowExampleCommand implements Command {
     }
 
     @Override
-    public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
-
-    }
-
-    @Override
     public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
         executeCommand.verify(commandCall, evaluator, resultRecorder);
     }
 
     @Override
-    public List<CommandCall> getExamples(CommandCall command) {
-        return Collections.emptyList();
+    public void modifyCommandCallTree(CommandCall element, List<CommandCall> examples, List<CommandCall> beforeExamples) {
+
     }
 
     @Override
-    public boolean isExample() {
-        return true;
-    }
-
-    @Override
-    public void executeAsExample(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+    public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
 
         executeCommand.announceBeforeExample(exampleName, detailRow.getElement(), resultRecorder);
 
@@ -70,9 +60,4 @@ public class TableRowExampleCommand implements Command {
 
         executeCommand.announceAfterExample(exampleName, detailRow.getElement(), resultRecorder);
     }
-
-    public boolean shouldExecuteEvenWhenAllChildCommandsAreExamples() {
-        return true;
-    }
-
 }

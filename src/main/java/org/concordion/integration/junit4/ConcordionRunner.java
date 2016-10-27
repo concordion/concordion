@@ -93,7 +93,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
             }
 
             if (setOfExamples.contains(example)) {
-                throw new InitializationError("Specification has duplicate example " + example);
+                throw new InitializationError("Specification has duplicate example: '" + example + "'");
             }
             setOfExamples.add(example);
         }
