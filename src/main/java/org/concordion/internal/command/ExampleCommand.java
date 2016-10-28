@@ -57,8 +57,14 @@ public class ExampleCommand extends AbstractCommand {
     public void modifyCommandCallTree(CommandCall element, List<CommandCall> examples, List<CommandCall> beforeExamples) {
         super.modifyCommandCallTree(element, examples, beforeExamples);
 
-        element.getParent().getChildren().remove(element);
+        CommandCall oldParent = element.getParent();
         element.setParent(null);
+
+        // we have to pull the example command to be the parent of the execute command
+        // on the TR element
+        if (element.getElement().isNamed("td")) {
+            oldParent.setParent(element);
+        }
 
         if (this.isBeforeExample(element)) {
             beforeExamples.add(element);
