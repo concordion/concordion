@@ -125,20 +125,6 @@ public class ExecuteCommand extends AbstractCommand {
     }
 
 
-//    @Override
-//    public List<CommandCall> getExamples(CommandCall command) {
-//        List<CommandCall> superExamples =  super.getExamples(command);
-//
-//        ExecuteCommandStrategy executeCommandStrategy = getStrategy(command);
-//        List<CommandCall> strategyExamples = executeCommandStrategy.getExamples(command);
-//
-//        List<CommandCall> allExamples = new ArrayList<CommandCall>();
-//        allExamples.addAll(superExamples);
-//        allExamples.addAll(strategyExamples);
-//
-//        return allExamples;
-//    }
-
     @Override
     public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
         ExecuteCommandStrategy executeCommandStrategy = getStrategy(commandCall);
