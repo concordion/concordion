@@ -10,10 +10,10 @@ public class FixtureWithoutExampleInitialisationFixture {
 
     private static AtomicInteger staticFieldCounter = new AtomicInteger();
     
-    private int counter = incrementOnEachCall();
+    private int counter;
 
-    private int incrementOnEachCall() {
-        return staticFieldCounter.incrementAndGet();
+    public FixtureWithoutExampleInitialisationFixture() {
+        counter = staticFieldCounter.incrementAndGet();
     }
 
     public int getFieldInitialisationCounter() {

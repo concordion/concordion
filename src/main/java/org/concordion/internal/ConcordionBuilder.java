@@ -415,7 +415,6 @@ public class ConcordionBuilder implements ConcordionExtender {
 
     public ConcordionExtender withExampleListener(ExampleListener listener) {
 		exampleCommand.addExampleListener(listener);
-        executeCommand.addExampleListener(listener);
 		return this;
 	}
 

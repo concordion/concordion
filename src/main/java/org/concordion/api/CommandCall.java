@@ -17,6 +17,8 @@ public class CommandCall {
     private final Resource resource;
     private Element element;
     private Map<String, String> parameters = Collections.emptyMap();
+    private Map<String, Object> constantsForExecution = new HashMap();
+    private boolean bypassExecution = false;
 
     public CommandCall(CommandCall parent, Command command, Element element, String expression, Resource resource) {
         this.command = command;
@@ -26,15 +28,46 @@ public class CommandCall {
         this.resource = resource;
     }
 
+    /*
+
+    Sometimes during tree modification, we get command nodes 'left over' that are kept in the
+    execution tree for consistancy, but can be skipped during execution. These are generally execute nodes
+    on a table or a list where we copy the commands onto the other table or list nodes.
+
+    Due to the way tree modification works, it's risky removing these from the execution tree
+    completely - so we set a bypass flag on them.
+
+     */
+    public void setBypassExecution(boolean bypassExecution) {
+        this.bypassExecution = bypassExecution;
+    }
+
+    public boolean bypassExecution() {
+        return this.bypassExecution;
+    }
+
+    public void setConstantForExecution(String name, Object value) {
+        constantsForExecution.put(name, value);
+    }
+
+    public Object getConstantForExecution(String levelVariable) {
+        return constantsForExecution.get(levelVariable);
+    }
+
     public CommandCall getParent() {
         return this.parent;
     }
 
     public void setUp(Evaluator evaluator, ResultRecorder resultRecorder) {
+
         command.setUp(this, evaluator, resultRecorder);
     }
 
     public void execute(Evaluator evaluator, ResultRecorder resultRecorder) {
+        for (Map.Entry<String, Object> entry: constantsForExecution.entrySet()) {
+            evaluator.setVariable(entry.getKey(), entry.getValue());
+        }
+
         command.execute(this, evaluator, resultRecorder);
     }
 
@@ -109,4 +142,5 @@ public class CommandCall {
             parent.appendChild(this);
         }
     }
+
 }
