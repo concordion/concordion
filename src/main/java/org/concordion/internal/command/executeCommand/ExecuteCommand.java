@@ -67,7 +67,14 @@ public class ExecuteCommand extends AbstractCommand {
         Map<Integer, CommandCall> headerCommands = populateCommandCallByColumnMap(table, commandCall);
 
         // copy the execute to each detail row.
-        for (Row row : table.getDetailRows()) {
+        Row[] detailRows = table.getDetailRows();
+        for (int i = 0; i < detailRows.length; i++) {
+            Row row = detailRows[i];
+
+            if (row.getCells().length != table.getLastHeaderRow().getCells().length) {
+                throw new RuntimeException("The <table> 'execute' command only supports rows with an equal number of columns. Detail row " + (i + 1) + " has a different number of columns to the last header row");
+            }
+
             CommandCall rowCommand = duplicateCommandForDifferentElement(commandCall, row.getElement());
             rowCommand.transferToParent(commandCall);
             Element[] cells = row.getCells();
