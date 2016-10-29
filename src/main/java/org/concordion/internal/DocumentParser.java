@@ -40,13 +40,13 @@ public class DocumentParser {
         nu.xom.Element xomElement = document.getRootElement();
         CommandCall rootCommandCall = new CommandCall(null, createSpecificationCommand(), new Element(xomElement), "", resource);
         generateCommandCallTree(xomElement, rootCommandCall, resource);
-        List<CommandCall> examples = new ArrayList<CommandCall>();
+        List<ExampleCommandCall> examples = new ArrayList<ExampleCommandCall>();
         List<CommandCall> beforeExamples = new ArrayList<CommandCall>();
         modifyCommandCallTree(rootCommandCall, examples, beforeExamples);
         return new XMLSpecification(rootCommandCall, examples, beforeExamples);
     }
 
-    private void modifyCommandCallTree(CommandCall rootCommandCall, List<CommandCall> examples, List<CommandCall> beforeExamples) {
+    private void modifyCommandCallTree(CommandCall rootCommandCall, List<ExampleCommandCall> examples, List<CommandCall> beforeExamples) {
 
         rootCommandCall.modifyTree(examples, beforeExamples);
 

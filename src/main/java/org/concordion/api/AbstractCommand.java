@@ -19,7 +19,7 @@ public abstract class AbstractCommand implements Command {
     public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
     }
 
-    public void modifyCommandCallTree(CommandCall element, List<CommandCall> examples, List<CommandCall> beforeExamples) {
+    public void modifyCommandCallTree(CommandCall element, List<ExampleCommandCall> examples, List<CommandCall> beforeExamples) {
     }
 
 }

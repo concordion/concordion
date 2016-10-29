@@ -7,10 +7,7 @@ import java.util.List;
 import org.concordion.api.*;
 import org.concordion.api.listener.ExampleEvent;
 import org.concordion.api.listener.ExampleListener;
-import org.concordion.internal.FailFastException;
-import org.concordion.internal.ImplementationStatusChecker;
-import org.concordion.internal.SpecificationDescriber;
-import org.concordion.internal.SummarizingResultRecorder;
+import org.concordion.internal.*;
 
 public class ExampleCommand extends AbstractCommand {
 
@@ -59,7 +56,7 @@ public class ExampleCommand extends AbstractCommand {
     }
 
     @Override
-    public void modifyCommandCallTree(CommandCall element, List<CommandCall> examples, List<CommandCall> beforeExamples) {
+    public void modifyCommandCallTree(CommandCall element, List<ExampleCommandCall> examples, List<CommandCall> beforeExamples) {
         super.modifyCommandCallTree(element, examples, beforeExamples);
 
         CommandCall oldParent = element.getParent();
@@ -74,7 +71,7 @@ public class ExampleCommand extends AbstractCommand {
         if (this.isBeforeExample(element)) {
             beforeExamples.add(element);
         } else {
-            examples.add(element);
+            examples.add(new ExampleCommandCall(this.getExampleName(element), element));
         }
     }
 

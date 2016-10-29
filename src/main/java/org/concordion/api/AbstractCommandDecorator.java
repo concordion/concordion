@@ -36,7 +36,7 @@ public abstract class AbstractCommandDecorator implements Command {
     }
 
     @Override
-    public void modifyCommandCallTree(final CommandCall element, final List<CommandCall> examples, final List<CommandCall> beforeExamples) {
+    public void modifyCommandCallTree(final CommandCall element, final List<ExampleCommandCall> examples, final List<CommandCall> beforeExamples) {
         command.modifyCommandCallTree(element, examples, beforeExamples);
     }
 

@@ -1,7 +1,6 @@
 package test.concordion.extension;
 
 import java.io.PrintStream;
-import java.util.Collections;
 import java.util.List;
 
 import org.concordion.api.Command;
@@ -10,6 +9,7 @@ import org.concordion.api.Evaluator;
 import org.concordion.api.ResultRecorder;
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
+import org.concordion.api.ExampleCommandCall;
 
 public class CommandExtension implements ConcordionExtension {
 
@@ -26,7 +26,7 @@ public class CommandExtension implements ConcordionExtension {
             public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
             }
 
-            public void modifyCommandCallTree(CommandCall element, List<CommandCall> examples, List<CommandCall> beforeExamples) {
+            public void modifyCommandCallTree(CommandCall element, List<ExampleCommandCall> examples, List<CommandCall> beforeExamples) {
             }
 
             public void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {

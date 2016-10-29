@@ -6,12 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.concordion.api.*;
-import org.concordion.api.listener.ExampleEvent;
 import org.concordion.api.listener.ExampleListener;
 import org.concordion.api.listener.ExecuteEvent;
 import org.concordion.api.listener.ExecuteListener;
+import org.concordion.api.ExampleCommandCall;
 import org.concordion.internal.Row;
-import org.concordion.internal.SummarizingResultRecorder;
 import org.concordion.internal.Table;
 
 public class ExecuteCommand extends AbstractCommand {
@@ -22,7 +21,7 @@ public class ExecuteCommand extends AbstractCommand {
     }
 
     @Override
-    public void modifyCommandCallTree(CommandCall commandCall, List<CommandCall> examples, List<CommandCall> beforeExamples) {
+    public void modifyCommandCallTree(CommandCall commandCall, List<ExampleCommandCall> examples, List<CommandCall> beforeExamples) {
         if (isTableElement(commandCall)) {
             performTableModification(commandCall);
         }
@@ -70,16 +69,16 @@ public class ExecuteCommand extends AbstractCommand {
         Row[] detailRows = table.getDetailRows();
         for (int i = 0; i < detailRows.length; i++) {
             Row row = detailRows[i];
+            Element[] cells = row.getCells();
 
-            if (row.getCells().length != table.getLastHeaderRow().getCells().length) {
+            if (cells.length != table.getLastHeaderRow().getCells().length) {
                 throw new RuntimeException("The <table> 'execute' command only supports rows with an equal number of columns. Detail row " + (i + 1) + " has a different number of columns to the last header row");
             }
 
             CommandCall rowCommand = duplicateCommandForDifferentElement(commandCall, row.getElement());
             rowCommand.transferToParent(commandCall);
-            Element[] cells = row.getCells();
 
-            for (int cellCount = 0; cellCount < row.getCells().length; cellCount++) {
+            for (int cellCount = 0; cellCount < cells.length; cellCount++) {
                 CommandCall headerCall = headerCommands.get(cellCount);
 
                 if (headerCall != null) {
@@ -96,13 +95,12 @@ public class ExecuteCommand extends AbstractCommand {
     }
 
     private CommandCall duplicateCommandForDifferentElement(CommandCall commandCall, Element element) {
-
-        String expression = commandCall.getExpression();
-        if (expression.equals("")) {
-            expression = element.getText();
-        }
-
-        return new CommandCall(null, commandCall.getCommand(), element, expression, commandCall.getResource());
+        return new CommandCall(
+                null,
+                commandCall.getCommand(),
+                element,
+                commandCall.getExpression(),
+                commandCall.getResource());
     }
 
     private boolean isTableElement(CommandCall commandCall) {

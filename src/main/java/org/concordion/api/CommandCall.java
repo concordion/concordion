@@ -94,7 +94,7 @@ public class CommandCall {
         return null;
     }
 
-    public void modifyTree(List<CommandCall> examples, List<CommandCall> beforeExamples) {
+    public void modifyTree(List<ExampleCommandCall> examples, List<CommandCall> beforeExamples) {
         this.getCommand().modifyCommandCallTree(this, examples, beforeExamples);
     }
 

@@ -1,6 +1,5 @@
 package org.concordion.api;
 
-
 import java.util.List;
 
 public interface Command {
@@ -17,5 +16,5 @@ public interface Command {
      *  * Add new commands to examples or before examples
      *  * Modify the tree to put table or list execute commands on the right children elements.
      */
-    void modifyCommandCallTree(CommandCall element, List<CommandCall> examples, List<CommandCall> beforeExamples);
+    void modifyCommandCallTree(CommandCall element, List<ExampleCommandCall> examples, List<CommandCall> beforeExamples);
 }

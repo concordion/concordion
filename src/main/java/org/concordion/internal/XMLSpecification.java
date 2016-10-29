@@ -16,11 +16,11 @@ public class XMLSpecification implements SpecificationByExample {
     private final CommandCall rootCommandNode;
 
     private final SpecificationCommand specificationCommand;
-    private final List<CommandCall> examples;
+    private final List<ExampleCommandCall> examples;
     private final List<CommandCall> beforeExamples;
     private final String specificationDescription;
 
-    public XMLSpecification(CommandCall rootCommandNode, List<CommandCall> examples, List<CommandCall> beforeExamples) {
+    public XMLSpecification(CommandCall rootCommandNode, List<ExampleCommandCall> examples, List<CommandCall> beforeExamples) {
         this.rootCommandNode = rootCommandNode;
         if (!(rootCommandNode.getCommand() instanceof SpecificationCommand)) {
             throw new IllegalStateException("Expected root command to be a SpecificationCommand");
@@ -29,7 +29,7 @@ public class XMLSpecification implements SpecificationByExample {
         specificationCommand.start(rootCommandNode);
         specificationDescription = specificationCommand.getSpecificationDescription(rootCommandNode);
 
-        this.examples = new ArrayList<CommandCall>(examples);
+        this.examples = new ArrayList(examples);
         this.beforeExamples = new ArrayList(beforeExamples);
     }
 
@@ -79,10 +79,10 @@ public class XMLSpecification implements SpecificationByExample {
             return;
         }
 
-        for (CommandCall commandCall: examples) {
-            if (makeJunitTestName(commandCall).equals(example)) {
+        for (ExampleCommandCall commandCall: examples) {
+            if (commandCall.getExampleName().equals(example)) {
                 resultRecorder.setForExample(true);
-                processNode(commandCall, evaluator, resultRecorder);
+                processNode(commandCall.getCommandCall(), evaluator, resultRecorder);
             }
         }
     }
@@ -106,8 +106,8 @@ public class XMLSpecification implements SpecificationByExample {
             commands.add(testDescription);
         }
 
-        for (CommandCall exampleCall: examples) {
-            commands.add(makeJunitTestName(exampleCall));
+        for (ExampleCommandCall exampleCall: examples) {
+            commands.add(exampleCall.getExampleName());
         }
 
         // If there are no examples and no commands, let's add the outer test so you have 1 test in the fixture
@@ -116,10 +116,6 @@ public class XMLSpecification implements SpecificationByExample {
         }
 
         return commands;
-    }
-
-    private String makeJunitTestName(CommandCall exampleCall) {
-        return exampleCall.getExpression();
     }
 
     public void finish() {
