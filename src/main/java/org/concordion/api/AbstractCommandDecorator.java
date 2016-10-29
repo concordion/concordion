@@ -37,12 +37,7 @@ public abstract class AbstractCommandDecorator implements Command {
 
     @Override
     public void modifyCommandCallTree(final CommandCall element, final List<CommandCall> examples, final List<CommandCall> beforeExamples) {
-//        process(element, null, null, new Runnable() {
-//            public void run() {
-                command.modifyCommandCallTree(element, examples, beforeExamples);
-//            }
-//        });
-
+        command.modifyCommandCallTree(element, examples, beforeExamples);
     }
 
     protected abstract void process(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Runnable runnable);

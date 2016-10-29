@@ -98,7 +98,7 @@ public class CommandCall {
         this.getCommand().modifyCommandCallTree(this, examples, beforeExamples);
     }
 
-    public void setParent(CommandCall parent) {
+    public void transferToParent(CommandCall parent) {
         if (getParent() != null) {
             getParent().getChildren().remove(this);
         }

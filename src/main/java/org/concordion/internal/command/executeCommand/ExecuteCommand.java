@@ -13,7 +13,6 @@ import org.concordion.api.listener.ExecuteListener;
 import org.concordion.internal.Row;
 import org.concordion.internal.SummarizingResultRecorder;
 import org.concordion.internal.Table;
-import org.concordion.internal.TableSupport;
 
 public class ExecuteCommand extends AbstractCommand {
     private List<ExecuteListener> executeListeners = new ArrayList<ExecuteListener>();
@@ -68,25 +67,24 @@ public class ExecuteCommand extends AbstractCommand {
         Map<Integer, CommandCall> headerCommands = populateCommandCallByColumnMap(table, commandCall);
 
         // copy the execute to each detail row.
-        Row headerRow = table.getLastHeaderRow();
-
         for (Row row : table.getDetailRows()) {
             CommandCall rowCommand = duplicateCommandForDifferentElement(commandCall, row.getElement());
-            rowCommand.setParent(commandCall);
+            rowCommand.transferToParent(commandCall);
+            Element[] cells = row.getCells();
 
             for (int cellCount = 0; cellCount < row.getCells().length; cellCount++) {
                 CommandCall headerCall = headerCommands.get(cellCount);
 
                 if (headerCall != null) {
-                    Element cellElement = row.getCells()[cellCount];
+                    Element cellElement = cells[cellCount];
                     CommandCall cellCommand = duplicateCommandForDifferentElement(headerCall, cellElement);
-                    cellCommand.setParent(rowCommand);
+                    cellCommand.transferToParent(rowCommand);
                 }
             }
         }
 
         for (CommandCall headerCommand : headerCommands.values()) {
-            headerCommand.setParent(null);
+            headerCommand.transferToParent(null);
         }
     }
 

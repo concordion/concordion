@@ -2,7 +2,6 @@ package org.concordion.internal.command;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.concordion.api.*;
@@ -50,7 +49,13 @@ public class ExampleCommand extends AbstractCommand {
     }
 
     private String getExampleName(CommandCall node) {
-        return node.getExpression();
+        String expression = node.getExpression();
+
+        // use the contents of the example if there is no name.
+        if ("".equals(expression) && node.getElement().isNamed("td")) {
+            return node.getElement().getText();
+        }
+        return expression;
     }
 
     @Override
@@ -58,12 +63,12 @@ public class ExampleCommand extends AbstractCommand {
         super.modifyCommandCallTree(element, examples, beforeExamples);
 
         CommandCall oldParent = element.getParent();
-        element.setParent(null);
+        element.transferToParent(null);
 
         // we have to pull the example command to be the parent of the execute command
         // on the TR element
         if (element.getElement().isNamed("td")) {
-            oldParent.setParent(element);
+            oldParent.transferToParent(element);
         }
 
         if (this.isBeforeExample(element)) {
