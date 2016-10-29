@@ -5,11 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import nu.xom.Attribute;
-import nu.xom.Document;
-import nu.xom.Elements;
+import nu.xom.*;
 
 import org.concordion.api.*;
+import org.concordion.api.Element;
 import org.concordion.api.listener.DocumentParsingListener;
 import org.concordion.internal.util.Check;
 
@@ -39,9 +38,23 @@ public class DocumentParser {
     public Specification parse(Document document, Resource resource) {
         announceBeforeParsing(document);
         nu.xom.Element xomElement = document.getRootElement();
-        CommandCall rootCommandCall = new CommandCall(createSpecificationCommand(), new Element(xomElement), "", resource);
+        CommandCall rootCommandCall = new CommandCall(null, createSpecificationCommand(), new Element(xomElement), "", resource);
         generateCommandCallTree(xomElement, rootCommandCall, resource);
-        return new XMLSpecification(rootCommandCall);
+        List<ExampleCommandCall> examples = new ArrayList<ExampleCommandCall>();
+        List<CommandCall> beforeExamples = new ArrayList<CommandCall>();
+        modifyCommandCallTree(rootCommandCall, examples, beforeExamples);
+        return new XMLSpecification(rootCommandCall, examples, beforeExamples);
+    }
+
+    private void modifyCommandCallTree(CommandCall rootCommandCall, List<ExampleCommandCall> examples, List<CommandCall> beforeExamples) {
+
+        rootCommandCall.modifyTree(examples, beforeExamples);
+
+        List<CommandCall> childrenCopy = new ArrayList(rootCommandCall.getChildren().asCollection());
+
+        for (CommandCall childCall: childrenCopy) {
+            modifyCommandCallTree(childCall, examples, beforeExamples);
+        }
     }
 
     private void generateCommandCallTree(nu.xom.Element xomElement, CommandCall parentCommandCall, Resource resource) {
@@ -61,7 +74,7 @@ public class DocumentParser {
                 if (command != null) {
                     Check.isFalse(commandIsAssigned, "Multiple commands per element is currently not supported.");
                     String expression = attribute.getValue();
-                    commandCall = new CommandCall(command, new Element(xomElement), expression, resource);
+                    commandCall = new CommandCall(parentCommandCall, command, new Element(xomElement), expression, resource);
                     break;
                 }
             }
