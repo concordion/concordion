@@ -151,16 +151,4 @@ public class ExecuteCommand extends AbstractCommand {
             listener.executeCompleted(new ExecuteEvent(element));
         }
     }
-
-    protected void announceBeforeExample(String exampleName, Element element, ResultRecorder resultRecorder) {
-        for (ExampleListener listener : exampleListeners) {
-            listener.beforeExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder) resultRecorder));
-        }
-    }
-
-    protected void announceAfterExample(String exampleName, Element element, ResultRecorder resultRecorder) {
-        for (ExampleListener listener : exampleListeners) {
-            listener.afterExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder) resultRecorder));
-        }
-    }
 }
