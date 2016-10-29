@@ -20,14 +20,20 @@ public class ExampleListenerTest extends AbstractExtensionTestCase {
     public void beforeSpec() {
         extension.withStream(getLogStream());
     }
-	
+
     public double sqrt(double num) {
         return Math.sqrt(num);
     }
-    
+
+    public String generateUsername(String fullName) {
+        return fullName.replaceAll(" ", "").toLowerCase();
+    }
+
     public List<String> getEventLogExcludingCheck() {
         List<String> eventLog = getEventLog();
-        eventLog.remove("Before example 'check-results'");
+        eventLog.remove("Before example 'check-basic-example'");
+        eventLog.remove("After example 'check-basic-example' - passed: 2, failed: 0, exceptions: 0");
+        eventLog.remove("Before example 'check-table-example'");
         return eventLog;
     }
 }
