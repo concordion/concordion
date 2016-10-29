@@ -46,13 +46,13 @@ public class ExampleCommand extends AbstractCommand {
     }
 
     private String getExampleName(CommandCall node) {
-        String expression = node.getExpression();
+        String exampleName = node.getExpression();
 
         // use the contents of the example if there is no name.
-        if ("".equals(expression) && node.getElement().isNamed("td")) {
-            return node.getElement().getText();
+        if ("".equals(exampleName) && node.getElement().isNamed("td")) {
+            exampleName = node.getElement().getText();
         }
-        return expression;
+        return exampleName;
     }
 
     @Override

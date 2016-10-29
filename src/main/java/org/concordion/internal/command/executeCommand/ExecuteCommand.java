@@ -25,7 +25,6 @@ public class ExecuteCommand extends AbstractCommand {
         if (modification != null) {
             modification.performModification(commandCall, examples, beforeExamples);
         }
-
     }
 
     private ExecuteCommandModification determineModificationStrategy(CommandCall commandCall) {

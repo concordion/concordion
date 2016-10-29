@@ -129,6 +129,12 @@ public class CommandCall {
 
     public void modifyTree(List<ExampleCommandCall> examples, List<CommandCall> beforeExamples) {
         this.getCommand().modifyCommandCallTree(this, examples, beforeExamples);
+
+        List<CommandCall> childrenCopy = new ArrayList(getChildren().asCollection());
+
+        for (CommandCall childCall: childrenCopy) {
+            childCall.modifyTree(examples, beforeExamples);
+        }
     }
 
     public void transferToParent(CommandCall parent) {

@@ -31,16 +31,6 @@ public class ExecuteCommandTableModification extends ExecuteCommandModification 
     }
 
     public void performModification(CommandCall commandCall, List<ExampleCommandCall> examples, List<CommandCall> beforeExamples) {
-        /*
-            We set the bypass flag on the main <table> node so it's not executed anymore. We
-            can't really remove it because if we remove it, we'll have to add all the new children to
-            this node's parent node. However, the 'modify' method is currently processing the parent node
-            and has made a copy of the list of children (to avoid a concurrent modification exception).
-
-            This means that any children added to the parent node won't have 'modify' called on them. And if
-            any of the children are examples, then they won't be processed properly.
-         */
-        commandCall.setBypassExecution(true);
 
         /*
 
@@ -50,6 +40,8 @@ public class ExecuteCommandTableModification extends ExecuteCommandModification 
         * remove the table execute commandCall from the table
         * remove the TH commandCalls from the TH rows.
          */
+
+        CommandCall newParent = commandCall.getParent();
 
         Table table = new Table(commandCall.getElement());
         Map<Integer, CommandCall> headerCommands = populateCommandCallByColumnMap(table, commandCall);
@@ -65,7 +57,6 @@ public class ExecuteCommandTableModification extends ExecuteCommandModification 
             }
 
             CommandCall rowCommand = duplicateCommandForDifferentElement(commandCall, row.getElement());
-            rowCommand.transferToParent(commandCall);
 
             for (int cellCount = 0; cellCount < cells.length; cellCount++) {
                 CommandCall headerCall = headerCommands.get(cellCount);
@@ -76,11 +67,16 @@ public class ExecuteCommandTableModification extends ExecuteCommandModification 
                     cellCommand.transferToParent(rowCommand);
                 }
             }
+
+            rowCommand.transferToParent(newParent);
+            rowCommand.modifyTree(examples, beforeExamples);
         }
 
-        for (CommandCall headerCommand : headerCommands.values()) {
-            headerCommand.transferToParent(null);
+        for (CommandCall call : headerCommands.values()) {
+            call.transferToParent(null);
         }
+
+        commandCall.transferToParent(null);
     }
 
     @Override
