@@ -7,10 +7,7 @@ import java.util.List;
 import org.concordion.api.*;
 import org.concordion.api.listener.ExampleEvent;
 import org.concordion.api.listener.ExampleListener;
-import org.concordion.internal.FailFastException;
-import org.concordion.internal.ImplementationStatusChecker;
-import org.concordion.internal.SpecificationDescriber;
-import org.concordion.internal.SummarizingResultRecorder;
+import org.concordion.internal.*;
 
 public class ExampleCommand extends AbstractCommand {
 
@@ -29,12 +26,9 @@ public class ExampleCommand extends AbstractCommand {
         listeners.remove(exampleListener);
     }
     
-    public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
-    }
+    public void execute(CommandCall node, Evaluator evaluator, ResultRecorder resultRecorder) {
 
-    public void executeAsExample(CommandCall node, Evaluator evaluator, ResultRecorder resultRecorder) {
-        
-        String exampleName = node.getExpression();
+        String exampleName = getExampleName(node);
         
         resultRecorder.setSpecificationDescription(
                 specificationDescriber.getDescription(node.getResource(), exampleName));
@@ -49,6 +43,40 @@ public class ExampleCommand extends AbstractCommand {
         setupCommandForExample(node, resultRecorder, exampleName);
 
         announceAfterExample(exampleName, node.getElement(), resultRecorder);
+    }
+
+    private String getExampleName(CommandCall node) {
+        String expression = node.getExpression();
+
+        // use the contents of the example if there is no name.
+        if ("".equals(expression) && node.getElement().isNamed("td")) {
+            return node.getElement().getText();
+        }
+        return expression;
+    }
+
+    @Override
+    public void modifyCommandCallTree(CommandCall element, List<ExampleCommandCall> examples, List<CommandCall> beforeExamples) {
+        super.modifyCommandCallTree(element, examples, beforeExamples);
+
+        CommandCall oldParent = element.getParent();
+        element.transferToParent(null);
+
+        // we have to pull the example command to be the parent of the execute command
+        // on the TR element
+        if (element.getElement().isNamed("td")) {
+            oldParent.transferToParent(element);
+        }
+
+        if (this.isBeforeExample(element)) {
+            beforeExamples.add(element);
+        } else {
+            examples.add(new ExampleCommandCall(this.getExampleName(element), element));
+        }
+    }
+
+    protected boolean isBeforeExample(CommandCall element) {
+        return element.getExpression().equals("before");
     }
 
     public static void setupCommandForExample(CommandCall node, ResultRecorder resultRecorder, String exampleName) {
@@ -71,10 +99,6 @@ public class ExampleCommand extends AbstractCommand {
             fixtureNode.appendText(note);
             node.getElement().prependChild(fixtureNode);
         }
-    }
-
-    public boolean isExample() {
-        return true;
     }
 
     public void setSpecificationDescriber(SpecificationDescriber specificationDescriber) {

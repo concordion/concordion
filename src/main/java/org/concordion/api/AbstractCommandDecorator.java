@@ -11,23 +11,6 @@ public abstract class AbstractCommandDecorator implements Command {
         this.command = command;
     }
 
-    public List<CommandCall> getExamples(CommandCall commandCall) {
-        return command.getExamples(commandCall);
-    }
-
-    public boolean isExample() {
-        return command.isExample();
-    }
-
-    public void executeAsExample(final CommandCall commandCall, final Evaluator evaluator, final ResultRecorder resultRecorder) {
-        process(commandCall, evaluator, resultRecorder, new Runnable() {
-            public void run() {
-                command.executeAsExample(commandCall, evaluator, resultRecorder);
-            }
-        });
-    }
-
-
     public void setUp(final CommandCall commandCall, final Evaluator evaluator, final ResultRecorder resultRecorder) {
         process(commandCall, evaluator, resultRecorder, new Runnable() {
             public void run() {
@@ -52,10 +35,10 @@ public abstract class AbstractCommandDecorator implements Command {
         });
     }
 
-    protected abstract void process(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Runnable runnable);
-
-    public boolean shouldExecuteEvenWhenAllChildCommandsAreExamples() {
-        return false;
+    @Override
+    public void modifyCommandCallTree(final CommandCall element, final List<ExampleCommandCall> examples, final List<CommandCall> beforeExamples) {
+        command.modifyCommandCallTree(element, examples, beforeExamples);
     }
 
+    protected abstract void process(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Runnable runnable);
 }

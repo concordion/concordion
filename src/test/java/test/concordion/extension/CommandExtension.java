@@ -1,7 +1,6 @@
 package test.concordion.extension;
 
 import java.io.PrintStream;
-import java.util.Collections;
 import java.util.List;
 
 import org.concordion.api.Command;
@@ -10,6 +9,7 @@ import org.concordion.api.Evaluator;
 import org.concordion.api.ResultRecorder;
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
+import org.concordion.api.ExampleCommandCall;
 
 public class CommandExtension implements ConcordionExtension {
 
@@ -26,8 +26,7 @@ public class CommandExtension implements ConcordionExtension {
             public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
             }
 
-            public List<CommandCall> getExamples(CommandCall command) {
-                return Collections.emptyList();
+            public void modifyCommandCallTree(CommandCall element, List<ExampleCommandCall> examples, List<CommandCall> beforeExamples) {
             }
 
             public void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
@@ -35,17 +34,6 @@ public class CommandExtension implements ConcordionExtension {
             
             public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
                 stream.println(commandCall.getElement().getText());
-            }
-
-            public boolean isExample() {
-                return false;
-            }
-
-            public void executeAsExample(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
-            }
-
-            public boolean shouldExecuteEvenWhenAllChildCommandsAreExamples() {
-                return false;
             }
         });
     }

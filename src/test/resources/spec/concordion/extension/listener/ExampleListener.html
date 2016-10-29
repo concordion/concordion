@@ -13,24 +13,60 @@
 		<h3>Before and after events are captured</h3>
         <p>An extension is installed that listens to the example command and the following instrumentation is run:</p> 
 		
-		<div concordion:example="example1">
+		<div concordion:example="basic-example">
 			<p style="margin: 20px">
 				<code style="border: 1px solid black; padding: 10px">
-					&lt;div concordion:example="example1"&gt;
+					&lt;div concordion:example="basic-example"&gt;
 					The square root of <span concordion:set="#num">4.0</span> is <span concordion:assertEquals="sqrt(#num)">2.0</span>
 					&lt;/div&gt;
 				</code>
 			</p>
 		</div>
 	
-        <div concordion:example="check-results">
+        <div concordion:example="check-basic-example">
            <p>The logged events for this example are:</p>
            <table concordion:verifyRows="#event : getEventLogExcludingCheck()">
            <tr><th concordion:assertEquals="#event">Event</th></tr>
-           <tr><td>Before example 'example1'</td></tr>
-           <tr><td>After example 'example1' - passed: 1, failed: 0, exceptions: 0</td></tr>
+           <tr><td>Before example 'basic-example'</td></tr>
+           <tr><td>After example 'basic-example' - passed: 1, failed: 0, exceptions: 0</td></tr>
            </table>
         </div> 
+    </div>
+
+    <div class="example">
+        <h3>Before and after events are captured</h3>
+        <p>An extension is installed that listens to the example command and the following instrumentation is run:</p>
+
+        <div class="example">
+            <table concordion:execute="#username = generateUsername(#fullName)">
+                <tr>
+                <th concordion:example="">Example</th>
+                <th concordion:set="#fullName">Full Name</th>
+                <th concordion:assertEquals="#username">Username</th>
+                </tr>
+                <tr>
+                <td>Short Name</td>
+                <td>John Doe</td>
+                <td>johndoe</td>
+                </tr>
+                <tr>
+                <td>Longer Name</td>
+                <td>Winston Churchill</td>
+                <td>winstonchurchill</td>
+                </tr>
+            </table>
+        </div>
+
+        <div concordion:example="check-table-example">
+            <p>The logged events for this example are:</p>
+            <table concordion:verifyRows="#event : getEventLogExcludingCheck()">
+                <tr><th concordion:assertEquals="#event">Event</th></tr>
+                <tr><td>Before example 'Short Name'</td></tr>
+                <tr><td>After example 'Short Name' - passed: 1, failed: 0, exceptions: 0</td></tr>
+                <tr><td>Before example 'Longer Name'</td></tr>
+                <tr><td>After example 'Longer Name' - passed: 1, failed: 0, exceptions: 0</td></tr>
+            </table>
+        </div>
     </div>
 </body>
 </html>
