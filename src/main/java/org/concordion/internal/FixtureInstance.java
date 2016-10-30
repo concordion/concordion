@@ -104,6 +104,10 @@ public class FixtureInstance extends FixtureType implements Fixture, FixtureDecl
         scopedFieldStore.destroyFields(fixtureObject, Scope.SPECIFICATION);
     }
 
+    @Override
+    public void beforeProcessExample(String exampleName) {
+        
+    }
     
     @Override
     public void beforeExample(final String exampleName) {
@@ -113,6 +117,10 @@ public class FixtureInstance extends FixtureType implements Fixture, FixtureDecl
     @Override
     public void afterExample(String exampleName) {
         invokeMethods(AfterExample.class, new SingleParameterSupplier(AfterExample.class, ExampleName.class, exampleName));
+    }
+
+    @Override
+    public void afterProcessExample(String exampleName) {
         scopedFieldStore.destroyFields(fixtureObject, Scope.EXAMPLE);
     }
     
