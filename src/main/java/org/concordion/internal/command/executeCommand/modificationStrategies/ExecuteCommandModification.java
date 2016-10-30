@@ -11,7 +11,6 @@ import java.util.List;
  */
 public abstract class ExecuteCommandModification {
     public abstract void performModification(CommandCall commandCall, List<ExampleCommandCall> examples, List<CommandCall> beforeExamples);
-    public abstract boolean originalNodeShouldBypassExecution();
 
     protected CommandCall duplicateCommandForDifferentElement(CommandCall commandCall, Element element) {
         return new CommandCall(

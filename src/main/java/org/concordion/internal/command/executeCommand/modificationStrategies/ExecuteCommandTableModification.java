@@ -77,11 +77,4 @@ public class ExecuteCommandTableModification extends ExecuteCommandModification 
             call.transferToParent(null);
         }
     }
-
-    @Override
-    public boolean originalNodeShouldBypassExecution() {
-        return true;
-    }
-
-
 }

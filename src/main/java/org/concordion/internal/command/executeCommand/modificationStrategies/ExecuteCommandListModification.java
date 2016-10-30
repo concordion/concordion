@@ -49,42 +49,4 @@ public class ExecuteCommandListModification extends ExecuteCommandModification {
         Integer currentLevel = (Integer)commandCall.getConstantForExecution(LEVEL_VARIABLE);
         return currentLevel == null ? 1 : currentLevel;
     }
-
-    @Override
-    public boolean originalNodeShouldBypassExecution() {
-        return true;
-    }
-
-
-
-    public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
-        increaseLevel(evaluator);
-        ListSupport listSupport = new ListSupport(commandCall);
-        for (ListEntry listEntry : listSupport.getListEntries()) {
-            commandCall.setElement(listEntry.getElement());
-            if (listEntry.isItem()) {
-                commandCall.execute(evaluator, resultRecorder);
-            }
-            if (listEntry.isList()) {
-                // recursive call
-                execute(commandCall, evaluator, resultRecorder);
-            }
-        }
-        decreaseLevel(evaluator);
-    }
-
-    private void increaseLevel(Evaluator evaluator) {
-        Integer value = (Integer) evaluator.getVariable(LEVEL_VARIABLE);
-        if (value == null) {
-            value = 0;
-        }
-        evaluator.setVariable(LEVEL_VARIABLE, value + 1);
-    }
-
-    private void decreaseLevel(Evaluator evaluator) {
-        Integer value = (Integer) evaluator.getVariable(LEVEL_VARIABLE);
-        evaluator.setVariable(LEVEL_VARIABLE, value - 1);
-    }
-
-
 }
