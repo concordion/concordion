@@ -35,7 +35,8 @@ public class CommandCall {
     on a table or a list where we copy the commands onto the other table or list nodes.
 
     Due to the way tree modification works, it's risky removing these from the execution tree
-    completely - so we set a bypass flag on them.
+    completely - so we set a bypass flag on them. Also, removing them and moving their children up a level can cause
+    ordering issues - the HTML might not be executed in order anymore.
 
      */
     public void setBypassExecution(boolean bypassExecution) {

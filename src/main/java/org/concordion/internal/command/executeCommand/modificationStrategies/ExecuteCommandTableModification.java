@@ -32,6 +32,9 @@ public class ExecuteCommandTableModification extends ExecuteCommandModification 
 
     public void performModification(CommandCall commandCall, List<ExampleCommandCall> examples, List<CommandCall> beforeExamples) {
 
+        // we need to keep this node in the tree to preserve execution order.
+        commandCall.setBypassExecution(true);
+
         /*
 
         We have to:
@@ -40,8 +43,6 @@ public class ExecuteCommandTableModification extends ExecuteCommandModification 
         * remove the table execute commandCall from the table
         * remove the TH commandCalls from the TH rows.
          */
-
-        CommandCall newParent = commandCall.getParent();
 
         Table table = new Table(commandCall.getElement());
         Map<Integer, CommandCall> headerCommands = populateCommandCallByColumnMap(table, commandCall);
@@ -68,15 +69,13 @@ public class ExecuteCommandTableModification extends ExecuteCommandModification 
                 }
             }
 
-            rowCommand.transferToParent(newParent);
+            rowCommand.transferToParent(commandCall);
             rowCommand.modifyTree(examples, beforeExamples);
         }
 
         for (CommandCall call : headerCommands.values()) {
             call.transferToParent(null);
         }
-
-        commandCall.transferToParent(null);
     }
 
     @Override
