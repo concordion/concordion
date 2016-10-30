@@ -25,16 +25,19 @@ public class ExampleCommand extends AbstractCommand {
     public void removeExampleListener(ExampleListener exampleListener) {
         listeners.remove(exampleListener);
     }
-    
+
     public void execute(CommandCall node, Evaluator evaluator, ResultRecorder resultRecorder) {
 
         String exampleName = getExampleName(node);
-        
+        boolean isBeforeExample = isBeforeExample(node);
+
         resultRecorder.setSpecificationDescription(
                 specificationDescriber.getDescription(node.getResource(), exampleName));
 
-        announceBeforeExample(exampleName, node.getElement(), resultRecorder);
-        
+        if (!isBeforeExample) {
+            announceBeforeExample(exampleName, node.getElement(), resultRecorder);
+        }
+
         try {
             node.getChildren().processSequentially(evaluator, resultRecorder);
         } catch (FailFastException f) {
@@ -42,7 +45,9 @@ public class ExampleCommand extends AbstractCommand {
         }
         setupCommandForExample(node, resultRecorder, exampleName);
 
-        announceAfterExample(exampleName, node.getElement(), resultRecorder);
+        if (!isBeforeExample) {
+            announceAfterExample(exampleName, node.getElement(), resultRecorder);
+        }
     }
 
     private String getExampleName(CommandCall node) {
@@ -104,13 +109,13 @@ public class ExampleCommand extends AbstractCommand {
     public void setSpecificationDescriber(SpecificationDescriber specificationDescriber) {
         this.specificationDescriber = specificationDescriber;
     }
-    
+
     private void announceBeforeExample(String exampleName, Element element,	ResultRecorder resultRecorder) {
 		for (ExampleListener listener : listeners) {
 			listener.beforeExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder)resultRecorder));
 		}
 	}
-    
+
     private void announceAfterExample(String exampleName, Element element, ResultRecorder resultRecorder) {
         for (int i = listeners.size() - 1; i >= 0; i--) {
             listeners.get(i).afterExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder)resultRecorder));
