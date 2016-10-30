@@ -5,13 +5,11 @@ import org.concordion.api.listener.ExampleEvent;
 import org.concordion.api.listener.ExampleListener;
 import org.concordion.api.listener.OuterExampleEvent;
 import org.concordion.api.listener.OuterExampleListener;
-import org.concordion.api.listener.SpecificationProcessingEvent;
-import org.concordion.api.listener.SpecificationProcessingListener;
 
-public class AnnounceExampleListener implements OuterExampleListener, ExampleListener {
+public class FixtureExampleHook implements OuterExampleListener, ExampleListener {
    private final Fixture fixture;
    
-   public AnnounceExampleListener(Fixture fixture) {
+   public FixtureExampleHook(Fixture fixture) {
        this.fixture = fixture;
    }
 

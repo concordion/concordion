@@ -69,7 +69,7 @@ public interface Fixture extends FixtureDeclarations {
 
     /**
      * Not currently used.
-     * @param exampleName
+     * @param exampleName the name of the example being invoked
      */
     void beforeProcessExample(String exampleName);
 
@@ -87,7 +87,7 @@ public interface Fixture extends FixtureDeclarations {
     
     /**
      * Destroy example scoped fields.
-     * @param exampleName
+     * @param exampleName the name of the example being invoked
      */
     void afterProcessExample(String exampleName);
 }

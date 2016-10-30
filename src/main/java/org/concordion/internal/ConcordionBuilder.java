@@ -279,9 +279,9 @@ public class ConcordionBuilder implements ConcordionExtender {
         withThrowableListener(new ThrowableRenderer(resourceSource));
         withRunListener(new RunResultRenderer(resourceSource));
 
-        AnnounceExampleListener announceExampleListener = new AnnounceExampleListener(fixture);
-        withOuterExampleListener(announceExampleListener);
-        withExampleListener(announceExampleListener);
+        FixtureExampleHook fixtureExampleHook = new FixtureExampleHook(fixture);
+        withOuterExampleListener(fixtureExampleHook);
+        withExampleListener(fixtureExampleHook);
 
         if (target == null) {
             target = new FileTarget(getBaseOutputDir());
