@@ -104,9 +104,9 @@ __Concise syntax__
 
 To shorten the syntax when the first column of the table contains the example name, you can combine the execute command and the example command into one. 
 
-To do this, prefix the header text with the `@` symbol, which will be removed from the Concordion output. For example:
+For example:
 
-    |[@Example Name](- "#z=add(#x, #y)") | [Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
+    |[Example Name](- "#z=add(#x, #y)") | [Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
     | --------------------------         | ----------------: | ---------------: | ---------------: |
     | Positive numbers                   |                  1|                 0|                 1|
     | Negative numbers                   |                  1|                -3|                -2|
