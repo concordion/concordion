@@ -47,14 +47,7 @@ public class DocumentParser {
     }
 
     private void modifyCommandCallTree(CommandCall rootCommandCall, List<ExampleCommandCall> examples, List<CommandCall> beforeExamples) {
-
         rootCommandCall.modifyTree(examples, beforeExamples);
-
-        List<CommandCall> childrenCopy = new ArrayList(rootCommandCall.getChildren().asCollection());
-
-        for (CommandCall childCall: childrenCopy) {
-            modifyCommandCallTree(childCall, examples, beforeExamples);
-        }
     }
 
     private void generateCommandCallTree(nu.xom.Element xomElement, CommandCall parentCommandCall, Resource resource) {

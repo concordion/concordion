@@ -39,9 +39,8 @@ public class LineContinuationsTest {
     }
     
     @RunWith(ConcordionRunner.class)
-public class Result {
+    public class Result {
         public String successes = "";
         public String failures = "";
     }
-
 }
