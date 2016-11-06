@@ -35,7 +35,9 @@ public class ConciseExpressionParser {
 
     public ConcordionStatement parse(String expression, String text) throws ConcordionSyntaxException {
         ConcordionStatement statement;
-        if (expression.startsWith("#") && !(expression.contains("="))) {
+        if (expression.equals("@")) {
+            statement = new ConcordionStatement(targetPrefix + "example", "");
+        } else if (expression.startsWith("#") && !(expression.contains("="))) {
             statement = new ConcordionStatement(targetPrefix + "set", expression);
         } else if (expression.startsWith("?=")) {
             statement = new ConcordionStatement(targetPrefix + "assert-equals", expression.substring(2));

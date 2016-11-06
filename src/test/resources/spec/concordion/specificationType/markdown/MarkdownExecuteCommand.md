@@ -55,7 +55,8 @@ If the special variable `#TEXT` is used as a parameter within the _expression_, 
 
 <a id="execute-on-a-table"/>
 ### Execute on a table
-To run the [execute command on a table](http://concordion.org/Tutorial.html#executeTable), the execute command is specified in the first table header column, followed by the command for that column (if any), with the commands for each column of the table specified in the table header.
+To run the [execute command on a table](http://concordion.org/Tutorial.html#executeTable), the execute command is specified in the first table header column, 
+followed by the command for that column (if any), with the commands for each column of the table specified in the table header.
 
 <div class="example">
   <h3>Example</h3>
@@ -67,10 +68,10 @@ To run the [execute command on a table](http://concordion.org/Tutorial.html#exec
     <tr>
       <td>
 <pre>      
-|[_add_](- "#z=add(#x, #y)")[Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
-| ------------------------------------------: | ---------------: | ---------------: |
-|                                            1|                 0|                 1|
-|                                            1|                -3|                -2|
+|[ ](- "#z=add(#x, #y)")[Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
+| --------------------------------------: | ---------------: | ---------------: |
+|                                        1|                 0|                 1|
+|                                        1|                -3|                -2|
 </pre>
       </td>
       <td>
@@ -185,9 +186,8 @@ or even:
   </table>
 </div>
 
-#### Concise Table Syntax
-To run each row of the table as an example, include only the execute command in the first column header, and
-specify the example name as the first column in each row. The markdown parser will automatically add an example command. 
+#### Run each row as an example
+To run each row of the table as an example, add a "c:example" command to a column header. The text in that column will be used for the example name.  
 
 For example:
 
@@ -201,17 +201,17 @@ For example:
     <tr>
       <td>
 <pre>      
-|[Example Name](- "#z=add(#x, #y)") | [Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
-| --------------------------         | ----------------: | ---------------: | ---------------: |
-| Positive numbers                   |                  1|                 0|                 1|
-| Negative numbers                   |                  1|                -3|                -2|
+|[ ](- "#z=add(#x, #y)")[Example Name](- "c:example") | [Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
+| --------------------------                          | ----------------: | ---------------: | ---------------: |
+| Positive numbers                                    |                  1|                 0|                 1|
+| Negative numbers                                    |                  1|                -3|                -2|
 </pre>
       </td>
       <td>
 <![CDATA[<table concordion:execute="#z=add(#x, #y)">
     <thead>
         <tr>
-            <th concordion:example=""> Example Name</th>
+            <th concordion:example="">Example Name </th>
             <th align="right" concordion:set="#x">Number 1</th>
             <th align="right" concordion:set="#y">Number 2</th>
             <th align="right" concordion:assert-equals="#z">Result</th>
@@ -237,7 +237,7 @@ For example:
   </table>
 </div>
 
-Without the concise syntax this would need to be written as:
+As a shorthand syntax, "c:example" can be written as "@":
 
 <div class="example">
   <h3>Example</h3>
@@ -249,10 +249,10 @@ Without the concise syntax this would need to be written as:
     <tr>
       <td>
 <pre>      
-|[_add_](- "#z=add(#x, #y)") [Example Name](- "c:example") | [Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
-| --------------------------                           | ----------------: | ---------------: | ---------------: |
-| Positive numbers                                     |                  1|                 0|                 1|
-| Negative numbers                                     |                  1|                -3|                -2|
+|[ ](- "#z=add(#x, #y)") [Example Name](- "@") | [Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
+| --------------------------                   | ----------------: | ---------------: | ---------------: |
+| Positive numbers                             |                  1|                 0|                 1|
+| Negative numbers                             |                  1|                -3|                -2|
 </pre>
       </td>
       <td>

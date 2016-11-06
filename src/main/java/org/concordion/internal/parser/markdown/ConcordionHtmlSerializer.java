@@ -100,8 +100,6 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
 // concordion:execute on a table and concordion:verifyRows
 // The concordion:execute command is in the first (and only) cell of the first header row.
 // The header row containing the command has to be removed, and the command needs to be printed on the table row.
-// If the first column contains only the execute command, we assume that each row is to be executed as an example
-// (with the first column of each table row containing the example name) and we add the example command.
 
     @Override
     public void visit(TableNode tableNode) {
@@ -112,12 +110,8 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
                 if (linkNode.getTitle() == null) {
                     throw new IllegalStateException(SimpleFormatter.format("No title found for link node '%s'", linkNode.getText()));
                 }
-                int numberOfLinkNodesInFirstColumn = numberOfLinkNodeChildren(cell);
                 pendingCommand = statementParser.parse(linkNode.getTitle(), linkNode.getText());
                 cell.getChildren().remove(0);
-                if (numberOfLinkNodesInFirstColumn == 1 && statementParser.isExecuteCommand(pendingCommand)) {
-                    addExampleCommand(cell, linkNode);
-                }
             }
         }
 
@@ -132,10 +126,6 @@ public class ConcordionHtmlSerializer extends ToHtmlSerializer {
         printer.print('>').indent(+2);
         visitChildren(node);
         printer.indent(-2).println().print('<').print('/').print(tag).print('>');
-    }
-
-    private void addExampleCommand(Node cell, LinkNode linkNode) {
-        cell.getChildren().add(new ExpLinkNode("c:example=", URL_FOR_CONCORDION, new TextNode(linkNode.getText())));
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
