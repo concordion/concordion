@@ -71,21 +71,24 @@ The Github Flavored Markdown [tables](https://help.github.com/articles/github-fl
 The command to be run on the table is specified in the first table header column, followed by the command for that column (if any), with the commands for each column of the table specified in the table header.
 
 ##### Execute on a table
-The execute command is specified in the first table header column, followed by the command for that column (if any), with the commands for each column of the table specified in the relevant table header column.
+The execute command is specified in the first table header column, followed by the command for that column (if any), 
+with the commands for each column of the table specified in the relevant table header column.
 
-    |[_add_](- "#z=add(#x, #y)")[Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
-    | ------------------------------------------: | ---------------: | ---------------: |
-    |                                            1|                 0|                 1|
-    |                                            1|                -3|                -2|
+The link text for the execute command is not used, but must contain at least 1 space, eg. `[ ]` to be a valid markdown link.
+
+    |[ ](- "#z=add(#x, #y)")[Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
+    | --------------------------------------: | ---------------: | ---------------: |
+    |                                        1|                 0|                 1|
+    |                                        1|                -3|                -2|
 
 Reference-style links can be used for one or more of the links to improve readability of the Markdown source: 
 
-    |[_add_][][Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
+    |[add][][Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
     | ------------------------: | ---------------: | ---------------: |
     |                          1|                 0|                 1|
     |                          1|                -3|                -2|
 
-    [_add_]: - "#z=add(#x, #y)"
+    [add]: - "#z=add(#x, #y)"
 
 ###### Run each row as an example
 _Since:_ Concordion 2.1.0
@@ -95,21 +98,21 @@ To do this, use the c:example tag in one of the table header columns and specify
 
 For example:
 
-    |[_add_](- "#z=add(#x, #y)") [Example Name](- "c:example=") | [Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
-    | --------------------------                                | ----------------: | ---------------: | ---------------: |
-    | Positive numbers                                          |                  1|                 0|                 1|
-    | Negative numbers                                          |                  1|                -3|                -2|
+    |[ ](- "#z=add(#x, #y)") [Example Name](- "c:example") | [Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
+    | --------------------------                           | ----------------: | ---------------: | ---------------: |
+    | Positive numbers                                     |                  1|                 0|                 1|
+    | Negative numbers                                     |                  1|                -3|                -2|
 
 __Concise syntax__
 
-To shorten the syntax when the first column of the table contains the example name, you can combine the execute command and the example command into one. 
+To shorten the syntax a bit, you can use `@` rather than `c:example` 
 
 For example:
 
-    |[Example Name](- "#z=add(#x, #y)") | [Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
-    | --------------------------         | ----------------: | ---------------: | ---------------: |
-    | Positive numbers                   |                  1|                 0|                 1|
-    | Negative numbers                   |                  1|                -3|                -2|
+    |[ ](- "#z=add(#x, #y)") [Example Name](- "@") | [Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
+    | --------------------------                   | ----------------: | ---------------: | ---------------: |
+    | Positive numbers                             |                  1|                 0|                 1|
+    | Negative numbers                             |                  1|                -3|                -2|
 
 ##### Verify Rows
 The verifyRows command is specified in the first table header column, followed by the command for that column (if any), with the commands for each column of the table specified in the relevant table header column.
