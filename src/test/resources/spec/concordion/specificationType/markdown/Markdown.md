@@ -103,17 +103,6 @@ For example:
     | Positive numbers                                     |                  1|                 0|                 1|
     | Negative numbers                                     |                  1|                -3|                -2|
 
-__Concise syntax__
-
-To shorten the syntax a bit, you can use `@` rather than `c:example` 
-
-For example:
-
-    |[ ](- "#z=add(#x, #y)") [Example Name](- "@") | [Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
-    | --------------------------                   | ----------------: | ---------------: | ---------------: |
-    | Positive numbers                             |                  1|                 0|                 1|
-    | Negative numbers                             |                  1|                -3|                -2|
-
 ##### Verify Rows
 The verifyRows command is specified in the first table header column, followed by the command for that column (if any), with the commands for each column of the table specified in the relevant table header column.
 
