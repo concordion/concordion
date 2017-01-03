@@ -4,7 +4,8 @@ apply plugin: 'wrapper'
 description = 'Concordion is an open source framework for Java that lets you turn a plain English description of a requirement into an automated test'
 
 wrapper {
-    gradleVersion = "2.9"
+    // If changing this, you may need to update the distributionUrl to http rather than https in gradle/wrapper/gradle-wrapper.properties to workaround a TravisCI with openjdk6. The other fixes in http://stackoverflow.com/questions/29584328/gradlew-bat-and-gradlew-sslhandshakeexception#answer-30924895 didn't work for me.
+    gradleVersion = "2.9" 
 }
 
 repositories {
