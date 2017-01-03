@@ -1,5 +1,6 @@
 package spec.concordion.integration.junit4;
 
+import junit.framework.AssertionFailedError;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -41,5 +42,9 @@ public class Junit4Test extends Statement {
     }
     public boolean wasRuleInvoked() {
         return ruleInvoked;
+    }
+
+    public String getFooFixtureClass() {
+        return FooFixtureRecorder.getFooFixtureClass();
     }
 }

@@ -41,7 +41,7 @@ sourceSets {
     }
 
     test {
-        runtimeClasspath += sourceSets.testDummies.output
+        compileClasspath += sourceSets.testDummies.output
     }
 }
 
