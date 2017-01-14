@@ -1,3 +1,5 @@
+sudo: false  # update to latest Travis CI build infrastructure
+
 # workaround for buffer overflow issue, ref https://github.com/travis-ci/travis-ci/issues/5227
 addons:
   hosts:
