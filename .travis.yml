@@ -1,8 +1,13 @@
+sudo: false  # update to latest Travis CI build infrastructure
+
 # workaround for buffer overflow issue, ref https://github.com/travis-ci/travis-ci/issues/5227
 addons:
   hosts:
     - myshorthost
   hostname: myshorthost
+  artifacts: # see https://docs.travis-ci.com/user/uploading-artifacts/
+    paths:
+      - $(git ls-files -o -x build/tmp -x build/classes -x build/resources -x .gradle | tr "\n" ":")  
 
 language: java
 jdk:
