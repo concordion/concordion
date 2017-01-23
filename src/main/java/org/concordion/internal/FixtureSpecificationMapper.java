@@ -1,6 +1,11 @@
 package org.concordion.internal;
 
 import org.concordion.api.Resource;
+import org.concordion.integration.TestFrameworkProvider;
+
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.ServiceLoader;
 
 /**
  * Maps from a fixture class to a specification and vice-versa.
@@ -12,6 +17,9 @@ import org.concordion.api.Resource;
  * </ul>
  */
 public class FixtureSpecificationMapper {
+
+    private static ServiceLoader<TestFrameworkProvider> serviceLoader = ServiceLoader.load(TestFrameworkProvider.class);
+
     public static Resource toSpecificationResource(Object fixture, String specificationSuffix) {
         String slashedClassName = fixture.getClass().getName().replaceAll("\\.", "/");
         String fixturePath = removeSuffixFromFixtureName(slashedClassName);
@@ -27,16 +35,29 @@ public class FixtureSpecificationMapper {
     public static Class<?> findFixtureClass(Resource hrefResource) throws ClassNotFoundException {
         String dottedHrefResource = hrefResource.getPath().replaceFirst("/", "").replace("/", ".");
         String name = dottedHrefResource.substring(0, dottedHrefResource.lastIndexOf("."));
-        Class<?> concordionClass;
-        try {
-            concordionClass = Class.forName(name);
-        } catch (ClassNotFoundException e) {
-            try {
-                concordionClass = Class.forName(name + "Test");
-            } catch (ClassNotFoundException e1) {
-                concordionClass = Class.forName(name + "Fixture"); // FIXED: Issue 47
+        String[] fixtureNames = {name, name + "Test", name + "Fixture"};
+        for (String fixtureName : fixtureNames) {
+            Class<?> concordionClass = getFixtureClass(fixtureName);
+            if (concordionClass != null) {
+                return concordionClass;
             }
         }
-        return concordionClass;
-    }   
+        throw new ClassNotFoundException("Unable to find fixture class for '" + hrefResource + "'. " +
+                "Fixture class must be named one of " + Arrays.toString(fixtureNames) + ".");
+    }
+
+    private static Class<?> getFixtureClass(String name) throws ClassNotFoundException {
+        try {
+            Class<?> clazz = Class.forName(name);
+            Iterator<TestFrameworkProvider> iterator = serviceLoader.iterator();
+            while (iterator.hasNext()) {
+                TestFrameworkProvider provider = iterator.next();
+                if (provider.isConcordionFixture(clazz)) {
+                    return clazz;
+                }
+            }
+        } catch (ClassNotFoundException e) {
+        }
+        return null;
+    }
 }
