@@ -201,17 +201,17 @@ For example:
     <tr>
       <td>
 <pre>      
-|[ ](- "#z=add(#x, #y)")[Example Name](- "c:example") | [Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
-| --------------------------                          | ----------------: | ---------------: | ---------------: |
-| Positive numbers                                    |                  1|                 0|                 1|
-| Negative numbers                                    |                  1|                -3|                -2|
+|[ ](- "#z=add(#x, #y)")[Description](- "c:example") | [Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
+| --------------------------                         | ----------------: | ---------------: | ---------------: |
+| Positive numbers                                   |                  1|                 0|                 1|
+| Negative numbers                                   |                  1|                -3|                -2|
 </pre>
       </td>
       <td>
 <![CDATA[<table concordion:execute="#z=add(#x, #y)">
     <thead>
         <tr>
-            <th concordion:example="">Example Name </th>
+            <th concordion:example="">Description </th>
             <th align="right" concordion:set="#x">Number 1</th>
             <th align="right" concordion:set="#y">Number 2</th>
             <th align="right" concordion:assert-equals="#z">Result</th>
