@@ -43,7 +43,7 @@ li {
   margin-bottom: 6px; 
 }
 
-.example, [c\:example] {
+.example, :not(th)[c\:example] {
   padding: 6px 16px 6px 16px;
   border: 1px solid #C3D9FF;
   margin: 6px 0px 28px 0px;
@@ -190,6 +190,14 @@ ins {
         <pre>
 <code c:set="#are = 'are'">&lt;span c:set="#are = 'are'"/&gt;</code></pre>
 
+    <p>Of course, you can have tables in a before example - this can be useful for populating
+    a database with data</p>
+
+    <table c:execute="addTableRow(#description)">
+        <tr><th>Table Row</th><th c:set="#description">Description</th></tr>
+        <tr><td>1</td><td>A database row</td></tr>
+        <tr><td>2</td><td>Another database row</td></tr>
+    </table>
 </div>
 
 <div c:example="example1" id="example1">
@@ -223,6 +231,7 @@ ins {
         <span c:assertTrue="beforeSpecRunOnce()" class="success">exactly once</span> before
         any examples are run. Methods annotated with @AfterSpecification are executed after the specification has executed.</p>
 
+    <p>Finally, we assert that <span c:assertEquals="numberTableRowsInserted()" class="success">2</span> table rows were added to our database.</p>
 </div>
 
 <div c:example="example2" id="example2">
@@ -254,6 +263,80 @@ ins {
         <span c:assertTrue="beforeSpecRunOnce()" class="success">exactly once</span> before
         any examples are run. Methods annotated with @AfterSpecification are executed after the specification has executed.</p>
 
+    <p>Finally, we assert that <span c:assertEquals="numberTableRowsInserted()" class="success">2</span> table rows were added to our database.</p>
+
+</div>
+
+
+<div class="example">
+    <h3>Tables</h3>
+
+    <p>
+        Concordion can execute each row in a table as an example. To do this, use the c:example tag in one of the table header columns and specify the example name in the corresponding column of each row.
+    </p>
+
+    <p>For example:</p>
+
+    <code><pre>
+    &lt;table c:execute="#counter = incrementCounter()"&gt;
+        &lt;tr&gt;
+            &lt;th c:example=""&gt;Example Name&lt;/th&gt;
+            &lt;th c:assertEquals="#counter"&gt;Counter value&lt;/th&gt;
+        &lt;/tr&gt;
+        &lt;tr c:status="ExpectedToFail"&gt;
+            &lt;td&gt;1st Table Example&lt;/td&gt;
+            &lt;td&gt;12&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;2nd Table Example&lt;/td&gt;
+            &lt;td&gt;11&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;3rd Table Example&lt;/td&gt;
+            &lt;td&gt;11&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+</pre></code>
+
+
+    <table c:execute="#counter = incrementCounter()">
+        <tr>
+            <th c:example="">Example Name</th>
+            <th c:assertEquals="#counter">Counter value</th>
+        </tr>
+        <tr>
+            <td id="1st Table Example">1st Table Example</td>
+            <td class="success">11</td>
+        </tr>
+        <tr>
+            <td id="2nd Table Example">2nd Table Example</td>
+            <td class="success">11</td>
+        </tr>
+        <tr>
+            <td id="3rd Table Example">3rd Table Example</td>
+            <td class="success">11</td>
+        </tr>
+    </table>
+
+    <table c:execute="#counter = incrementCounter()">
+        <tr>
+            <th c:example="">Example Name</th>
+            <th c:assertEquals="#counter">Counter value</th>
+        </tr>
+        <tr>
+            <td id="4th Table Example">4th Table Example</td>
+            <td class="success">11</td>
+        </tr>
+        <tr>
+            <td id="5th Table Example">5th Table Example</td>
+            <td class="success">11</td>
+        </tr>
+        <tr>
+            <td id="6th Table Example">6th Table Example</td>
+            <td class="success">11</td>
+        </tr>
+    </table>
+
 </div>
 
 <div c:example="runresults" id="runresults">
@@ -263,7 +346,7 @@ ins {
 
     <p>
         For example, a spec (<a href="LotsOfExamples.html" c:execute="#result=runTestDummySpec(#TEXT)">LotsOfExamples.html</a>)
-        with two successful examples, a failed example, an an exception example with a total of 10 successes, 2 failures and 2 exceptions 
+        with two successful examples, a failed example, an an exception example with a total of 10 successes, 2 failures and 2 exceptions
         returns <span c:assertEquals="#result.successCount" class="success">10</span> successes,
         <span c:assertEquals="#result.failureCount" class="success">2</span> failure,
         <span c:assertEquals="#result.exceptionCount" class="success">2</span> exceptions, and
@@ -287,6 +370,9 @@ ins {
             <span c:assertEquals="#result.exceptionCount" class="success">0</span> exceptions, and
                 <span c:assertEquals="#result.ignoredCount" class="success">0</span> ignores
     </p>
+
+    <p>Finally, we assert that <span c:assertEquals="numberTableRowsInserted()" class="success">2</span> table rows were added to our database.</p>
+
 </div>
 
 <div c:example="instances" id="instances">
@@ -296,10 +382,10 @@ ins {
 <li>For classes without examples, only <a c:run="concordion" href="FixtureWithoutExampleInitialisation.html" class="success">1 instance is created</a>.</li>
 <li>For classes with examples with commands also outside of the examples, <a c:run="concordion" href="FixtureWithExampleInitialisation.html" class="success">n+1 instances are created</a> where n is the number of examples.</li>
 <li>For classes with examples with no commands outside of the examples <a c:run="concordion" href="FixtureWithExampleWithoutOuterExampleInitialisation.html" class="success">n instances are created</a> where n is the number of examples.</li>
-</ul>  
+</ul>
 
 <h4>Field reuse</h4>
-<p>Fixture fields can be <a c:run="concordion" href="ScopedField.html" class="success">scoped</a> for reuse across a specification, in addition to the default example scope.</p>
+<p>Fixture fields can be <a c:run="concordion" href="../../annotation/ConcordionScoped.html" class="success">scoped</a> for reuse across a specification, in addition to the default example scope.</p>
 </div>
 
 <div c:example="hooks" id="hooks">
@@ -309,7 +395,10 @@ ins {
 <li>For classes without examples, the hook methods are called <a c:run="concordion" href="FixtureWithoutExampleHookMethods.html" class="success">1 time</a>.</li>
 <li>For classes with examples with commands also outside of the examples, the hook methods are called <a c:run="concordion" href="FixtureWithExampleHookMethods.html" class="success">n+1 times</a> where n is the number of examples.</li>
 <li>For classes with examples with no commands outside of the examples, the hook methods are called <a c:run="concordion" href="FixtureWithExampleWithoutOuterExampleHookMethods.html" class="success">n times</a> where n is the number of examples.</li>
-</ul>  
+</ul>
+
+    <p>In addition, you can use <a c:run="concordion" href="../../extension/listener/ExampleListener.html" class="success">example listeners</a>.</p>
+
 </div>
 
 <p>
@@ -356,5 +445,5 @@ with an unimplemented example, a successful example and a failing example all ma
 
 </div>
 
-<div class="footer">Results generated by <a href="http://www.concordion.org" style="font-weight: bold; text-decoration: none; color: #89C;">Concordion</a><div class="testTime">in 156 ms on 28-Aug-2016 at 18:52:04 NZST</div></div></body>
+<div class="footer">Results generated by <a href="http://www.concordion.org" style="font-weight: bold; text-decoration: none; color: #89C;">Concordion</a><div class="testTime">in 189 ms on 12-Mar-2017 at 14:55:04 NZDT</div></div></body>
 </html>

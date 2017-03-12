@@ -43,7 +43,7 @@ li {
   margin-bottom: 6px; 
 }
 
-.example, [concordion\:example] {
+.example, :not(th)[concordion\:example] {
   padding: 6px 16px 6px 16px;
   border: 1px solid #C3D9FF;
   margin: 6px 0px 28px 0px;
@@ -161,64 +161,36 @@ ins {
 .commentary, .commentary * {
   font-size: 8pt;
 }
-</style><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
-</head><body><span class="breadcrumbs"><a href="../../Concordion.html">Concordion</a> &gt; <a href="../Integration.html">Integration</a> &gt;</span>
-
-<h1>JUnit 4</h1>
-
-<p>
-    An active specification with JUnit 4 consists of two parts: an
-    HTML file and a Java test has the annotation <code>@RunWith(ConcordionRunner.class)</code>.
-</p>
-
-<p>
-    When you run the test class using JUnit, it will automatically locate
-    the HTML file. It does this by looking in the same package for a ".html"
-    file named the same as the test, but without the "Test" or "Fixture" suffixes.
-</p>
-
-<div class="example">
-    <h3>Naming Example</h3>
-
-    <p>
-        If your test is called <b>com.example.BreadcrumbTest</b> then the corresponding
-        HTML file must be in the same package (<b>com.example</b>) and called
-        <b>Breadcrumb.html</b>.
-    </p>
-</div>
-
-The JUnit 4 integration supports the <span concordion:assertTrue="wasBeforeCalled()" class="success">Before</span>,
-<span concordion:assertTrue="wasBeforeClassCalled()" class="success">BeforeClass</span>,
-and <span concordion:assertTrue="wasRuleInvoked()" class="success">Rule</span> annotations.
-
-<div class="example">
-    <h3>Fixture Example</h3>
-<pre>
-<code>
-import org.concordion.integration.junit4.ConcordionRunner;
-import org.junit.Before;
+</style><meta http-equiv="content-type" content="text/html; charset=UTF-8" /></head><body><span class="breadcrumbs"><a href="../../Concordion.html">Concordion</a> &gt; <a href="../Integration.html">Integration</a> &gt; <a href="Junit4.html">JUnit 4</a> &gt;</span><h1>JUnit 4</h1>
+<p>An active specification with JUnit 4 consists of two parts: a specification (eg. in HTML, Markdown or Excel) and a Java fixture annotated with <code>@RunWith(ConcordionRunner.class)</code>.</p>
+<h3>Fixture naming</h3>
+<p>The fixture class must be in the same package as the specification. The fixture class must have the same name as the specification (excluding the file extension), and can optionally have <code>Test</code> or <code>Fixture</code> appended.</p>
+<p>When you run the fixture class using JUnit, it will automatically locate the specification file. It does this by looking in the same package for the specification file named the same as the test, but without the <code>Test</code> or <code>Fixture</code> suffixes.</p>
+<h4>Example</h4>
+<p>If your test is called <code>com.example.BreadcrumbTest</code> then the corresponding specification file must be in the same package (<code>com.example</code>) and called <code>Breadcrumb.html</code>. (Other specification types will use different suffices, eg. <code>.md</code> or <code>.markdown</code> for Markdown specifications.)</p>
+<h3>Reverse lookup</h3>
+<p>When using the <a href="../../command/run/Run.html" concordion:run="concordion" class="success">run command</a>, the fixture class is located from the referenced specification by looking in the same package as the specification for a JUnit test named the same as the specification with optionally <code>Test</code> or <code>Fixture</code> appended.</p>
+<h4>Example</h4>
+<p>If your specification contains a run command referencing the specification <code>Breadcrumb.md</code> in the <code>com.example</code> package, Concordion will look in the following order for a corresponding fixture:</p>
+<ol>
+  <li><code>com.example.Breadcrumb</code></li>
+  <li><code>com.example.BreadcrumbTest</code></li>
+  <li><code>com.example.BreadcrumbFixture</code></li>
+</ol>
+<h4>Non-Concordion fixture exammple</h4>
+<p>Running the specification <a concordion:run="concordion" class="success" href="Foo.html">Foo</a> which has (non-Concordion) JUnit classes named <code>Foo.java</code>, <code>FooTest.java</code> and a Concordion fixture named <code>FooFixture.java</code> in the same package will ignore the JUnit classes when locating  the fixture and will run <span concordion:assert-equals="getFooFixtureClass()" class="success">FooFixture</span>.</p>
+<h3>JUnit Annotations</h3>
+<p>The following JUnit annotations can be used. However, the <a concordion:run="concordion" class="ignored" href="../../annotation/Annotation.html">Concordion annotations</a> are  preferred, and support additional features.</p>
+<div concordion:example="annotations" id="annotations">
+<h4>Supported JUnit annotations</h4>
+<p>The JUnit 4 integration supports the <span concordion:assertTrue="wasBeforeCalled()" class="success">Before</span>, <span concordion:assertTrue="wasBeforeClassCalled()" class="success">BeforeClass</span>, and <span concordion:assertTrue="wasRuleInvoked()" class="success">Rule</span> annotations.</p></div>
+<h3>Fixture Example</h3>
+<pre><code>import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
-public class jUnit4Test {
+public class JUnit4Test {
 
-    @Before
-    public void before() {
-        // this method is called before your fixture starts
-    }
-
-    <!--public boolean assertSomething() {-->
-        <!--// this method can be asserted to return "true" from your specification using the-->
-        <!--// <a href="../../command/assertTrue/AssertTrue.html" concordion:run="concordion">concordion:assertTrue</a> command.-->
-        <!--// other commands can be found <a concordion:run="concordion" href="../../command/Command.html">here</a>.-->
-    <!--}-->
-
+// ...
 }
-</code>
-</pre>
-
-</div>
-
-<div class="footer">Results generated by <a href="http://www.concordion.org" style="font-weight: bold; text-decoration: none; color: #89C;">Concordion</a><div class="testTime">in 5 ms on 28-Aug-2016 at 18:52:03 NZST</div></div></body>
-</html>
+</code></pre><div class="footer">Results generated by <a href="http://www.concordion.org" style="font-weight: bold; text-decoration: none; color: #89C;">Concordion</a><div class="testTime">in 36 ms on 12-Mar-2017 at 14:55:07 NZDT</div></div></body></html>
