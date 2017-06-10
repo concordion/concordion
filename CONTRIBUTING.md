@@ -1,6 +1,10 @@
 How to contribute
 ================
-We welcome contributions to Concordion. This document lists the guidelines for contributing.
+We welcome contributions to Concordion. 
+
+To get started, [sign the Contributor License Agreement](https://www.clahub.com/agreements/concordion/concordion).
+
+This document lists the guidelines for contributing.
 
 Proposing a change
 -----------------------------
