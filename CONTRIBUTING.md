@@ -1,8 +1,8 @@
 How to contribute
 ================
-We welcome contributions to Concordion. 
+We welcome contributions to Concordion.
 
-To get started, [sign the Contributor License Agreement](https://www.clahub.com/agreements/concordion/concordion).
+Note that you will be asked to agree to the [contributor license agreement](https://gist.github.com/nigelcharman/c7cb396e2f48989be04d1e5afb89ca96) when raising a pull request.
 
 This document lists the guidelines for contributing.
 
@@ -20,6 +20,7 @@ Concordion uses a "Fork & Pull" model for collaborative development. If you have
  1. [fork](https://help.github.com/articles/fork-a-repo) the repository, 
  1. commit and push your changes to your forked project, and 
  1. send us a [pull request](https://help.github.com/articles/using-pull-requests) referencing the URL of the issue that you created.
+ 1. if this is your first pull request, you will be asked to sign the [contributor license agreement]((https://gist.github.com/nigelcharman/c7cb396e2f48989be04d1e5afb89ca96).
 
 Development Rules
 -----------------
