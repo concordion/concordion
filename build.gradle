@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'wrapper'
+apply plugin: 'jacoco'
 
 description = 'Concordion is an open source framework for Java that lets you turn a plain English description of a requirement into an automated test'
 
