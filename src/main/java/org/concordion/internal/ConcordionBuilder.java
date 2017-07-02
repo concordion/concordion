@@ -56,6 +56,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private ThrowableCaughtPublisher throwableListenerPublisher = new ThrowableCaughtPublisher();
     private LinkedHashMap<String, Resource> resourceToCopyMap = new LinkedHashMap<String, Resource>();
     private List<SpecificationProcessingListener> specificationProcessingListeners = new ArrayList<SpecificationProcessingListener>();
+    private List<ThrowableCaughtListener> throwableCaughtListeners = new ArrayList<ThrowableCaughtListener>();
     private List<Class<? extends Throwable>> failFastExceptions = Collections.<Class<? extends Throwable>>emptyList();
     private boolean builtAlready;
     private Fixture fixture;
@@ -134,7 +135,12 @@ public class ConcordionBuilder implements ConcordionExtender {
     }
 
     public ConcordionBuilder withThrowableListener(ThrowableCaughtListener throwableListener) {
-        throwableListenerPublisher.addThrowableListener(throwableListener);
+        throwableCaughtListeners.add(throwableListener);
+        return this;
+    }
+
+    private ConcordionBuilder withThrowableListener(int index, ThrowableCaughtListener throwableListener) {
+        throwableCaughtListeners.add(index, throwableListener);
         return this;
     }
 
@@ -276,7 +282,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         Source resourceSource = sources.get(SourceType.RESOURCE);
         Source specificationSource = sources.get(SourceType.SPECIFICATION);
 
-        withThrowableListener(new ThrowableRenderer(resourceSource));
+        withThrowableListener(0, new ThrowableRenderer(resourceSource));
         withRunListener(new RunResultRenderer(resourceSource));
 
         FixtureExampleHook fixtureExampleHook = new FixtureExampleHook(fixture);
@@ -301,6 +307,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         copyResources(resourceSource);
 
         addSpecificationListeners();
+        addThrowableListeners();
 
         SpecificationExporter exporter = new SpecificationExporter(target);
         specificationCommand.addSpecificationListener(exporter);
@@ -327,6 +334,12 @@ public class ConcordionBuilder implements ConcordionExtender {
 	private void addSpecificationListeners() {
         for (SpecificationProcessingListener listener : specificationProcessingListeners) {
             specificationCommand.addSpecificationListener(listener);
+        }
+    }
+
+    private void addThrowableListeners() {
+        for (ThrowableCaughtListener listener : throwableCaughtListeners) {
+            throwableListenerPublisher.addThrowableListener(listener);
         }
     }
 
