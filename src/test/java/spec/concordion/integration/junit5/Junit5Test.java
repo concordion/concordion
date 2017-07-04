@@ -44,7 +44,7 @@ public class Junit5Test {
     @TestFactory
     Iterable<DynamicTest> determineConcordionTests() throws InitializationError, IOException {
 
-        Fixture setupFixture;
+        final Fixture setupFixture;
         try {
             setupFixture = createFixture(getFixtureObject());
             // needs to be called so extensions have access to scoped variables
@@ -58,7 +58,7 @@ public class Junit5Test {
         } catch (UnableToBuildConcordionException e) {
             throw new InitializationError(e);
         }
-        org.concordion.Concordion concordion = fixtureRunner.getConcordion();
+        final org.concordion.Concordion concordion = fixtureRunner.getConcordion();
 
         concordion.checkValidStatus(setupFixture);
 
@@ -66,9 +66,10 @@ public class Junit5Test {
 
         final List<DynamicTest> tests = new LinkedList<DynamicTest>();
 
-        for (String example : examples) {
+        for (final String example : examples) {
             tests.add(dynamicTest(example, new Executable() {
                 public void execute() throws Throwable {
+                    concordion.processExample(setupFixture, example);
                 }
             }));
         }
