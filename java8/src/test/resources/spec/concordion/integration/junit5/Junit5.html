@@ -25,32 +25,32 @@
     </p>
 </div>
 
-The JUnit 4 integration supports the <span concordion:assertTrue="wasBeforeCalled()">Before</span>,
-<span concordion:assertTrue="wasBeforeClassCalled()">BeforeClass</span>,
-and <span concordion:assertTrue="wasRuleInvoked()">Rule</span> annotations.
+The JUnit 5 integration supports the <span concordion:assertTrue="wasBeforeCalled()">@BeforeEach</span> and
+<span concordion:assertTrue="wasBeforeClassCalled()">@BeforeAll</span> annotations
 
 <div concordion:example="Fixture Example">
     <h3>Fixture Example</h3>
 <pre>
 <code>
-import org.concordion.integration.junit4.ConcordionRunner;
-import org.junit.Before;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
 
-@RunWith(ConcordionRunnerJUnit5.class)
+@ConcordionJUnit5
 public class jUnit5Test {
 
-    @Before
+    @BeforeEach
     public void before() {
         // this method is called before your fixture starts
     }
 
-    <!--public boolean assertSomething() {-->
-        <!--// this method can be asserted to return "true" from your specification using the-->
-        <!--// <a href="../../command/assertTrue/AssertTrue.html" concordion:run="concordion">concordion:assertTrue</a> command.-->
-        <!--// other commands can be found <a concordion:run="concordion" href="../../command/Command.html">here</a>.-->
-    <!--}-->
+    @ConcordionTests
+    public Iterable&lt;DynamicTest&gt; concordionTests;
 
+    @TestFactory
+    Iterable&lt;DynamicTest&gt; determineConcordionTests() throws InitializationError, IOException {
+        return concordionTests;
+    }
 }
 </code>
 </pre>

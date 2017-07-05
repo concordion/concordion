@@ -13,5 +13,5 @@ import java.lang.annotation.Target;
 @ExtendWith(ConcordionJUnit5Extension.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.ANNOTATION_TYPE })
-public @interface Concordion {
+public @interface ConcordionJUnit5 {
 }
