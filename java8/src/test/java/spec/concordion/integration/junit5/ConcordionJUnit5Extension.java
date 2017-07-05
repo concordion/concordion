@@ -26,7 +26,8 @@ import static org.junit.jupiter.api.extension.ExtensionContext.*;
 public class ConcordionJUnit5Extension implements
         BeforeTestExecutionCallback,
         TestInstancePostProcessor,
-        AfterAllCallback
+        AfterAllCallback,
+        ParameterResolver
 {
     private static final Namespace NAMESPACE =
             Namespace.create("org", "concordion", "ConcordionJUnit5Extension");
@@ -73,6 +74,8 @@ public class ConcordionJUnit5Extension implements
             }));
         }
 
+        context.getStore(NAMESPACE).put("tests", tests);
+
         for(Field field  : testInstance.getClass().getDeclaredFields())
         {
             if (field.isAnnotationPresent(ConcordionTests.class))
@@ -92,5 +95,15 @@ public class ConcordionJUnit5Extension implements
         System.err.println("finishing");
         Concordion concordion = (Concordion) context.getStore(NAMESPACE).get("concordion");
         concordion.finish();
+    }
+
+    @Override
+    public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        return parameterContext.getParameter().getType().isAssignableFrom(Iterable.class);
+    }
+
+    @Override
+    public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        return extensionContext.getStore(NAMESPACE).get("tests");
     }
 }

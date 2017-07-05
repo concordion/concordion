@@ -44,11 +44,8 @@ public class jUnit5Test {
         // this method is called before your fixture starts
     }
 
-    @ConcordionTests
-    public Iterable&lt;DynamicTest&gt; concordionTests;
-
     @TestFactory
-    Iterable&lt;DynamicTest&gt; determineConcordionTests() throws InitializationError, IOException {
+    Iterable&lt;DynamicTest&gt; determineConcordionTests(Iterable&lt;DynamicTest&gt; concordionTests) {
         return concordionTests;
     }
 }

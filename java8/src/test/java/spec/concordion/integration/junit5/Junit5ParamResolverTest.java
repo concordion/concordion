@@ -9,7 +9,7 @@ import org.junit.jupiter.api.TestFactory;
  * Created by tim on 4/07/17.
  */
 @ConcordionJUnit5
-public class Junit5Test {
+public class Junit5ParamResolverTest {
     private static boolean beforeClassCalled=false;
     private boolean beforeCalled=false;
     private boolean ruleInvoked = false;
@@ -34,11 +34,8 @@ public class Junit5Test {
         return ruleInvoked;
     }
 
-    @ConcordionTests
-    public Iterable<DynamicTest> concordionTests;
-
     @TestFactory
-    Iterable<DynamicTest> determineConcordionTests() {
+    Iterable<DynamicTest> determineConcordionTests(Iterable<DynamicTest> concordionTests) {
         return concordionTests;
     }
 }
