@@ -10,9 +10,8 @@ import org.junit.jupiter.api.TestFactory;
  */
 @ConcordionJUnit5
 public class Junit5FieldInjectionTest {
-    private static boolean beforeClassCalled=false;
-    private boolean beforeCalled=false;
-    private boolean ruleInvoked = false;
+    private static boolean beforeClassCalled = false;
+    private boolean beforeCalled = false;
 
     @BeforeEach
     public void before() {
@@ -29,9 +28,6 @@ public class Junit5FieldInjectionTest {
     }
     public boolean wasBeforeClassCalled() {
         return beforeClassCalled;
-    }
-    public boolean wasRuleInvoked() {
-        return ruleInvoked;
     }
 
     @ConcordionTests
