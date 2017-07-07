@@ -1,0 +1,92 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>JUnit 3.8</h1>
+    
+    <hr/>
+    <h2>NOTE:</h2>
+    <p>JUnit 3 support is <b>deprecated</b> as of Concordion 2.0. Please update to use the <a href="Junit4.html">JUnit 4</a> support.</p>
+    <hr/>
+
+    <p>
+        An active specification with JUnit consists of two parts: an
+        HTML (or Markdown) file and a Java test that extends <code>ConcordionTestCase</code>.
+    </p>
+    
+    <p>
+        When you run the test class using JUnit, it will automatically locate
+        the HTML file. It does this by looking in the same package for a ".html"
+        file named the same as the test, but without the "Test" suffix.
+    </p>
+
+    <div class="example">
+        <h3>Example</h3>
+
+        <p>
+            If your test is called <b>com.example.BreadcrumbTest</b> then the corresponding
+            HTML file must be in the same package (<b>com.example</b>) and called
+            <b>Breadcrumb.html</b>. (Other specification types will use different suffices, eg. `.md` or `.markdown` for Markdown specifications.)
+        </p>
+    </div>
+
+    <h3>Reverse lookup</h3>
+
+    <p>When using the [run command](../../command/run/Run.html "c:run"), the fixture class is located from the referenced specification by
+    looking in the same package as the specification for a JUnit test named the same as the specification with optionally `Test` or
+    `Fixture` appended.</p>
+
+    <div class="example">
+    <h4>Example</h4>
+    <p>If your specification contains a run command referencing the specification `Breadcrumb.md` in the `com.example` package,
+    Concordion will look in the following order for a corresponding fixture:</p>
+
+    <ol>
+      <li>com.example.Breadcrumb</li>
+      <li>com.example.BreadcrumbTest</li>
+      <li>com.example.BreadcrumbFixture</li>
+    </ol>
+    </div>
+
+    <div class="example">
+    <h4>Non-Concordion fixture exammple</h4>
+
+    <p>Running the specification <a concordion:run="concordion" href="Foo.md">Foo</a> which has (non-Concordion) JUnit classes named <b>Foo.java</b>, <b>FooTest.java</b>
+    and a Concordion fixture named <b>FooFixture.java</b> in the same package will ignore the JUnit classes when locating
+    the fixture and will run <span concordion:assert-equals="getFooFixtureClass()">FooFixture</span>.</p>
+    </div>
+
+    <p>
+        The jUnit 3 integration supports all standard jUnit3 methods - including the <span concordion:assertTrue="wasSetUpCalled()">setUp</span> method.
+
+    </p>
+
+
+    <div class="example">
+        <h3>Fixture Example</h3>
+<pre>
+<code>
+import org.concordion.integration.junit3.ConcordionTestCase;
+import org.junit.Before;
+import org.junit.runner.RunWith;
+
+public class Junit3Test extends ConcordionTestCase {
+
+    @Override
+    public void setUp() {
+        // this method is called before your fixture starts
+    }
+
+
+    public boolean assertSomething() {
+        // this method can be asserted to return "true" from your specification using the
+        // &lt;a href="../../command/assertTrue/AssertTrue.html" concordion:run="concordion">concordion:assertTrue&lt;/a> command
+        // other commands can be found <a href="../../command/Command.html">here</a>.
+    }
+}
+</code>
+</pre>
+
+    </div>
+</body>
+</html>

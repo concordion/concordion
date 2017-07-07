@@ -1,0 +1,24 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Demo</h1>
+
+    <p>
+    	After a user logs into the system, a greeting is
+    	displayed saying "Hello [user's first name]!"
+    </p>
+
+    <div class="example">
+
+		<h3>Example</h3>
+		
+        <p>
+            When user <b concordion:set="#firstName">Bob</b>
+            logs in, the greeting will be:
+            <b concordion:assertEquals="greetingFor(#firstName)">Hello Bob!</b>
+        </p>
+    </div>
+
+</body>
+</html>

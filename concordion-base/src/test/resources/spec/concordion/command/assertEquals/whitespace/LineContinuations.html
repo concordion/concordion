@@ -1,0 +1,57 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Line Continuations</h1>
+    
+    <p>
+        It is sometimes useful to be able to break a long line of text
+        over several lines without the linebreaks being treated as whitespace.
+    </p>
+           
+    <p>       
+        You can do this by putting an underscore at the end of a line, preceded
+        by a space.
+    </p>
+    
+    <div class="example">        
+    
+        <h3>Example</h3>
+
+        <p>These two statements are treated identically:</p>
+
+<span style="float:left">(1)</span>
+        <pre concordion:execute="addSnippet(#TEXT)">&lt;pre concordion:assertEquals="#firstName"&gt;Fred Flintstone&lt;/pre&gt;</pre>
+
+<span style="float:left">(2)</span>
+        <pre concordion:execute="addSnippet(#TEXT)">&lt;pre concordion:assertEquals="#firstName"&gt;Fred Flint _
+stone&lt;/pre&gt;</pre>
+
+
+        <table concordion:execute="#outcome = processSnippets(#evaluationResult)">
+            <tr>
+                <th concordion:set="#evaluationResult">#firstName</th>
+                <th concordion:assertEquals="#outcome.successes">Success</th>
+                <th concordion:assertEquals="#outcome.failures">Failure</th>
+            </tr>
+            <tr>
+                <td>Fred Flintstone</td>
+                <td>(1), (2)</td>
+                <td></td>
+            </tr>                
+            <tr>
+                <td>Fred Flint stone</td>
+                <td></td>
+                <td>(1), (2)</td>
+            </tr>
+            <tr>
+                <td>Fred Flint _ stone</td>
+                <td></td>
+                <td>(1), (2)</td>
+            </tr>                
+        </table>
+       
+    </div>
+
+</body>
+</html>

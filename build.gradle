@@ -13,46 +13,5 @@ repositories {
     jcenter()
 }
 
-dependencies {
-    compile 'junit:junit:4.12',
-            'ognl:ognl:3.1',
-            'org.pegdown:pegdown:1.6.0'
-
-    compile ('xom:xom:1.2.5') {
-        exclude group: 'xalan', module: 'xalan'
-        exclude group: 'xerces', module: 'xercesImpl'
-        exclude group: 'xml-apis', module: 'xml-apis'
-    }
-    
-    testCompile ('org.concordion:concordion-embed-extension:1.1.2') {
-        exclude group: 'org.concordion', module: 'concordion'
-    }
-	
-	testCompile 'com.github.stefanbirkner:system-rules:1.16.0'
-}
-
-sourceSets {
-    testDummies {  // "crash test dummies" - specs+fixtures that are used by the tests but aren't run as tests themselves
-        java {
-            srcDir 'src/test-dummies/java'
-        }
-        resources {
-            srcDir 'src/test-dummies/resources'
-        }
-        compileClasspath = sourceSets.main.output + configurations.compile
-    }
-
-    test {
-        compileClasspath += sourceSets.testDummies.output
-        runtimeClasspath += sourceSets.testDummies.output
-    }
-}
-
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
-
-test {
-    systemProperties['concordion.output.dir'] = "${reporting.baseDir}"
-}
-
-compileTestJava.dependsOn compileTestDummiesJava

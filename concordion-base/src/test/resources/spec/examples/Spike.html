@@ -1,0 +1,30 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<head>
+<link href="../../concordion.css" rel="stylesheet" type="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Spike</title>
+</head>
+<body>
+<h1>Spike</h1>
+
+<p concordion:execute="#greeting = getGreetingFor(#name)">
+The greeting <b concordion:assertEquals="#greeting">Hello David!</b>
+should be displayed for <b concordion:set="#name">David</b>
+when he logs in. 
+</p>
+
+<p concordion:execute="doSomething()"/>
+
+<table concordion:verifyRows="#person : getPeople()">
+    <tr>
+        <th concordion:assertEquals="#person.firstName">First Name</th>
+        <th concordion:assertEquals="#person.lastName">Last Name</th>
+    </tr>
+    <tr>
+        <td>John</td>
+        <td>Travolta</td>
+    </tr>
+</table>
+
+</body>
+</html>
