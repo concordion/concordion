@@ -67,7 +67,7 @@ public class ConcordionJUnit5Extension implements
         final List<DynamicTest> tests = new LinkedList<>();
 
         for (final String example : examples) {
-            tests.add(dynamicTest(example, () -> {
+            tests.add(DynamicTest.dynamicTest(example, () -> {
                 RunResultsCache.SINGLETON.startFixtureRun(setupFixture, concordion.getSpecificationDescription());
                 ResultSummary result = fixtureRunner.run(example, setupFixture);
                 result.assertIsSatisfied(setupFixture);
