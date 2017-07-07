@@ -8,16 +8,13 @@ import org.concordion.internal.FixtureRunner;
 import org.concordion.internal.UnableToBuildConcordionException;
 import org.concordion.internal.cache.RunResultsCache;
 import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.junit.runners.model.InitializationError;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.jupiter.api.extension.ExtensionContext.*;
 
 /**
@@ -25,27 +22,71 @@ import static org.junit.jupiter.api.extension.ExtensionContext.*;
  */
 public class ConcordionJUnit5Extension implements
         BeforeTestExecutionCallback,
+        AfterTestExecutionCallback,
         TestInstancePostProcessor,
         AfterAllCallback,
         ParameterResolver
 {
     private static final Namespace NAMESPACE =
             Namespace.create("org", "concordion", "ConcordionJUnit5Extension");
-
+    public static final String CONCORDION_NAMESPACE_KEY = "concordion";
+    public static final String DYNAMIC_TEST_LIST_NAMESPACE_KEY = "tests";
+    private static final Object SETUP_FIXTURE_NAMESPACE_KEY = "setupFixture";
 
     ConcordionJUnit5Extension() {
-
     }
+
+    private Fixture getSetupFixture(TestExtensionContext context) {
+        return (Fixture) context.getStore(NAMESPACE).get(SETUP_FIXTURE_NAMESPACE_KEY);
+    }
+    private void setSetupFixture(ExtensionContext context, Fixture setupFixture) {
+        context.getStore(NAMESPACE).put(SETUP_FIXTURE_NAMESPACE_KEY, setupFixture);
+    }
+    private Concordion getConcordion(ContainerExtensionContext context) {
+        return (Concordion) context.getStore(NAMESPACE).get(CONCORDION_NAMESPACE_KEY);
+    }
+    private void setConcordion(ExtensionContext context, Concordion concordion) {
+        context.getStore(NAMESPACE).put(CONCORDION_NAMESPACE_KEY, concordion);
+    }
+    private List<DynamicTest> getDynamicTestList(ExtensionContext extensionContext) {
+        return (List<DynamicTest>) extensionContext.getStore(NAMESPACE).get(DYNAMIC_TEST_LIST_NAMESPACE_KEY);
+    }
+    private void setDynamicTestList(ExtensionContext context, List<DynamicTest> tests) {
+        context.getStore(NAMESPACE).put(DYNAMIC_TEST_LIST_NAMESPACE_KEY, tests);
+    }
+
 
     @Override
     public void beforeTestExecution(TestExtensionContext context) throws Exception {
+        getSetupFixture(context).beforeExample(context.getDisplayName());
     }
+    @Override
+    public void afterTestExecution(TestExtensionContext context) throws Exception {
+        getSetupFixture(context).afterExample(context.getDisplayName());
+    }
+    @Override
+    public void afterAll(ContainerExtensionContext context) throws Exception {
+        Concordion concordion = getConcordion(context);
+        concordion.finish();
+    }
+    @Override
+    public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        return parameterContext.getParameter().getType().isAssignableFrom(Iterable.class);
+    }
+
+    @Override
+    public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        return getDynamicTestList(extensionContext);
+    }
+
 
     @Override
     public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
         final Fixture setupFixture;
         try {
             setupFixture = createFixture(testInstance);
+            setSetupFixture(context, setupFixture);
+
             // needs to be called so extensions have access to scoped variables
         } catch (Exception e) {
             throw new InitializationError(e);
@@ -58,7 +99,7 @@ public class ConcordionJUnit5Extension implements
             throw new InitializationError(e);
         }
         Concordion concordion = fixtureRunner.getConcordion();
-        context.getStore(NAMESPACE).put("concordion", concordion);
+        setConcordion(context, concordion);
 
         concordion.checkValidStatus(setupFixture);
 
@@ -74,7 +115,7 @@ public class ConcordionJUnit5Extension implements
             }));
         }
 
-        context.getStore(NAMESPACE).put("tests", tests);
+        setDynamicTestList(context, tests);
 
         for(Field field  : testInstance.getClass().getDeclaredFields())
         {
@@ -88,22 +129,5 @@ public class ConcordionJUnit5Extension implements
 
     protected Fixture createFixture(Object fixtureObject) {
         return new FixtureInstance(fixtureObject);
-    }
-
-    @Override
-    public void afterAll(ContainerExtensionContext context) throws Exception {
-        System.err.println("finishing");
-        Concordion concordion = (Concordion) context.getStore(NAMESPACE).get("concordion");
-        concordion.finish();
-    }
-
-    @Override
-    public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return parameterContext.getParameter().getType().isAssignableFrom(Iterable.class);
-    }
-
-    @Override
-    public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return extensionContext.getStore(NAMESPACE).get("tests");
     }
 }
