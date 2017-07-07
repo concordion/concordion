@@ -16,7 +16,7 @@ apply plugin: 'java'
 apply plugin: 'wrapper'
 apply plugin: 'org.junit.platform.gradle.plugin'
 
-description = 'Adds support for features specific to java8, including JUnit 5.'
+description = 'Adds support for JUnit 5.'
 
 wrapper {
     // If changing this, you may need to update the distributionUrl to http rather than https in gradle/wrapper/gradle-wrapper.properties to workaround a TravisCI with openjdk6. The other fixes in http://stackoverflow.com/questions/29584328/gradlew-bat-and-gradlew-sslhandshakeexception#answer-30924895 didn't work for me.
