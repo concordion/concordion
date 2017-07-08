@@ -1,22 +1,8 @@
-buildscript {
-    ext {
-        junitPlatformVersion = '1.0.0-M4'
-        junitJupiterVersion = '5.0.0-M4'
-    }
-    repositories {
-        mavenLocal()
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.junit.platform:junit-platform-gradle-plugin:$junitPlatformVersion"
-    }
-}
-
 apply plugin: 'java'
 apply plugin: 'wrapper'
-apply plugin: 'org.junit.platform.gradle.plugin'
+apply plugin: 'jacoco'
 
-description = 'Adds support for JUnit 5.'
+description = 'Concordion is an open source framework for Java that lets you turn a plain English description of a requirement into an automated test'
 
 wrapper {
     // If changing this, you may need to update the distributionUrl to http rather than https in gradle/wrapper/gradle-wrapper.properties to workaround a TravisCI with openjdk6. The other fixes in http://stackoverflow.com/questions/29584328/gradlew-bat-and-gradlew-sslhandshakeexception#answer-30924895 didn't work for me.
@@ -28,18 +14,21 @@ repositories {
 }
 
 dependencies {
-    compile project(':concordion-base')
-    compile "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
-    testRuntime "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
-}
+    compile 'junit:junit:4.12',
+            'ognl:ognl:3.1',
+            'org.pegdown:pegdown:1.6.0'
 
-junitPlatform {
-    filters {
-        engines {
-            include 'junit-jupiter'
-            exclude 'junit-vintage'
-        }
+    compile ('xom:xom:1.2.5') {
+        exclude group: 'xalan', module: 'xalan'
+        exclude group: 'xerces', module: 'xercesImpl'
+        exclude group: 'xml-apis', module: 'xml-apis'
     }
+    
+    testCompile ('org.concordion:concordion-embed-extension:1.1.2') {
+        exclude group: 'org.concordion', module: 'concordion'
+    }
+	
+	testCompile 'com.github.stefanbirkner:system-rules:1.16.0'
 }
 
 sourceSets {
@@ -59,8 +48,8 @@ sourceSets {
     }
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
 
 test {
     systemProperties['concordion.output.dir'] = "${reporting.baseDir}"
