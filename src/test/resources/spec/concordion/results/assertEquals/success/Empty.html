@@ -1,0 +1,24 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Empty Elements</h1>
+    
+    <p>
+        If the element is empty then a non-breaking space (&amp;#160) is inserted so
+        that there is something there to show the success.
+    </p>        
+
+    <div class="example">        
+    
+        <h3>Example</h3>
+        
+        <pre concordion:set="#snippet">&lt;span concordion:assertEquals="username"/&gt;</pre>
+
+        <p>When marked as a success becomes:</p>
+        
+        <pre concordion:assertEquals="renderAsSuccess(#snippet)">&lt;span concordion:assertEquals="username" class="success"&gt;&amp;#160;&lt;/span&gt;</pre>
+    </div>
+
+</body>
+</html>

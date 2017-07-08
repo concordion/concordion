@@ -28,7 +28,7 @@ repositories {
 }
 
 dependencies {
-    compile project(':concordion-base')
+    compile project(':')
     compile "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
     testRuntime "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
 }

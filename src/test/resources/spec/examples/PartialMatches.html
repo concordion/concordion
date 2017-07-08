@@ -1,0 +1,37 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+<h1>Partial Matches</h1>
+
+<p>
+    Username searches return partial matches, i.e. all usernames containing 
+    the search string are returned.
+</p>
+
+<div class="example">
+
+    <h3>Example</h3>
+    
+    <p>Given these users:</p>
+    
+    <table concordion:execute="setUpUser(#username)">
+        <tr><th concordion:set="#username">Username</th></tr>
+        <tr><td>john.lennon</td></tr>
+        <tr><td>ringo.starr</td></tr>
+        <tr><td>george.harrison</td></tr>
+        <tr><td>paul.mcartney</td></tr>
+    </table>
+
+    <p>Searching for "<b concordion:set="#searchString">arr</b>" will return:</p>
+    
+    <table concordion:verifyRows="#username : getSearchResultsFor(#searchString)">
+        <tr><th concordion:assertEquals="#username">Matching Usernames</th></tr>
+        <tr><td>george.harrison</td></tr>
+        <tr><td>ringo.starr</td></tr>
+    </table>        
+
+</div>    
+
+</body>
+</html>

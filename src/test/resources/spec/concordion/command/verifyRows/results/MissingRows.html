@@ -1,0 +1,126 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<head>
+<link href="../../../../../concordion.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+    <h1>Missing Rows</h1>
+
+    <p>
+        Missing rows are marked with CSS <code>class="missing"</code>
+        on the <code>&lt;tr&gt;</code> element.
+    </p>
+
+    <p>
+        In the example, below, we will also demonstrate how the <code>verifyRows</code>
+        command can be used to check multiple properties of objects in a collection.
+    </p>
+
+    <div class="example">
+
+        <h3>Example</h3>
+
+        <p>Given a method <code>getPeople()</code> that returns a Collection containing the following <code>Person</code> objects:</p>
+
+        <table concordion:execute="addPerson(#firstName, #lastName, #birthYear)">
+            <tr>
+                <th concordion:set="#firstName">First Name</th>
+                <th concordion:set="#lastName">Last Name</th>
+                <th concordion:set="#birthYear">Birth Year</th>
+            </tr>
+            <tr>
+                <td>John</td>
+                <td>Travolta</td>
+                <td>1954</td>
+            </tr>
+            <tr>
+                <td>Cliff</td>
+                <td>Richard</td>
+                <td>1940</td>
+            </tr>
+            <tr>
+                <td>Britney</td>
+                <td>Spears</td>
+                <td>1981</td>
+            </tr>
+        </table>
+
+
+        <p>And the following instrumentation:</p>
+
+<pre class="html" concordion:set="#fragment">
+&lt;table concordion:verifyRows="#person : getPeople()"&gt;
+    &lt;tr&gt;
+        &lt;th concordion:assertEquals="#person.firstName"&gt;First Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#person.lastName"&gt;Last Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#person.birthYear"&gt;Birth Year&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;John&lt;/td&gt;
+        &lt;td&gt;Travolta&lt;/td&gt;
+        &lt;td&gt;1066&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Michael&lt;/td&gt;
+        &lt;td&gt;Jackson&lt;/td&gt;
+        &lt;td&gt;1958&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Britney&lt;/td&gt;
+        &lt;td&gt;Spears&lt;/td&gt;
+        &lt;td&gt;1981&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Mick&lt;/td&gt;
+        &lt;td&gt;Jagger&lt;/td&gt;
+        &lt;td&gt;1943&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+</pre>
+
+        <p>Results in this output:</p>
+
+<pre class="html" concordion:assertEquals="getOutputFragment(#fragment)">
+&lt;table concordion:verifyRows="#person : getPeople()"&gt;
+    &lt;tr&gt;
+        &lt;th concordion:assertEquals="#person.firstName"&gt;First Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#person.lastName"&gt;Last Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#person.birthYear"&gt;Birth Year&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="success"&gt;John&lt;/td&gt;
+        &lt;td class="success"&gt;Travolta&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;1066&lt;/del&gt;
+&lt;ins class="actual"&gt;1954&lt;/ins&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;Michael&lt;/del&gt;
+&lt;ins class="actual"&gt;Cliff&lt;/ins&gt;&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;Jackson&lt;/del&gt;
+&lt;ins class="actual"&gt;Richard&lt;/ins&gt;&lt;/td&gt;
+        &lt;td class="failure"&gt;&lt;del class="expected"&gt;1958&lt;/del&gt;
+&lt;ins class="actual"&gt;1940&lt;/ins&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class="success"&gt;Britney&lt;/td&gt;
+        &lt;td class="success"&gt;Spears&lt;/td&gt;
+        &lt;td class="success"&gt;1981&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr class="missing"&gt;
+        &lt;td&gt;Mick&lt;/td&gt;
+        &lt;td&gt;Jagger&lt;/td&gt;
+        &lt;td&gt;1943&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+</pre>
+
+        <p>
+            Notice that the Mick Jagger item was expected to be in the collection,
+            but was not, so the row is marked with <code>class="missing"</code>.
+        </p>
+
+    </div>
+
+
+</body>
+</html>

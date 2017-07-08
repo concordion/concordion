@@ -1,0 +1,62 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Handling Exceptions</h1>
+    
+    <p>
+       If an exception is thrown during the evaluation of the expression,
+       then the exception is reported. No "success" or "failure" events
+       are reported since the exception will be treated as an implicit failure.
+    </p>
+    
+    <div class="example">        
+    
+        <h3>Example</h3>
+        
+        <p>Given the following instrumentation:</p>
+        
+<pre concordion:set="#snippet">
+&lt;span concordion:assertEquals="myMethod()"&gt;ABCD&lt;/span&gt;
+</pre>
+
+        <p>And given that each row in this table is an independent test, we
+           expect these event counts:
+        </p>           
+           
+        <table concordion:execute="#counts = countsFromExecutingSnippetWithSimulatedEvaluationResult(#snippet, #simulatedResult)">
+            <tr>
+                <th>Scenario</th>
+                <th colspan="3">Event Counts</th>
+            </tr>
+            <tr>
+                <th concordion:set="#simulatedResult">myMethod() Returns</th>
+                <th concordion:assertEquals="#counts.successCount">Successes</th>
+                <th concordion:assertEquals="#counts.failureCount">Failures</th>
+                <th concordion:assertEquals="#counts.exceptionCount">Exceptions</th>
+            </tr>
+            <tr>
+                <td>ABCD</td>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>XYZ</td>
+                <td>0</td>
+                <td>1</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>(An exception)</td>
+                <td>0</td>
+                <td>0</td>
+                <td>1</td>
+            </tr>
+        </table>
+    </div>
+
+    
+
+</body>
+</html>
