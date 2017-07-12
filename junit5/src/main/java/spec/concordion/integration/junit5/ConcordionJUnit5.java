@@ -1,6 +1,7 @@
 package spec.concordion.integration.junit5;
 
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.commons.annotation.Testable;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -13,5 +14,6 @@ import java.lang.annotation.Target;
 @ExtendWith(ConcordionJUnit5Extension.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.ANNOTATION_TYPE })
+@Testable
 public @interface ConcordionJUnit5 {
 }
