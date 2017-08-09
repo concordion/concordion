@@ -1,0 +1,39 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<head>
+<link href="../../../../../concordion.css" rel="stylesheet" type="text/css" />
+<title>Failures</title>
+</head>
+<body>
+
+    <h1>Failures</h1>
+    
+    <p>
+        Failures are indicated by adding a <code>class="failure"</code> attribute to the element,
+        and replacing the contents with a <code>&lt;del&gt;</code> and <code>&lt;ins&gt;</code> 
+        elements containing the expected value and the actual value respectively.
+    </p>
+    
+    <div class="example">        
+    
+        <h3>Example</h3>
+        
+        <p>
+            The output of running this:
+        </p>
+        
+        <pre concordion:set="#snippet">&lt;p concordion:assertTrue="isPalindrome(#TEXT)"&gt;ABB&lt;/p&gt;</pre>
+
+        <p>Looks like this:</p>
+
+<pre class="html" concordion:assertEquals="render(#snippet)">
+&lt;p concordion:assertTrue="isPalindrome(#TEXT)" class="failure"&gt; _
+&lt;del class="expected"&gt;ABB&lt;/del&gt;
+&lt;ins class="actual"&gt;== false&lt;/ins&gt; _
+&lt;/p&gt;
+</pre>
+        <p>Note: The underscores indicate line continuations for readability only. They are not output. In reality, it is all in one long line.</p>
+        
+    </div>
+
+</body>
+</html>

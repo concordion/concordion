@@ -1,0 +1,47 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Supported Elements</h1>
+    
+    <p>
+        The <code>assertEquals</code> command can currently be used on any HTML element.
+        There are currently no checks. 
+        
+        However, you should avoid using the command on elements that cannot legally
+        have a <code>&lt;span&gt;</code> child (e.g. <code>&lt;table&gt;</code>,
+        <code>&lt;tr&gt;</code>, <code>&lt;ul&gt;</code>, <code>&lt;ol&gt;</code>).
+    </p>
+    
+    <div class="example">        
+    
+        <h3>Examples</h3>
+
+<p>All of these will work:</p>        
+        
+<pre class="html" concordion:assertEquals="process(#TEXT)">
+&lt;span concordion:assertEquals="#name"&gt;Fred&lt;/span&gt;
+</pre>
+
+<pre class="html" concordion:assertEquals="process(#TEXT)">
+&lt;strong concordion:assertEquals="#name"&gt;Fred&lt;/strong&gt;
+</pre>
+
+<pre class="html" concordion:assertEquals="process(#TEXT)">
+&lt;div concordion:assertEquals="#name"&gt;Fred&lt;/div&gt;
+</pre>
+
+<pre class="html" concordion:assertEquals="process(#TEXT)">
+&lt;table&gt;
+    &lt;tr&gt;
+        &lt;td concordion:assertEquals="#name"&gt;Fred&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+</pre>
+        
+    </div>
+
+    
+
+</body>
+</html>

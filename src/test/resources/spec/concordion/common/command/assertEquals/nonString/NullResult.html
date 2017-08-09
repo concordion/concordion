@@ -1,0 +1,47 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Null Result</h1>
+    
+    <p>
+       If the evaluation result is <code>null</code> then the string
+       "(null)" is used for performing the comparison.
+    </p>
+    
+    <div class="example">        
+    
+        <h3>Example</h3>
+
+<pre concordion:set="#snippet">
+&lt;span concordion:assertEquals="myMethod()"&gt;<b><em>(some expectation)</em></b>&lt;/span&gt;
+</pre>
+
+       <table concordion:execute="#outcome = outcomeOfPerformingAssertEquals(#snippet, #expectedString, #result)">
+            <tr>
+                <th concordion:set="#result">myMethod()<br />Returns</th>
+                <th concordion:set="#expectedString">The Expectation</th>
+                <th concordion:assertEquals="#outcome">Outcome</th>
+            </tr>
+            <tr>
+                <td>null</td>
+                <td>(null)</td>
+                <td>SUCCESS</td>
+            </tr>
+            <tr>
+                <td>null</td>
+                <td>xyz</td>
+                <td>FAILURE</td>
+            </tr>
+            <tr>
+                <td>null</td>
+                <td>null</td>
+                <td>FAILURE</td>
+            </tr>
+        </table>
+    </div>
+
+    
+
+</body>
+</html>

@@ -4,7 +4,7 @@ import org.concordion.api.Resource;
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 
-import spec.concordion.extension.JavaScriptExtensionTest;
+import spec.concordion.common.extension.JavaScriptExtensionTest;
 
 public class JavaScriptLinkedExtension implements ConcordionExtension {
 

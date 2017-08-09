@@ -1,0 +1,33 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Anchor Elements </h1>
+    
+    <p>
+        Anchor elements (&lt;a&gt;) have to be treated slightly differently to
+        other elements to prevent the 'actual' value becoming a link. Rather than
+        nesting &lt;span&gt; elements inside the &lt;a&gt;, we nest the &lt;a&gt;
+        inside a new 'failure' &lt;span&gt;. 
+    </p>        
+
+    <div class="example">        
+    
+        <h3>Example:</h3>
+        
+        <pre concordion:set="#snippet">&lt;a href="abc.html"&gt;ABC&lt;/a&gt;</pre>
+
+        <p>When marked as a failure, with actual value <code>XYZ</code>, it becomes:</p>
+
+<pre class="html">
+&lt;span class="failure"&gt; _
+&lt;span class="expected"&gt; _
+&lt;a href="abc.html"&gt;ABC&lt;/a&gt; _
+&lt;/span&gt; _
+&lt;span class="actual"&gt;XYZ&lt;/span&gt; _
+&lt;/div&gt;
+</pre>
+    </div>
+
+</body>
+</html>
