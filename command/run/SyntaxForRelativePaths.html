@@ -1,0 +1,82 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<head>
+    <link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+    <title>Syntax for Relative Paths</title>
+</head>    
+<body>
+
+    <h1>Syntax for Relative Paths</h1>
+
+    <p>
+    	Paths are relative to the current location. You can use one or more leading
+    	<code>../</code> to refer to parent directories. 
+    </p>        
+
+	<div class="example">        
+
+        <h3>Examples</h3>
+        
+        <p>Same directory:</p>
+        
+		<table concordion:execute="#result = getPath(#currentPath, #relativePath)">
+        	<tr>
+        		<th concordion:set="#currentPath">Our Current Path</th>
+        		<th concordion:set="#relativePath">Specified Relative Path</th>
+        		<th concordion:assertEquals="#result">Resultant Path</th>
+        	</tr>
+        	
+        	<tr> <td>/MySpec.html</td>                  <td>AnotherSpec.html</td>    <td>/AnotherSpec.html</td>              </tr>
+			<tr> <td>/blah/MySpec.html</td>             <td>AnotherSpec.html</td>    <td>/blah/AnotherSpec.html</td>         </tr>
+			<tr> <td>/blah/x/MySpec.html</td>           <td>AnotherSpec.html</td>    <td>/blah/x/AnotherSpec.html</td>       </tr>
+		</table>
+		
+		<p>You can also use <code>./</code> to mean "the current directory", if you
+		   want to be particularly explicit:
+		</p>
+		
+ 		<table concordion:execute="#result = getPath(#currentPath, #relativePath)">
+        	<tr>
+        		<th concordion:set="#currentPath">Our Current Path</th>
+        		<th concordion:set="#relativePath">Specified Relative Path</th>
+        		<th concordion:assertEquals="#result">Resultant Path</th>
+        	</tr>
+        	
+        	<tr> <td>/MySpec.html</td>                  <td>./AnotherSpec.html</td>  <td>/AnotherSpec.html</td>              </tr>
+			<tr> <td>/blah/MySpec.html</td>             <td>./AnotherSpec.html</td>  <td>/blah/AnotherSpec.html</td>         </tr>
+			<tr> <td>/blah/x/MySpec.html</td>           <td>./AnotherSpec.html</td>  <td>/blah/x/AnotherSpec.html</td>       </tr>
+		</table>
+
+		<p>Child directory:</p>
+			
+		<table concordion:execute="#result = getPath(#currentPath, #relativePath)">
+        	<tr>
+        		<th concordion:set="#currentPath">Our Current Path</th>
+        		<th concordion:set="#relativePath">Specified Relative Path</th>
+        		<th concordion:assertEquals="#result">Resultant Path</th>
+        	</tr>
+			<tr> <td>/MySpec.html</td>                <td>foo/AnotherSpec.html</td>   <td>/foo/AnotherSpec.html</td>          </tr>
+			<tr> <td>/blah/x/MySpec.html</td>         <td>z/AnotherSpec.html</td>     <td>/blah/x/z/AnotherSpec.html</td>     </tr>
+		</table>
+
+		<p>Parent or sibling directory:</p>
+
+		<table concordion:execute="#result = getPath(#currentPath, #relativePath)">
+        	<tr>
+        		<th concordion:set="#currentPath">Our Current Path</th>
+        		<th concordion:set="#relativePath">Specified Relative Path</th>
+        		<th concordion:assertEquals="#result">Resultant Path</th>
+        	</tr>
+            <tr> <td>/blah/docs/Example.html</td>       <td>../Fred.html</td>     <td>/blah/Fred.html</td>          </tr>
+            <tr> <td>/blah/docs/Example.html</td>       <td>../../Fred.html</td>  <td>/Fred.html</td>               </tr>
+            <tr> <td>/blah/docs/work/Example.html</td>  <td>../../Fred.html</td>  <td>/blah/Fred.html</td>          </tr>
+            <tr> <td>/blah/docs/work/Example.html</td>  <td>../Fred.html</td>     <td>/blah/docs/Fred.html</td>     </tr>
+            <tr> <td>/blah/Example.html</td>            <td>../Fred.html</td>     <td>/Fred.html</td>               </tr>
+            <tr> <td>/blah/docs/work/Example.html</td>  <td>../css/Fred.html</td> <td>/blah/docs/css/Fred.html</td> </tr>
+        	
+        </table>
+
+    </div>        
+
+
+</body>
+</html>

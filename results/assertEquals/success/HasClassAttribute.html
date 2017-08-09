@@ -1,0 +1,24 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Element Already Has A Class Attribute</h1>
+    
+    <p>
+        If an element already has a class attribute then the new attribute will
+        be appended to the existing value, separated by space.
+    </p>
+    
+    <div class="example">        
+    
+        <h3>Example</h3>
+        
+        <pre concordion:set="#snippet">&lt;span concordion:assertEquals="username" class="blah"&gt;fred&lt;/span&gt;</pre>
+
+        <p>When marked as a success becomes:</p>
+        
+        <pre concordion:assertEquals="renderAsSuccess(#snippet)">&lt;span concordion:assertEquals="username" class="blah success"&gt;fred&lt;/span&gt;</pre>
+    </div>
+
+</body>
+</html>

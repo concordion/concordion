@@ -1,0 +1,46 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>assertTrue</h1>
+
+    <p>
+        The <code>concordion:assertTrue</code> tag evaluates an expression
+        to obtain a boolean result. If the result is true, the tagged element
+        is marked as a success else it is marked as a failure.
+    </p>
+
+    <div class="example">
+
+        <h3>Example</h3>
+
+        <p>Given this instrumented snippet:</p>
+
+<pre concordion:set="#snippet">
+&lt;p&gt;
+    Since the password was correct, the user should then be        
+    <b>&lt;span concordion:assertTrue="#user.isLoggedIn()"&gt;</b>logged in<b>&lt;/span&gt;</b>.
+&lt;/p&gt;    
+</pre>
+
+        <p>We get the following outcomes depending on the evaluation result of the expression <code>#user.isLoggedIn()</code>:</p>
+
+        <table concordion:execute="#outcome = successOrFailure(#snippet, #evaluationResult)">
+            <tr>
+                <th concordion:set="#evaluationResult">Evaluation Result</th>
+                <th concordion:assertEquals="#outcome">Outcome</th>
+            </tr>
+            <tr>
+                <td>true</td>
+                <td>SUCCESS</td>
+            </tr>
+            <tr>
+                <td>false</td>
+                <td>FAILURE</td>
+            </tr>
+        </table>
+        
+    </div>
+
+</body>
+</html>
