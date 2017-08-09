@@ -1,0 +1,58 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Normalization</h1>
+    
+    <p>Whitespace characters are:</p>
+      
+    <ul>
+        <li>Tab (ASCII 9)</li>
+        <li>LF (ASCII 10)</li>
+        <li>CR (ASCII 13)</li>
+        <li>Space (ASCII 32)</li>
+    </ul>
+
+    <div class="example">
+
+        <h3>Examples</h3>
+
+        <table concordion:execute="#normalized = normalize(#source)">
+            <tr>
+                <th concordion:set="#source">Source String</th>
+                <th concordion:assertEquals="#normalized">Normalized</th>
+            </tr>
+            <tr>
+                <td>fred</td>
+                <td>fred</td>
+            </tr>
+            <tr>
+                <td>[SPACE]fred</td>
+                <td>fred</td>
+            </tr>
+            <tr>
+                <td>[SPACE]fred[SPACE]</td>
+                <td>fred</td>
+            </tr>
+            <tr>
+                <td>[SPACE][SPACE]fred[LF][SPACE]</td>
+                <td>fred</td>
+            </tr>
+            <tr>
+                <td>[SPACE][CR][LF][TAB][SPACE]fred[SPACE][SPACE]bloggs</td>
+                <td>fred[SPACE]bloggs</td>
+            </tr>
+            <tr>
+                <td>fred[LF][SPACE][TAB][CR][LF]bloggs</td>
+                <td>fred[SPACE]bloggs</td>
+            </tr>
+            <tr>
+                <td>fred[LF][SPACE]x[TAB][CR][LF]bloggs</td>
+                <td>fred[SPACE]x[SPACE]bloggs</td>
+            </tr>
+        </table>
+    </div>
+        
+
+</body>
+</html>

@@ -3,7 +3,7 @@ package test.concordion.extension;
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 
-import spec.concordion.extension.CSSExtensionTest;
+import spec.concordion.common.extension.CSSExtensionTest;
 
 public class CSSEmbeddedExtension implements ConcordionExtension {
 

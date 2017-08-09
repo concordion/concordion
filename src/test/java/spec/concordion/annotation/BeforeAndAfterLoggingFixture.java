@@ -1,11 +1,11 @@
 package spec.concordion.annotation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.concordion.api.*;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RunWith(ConcordionRunner.class)
 public class BeforeAndAfterLoggingFixture {

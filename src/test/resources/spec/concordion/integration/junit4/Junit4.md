@@ -21,7 +21,7 @@ specification file must be in the same package (`com.example`) and called
 
 ### Reverse lookup
 
-When using the [run command](../../command/run/Run.html "c:run"), the fixture class is located from the referenced specification by
+When using the [run command](../../common/command/run/Run.html "c:run"), the fixture class is located from the referenced specification by
 looking in the same package as the specification for a JUnit test named the same as the specification with optionally `Test` or
 `Fixture` appended.
 
