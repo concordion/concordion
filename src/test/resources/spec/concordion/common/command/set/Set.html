@@ -1,0 +1,38 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<head>
+    <link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+    <title>"set"</title>
+</head>    
+<body>
+
+    <h1>set</h1>
+
+    <p>
+        A <code>set</code> command sets a temporary variable to the
+        text contents of the instrumented element, so that it can
+        be referenced by another command.
+    </p>        
+    
+    <div class="example">
+
+        <h3>Example</h3>
+        
+        <p>The following instrumentation:</p>
+<pre class="html" concordion:execute="process(#TEXT)">
+&lt;p&gt;
+    My name is &lt;b concordion:set="#fullName"&gt;David Peterson&lt;/b&gt;.
+    
+    &lt;span concordion:execute="setUpUser(#fullName)" /&gt;
+&lt;/p&gt;
+</pre>
+        <p>
+            <span>Calls</span> the method <code>setUpUser()</code> with the
+            string value
+            <code concordion:assertEquals="getParameterPassedIn()">David Peterson</code>. 
+        </p> 
+    </div>            
+
+
+
+</body>
+</html>
