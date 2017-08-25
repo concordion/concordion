@@ -3,6 +3,7 @@ package org.concordion.internal;
 import org.concordion.Concordion;
 import org.concordion.api.Fixture;
 import org.concordion.api.ResultSummary;
+import org.concordion.api.SpecificationLocator;
 import org.concordion.internal.cache.RunResultsCache;
 import org.concordion.internal.extension.FixtureExtensionLoader;
 
@@ -12,8 +13,8 @@ public class FixtureRunner {
     private static RunResultsCache runResultsCache = RunResultsCache.SINGLETON;
     private Concordion concordion;
 
-    public FixtureRunner(Fixture fixture) throws UnableToBuildConcordionException {
-        ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture);
+    public FixtureRunner(Fixture fixture, SpecificationLocator specificationLocator) throws UnableToBuildConcordionException {
+        ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture).withSpecificationLocator(specificationLocator);
         new FixtureExtensionLoader().addExtensions(fixture, concordionBuilder);
         new FixtureOptionsLoader().addOptions(fixture, concordionBuilder);
         concordion = concordionBuilder.build();
