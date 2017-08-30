@@ -1,7 +1,7 @@
 buildscript {
     ext {
-        junitPlatformVersion = '1.0.0-M4'
-        junitJupiterVersion = '5.0.0-M4'
+        junitPlatformVersion = '1.0.0-RC3'
+        junitJupiterVersion = '5.0.0-RC3'
     }
     repositories {
         mavenLocal()

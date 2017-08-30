@@ -14,3 +14,5 @@ bin/
 
 # Infer
 infer-out/
+junit5/out
+concordion-base/out

@@ -36,13 +36,13 @@ public class ConcordionJUnit5Extension implements
     ConcordionJUnit5Extension() {
     }
 
-    private Fixture getSetupFixture(TestExtensionContext context) {
+    private Fixture getSetupFixture(ExtensionContext context) {
         return (Fixture) context.getStore(NAMESPACE).get(SETUP_FIXTURE_NAMESPACE_KEY);
     }
     private void setSetupFixture(ExtensionContext context, Fixture setupFixture) {
         context.getStore(NAMESPACE).put(SETUP_FIXTURE_NAMESPACE_KEY, setupFixture);
     }
-    private Concordion getConcordion(ContainerExtensionContext context) {
+    private Concordion getConcordion(ExtensionContext context) {
         return (Concordion) context.getStore(NAMESPACE).get(CONCORDION_NAMESPACE_KEY);
     }
     private void setConcordion(ExtensionContext context, Concordion concordion) {
@@ -55,29 +55,6 @@ public class ConcordionJUnit5Extension implements
         context.getStore(NAMESPACE).put(DYNAMIC_TEST_LIST_NAMESPACE_KEY, tests);
     }
 
-
-    @Override
-    public void beforeTestExecution(TestExtensionContext context) throws Exception {
-        getSetupFixture(context).beforeExample(context.getDisplayName());
-    }
-    @Override
-    public void afterTestExecution(TestExtensionContext context) throws Exception {
-        getSetupFixture(context).afterExample(context.getDisplayName());
-    }
-    @Override
-    public void afterAll(ContainerExtensionContext context) throws Exception {
-        Concordion concordion = getConcordion(context);
-        concordion.finish();
-    }
-    @Override
-    public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return parameterContext.getParameter().getType().isAssignableFrom(Iterable.class);
-    }
-
-    @Override
-    public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return getDynamicTestList(extensionContext);
-    }
 
 
     @Override
@@ -129,5 +106,32 @@ public class ConcordionJUnit5Extension implements
 
     protected Fixture createFixture(Object fixtureObject) {
         return new FixtureInstance(fixtureObject);
+    }
+
+    @Override
+    public void afterAll(ExtensionContext context) throws Exception {
+        Concordion concordion = getConcordion(context);
+        concordion.finish();
+    }
+
+    @Override
+    public void afterTestExecution(ExtensionContext context) throws Exception {
+        getSetupFixture(context).afterExample(context.getDisplayName());
+
+    }
+
+    @Override
+    public void beforeTestExecution(ExtensionContext context) throws Exception {
+        getSetupFixture(context).beforeExample(context.getDisplayName());
+    }
+
+    @Override
+    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        return parameterContext.getParameter().getType().isAssignableFrom(Iterable.class);
+    }
+
+    @Override
+    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        return getDynamicTestList(extensionContext);
     }
 }

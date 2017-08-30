@@ -1,15 +1,16 @@
-package spec.concordion.integration.junit5;
+package spec.concordion.integration.junit5.jupiterRunner;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
+import spec.concordion.integration.junit5.ConcordionJUnit5;
 
 /**
  * Created by tim on 4/07/17.
  */
 @ConcordionJUnit5
-public class Junit5FieldInjectionTest {
+public class Junit5ParamResolverTest {
     private static boolean beforeClassCalled = false;
     private boolean beforeCalled = false;
 
@@ -30,11 +31,8 @@ public class Junit5FieldInjectionTest {
         return beforeClassCalled;
     }
 
-    @ConcordionTests
-    public Iterable<DynamicTest> concordionTests;
-
     @TestFactory
-    Iterable<DynamicTest> determineConcordionTests() {
+    Iterable<DynamicTest> determineConcordionTests(Iterable<DynamicTest> concordionTests) {
         return concordionTests;
     }
 }
