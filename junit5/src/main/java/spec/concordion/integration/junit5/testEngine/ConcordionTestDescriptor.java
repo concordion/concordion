@@ -11,15 +11,19 @@ import org.junit.platform.engine.support.hierarchical.Node;
  * Created by tim on 12/07/17.
  */
 public class ConcordionTestDescriptor extends AbstractTestDescriptor {
-    private Class<?> clas;
+    private Class<?> classUnderTest;
 
     public ConcordionTestDescriptor(UniqueId uniqueId, Class<?> clas) {
         super(uniqueId, clas.getCanonicalName());
-        this.clas = clas;
+        this.classUnderTest = clas;
     }
 
     @Override
     public Type getType() {
         return Type.TEST;
+    }
+
+    public Class<?> getClassUnderTest() {
+        return classUnderTest;
     }
 }

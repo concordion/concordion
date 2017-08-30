@@ -1,0 +1,61 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+<h1>JUnit 5</h1>
+
+<p>
+    An active specification with JUnit 4 consists of two parts: an
+    HTML file and a Java test has the annotation <code>ConcordionJUnit5</code>.
+</p>
+
+<p>
+    When you run the test class using JUnit, it will automatically locate
+    the HTML file. It does this by looking in the same package for a ".html"
+    file named the same as the test, but without the "Test" or "Fixture" suffixes.
+</p>
+
+<div concordion:example="Naming Example">
+    <h3>Naming Example</h3>
+
+    <p>
+        If your test is called <b>com.example.BreadcrumbTest</b> then the corresponding
+        HTML file must be in the same package (<b>com.example</b>) and called
+        <b>Breadcrumb.html</b>.
+    </p>
+</div>
+
+The JUnit 5 integration supports the <span concordion:assertTrue="wasBeforeCalled()">@BeforeEach</span> and
+<span concordion:assertTrue="wasBeforeClassCalled()">@BeforeAll</span> annotations
+
+<div concordion:example="Fixture Example">
+    <h3>Fixture Example</h3>
+<pre>
+<code>
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
+
+@ConcordionJUnit5
+public class jUnit5Test {
+
+    @BeforeEach
+    public void before() {
+        // this method is called before your fixture starts
+    }
+
+    @ConcordionTests
+    public Iterable&lt;DynamicTest&gt; concordionTests;
+
+    @TestFactory
+    Iterable&lt;DynamicTest&gt; determineConcordionTests() {
+        return concordionTests;
+    }
+}
+</code>
+</pre>
+
+</div>
+
+</body>
+</html>

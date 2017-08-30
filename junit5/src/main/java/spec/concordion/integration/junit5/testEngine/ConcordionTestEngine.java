@@ -1,7 +1,11 @@
 package spec.concordion.integration.junit5.testEngine;
 
 import org.concordion.Concordion;
+import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.platform.engine.*;
+import org.junit.runner.notification.RunListener;
+import org.junit.runner.notification.RunNotifier;
+import org.junit.runners.model.InitializationError;
 
 import java.util.Optional;
 
@@ -32,7 +36,21 @@ public class ConcordionTestEngine implements TestEngine {
         });
         descriptor.getChildren().forEach(test -> {
             request.getEngineExecutionListener().executionStarted(test);
-            request.getEngineExecutionListener().executionFinished(test, TestExecutionResult.successful());
+
+            ConcordionTestDescriptor ctd = (ConcordionTestDescriptor) test;
+            try {
+                RunNotifier runNotifier = new RunNotifier();
+
+                runNotifier.addListener(new ConcordionTestEngineRunNotifier(ctd, request.getEngineExecutionListener()));
+
+                System.err.println("Executing test: " + ctd.getClassUnderTest().getCanonicalName());
+                new ConcordionRunner(ctd.getClassUnderTest()).run(runNotifier);
+
+            } catch (InitializationError initializationError) {
+                initializationError.printStackTrace();
+                request.getEngineExecutionListener().executionFinished(test, TestExecutionResult.failed(initializationError));
+            }
+
         });
     }
 }

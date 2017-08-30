@@ -1,6 +1,5 @@
 package spec.concordion.integration.junit5.testEngine;
 
-import org.junit.platform.commons.annotation.Testable;
 import spec.concordion.integration.junit5.ConcordionJUnit5;
 
 /**
