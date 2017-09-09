@@ -10,8 +10,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.concordion.Concordion;
 import org.concordion.api.Fixture;
 import org.concordion.api.ResultSummary;
+import org.concordion.api.SpecificationLocator;
 import org.concordion.internal.*;
-import org.concordion.internal.RunOutput;
 import org.concordion.internal.cache.RunResultsCache;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
@@ -59,7 +59,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         }
 
         try {
-            fixtureRunner = new FixtureRunner(setupFixture);
+            fixtureRunner = new FixtureRunner(setupFixture, getSpecificationLocator());
         } catch (UnableToBuildConcordionException e) {
             throw new InitializationError(e);
         }
@@ -81,7 +81,11 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         }
     }
 
-    private void verifyUniqueExampleMethods(List<String> exampleNames) throws InitializationError {
+    protected SpecificationLocator getSpecificationLocator() {
+		return new ClassNameAndTypeBasedSpecificationLocator();
+	}
+
+	private void verifyUniqueExampleMethods(List<String> exampleNames) throws InitializationError {
         // use a hash set to store examples - gives us quick lookup and add.
         Set<String> setOfExamples = new HashSet<String>();
 

@@ -3,6 +3,7 @@ package org.concordion.integration.junit3;
 import junit.framework.TestCase;
 
 import org.concordion.api.Fixture;
+import org.concordion.internal.ClassNameAndTypeBasedSpecificationLocator;
 import org.concordion.internal.FixtureInstance;
 import org.concordion.internal.FixtureRunner;
 
@@ -19,7 +20,7 @@ public abstract class ConcordionTestCase extends TestCase {
         Fixture fixture  = new FixtureInstance(this);
         fixture.beforeSpecification();
         fixture.setupForRun(this);
-        new FixtureRunner(fixture).run(fixture);
+        new FixtureRunner(fixture, new ClassNameAndTypeBasedSpecificationLocator()).run(fixture);
         fixture.afterSpecification();
     }
 }

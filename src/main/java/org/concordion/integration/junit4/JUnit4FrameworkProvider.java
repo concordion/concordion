@@ -7,6 +7,6 @@ public class JUnit4FrameworkProvider implements TestFrameworkProvider {
     @Override
     public boolean isConcordionFixture(Class<?> clazz) {
         RunWith annotation = clazz.getAnnotation(RunWith.class);
-        return annotation != null && ConcordionRunner.class.equals(annotation.value());
+        return annotation != null && ConcordionRunner.class.isAssignableFrom(annotation.value());
     }
 }
