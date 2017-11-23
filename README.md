@@ -76,4 +76,6 @@ On importing the project to your IDE, the required dependencies will be download
 
 Project History
 =========
-History prior to April 2013 is in the [Subversion repository](http://concordion.googlecode.com/svn/tags/final-revision-before-github-migration/).
+History prior to April 2013 is in Google code archive [code](https://code.google.com/archive/p/concordion/source/default/source) and [history](https://code.google.com/archive/p/concordion/source/default/commits).
+
+
