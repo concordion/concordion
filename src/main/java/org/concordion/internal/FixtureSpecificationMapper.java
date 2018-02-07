@@ -18,7 +18,12 @@ import java.util.ServiceLoader;
  */
 public class FixtureSpecificationMapper {
 
-    private static ServiceLoader<TestFrameworkProvider> serviceLoader = ServiceLoader.load(TestFrameworkProvider.class);
+    private static ThreadLocal serviceLoaderHolder  = new ThreadLocal<ServiceLoader<TestFrameworkProvider>>() {
+        @Override
+        protected ServiceLoader<TestFrameworkProvider> initialValue() {
+            return ServiceLoader.load(TestFrameworkProvider.class);
+        }
+    };
 
     public static Resource toSpecificationResource(Object fixture, String specificationSuffix) {
         String slashedClassName = fixture.getClass().getName().replaceAll("\\.", "/");
@@ -49,6 +54,7 @@ public class FixtureSpecificationMapper {
     private static Class<?> getFixtureClass(String name) throws ClassNotFoundException {
         try {
             Class<?> clazz = Class.forName(name);
+            ServiceLoader<TestFrameworkProvider> serviceLoader = (ServiceLoader<TestFrameworkProvider>) serviceLoaderHolder.get();
             Iterator<TestFrameworkProvider> iterator = serviceLoader.iterator();
             while (iterator.hasNext()) {
                 TestFrameworkProvider provider = iterator.next();
