@@ -41,11 +41,12 @@ public interface SpecificationByExample extends Specification {
     /**
      * Processes a single example.
      *
+     * @param fixture the example's fixture
      * @param evaluator evaluator
      * @param example name of the example
      * @param resultRecorder result recorder
      */
-    void processExample(Evaluator evaluator, String example, ResultRecorder resultRecorder);
+    void processExample(Fixture fixture, Evaluator evaluator, String example, ResultRecorder resultRecorder);
 
     /**
      * Called once all examples have been executed so the spec can do things like "save HTML results to file".

@@ -35,7 +35,8 @@ public class ExampleCommand extends AbstractCommand {
                 specificationDescriber.getDescription(node.getResource(), exampleName));
 
         if (!isBeforeExample) {
-            announceBeforeExample(exampleName, node.getElement(), resultRecorder);
+            Fixture fixture = XMLSpecification.FIXTURE_HOLDER.get();
+            announceBeforeExample(exampleName, node.getElement(), resultRecorder, fixture);
         }
 
         try {
@@ -46,7 +47,8 @@ public class ExampleCommand extends AbstractCommand {
         setupCommandForExample(node, resultRecorder, exampleName);
 
         if (!isBeforeExample) {
-            announceAfterExample(exampleName, node.getElement(), resultRecorder);
+            Fixture fixture = XMLSpecification.FIXTURE_HOLDER.get();
+            announceAfterExample(exampleName, node.getElement(), resultRecorder, fixture);
         }
     }
 
@@ -110,15 +112,15 @@ public class ExampleCommand extends AbstractCommand {
         this.specificationDescriber = specificationDescriber;
     }
 
-    private void announceBeforeExample(String exampleName, Element element,	ResultRecorder resultRecorder) {
+    private void announceBeforeExample(String exampleName, Element element, ResultRecorder resultRecorder, Fixture fixture) {
 		for (ExampleListener listener : listeners) {
-			listener.beforeExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder)resultRecorder));
+			listener.beforeExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder)resultRecorder, fixture));
 		}
 	}
 
-    private void announceAfterExample(String exampleName, Element element, ResultRecorder resultRecorder) {
+    private void announceAfterExample(String exampleName, Element element, ResultRecorder resultRecorder, Fixture fixture) {
         for (int i = listeners.size() - 1; i >= 0; i--) {
-            listeners.get(i).afterExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder)resultRecorder));
+            listeners.get(i).afterExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder)resultRecorder, fixture));
         }
 	}
 }

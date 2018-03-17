@@ -11,7 +11,21 @@ Optionally, the method can have a String parameter annotated with `@ExampleName`
 
     @BeforeExample
     public void setupExample(@ExampleName exampleName) {
-    }    
+    }   
+
+We have two examples below. Each example increments an AtomicInteger that is [scoped](ConcordionScoped.md "c:run") differently and echoes the value.
+
+### [Test that increments counters](- "firstTest")
+
+* Example name is [firstTest](- "?=getExampleName()")
+* Unannotated field value is [1](- "?=getFieldCounter()")
+* Example scope value is [1](- "?=getExampleScopedCounter()")
+
+### [The same test again](- "secondTest")
+
+* Example name is [secondTest](- "?=getExampleName()")
+* Unannotated field value is [1](- "?=getFieldCounter()")
+* Example scope value is [1](- "?=getExampleScopedCounter()")
 
 ## Specification hooks 
 

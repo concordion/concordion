@@ -11,6 +11,7 @@ import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.internal.FailFastException;
 import org.concordion.internal.SpecificationDescriber;
 import org.concordion.internal.SummarizingResultRecorder;
+import org.concordion.internal.XMLSpecification;
 
 import static org.concordion.internal.XMLSpecification.OUTER_EXAMPLE_NAME;
 
@@ -32,12 +33,14 @@ public class SpecificationCommand extends AbstractCommand {
         }
 
         try {
-            announceBeforeOuterExampleEvent(commandCall.getElement(), (SummarizingResultRecorder) resultRecorder);
+            Fixture fixture = XMLSpecification.FIXTURE_HOLDER.get();
+            announceBeforeOuterExampleEvent(commandCall.getElement(), (SummarizingResultRecorder) resultRecorder, fixture);
             commandCall.getChildren().processSequentially(evaluator, resultRecorder);
         } catch (FailFastException e) {
             // Ignore - it'll be re-thrown later if necessary.
         } finally {
-            announceAfterOuterExampleEvent(commandCall.getElement(), (SummarizingResultRecorder) resultRecorder);
+            Fixture fixture = XMLSpecification.FIXTURE_HOLDER.get();
+            announceAfterOuterExampleEvent(commandCall.getElement(), (SummarizingResultRecorder) resultRecorder, fixture);
         }
     }
 
@@ -90,15 +93,15 @@ public class SpecificationCommand extends AbstractCommand {
 		}
     }
 
-    private void announceBeforeOuterExampleEvent(Element element, ResultSummary resultSummary) {
+    private void announceBeforeOuterExampleEvent(Element element, ResultSummary resultSummary, Fixture fixture) {
         for (OuterExampleListener listener : outerExampleListeners) {
-            listener.beforeOuterExample(new OuterExampleEvent(OUTER_EXAMPLE_NAME, element, resultSummary));
+            listener.beforeOuterExample(new OuterExampleEvent(OUTER_EXAMPLE_NAME, element, resultSummary, fixture));
         }
     }
 
-    private void announceAfterOuterExampleEvent(Element element, ResultSummary resultSummary) {
+    private void announceAfterOuterExampleEvent(Element element, ResultSummary resultSummary, Fixture fixture) {
         for (int i = outerExampleListeners.size() - 1; i >= 0; i--) {
-            outerExampleListeners.get(i).afterOuterExample(new OuterExampleEvent(OUTER_EXAMPLE_NAME, element, resultSummary));
+            outerExampleListeners.get(i).afterOuterExample(new OuterExampleEvent(OUTER_EXAMPLE_NAME, element, resultSummary, fixture));
         }
     }
 }

@@ -11,6 +11,7 @@ public class XMLSpecification implements SpecificationByExample {
 
     public static final String OUTER_EXAMPLE_NAME = "[Outer]";
     public static final String OUTER_EXAMPLE_SUFFIX = " " + OUTER_EXAMPLE_NAME;
+    public static final ThreadLocal<Fixture> FIXTURE_HOLDER = new ThreadLocal<Fixture>();
 
     private String testDescription;
     private final CommandCall rootCommandNode;
@@ -66,6 +67,8 @@ public class XMLSpecification implements SpecificationByExample {
     }
 
     public void setFixture(Fixture fixture) {
+        FIXTURE_HOLDER.set(fixture);
+
         if (hasExampleCommandNodes()) {
             testDescription = OUTER_EXAMPLE_NAME;
         } else {
@@ -73,12 +76,13 @@ public class XMLSpecification implements SpecificationByExample {
         }
     }
 
-    public void processExample(Evaluator evaluator, String example, ResultRecorder resultRecorder) {
+    public void processExample(Fixture fixture, Evaluator evaluator, String example, ResultRecorder resultRecorder) {
         if (testDescription.equals(example)) {
             processNode(rootCommandNode, evaluator, resultRecorder);
             return;
         }
 
+        FIXTURE_HOLDER.set(fixture);
         for (ExampleCommandCall commandCall: examples) {
             if (commandCall.getExampleName().equals(example)) {
                 resultRecorder.setForExample(true);
