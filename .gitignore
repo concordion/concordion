@@ -10,6 +10,7 @@ bin/
 
 # IDEA
 .idea/
+out/
 *.iml
 
 # Infer
