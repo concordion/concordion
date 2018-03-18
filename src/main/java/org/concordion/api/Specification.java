@@ -2,5 +2,5 @@ package org.concordion.api;
 
 public interface Specification {
 
-    void process(Evaluator evaluator, ResultRecorder resultRecorder);
+    void process(Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture);
 }

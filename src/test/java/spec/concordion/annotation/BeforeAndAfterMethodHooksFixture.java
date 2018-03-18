@@ -8,6 +8,7 @@ import org.concordion.api.ExampleName;
 import org.concordion.api.Scope;
 import org.concordion.api.ScopedObjectHolder;
 import org.concordion.integration.junit4.ConcordionRunner;
+import org.concordion.internal.FixtureInstance;
 import org.junit.runner.RunWith;
 import test.concordion.RunCommandSimulator;
 
@@ -24,7 +25,7 @@ public class BeforeAndAfterMethodHooksFixture {
     }
 
     public void simulateRun(final String href) throws Exception {
-        new RunCommandSimulator().simulate(href, this.getClass());
+        new RunCommandSimulator().simulate(href, this.getClass(), new FixtureInstance(this));
     }
 
     @org.concordion.api.ConcordionScoped(Scope.EXAMPLE)

@@ -64,16 +64,16 @@ public class CommandCall {
         command.setUp(this, evaluator, resultRecorder);
     }
 
-    public void execute(Evaluator evaluator, ResultRecorder resultRecorder) {
+    public void execute(Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
         for (Map.Entry<String, Object> entry: constantsForExecution.entrySet()) {
             evaluator.setVariable(entry.getKey(), entry.getValue());
         }
 
-        command.execute(this, evaluator, resultRecorder);
+        command.execute(this, evaluator, resultRecorder, fixture);
     }
 
-    public void verify(Evaluator evaluator, ResultRecorder resultRecorder) {
-        command.verify(this, evaluator, resultRecorder);
+    public void verify(Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
+        command.verify(this, evaluator, resultRecorder, fixture);
     }
 
     public void appendChild(CommandCall commandNode) {

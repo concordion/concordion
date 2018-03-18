@@ -11,7 +11,6 @@ public class XMLSpecification implements SpecificationByExample {
 
     public static final String OUTER_EXAMPLE_NAME = "[Outer]";
     public static final String OUTER_EXAMPLE_SUFFIX = " " + OUTER_EXAMPLE_NAME;
-    public static final ThreadLocal<Fixture> FIXTURE_HOLDER = new ThreadLocal<Fixture>();
 
     private String testDescription;
     private final CommandCall rootCommandNode;
@@ -34,13 +33,13 @@ public class XMLSpecification implements SpecificationByExample {
         this.beforeExamples = new ArrayList(beforeExamples);
     }
 
-    public void processNode(CommandCall node, Evaluator evaluator, ResultRecorder resultRecorder) {
+    public void processNode(CommandCall node, Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
 
         if (!node.getChildren().isEmpty()) {
             for (CommandCall before: beforeExamples) {
                 SummarizingResultRecorder beforeResultRecorder = new SummarizingResultRecorder();
                 beforeResultRecorder.setSpecificationDescription("Running before for example " + node.getExpression());
-                before.getCommand().execute(before, evaluator, beforeResultRecorder);
+                before.getCommand().execute(before, evaluator, beforeResultRecorder, fixture);
                 String errorText = null;
                 if (beforeResultRecorder.hasExceptions()) {
                     errorText = SimpleFormatter.format("Exceptions occurred in the 'before' example in '%s'. See the output specification for details.\n",
@@ -59,16 +58,14 @@ public class XMLSpecification implements SpecificationByExample {
             }
         }
 
-        node.execute(evaluator, resultRecorder);
+        node.execute(evaluator, resultRecorder, fixture);
     }
 
-    public void process(Evaluator evaluator, ResultRecorder resultRecorder) {
-        processNode(rootCommandNode, evaluator, resultRecorder);
+    public void process(Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
+        processNode(rootCommandNode, evaluator, resultRecorder, fixture);
     }
 
     public void setFixture(Fixture fixture) {
-        FIXTURE_HOLDER.set(fixture);
-
         if (hasExampleCommandNodes()) {
             testDescription = OUTER_EXAMPLE_NAME;
         } else {
@@ -78,15 +75,14 @@ public class XMLSpecification implements SpecificationByExample {
 
     public void processExample(Fixture fixture, Evaluator evaluator, String example, ResultRecorder resultRecorder) {
         if (testDescription.equals(example)) {
-            processNode(rootCommandNode, evaluator, resultRecorder);
+            processNode(rootCommandNode, evaluator, resultRecorder, fixture);
             return;
         }
 
-        FIXTURE_HOLDER.set(fixture);
         for (ExampleCommandCall commandCall: examples) {
             if (commandCall.getExampleName().equals(example)) {
                 resultRecorder.setForExample(true);
-                processNode(commandCall.getCommandCall(), evaluator, resultRecorder);
+                processNode(commandCall.getCommandCall(), evaluator, resultRecorder, fixture);
             }
         }
     }

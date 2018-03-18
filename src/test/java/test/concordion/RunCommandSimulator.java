@@ -1,9 +1,6 @@
 package test.concordion;
 
-import org.concordion.api.CommandCall;
-import org.concordion.api.Element;
-import org.concordion.api.Resource;
-import org.concordion.api.ResultSummary;
+import org.concordion.api.*;
 import org.concordion.internal.*;
 import org.concordion.internal.command.RunCommand;
 
@@ -12,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RunCommandSimulator {
-    public Map<String, String> simulate(String href, Class<?> testClass) {
+    public Map<String, String> simulate(String href, Class<?> testClass, Fixture fixture) {
         final Element element = new Element("a");
         element.addAttribute("href", href);
 
@@ -30,7 +27,7 @@ public class RunCommandSimulator {
         recorder.setSpecificationDescription("");
 
         try {
-            commandCall.execute(null, recorder);
+            commandCall.execute(null, recorder, fixture);
         } catch (FailFastException ffe) {
             System.out.println("Caught fail fast exception thrown by the fixture under test. Ignoring...");
         }

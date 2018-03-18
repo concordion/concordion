@@ -26,7 +26,7 @@ public class ExampleCommand extends AbstractCommand {
         listeners.remove(exampleListener);
     }
 
-    public void execute(CommandCall node, Evaluator evaluator, ResultRecorder resultRecorder) {
+    public void execute(CommandCall node, Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
 
         String exampleName = getExampleName(node);
         boolean isBeforeExample = isBeforeExample(node);
@@ -35,19 +35,17 @@ public class ExampleCommand extends AbstractCommand {
                 specificationDescriber.getDescription(node.getResource(), exampleName));
 
         if (!isBeforeExample) {
-            Fixture fixture = XMLSpecification.FIXTURE_HOLDER.get();
             announceBeforeExample(exampleName, node.getElement(), resultRecorder, fixture);
         }
 
         try {
-            node.getChildren().processSequentially(evaluator, resultRecorder);
+            node.getChildren().processSequentially(evaluator, resultRecorder, fixture);
         } catch (FailFastException f) {
             // Ignore - it'll be re-thrown later by the implementation status checker if necessary.
         }
         setupCommandForExample(node, resultRecorder, exampleName);
 
         if (!isBeforeExample) {
-            Fixture fixture = XMLSpecification.FIXTURE_HOLDER.get();
             announceAfterExample(exampleName, node.getElement(), resultRecorder, fixture);
         }
     }

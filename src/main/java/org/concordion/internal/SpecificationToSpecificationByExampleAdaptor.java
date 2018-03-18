@@ -17,8 +17,8 @@ public class SpecificationToSpecificationByExampleAdaptor implements Specificati
     public void finish() {
     }
 
-    public void process(Evaluator evaluator, ResultRecorder resultRecorder) {
-        specification.process(evaluator, resultRecorder);
+    public void process(Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
+        specification.process(evaluator, resultRecorder, fixture);
     }
 
     public void setFixture(Fixture fixture) {
@@ -27,7 +27,7 @@ public class SpecificationToSpecificationByExampleAdaptor implements Specificati
 
     public void processExample(Fixture fixture, Evaluator evaluator, String example, ResultRecorder resultRecorder) {
         if (testDescription.equals(example)) {
-            specification.process(evaluator, resultRecorder);
+            specification.process(evaluator, resultRecorder, fixture);
         }
     }
 

@@ -19,19 +19,19 @@ public class CommandCallList {
         for(CommandCall call : commandCalls) call.setUp(evaluator, resultRecorder);
     }
     
-    public void execute(Evaluator evaluator, ResultRecorder resultRecorder) {
-        for(CommandCall call : commandCalls) call.execute(evaluator, resultRecorder);
+    public void execute(Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
+        for(CommandCall call : commandCalls) call.execute(evaluator, resultRecorder, fixture);
     }
 
-    public void verify(Evaluator evaluator, ResultRecorder resultRecorder) {
-        for(CommandCall call : commandCalls) call.verify(evaluator, resultRecorder);
+    public void verify(Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
+        for(CommandCall call : commandCalls) call.verify(evaluator, resultRecorder, fixture);
     }
 
-    public void processSequentially(Evaluator evaluator, ResultRecorder resultRecorder) {
+    public void processSequentially(Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
         for(CommandCall call : commandCalls) {
             call.setUp(evaluator, resultRecorder);
-            call.execute(evaluator, resultRecorder);
-            call.verify(evaluator, resultRecorder);
+            call.execute(evaluator, resultRecorder, fixture);
+            call.verify(evaluator, resultRecorder, fixture);
         }
     }
 

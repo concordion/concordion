@@ -19,18 +19,18 @@ public abstract class AbstractCommandDecorator implements Command {
         });
     }
 
-    public void execute(final CommandCall commandCall, final Evaluator evaluator, final ResultRecorder resultRecorder) {
+    public void execute(final CommandCall commandCall, final Evaluator evaluator, final ResultRecorder resultRecorder, final Fixture fixture) {
         process(commandCall, evaluator, resultRecorder, new Runnable() {
             public void run() {
-                command.execute(commandCall, evaluator, resultRecorder);
+                command.execute(commandCall, evaluator, resultRecorder, fixture);
             }
         });
     }
     
-    public void verify(final CommandCall commandCall, final Evaluator evaluator, final ResultRecorder resultRecorder) {
+    public void verify(final CommandCall commandCall, final Evaluator evaluator, final ResultRecorder resultRecorder, final Fixture fixture) {
         process(commandCall, evaluator, resultRecorder, new Runnable() {
             public void run() {
-                command.verify(commandCall, evaluator, resultRecorder);
+                command.verify(commandCall, evaluator, resultRecorder, fixture);
             }
         });
     }

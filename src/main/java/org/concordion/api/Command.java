@@ -6,9 +6,9 @@ public interface Command {
 
     void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder);
 
-    void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder);
+    void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture);
 
-    void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder);
+    void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture);
 
     /**
      *  Used to modify the command call tree post parsing and before execution. Some things that might be done are:
