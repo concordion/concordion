@@ -59,9 +59,9 @@ public class CommandCall {
         return this.parent;
     }
 
-    public void setUp(Evaluator evaluator, ResultRecorder resultRecorder) {
+    public void setUp(Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
 
-        command.setUp(this, evaluator, resultRecorder);
+        command.setUp(this, evaluator, resultRecorder, fixture);
     }
 
     public void execute(Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {

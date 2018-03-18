@@ -11,10 +11,10 @@ public abstract class AbstractCommandDecorator implements Command {
         this.command = command;
     }
 
-    public void setUp(final CommandCall commandCall, final Evaluator evaluator, final ResultRecorder resultRecorder) {
+    public void setUp(final CommandCall commandCall, final Evaluator evaluator, final ResultRecorder resultRecorder, final Fixture fixture) {
         process(commandCall, evaluator, resultRecorder, new Runnable() {
             public void run() {
-                command.setUp(commandCall, evaluator, resultRecorder);
+                command.setUp(commandCall, evaluator, resultRecorder, fixture);
             }
         });
     }

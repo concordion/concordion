@@ -25,7 +25,7 @@ public class CommandExtension implements ConcordionExtension {
             public void modifyCommandCallTree(CommandCall element, List<ExampleCommandCall> examples, List<CommandCall> beforeExamples) {
             }
 
-            public void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+            public void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
             }
             
             public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {

@@ -15,8 +15,8 @@ public class CommandCallList {
         return commandCalls.isEmpty();
     }
 
-    public void setUp(Evaluator evaluator, ResultRecorder resultRecorder) {
-        for(CommandCall call : commandCalls) call.setUp(evaluator, resultRecorder);
+    public void setUp(Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
+        for(CommandCall call : commandCalls) call.setUp(evaluator, resultRecorder, fixture);
     }
     
     public void execute(Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
@@ -29,7 +29,7 @@ public class CommandCallList {
 
     public void processSequentially(Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
         for(CommandCall call : commandCalls) {
-            call.setUp(evaluator, resultRecorder);
+            call.setUp(evaluator, resultRecorder, fixture);
             call.execute(evaluator, resultRecorder, fixture);
             call.verify(evaluator, resultRecorder, fixture);
         }

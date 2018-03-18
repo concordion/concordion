@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface Command {
 
-    void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder);
+    void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture);
 
     void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture);
 

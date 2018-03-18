@@ -71,7 +71,7 @@ public class ExecuteCommand extends AbstractCommand {
     private void normalExecution(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
         CommandCallList childCommands = commandCall.getChildren();
 
-        childCommands.setUp(evaluator, resultRecorder);
+        childCommands.setUp(evaluator, resultRecorder, fixture);
         evaluator.evaluate(commandCall.getExpression());
         childCommands.execute(evaluator, resultRecorder, fixture);
         announceExecuteCompleted(commandCall.getElement());

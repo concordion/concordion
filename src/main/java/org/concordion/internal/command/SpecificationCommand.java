@@ -11,7 +11,6 @@ import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.internal.FailFastException;
 import org.concordion.internal.SpecificationDescriber;
 import org.concordion.internal.SummarizingResultRecorder;
-import org.concordion.internal.XMLSpecification;
 
 import static org.concordion.internal.XMLSpecification.OUTER_EXAMPLE_NAME;
 
@@ -22,7 +21,7 @@ public class SpecificationCommand extends AbstractCommand {
     private SpecificationDescriber specificationDescriber;
 
     @Override
-    public void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+    public void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
         throw new IllegalStateException("Unexpected call to " + getClass().getSimpleName() + "'s setUp() method. Only the execute() method should be called.");
     }
 

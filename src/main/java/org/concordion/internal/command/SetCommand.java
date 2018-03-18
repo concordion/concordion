@@ -21,7 +21,7 @@ public class SetCommand extends AbstractCommand {
     }
 
     @Override
-    public void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+    public void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
         Check.isFalse(commandCall.hasChildCommands(), "Nesting commands inside a 'set' is not supported");
         evaluator.setVariable(commandCall.getExpression(), commandCall.getElement().getText());
         announceSetCompleted(commandCall.getElement(), commandCall.getExpression());

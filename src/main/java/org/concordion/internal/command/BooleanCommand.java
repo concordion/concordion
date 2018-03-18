@@ -25,7 +25,7 @@ public abstract class BooleanCommand extends AbstractCommand {
     public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
 //        Check.isFalse(commandCall.hasChildCommands(), "Nesting commands inside an 'assertTrue' is not supported");
         CommandCallList childCommands = commandCall.getChildren();
-        childCommands.setUp(evaluator, resultRecorder);
+        childCommands.setUp(evaluator, resultRecorder, fixture);
         childCommands.execute(evaluator, resultRecorder, fixture);
         childCommands.verify(evaluator, resultRecorder, fixture);
         
