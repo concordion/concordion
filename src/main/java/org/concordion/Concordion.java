@@ -100,7 +100,7 @@ public class Concordion {
 
     public ResultSummary processExample(Fixture fixture, String example) throws IOException {
         SummarizingResultRecorder resultRecorder = new SummarizingResultRecorder(example);
-        getSpecification(fixture).processExample(fixture, evaluatorFactory.createEvaluator(fixture.getFixtureObject()), example, resultRecorder);
+        getSpecification(fixture).processExample(evaluatorFactory.createEvaluator(fixture.getFixtureObject()), example, resultRecorder, fixture);
         return resultRecorder;
     }
 

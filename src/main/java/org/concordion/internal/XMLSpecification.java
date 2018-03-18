@@ -73,7 +73,7 @@ public class XMLSpecification implements SpecificationByExample {
         }
     }
 
-    public void processExample(Fixture fixture, Evaluator evaluator, String example, ResultRecorder resultRecorder) {
+    public void processExample(Evaluator evaluator, String example, ResultRecorder resultRecorder, Fixture fixture) {
         if (testDescription.equals(example)) {
             processNode(rootCommandNode, evaluator, resultRecorder, fixture);
             return;
