@@ -1,10 +1,12 @@
 package org.concordion.api;
 
+import org.concordion.internal.FixtureType;
+
 import java.io.PrintStream;
 
 public interface ResultSummary {
 
-    void assertIsSatisfied(Fixture fixture);
+    void assertIsSatisfied(FixtureType fixtureType);
 
     boolean hasExceptions();
 
@@ -16,9 +18,9 @@ public interface ResultSummary {
 
     long getIgnoredCount();
 
-    void print(PrintStream out, Fixture fixture);
+    void print(PrintStream out, FixtureType fixtureType);
 
-    String printCountsToString(Fixture fixture);
+    String printCountsToString(FixtureType fixtureType);
 
     String getSpecificationDescription();
 

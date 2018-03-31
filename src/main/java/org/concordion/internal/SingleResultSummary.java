@@ -57,8 +57,8 @@ public class SingleResultSummary extends AbstractResultSummary implements Result
     }
 
     @Override
-    public void assertIsSatisfied(Fixture fixture) {
-        getImplementationStatusChecker(fixture).assertIsSatisfied(this, null);
+    public void assertIsSatisfied(FixtureType fixtureType) {
+        getImplementationStatusChecker(fixtureType).assertIsSatisfied(this, null);
     }
 
     @Override

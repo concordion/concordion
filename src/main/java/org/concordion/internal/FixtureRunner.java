@@ -65,19 +65,19 @@ public class FixtureRunner {
         }
 
         if (actualResultSummary.isForExample()) {
-            printResultSummary(fixture, example, actualResultSummary, additionalInformation);
+            printResultSummary(new FixtureType(fixture.getFixtureClass()), example, actualResultSummary, additionalInformation);
         }
 
         return actualResultSummary;
     }
 
-    private void printResultSummary(Fixture fixture, String example, ResultSummary resultSummary, String additionalInformation) {
+    private void printResultSummary(FixtureType fixtureType, String example, ResultSummary resultSummary, String additionalInformation) {
         synchronized (System.out) {
             if (additionalInformation != null) {
                 System.out.print(additionalInformation);
             }
-            resultSummary.print(System.out, fixture);
-            resultSummary.assertIsSatisfied(fixture);
+            resultSummary.print(System.out, fixtureType);
+            resultSummary.assertIsSatisfied(fixtureType);
         }
     }
 
@@ -103,7 +103,7 @@ public class FixtureRunner {
         if (results == null) {
             concordion.finish();
         }
-        resultSummary.print(System.out, fixture);
+        resultSummary.print(System.out, new FixtureType(fixture.getFixtureClass()));
         return resultSummary;
     }
 }

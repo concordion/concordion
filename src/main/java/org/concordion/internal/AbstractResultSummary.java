@@ -17,16 +17,16 @@ public abstract class AbstractResultSummary implements ResultSummary {
     }
 
     @Override
-    public void print(PrintStream out, Fixture fixture) {
-        out.print(printToString(fixture));
+    public void print(PrintStream out, FixtureType fixtureType) {
+        out.print(printToString(fixtureType));
     }
 
-    String printToString(Fixture fixture) {
+    String printToString(FixtureType fixtureType) {
         StringBuilder builder = new StringBuilder();
         builder.append("\n");
         builder.append(specificationDescription);
         builder.append("\n");
-        String counts = printCountsToString(fixture);
+        String counts = printCountsToString(fixtureType);
         if (counts != null) {
             builder.append(counts).append("\n");
         }
@@ -35,7 +35,7 @@ public abstract class AbstractResultSummary implements ResultSummary {
     }
 
     @Override
-    public String printCountsToString(Fixture fixture) {
+    public String printCountsToString(FixtureType fixtureType) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("Successes: ");
@@ -51,7 +51,7 @@ public abstract class AbstractResultSummary implements ResultSummary {
             builder.append(getExceptionCount());
         }
 
-        builder.append(getImplementationStatusChecker(fixture).printNoteToString());
+        builder.append(getImplementationStatusChecker(fixtureType).printNoteToString());
 
         return builder.toString();
     }
@@ -74,12 +74,12 @@ public abstract class AbstractResultSummary implements ResultSummary {
         this.implementationStatus = implementationStatus;
     }
     
-    public ImplementationStatusChecker getImplementationStatusChecker(Fixture fixture) {
+    public ImplementationStatusChecker getImplementationStatusChecker(FixtureType fixtureType) {
         ImplementationStatus implementationStatus;
-        if (isForExample() || fixture == null) {
+        if (isForExample() || fixtureType == null) {
             implementationStatus = getImplementationStatus();
         } else {
-            implementationStatus = fixture.getDeclaredImplementationStatus();
+            implementationStatus = fixtureType.getDeclaredImplementationStatus();
         }
         return ImplementationStatusChecker.implementationStatusCheckerFor(implementationStatus);
     }

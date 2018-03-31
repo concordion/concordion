@@ -159,7 +159,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
             if (results != null) {
                 synchronized (System.out) {
-                    results.getActualResultSummary().print(System.out, setupFixture);
+                    results.getActualResultSummary().print(System.out, new FixtureType(setupFixture.getFixtureClass()));
                 }
             }
         } catch (RuntimeException e) {
@@ -205,7 +205,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
         try {
             ResultSummary result = fixtureRunner.run(example, fixture);
-            result.assertIsSatisfied(fixture);
+            result.assertIsSatisfied(new FixtureType(fixture.getFixtureClass()));
 
         } catch (ConcordionAssertionError e) {
             throw e;
