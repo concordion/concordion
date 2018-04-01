@@ -116,7 +116,7 @@ public enum RunResultsCache {
     }
 
     private void addResultsToFixtureTotal(Fixture fixture, RunOutput exampleRunOutput) {
-        CompositeRunOutput fixtureRunOutput = (CompositeRunOutput) getFromCache(fixture, null);
+        CompositeRunOutput fixtureRunOutput = (CompositeRunOutput) getFromCache(fixture.getFixtureClass(), null);
         fixtureRunOutput.add(exampleRunOutput);
     }
 

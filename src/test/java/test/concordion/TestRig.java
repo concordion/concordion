@@ -49,7 +49,7 @@ public class TestRig {
             fixture = new FixtureInstance(new DummyFixture());
             withResource(new Resource("/test/concordion/Dummy.html"), "<html/>");
         } else {
-            withResource(new ClassNameBasedSpecificationLocator("html").locateSpecification(fixture.getFixtureObject()), "<html/>");
+            withResource(new ClassNameBasedSpecificationLocator("html").locateSpecification(fixture.getFixtureObject(), "html"), "<html/>");
         }
         ConcordionBuilder concordionBuilder = new ConcordionBuilder()
             .withAssertEqualsListener(eventRecorder)

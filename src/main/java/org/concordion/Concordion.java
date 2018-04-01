@@ -18,22 +18,6 @@ public class Concordion {
     private String specificationDescription;
 
     /**
-     * @deprecated use {@link #Concordion(List, SpecificationLocator, SpecificationReader, EvaluatorFactory, Fixture)} instead
-     * @param specificationLocator locates the specification based on the specification type
-     * @param specificationReader specification reader
-     * @param evaluatorFactory evaluator factory
-     * @param fixture fixture instance
-     * @throws IOException on i/o error
-     */
-    @Deprecated
-    public Concordion(SpecificationLocator specificationLocator, SpecificationReader specificationReader, EvaluatorFactory evaluatorFactory, Fixture fixture) throws IOException {
-        this.specificationReader = specificationReader;
-        this.evaluatorFactory = evaluatorFactory;
-
-        resource = specificationLocator.locateSpecification(fixture.getFixtureObject());
-    }
-
-    /**
      * Constructor. Locates the specification with a type from the <code>specificationTypes</code> list.
      * Errors if unable to find exactly one specification of all the specified types.
      *

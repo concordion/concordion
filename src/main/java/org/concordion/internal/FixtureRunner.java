@@ -95,7 +95,7 @@ public class FixtureRunner {
      */
     @Deprecated
     public ResultSummary run(Fixture fixture) throws IOException {
-        RunOutput results = RunResultsCache.SINGLETON.getFromCache(fixture, null);
+        RunOutput results = RunResultsCache.SINGLETON.getFromCache(fixture.getFixtureClass(), null);
 
         ResultSummary resultSummary = run(null, fixture);
 
