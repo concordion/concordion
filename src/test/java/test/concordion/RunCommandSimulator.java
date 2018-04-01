@@ -49,7 +49,7 @@ public class RunCommandSimulator {
         result.put("ignoredCount", Long.toString(recorder.getIgnoredCount()));
         result.put("exceptionCount", Long.toString(recorder.getExceptionCount()));
 
-        String counts = recorder.printCountsToString(new FixtureInstance(new Object()));
+        String counts = recorder.printCountsToString(new FixtureType(Object.class));
 
         result.put("totalsString", counts);
         return result;

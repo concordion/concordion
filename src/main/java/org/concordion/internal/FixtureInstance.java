@@ -13,16 +13,20 @@ import java.util.Enumeration;
 import java.util.List;
 
 import org.concordion.api.*;
+import org.concordion.api.option.ConcordionOptions;
 import org.concordion.internal.scopedObjects.ScopedFieldStore;
 import org.concordion.internal.util.SimpleFormatter;
 
-public class FixtureInstance extends FixtureType implements Fixture, FixtureDeclarations {
+public class FixtureInstance implements Fixture, FixtureDeclarations {
     private final Object fixtureObject;
     private final ScopedFieldStore scopedFieldStore;
+    private final Class<? extends Object> fixtureClass;
+    private final FixtureType fixtureType;
 
     public FixtureInstance(Object fixtureObject) {
-        super(fixtureObject.getClass());
         this.fixtureObject = fixtureObject;
+        this.fixtureClass = fixtureObject.getClass();
+        this.fixtureType = new FixtureType(fixtureClass);
         scopedFieldStore = new ScopedFieldStore(this);
     }
     
@@ -126,7 +130,7 @@ public class FixtureInstance extends FixtureType implements Fixture, FixtureDecl
     
     @Override
     public List<Class<?>> getClassHierarchyParentFirst() {
-        return super.getClassHierarchyParentFirst();
+        return fixtureType.getClassHierarchyParentFirst();
     }
     
     private void invokeMethods(Class<? extends Annotation> methodAnnotation) {
@@ -165,5 +169,35 @@ public class FixtureInstance extends FixtureType implements Fixture, FixtureDecl
                 }
             }
         }        
+    }
+
+    @Override
+    public boolean declaresFullOGNL() {
+        return fixtureType.declaresFullOGNL();
+    }
+
+    @Override
+    public boolean declaresFailFast() {
+        return fixtureType.declaresFailFast();
+    }
+
+    @Override
+    public Class<? extends Throwable>[] getDeclaredFailFastExceptions() {
+        return fixtureType.getDeclaredFailFastExceptions();
+    }
+
+    @Override
+    public boolean declaresResources() {
+        return fixtureType.declaresResources();
+    }
+
+    @Override
+    public ImplementationStatus getDeclaredImplementationStatus() {
+        return fixtureType.getDeclaredImplementationStatus();
+    }
+
+    @Override
+    public List<ConcordionOptions> getDeclaredConcordionOptionsParentFirst() {
+        return fixtureType.getDeclaredConcordionOptionsParentFirst();
     }
 }

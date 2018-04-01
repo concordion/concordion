@@ -18,7 +18,7 @@ public interface Fixture extends FixtureDeclarations {
     /**
      * @return the class of the fixture instance.
      */
-    Class<?> getFixtureClass(); 
+    Class<?> getFixtureClass();
 
     /**
      * @return a list of the absolute paths on the class path. 
