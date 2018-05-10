@@ -13,6 +13,7 @@ public class ExampleCommand extends AbstractCommand {
 
 	private List<ExampleListener> listeners = new ArrayList<ExampleListener>();
     private SpecificationDescriber specificationDescriber;
+    private ExampleFilter exampleFilter;
 
     public List<CommandCall> getExamples(CommandCall command) {
         return Arrays.asList(command);
@@ -39,7 +40,11 @@ public class ExampleCommand extends AbstractCommand {
         }
 
         try {
-            node.getChildren().processSequentially(evaluator, resultRecorder);
+            if (exampleFilter != null && exampleFilter.shouldSkip(node.getElement())) {
+                resultRecorder.setImplementationStatus(ImplementationStatus.SKIPPED);
+            } else {
+                node.getChildren().processSequentially(evaluator, resultRecorder);
+            }
         } catch (FailFastException f) {
             // Ignore - it'll be re-thrown later by the implementation status checker if necessary.
         }
@@ -88,22 +93,23 @@ public class ExampleCommand extends AbstractCommand {
         node.getElement().addAttribute("id", exampleName);
 
         String params = node.getParameter("status");
+        // declared status supersedes manually set status
         if (params != null) {
             ImplementationStatus implementationStatus = ImplementationStatus.implementationStatusFor(params);
             resultRecorder.setImplementationStatus(implementationStatus);
-            // let's be really nice and add the implementation status text into the element itself.
-            ImplementationStatusChecker checker = ImplementationStatusChecker.implementationStatusCheckerFor(implementationStatus);
-
-            String note;
-            if (checker != null) {
-                note = checker.printNoteToString();
-            } else {
-                note = "Invalid status expression " + params;
-            }
-            Element fixtureNode = new Element("p");
-            fixtureNode.appendText(note);
-            node.getElement().prependChild(fixtureNode);
         }
+        // let's be really nice and add the implementation status text into the element itself.
+        ImplementationStatusChecker checker = ImplementationStatusChecker.implementationStatusCheckerFor(resultRecorder.getImplementationStatus());
+
+        String note;
+        if (checker != null) {
+            note = checker.printNoteToString();
+        } else {
+            note = "Invalid status expression " + params;
+        }
+        Element fixtureNode = new Element("p");
+        fixtureNode.appendText(note);
+        node.getElement().prependChild(fixtureNode);
     }
 
     public void setSpecificationDescriber(SpecificationDescriber specificationDescriber) {
@@ -121,4 +127,8 @@ public class ExampleCommand extends AbstractCommand {
             listeners.get(i).afterExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder)resultRecorder));
         }
 	}
+
+    public void setExampleFilter(ExampleFilter exampleFilter) {
+        this.exampleFilter = exampleFilter;
+    }
 }

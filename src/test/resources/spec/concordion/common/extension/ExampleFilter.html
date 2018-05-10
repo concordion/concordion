@@ -1,0 +1,41 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../concordion.css" rel="stylesheet" type="text/css"/>
+<body>
+<h1>Example Filter</h1>
+
+<p>
+    An example filter allows a user to introduce conditional logic to decide whether concordion should skip the
+    execution of an <a href="../command/example/Example.html">example</a>. The filter can be injected via the concordion
+    <a href="Extension.html">extensions</a>. If provided, concordion would consult the filter prior to executing each
+    example in the specification. The user can create the conditional logic based on the example element (usually a &lt;div&gt;).
+</p>
+
+<div class="example">
+
+    <h3>Example</h3>
+
+    <p>An <span concordion:execute="addExampleFilterExtension()">example filter is installed</span> that skips examples
+        if their name starts with <b>skipped</b>.
+    </p>
+    <p>Running a specification containing: </p>
+    <pre concordion:set="#result = process(#TEXT)">
+&lt;div concordion:example="aPassingExample"&gt;
+    &lt;span concordion:set="#char"&gt;a&lt;/span&gt; == &lt;span concordion:assert-equals="#char"&gt;a&lt;/span&gt;
+&lt;/div&gt;
+&lt;div concordion:example="aFailingExample"&gt;
+    &lt;span concordion:set="#char"&gt;a&lt;/span&gt; == &lt;span concordion:assert-equals="#char"&gt;b&lt;/span&gt;
+&lt;/div&gt;
+&lt;div concordion:example="skippedExample"&gt;
+    &lt;span concordion:set="#char"&gt;c&lt;/span&gt; == &lt;span concordion:assert-equals="#char"&gt;c&lt;/span&gt;
+&lt;/div&gt;</pre>
+    <p>Would result in
+    <ul>
+        <li>Success: <span concordion:assert-equals="processingResult.successCount">1</span></li>
+        <li>Failed: <span concordion:assert-equals="processingResult.failureCount">1</span></li>
+        <li>Exceptions: <span concordion:assert-equals="processingResult.exceptionCount">0</span></li>
+    </ul>
+    </p>
+</div>
+
+</body>
+</html>

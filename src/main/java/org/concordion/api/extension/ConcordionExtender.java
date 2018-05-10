@@ -101,6 +101,14 @@ public interface ConcordionExtender {
     ConcordionExtender withExampleListener(ExampleListener listener);
 
     /**
+     * Adds a filter which Concordion can apply to each specification example to decide if it should be skipped.
+     *
+     * @param filter the filter
+     * @return this
+     */
+    ConcordionExtender withExampleFilter(ExampleFilter filter);
+
+    /**
      * Adds a listener that is invoked before and after Concordion has processed the "outer" example (which includes
      * all commands in a specification not inside an example command).
      * @param listener the listener

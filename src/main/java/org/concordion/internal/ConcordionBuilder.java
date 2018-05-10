@@ -435,6 +435,12 @@ public class ConcordionBuilder implements ConcordionExtender {
 		return this;
 	}
 
+    @Override
+    public ConcordionExtender withExampleFilter(ExampleFilter filter) {
+        exampleCommand.setExampleFilter(filter);
+        return this;
+    }
+
     public ConcordionExtender withOuterExampleListener(OuterExampleListener listener) {
         specificationCommand.addOuterExampleListener(listener);
         return this;
