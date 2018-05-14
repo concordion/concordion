@@ -1,12 +1,14 @@
 package org.concordion.api;
 
+import org.junit.Ignore;
+
 import java.lang.annotation.Annotation;
 
 public enum ImplementationStatus {
     UNIMPLEMENTED("Unimplemented", Unimplemented.class),
     EXPECTED_TO_FAIL("ExpectedToFail", ExpectedToFail.class),
     EXPECTED_TO_PASS("ExpectedToPass", ExpectedToPass.class),
-    SKIPPED("Skipped", Skipped.class);
+    IGNORED("Ignored", Ignore.class);
 
     private final String tag;
     private final Class<? extends Annotation> annotation;

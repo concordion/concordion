@@ -1,7 +1,8 @@
 package spec.concordion.common.extension;
 
 import org.concordion.api.Element;
-import org.concordion.api.ExampleFilter;
+import org.concordion.api.ImplementationStatus;
+import org.concordion.api.ImplementationStatusModifier;
 import org.concordion.api.FullOGNL;
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
@@ -15,17 +16,21 @@ import test.concordion.ProcessingResult;
  */
 @RunWith(ConcordionRunner.class)
 @FullOGNL
-public class ExampleFilterTest extends AbstractExtensionTestCase {
+public class ImplementationStatusModifierTest extends AbstractExtensionTestCase {
 
-    public void addExampleFilterExtension() {
+    public void addExtension() {
         setExtension(new ConcordionExtension() {
             @Override
             public void addTo(ConcordionExtender concordionExtender) {
-                concordionExtender.withExampleFilter(new ExampleFilter() {
+                concordionExtender.withImplementationStatusModifier(new ImplementationStatusModifier() {
                     @Override
-                    public boolean shouldSkip(Element exampleElement) {
+                    public ImplementationStatus getStatusForExample(Element exampleElement) {
                         String exampleName = exampleElement.getAttributeValue("example", ConcordionBuilder.NAMESPACE_CONCORDION_2007);
-                        return exampleName.startsWith("skipped");
+                        if (exampleName.endsWith("Ignored")) {
+                            return ImplementationStatus.IGNORED;
+                        } else {
+                            return null;
+                        }
                     }
                 });
             }

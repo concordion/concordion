@@ -436,8 +436,8 @@ public class ConcordionBuilder implements ConcordionExtender {
 	}
 
     @Override
-    public ConcordionExtender withExampleFilter(ExampleFilter filter) {
-        exampleCommand.setExampleFilter(filter);
+    public ConcordionExtender withImplementationStatusModifier(ImplementationStatusModifier statusModifier) {
+        exampleCommand.setImplementationStatusModifier(statusModifier);
         return this;
     }
 

@@ -122,17 +122,17 @@ public enum ImplementationStatusChecker {
             return rs;
         }
     },
-    SKIPPED(ImplementationStatus.SKIPPED) {
+    IGNORED(ImplementationStatus.IGNORED) {
         @Override
         public void assertIsSatisfied(ResultSummary rs, FailFastException ffe) {
-            if (rs.getSuccessCount() + rs.getFailureCount() + rs.getExceptionCount() + rs.getIgnoredCount() > 0 || ffe != null) {
-                throw new ConcordionAssertionError("Example is expected to be skipped but is currently reporting.", rs);
+            if (rs.getIgnoredCount() != 1 || rs.getSuccessCount() + rs.getFailureCount() + rs.getExceptionCount() > 0 || ffe != null) {
+                throw new ConcordionAssertionError("Example is expected to be ignored but is currently reporting.", rs);
             }
         }
 
         @Override
         public String printNoteToString() {
-            return "   <-- Note: This example has been marked as SKIPPED";
+            return "   <-- Note: This example has been marked as IGNORED";
         }
 
         @Override

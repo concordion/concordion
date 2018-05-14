@@ -101,12 +101,12 @@ public interface ConcordionExtender {
     ConcordionExtender withExampleListener(ExampleListener listener);
 
     /**
-     * Adds a filter which Concordion can apply to each specification example to decide if it should be skipped.
+     * Adds a status modifier which Concordion can apply to each specification example to override their status.
      *
-     * @param filter the filter
+     * @param statusModifier the status modifier
      * @return this
      */
-    ConcordionExtender withExampleFilter(ExampleFilter filter);
+    ConcordionExtender withImplementationStatusModifier(ImplementationStatusModifier statusModifier);
 
     /**
      * Adds a listener that is invoked before and after Concordion has processed the "outer" example (which includes
