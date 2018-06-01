@@ -26,27 +26,27 @@ public class Concordion {
      * @param specificationLocator locates the specification based on the specification type
      * @param specificationReader specification reader
      * @param evaluatorFactory evaluator factory
-     * @param fixture fixture instance
+     * @param fixtureType
      * @throws IOException on i/o error
      */
-    public Concordion(List<SpecificationType> specificationTypes, SpecificationLocator specificationLocator, SpecificationReader specificationReader, EvaluatorFactory evaluatorFactory, Fixture fixture) throws IOException {
+    public Concordion(List<SpecificationType> specificationTypes, SpecificationLocator specificationLocator, SpecificationReader specificationReader, EvaluatorFactory evaluatorFactory, FixtureType fixtureType) throws IOException {
         this.specificationReader = specificationReader;
         this.evaluatorFactory = evaluatorFactory;
 
         SpecificationType specificationType = null;
 
         for (SpecificationType currentType : specificationTypes) {
-            Resource currentResource = specificationLocator.locateSpecification(fixture.getFixtureType(), currentType.getTypeSuffix());
+            Resource currentResource = specificationLocator.locateSpecification(fixtureType, currentType.getTypeSuffix());
             if (specificationReader.canFindSpecification(currentResource)) {
                 if (specificationType != null) {
-                    throw new RuntimeException(createMultipleSpecsMessage(fixture.getFixtureType(), specificationType, currentType));
+                    throw new RuntimeException(createMultipleSpecsMessage(fixtureType, specificationType, currentType));
                 }
                 specificationType = currentType;
                 resource = currentResource;
             }
         }
         if (specificationType == null) {
-            throw new RuntimeException(createUnableToFindSpecMessage(fixture.getFixtureType(), specificationTypes));
+            throw new RuntimeException(createUnableToFindSpecMessage(fixtureType, specificationTypes));
         }
         specificationReader.setSpecificationConverter(specificationType.getConverter());
     }

@@ -59,7 +59,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private List<ThrowableCaughtListener> throwableCaughtListeners = new ArrayList<ThrowableCaughtListener>();
     private List<Class<? extends Throwable>> failFastExceptions = Collections.<Class<? extends Throwable>>emptyList();
     private boolean builtAlready;
-    private Fixture fixture;
+    private FixtureType fixtureType;
     private MarkdownConverter markdownConverter = new MarkdownConverter();
     private XhtmlConverter xhtmlConverter = new XhtmlConverter();
 
@@ -319,7 +319,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         announceBuildCompleted();
 
         try {
-            return new Concordion(specificationTypes, specificationLocator, specificationReader, evaluatorFactory, fixture);
+            return new Concordion(specificationTypes, specificationLocator, specificationReader, evaluatorFactory, fixtureType);
         } catch (IOException e) {
             throw new UnableToBuildConcordionException(e);
         }
@@ -415,8 +415,8 @@ public class ConcordionBuilder implements ConcordionExtender {
         return this;
     }
 
-    public ConcordionBuilder withFixture(Fixture fixture, FixtureType fixtureType) {
-        this.fixture = fixture;
+    public ConcordionBuilder withFixtureType(FixtureType fixtureType) {
+        this.fixtureType = fixtureType;
 
         withResources(fixtureType);
 

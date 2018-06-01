@@ -57,7 +57,7 @@ public class TestRig {
             .withSource(source)
             .withEvaluatorFactory(evaluatorFactory)
             .withTarget(stubTarget)
-            .withFixture(fixture, fixture.getFixtureType());
+            .withFixtureType(fixture.getFixtureType());
 
         fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
         if (extension != null) {
