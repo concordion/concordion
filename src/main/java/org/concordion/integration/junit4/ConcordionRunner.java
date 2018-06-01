@@ -66,9 +66,9 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
         concordion = fixtureRunner.getConcordion();
 
         try {
-            concordion.checkValidStatus(setupFixture);
+            concordion.checkValidStatus(setupFixture.getFixtureType());
 
-            List<String> examples = concordion.getExampleNames(setupFixture);
+            List<String> examples = concordion.getExampleNames(setupFixture.getFixtureType());
 
             verifyUniqueExampleMethods(examples);
 
@@ -82,7 +82,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
     }
 
     protected SpecificationLocator getSpecificationLocator() {
-		return new ClassNameAndTypeBasedSpecificationLocator();
+		return new ClassNameBasedSpecificationLocator();
 	}
 
 	private void verifyUniqueExampleMethods(List<String> exampleNames) throws InitializationError {
@@ -143,7 +143,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
             // only setup the fixture if it hasn't been run before
             if (firstRun) {
-                runResultsCache.startFixtureRun(setupFixture, concordion.getSpecificationDescription());
+                runResultsCache.startFixtureRun(setupFixture.getFixtureType(), concordion.getSpecificationDescription());
                 setupFixture.beforeSpecification();
             }
 
@@ -159,7 +159,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
             if (results != null) {
                 synchronized (System.out) {
-                    results.getActualResultSummary().print(System.out, new FixtureType(setupFixture.getFixtureClass()));
+                    results.getActualResultSummary().print(System.out, setupFixture.getFixtureType());
                 }
             }
         } catch (RuntimeException e) {
@@ -205,7 +205,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
 
         try {
             ResultSummary result = fixtureRunner.run(example, fixture);
-            result.assertIsSatisfied(new FixtureType(fixture.getFixtureClass()));
+            result.assertIsSatisfied(fixture.getFixtureType());
 
         } catch (ConcordionAssertionError e) {
             throw e;

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.concordion.api.*;
+import org.concordion.internal.FixtureType;
 import org.concordion.internal.SpecificationToSpecificationByExampleAdaptor;
 import org.concordion.internal.SpecificationType;
 import org.concordion.internal.SummarizingResultRecorder;
@@ -35,17 +36,17 @@ public class Concordion {
         SpecificationType specificationType = null;
 
         for (SpecificationType currentType : specificationTypes) {
-            Resource currentResource = specificationLocator.locateSpecification(fixture.getFixtureObject(), currentType.getTypeSuffix());
+            Resource currentResource = specificationLocator.locateSpecification(fixture.getFixtureType(), currentType.getTypeSuffix());
             if (specificationReader.canFindSpecification(currentResource)) {
                 if (specificationType != null) {
-                    throw new RuntimeException(createMultipleSpecsMessage(fixture, specificationType, currentType));
+                    throw new RuntimeException(createMultipleSpecsMessage(fixture.getFixtureType(), specificationType, currentType));
                 }
                 specificationType = currentType;
                 resource = currentResource;
             }
         }
         if (specificationType == null) {
-            throw new RuntimeException(createUnableToFindSpecMessage(fixture, specificationTypes));
+            throw new RuntimeException(createUnableToFindSpecMessage(fixture.getFixtureType(), specificationTypes));
         }
         specificationReader.setSpecificationConverter(specificationType.getConverter());
     }
@@ -61,42 +62,42 @@ public class Concordion {
 
     public ResultSummary process(Fixture fixture) throws IOException {
         SummarizingResultRecorder resultRecorder = new SummarizingResultRecorder();
-        resultRecorder.setSpecificationDescription(fixture.getSpecificationDescription());
-        getSpecification(fixture).process(evaluatorFactory.createEvaluator(fixture.getFixtureObject()), resultRecorder, fixture);
+        resultRecorder.setSpecificationDescription(fixture.getFixtureType().getSpecificationDescription());
+        getSpecification(fixture.getFixtureType()).process(evaluatorFactory.createEvaluator(fixture.getFixtureObject()), resultRecorder, fixture);
         return resultRecorder;
     }
 
-    private SpecificationByExample getSpecification(Fixture fixture) throws IOException {
+    private SpecificationByExample getSpecification(FixtureType fixtureType) throws IOException {
         if (specification == null) {
-            specification = loadSpecificationFromResource(fixture, resource);
+            specification = loadSpecificationFromResource(resource, fixtureType);
             specificationDescription = specification.getSpecificationDescription();
         }
         return specification;
     }
 
-    public List<String> getExampleNames(Fixture fixture) throws IOException {
-        return getSpecification(fixture).getExampleNames();
+    public List<String> getExampleNames(FixtureType fixtureType) throws IOException {
+        return getSpecification(fixtureType).getExampleNames();
     }
 
-    public boolean hasExampleCommands(Fixture fixture) throws IOException {
-        return getSpecification(fixture).hasExampleCommandNodes();
+    public boolean hasExampleCommands(FixtureType fixtureType) throws IOException {
+        return getSpecification(fixtureType).hasExampleCommandNodes();
     }
 
     public ResultSummary processExample(Fixture fixture, String example) throws IOException {
         SummarizingResultRecorder resultRecorder = new SummarizingResultRecorder(example);
-        getSpecification(fixture).processExample(evaluatorFactory.createEvaluator(fixture.getFixtureObject()), example, resultRecorder, fixture);
+        getSpecification(fixture.getFixtureType()).processExample(evaluatorFactory.createEvaluator(fixture.getFixtureObject()), example, resultRecorder, fixture);
         return resultRecorder;
     }
 
     /**
      * Loads the specification for the specified fixture.
      *
-     * @param fixture the fixture instance
      * @param resource the resource to load
+     * @param fixtureType
      * @return a SpecificationByExample object to use
      * @throws IOException if the resource cannot be loaded
      */
-    private SpecificationByExample loadSpecificationFromResource(Fixture fixture, Resource resource) throws IOException {
+    private SpecificationByExample loadSpecificationFromResource(Resource resource, FixtureType fixtureType) throws IOException {
         Specification specification= specificationReader.readSpecification(resource);
 
         SpecificationByExample specificationByExample;
@@ -105,7 +106,7 @@ public class Concordion {
         } else {
             specificationByExample = new SpecificationToSpecificationByExampleAdaptor(specification);
         }
-        specificationByExample.setFixture(fixture);
+        specificationByExample.setFixture(fixtureType);
         return specificationByExample;
     }
 
@@ -113,21 +114,21 @@ public class Concordion {
         specification.finish();
     }
 
-    public void checkValidStatus(Fixture fixture) throws IOException {
-        if (getSpecification(fixture).hasExampleCommandNodes() && fixture.getDeclaredImplementationStatus() != ImplementationStatus.EXPECTED_TO_PASS) {
+    public void checkValidStatus(FixtureType fixtureType) throws IOException {
+        if (hasExampleCommands(fixtureType) && fixtureType.getDeclaredImplementationStatus() != ImplementationStatus.EXPECTED_TO_PASS) {
             throw new IllegalStateException("Error: When the specification contains examples, "
                     + "the Implementation Status (ExpectedToFail or Unimplemented) must be set on the example command in the specification, "
                     + "and not as an annotation on the fixture.");
         }
     }
 
-    private String createMultipleSpecsMessage(Fixture fixture, SpecificationType type1, SpecificationType type2) {
-        String fixturePathWithoutSuffix = fixture.getFixturePathWithoutSuffix();
+    private String createMultipleSpecsMessage(FixtureType fixtureType, SpecificationType type1, SpecificationType type2) {
+        String fixturePathWithoutSuffix = fixtureType.getFixturePathWithoutSuffix();
 		return SimpleFormatter.format("Found multiple matching specifications: '%s.%s' and '%s.%s'",
             fixturePathWithoutSuffix, type1.getTypeSuffix(), fixturePathWithoutSuffix, type2.getTypeSuffix());
     }
 
-    private String createUnableToFindSpecMessage(Fixture fixture, List<SpecificationType> specificationTypes) {
+    private String createUnableToFindSpecMessage(FixtureType fixtureType, List<SpecificationType> specificationTypes) {
         String msg = "Unable to find specification: '";
         boolean first = true;
         for (SpecificationType specificationType : specificationTypes) {
@@ -136,7 +137,7 @@ public class Concordion {
             } else {
                 msg += "' or '";
             }
-            msg += fixture.getFixturePathWithoutSuffix() + "." + specificationType.getTypeSuffix();
+            msg += fixtureType.getFixturePathWithoutSuffix() + "." + specificationType.getTypeSuffix();
         }
         msg += "'";
         return msg;

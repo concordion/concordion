@@ -3,8 +3,8 @@ package org.concordion.internal.cache;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.concordion.api.Fixture;
 import org.concordion.api.ResultSummary;
+import org.concordion.internal.FixtureType;
 import org.concordion.internal.ImplementationStatusChecker;
 import org.concordion.internal.RunOutput;
 
@@ -15,17 +15,6 @@ public enum RunResultsCache {
     SINGLETON;
 
 	Map<CacheKey, RunOutput> map = new ConcurrentHashMap<CacheKey, RunOutput>();
-
-    /**
-    * Provides a direct method to access the cache
-    *
-    * @param fixture fixture containing class to retrieve from the cache
-    * @param example the example to get from the cache
-    * @return can return null if not in the cache
-    */
-    public RunOutput getFromCache(Fixture fixture, String example) {
-        return getFromCache(fixture.getFixtureClass(), example);
-    }
 
     /**
      * Provides a direct method to access the cache
@@ -39,45 +28,54 @@ public enum RunResultsCache {
     }
 
     /**
+     * Provides a direct method to access the cache
+     *
+     * @param fixtureType class to retrieve from the cache
+     * @param example the example to get from the cache
+     * @return can return null if not in the cache
+     */
+    public synchronized RunOutput getFromCache(FixtureType fixtureType, String example) {
+        return map.get(getID(fixtureType, example));
+    }
+
+    /**
      * Initialises an entry in the cache for a specification with the given description.
      * Individual examples may then be run, and their results will be added to the fixture
-     * total when {@link #finishRun(Fixture, String, ResultSummary, ImplementationStatusChecker)}
+     * total when {@link #finishRun(FixtureType, String, ResultSummary, ImplementationStatusChecker)}
      * is called.
-     *
-     * @param fixture the fixture that is being started
+     * @param fixtureType the fixture class that is being started
      * @param specificationDescription a description of the target specification
      */
-    public synchronized void startFixtureRun(Fixture fixture, String specificationDescription) {
+    public synchronized void startFixtureRun(FixtureType fixtureType, String specificationDescription) {
         CompositeRunOutput fixtureRunOutput = new CompositeRunOutput(specificationDescription);
-        map.put(getID(fixture, null), fixtureRunOutput);
+        map.put(getID(fixtureType, null), fixtureRunOutput);
     }
 
     /**
      * Searches for a match in the cache. If there is no match, it marks the test as "in progress".
      * This is done in one method to avoid thread synchronization issues.
      *
-     * @param fixture the fixture to retrieve
+     * @param fixtureType the fixture class to retrieve
      * @param example the name of the example that is being started (null OK)
-     *
      * @return the result summary from the cache
      */
-    public synchronized RunOutput startRun(Fixture fixture, String example) {
-        assert fixture.getFixtureClass() != null;
+    public synchronized RunOutput startRun(FixtureType fixtureType, String example) {
+        assert fixtureType.getFixtureClass() != null;
 
         // check to see if there is a result in the cache
-        RunOutput runSummary = getExampleFromCache(fixture, example);
+        RunOutput runSummary = getExampleFromCache(fixtureType, example);
         if (runSummary != null) {
             return runSummary;
         }
 
         // no cached result, so update the cache - that means we can detect circular dependencies
         runSummary = new ConcordionRunOutput();
-        map.put(getID(fixture, example), runSummary);
+        map.put(getID(fixtureType, example), runSummary);
         return null;
     }
 
-    private CacheKey getID(Fixture fixture, String example) {
-        return getID(fixture.getFixtureClass(), example);
+    private CacheKey getID(FixtureType fixtureType, String example) {
+        return getID(fixtureType.getFixtureClass(), example);
     }
 
     private CacheKey getID(Class<? extends Object> fixtureClass, String example) {
@@ -86,27 +84,26 @@ public enum RunResultsCache {
 
     /**
      * Updates the cache with the results of a run.
-     * @param fixture the fixture to update
+     * @param fixtureType the fixture class to update
      * @param example the name of the example that is being finished (null ok)
      * @param actualResultSummary the results as reported from the spec
      * @param statusChecker modifier that updates results dependent on ImplementationStatus (ExpectedToFail etc)
      */
-    public synchronized void finishRun(Fixture fixture,
-                                       String example,
+    public synchronized void finishRun(FixtureType fixtureType, String example,
                                        ResultSummary actualResultSummary,
                                        ImplementationStatusChecker statusChecker) {
-        assert fixture.getFixtureClass() != null;
+        assert fixtureType.getFixtureClass() != null;
         assert actualResultSummary != null;
 
-        RunOutput exampleRunOutput = setResultsForExample(fixture, example, actualResultSummary, statusChecker);
+        RunOutput exampleRunOutput = setResultsForExample(fixtureType, example, actualResultSummary, statusChecker);
 
         if (example != null) {
-            addResultsToFixtureTotal(fixture, exampleRunOutput);
+            addResultsToFixtureTotal(fixtureType, exampleRunOutput);
         }
     }
 
-    private RunOutput setResultsForExample(Fixture fixture, String example, ResultSummary actualResultSummary, ImplementationStatusChecker statusChecker) {
-        ConcordionRunOutput exampleResults = (ConcordionRunOutput) getExampleFromCache(fixture, example);
+    private RunOutput setResultsForExample(FixtureType fixtureType, String example, ResultSummary actualResultSummary, ImplementationStatusChecker statusChecker) {
+        ConcordionRunOutput exampleResults = (ConcordionRunOutput) getExampleFromCache(fixtureType, example);
         if (exampleResults == null) {
             throw new IllegalStateException("Internal error: startRun must always be called before finishRun");
         }
@@ -115,31 +112,31 @@ public enum RunResultsCache {
         return exampleResults;
     }
 
-    private void addResultsToFixtureTotal(Fixture fixture, RunOutput exampleRunOutput) {
-        CompositeRunOutput fixtureRunOutput = (CompositeRunOutput) getFromCache(fixture.getFixtureClass(), null);
+    private void addResultsToFixtureTotal(FixtureType fixtureType, RunOutput exampleRunOutput) {
+        CompositeRunOutput fixtureRunOutput = (CompositeRunOutput) getFromCache(fixtureType.getFixtureClass(), null);
         fixtureRunOutput.add(exampleRunOutput);
     }
 
-    private RunOutput getExampleFromCache(Fixture fixture, String example) {
-        return map.get(getID(fixture, example));
+    private RunOutput getExampleFromCache(FixtureType fixtureType, String example) {
+        return map.get(getID(fixtureType, example));
     }
 
     /**
      * Run failed. Remove our placeholder value.
-     * @param fixture the fixture to update
+     * @param fixtureType fixture class that failed
      * @param example the name of the example that failed
      */
-    public synchronized void failRun(Fixture fixture, String example) {
-        map.remove(getID(fixture, example));
+    public synchronized void failRun(FixtureType fixtureType, String example) {
+        map.remove(getID(fixtureType, example));
     }
 
     /**
      * For test purposes only
-     * @param fixture fixture to remove cache results for
+     * @param fixtureType fixture class to remove cache results for
      */
-    public void removeAllFromCache(Fixture fixture) {
+    public void removeAllFromCache(FixtureType fixtureType) {
         for (CacheKey key : map.keySet()) {
-            if (key.isForClass(fixture.getFixtureClass())) {
+            if (key.isForClass(fixtureType.getFixtureClass())) {
                 map.remove(key);
             }
         }

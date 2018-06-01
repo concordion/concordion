@@ -65,11 +65,11 @@ public class XMLSpecification implements SpecificationByExample {
         processNode(rootCommandNode, evaluator, resultRecorder, fixture);
     }
 
-    public void setFixture(Fixture fixture) {
+    public void setFixture(FixtureType fixtureType) {
         if (hasExampleCommandNodes()) {
             testDescription = OUTER_EXAMPLE_NAME;
         } else {
-            testDescription = fixture.getSpecificationDescription();
+            testDescription = fixtureType.getSpecificationDescription();
         }
     }
 

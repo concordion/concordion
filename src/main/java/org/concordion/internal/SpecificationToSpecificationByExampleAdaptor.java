@@ -21,8 +21,8 @@ public class SpecificationToSpecificationByExampleAdaptor implements Specificati
         specification.process(evaluator, resultRecorder, fixture);
     }
 
-    public void setFixture(Fixture fixture) {
-        testDescription = fixture.getSpecificationDescription();
+    public void setFixture(FixtureType fixtureType) {
+        testDescription = fixtureType.getSpecificationDescription();
     }
 
     public void processExample(Evaluator evaluator, String example, ResultRecorder resultRecorder, Fixture fixture) {

@@ -1,5 +1,7 @@
 package org.concordion.api;
 
+import org.concordion.internal.FixtureType;
+
 import java.util.List;
 
 /**
@@ -13,9 +15,9 @@ public interface SpecificationByExample extends Specification {
 	 * Sets the fixture. Will be called before the other methods are called so that
 	 * the class can process the fixture to determine examples, etc.
 	 *
-	 * @param fixture the fixture instance
-	 */
-    void setFixture(Fixture fixture);
+     * @param fixtureType
+     */
+    void setFixture(FixtureType fixtureType);
 
     /**
      * Returns whether the specification contains example nodes.
@@ -40,7 +42,7 @@ public interface SpecificationByExample extends Specification {
 
     /**
      * Processes a single example.
-     *  @param evaluator evaluator
+     * @param evaluator evaluator
      * @param example name of the example
      * @param resultRecorder result recorder
      * @param fixture the example's fixture

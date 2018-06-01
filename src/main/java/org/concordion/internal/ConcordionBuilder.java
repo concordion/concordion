@@ -36,7 +36,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private static final String EMBEDDED_STYLESHEET_RESOURCE = "/org/concordion/internal/resource/embedded.css";
 
     private static File baseOutputDir;
-    private SpecificationLocator specificationLocator = new ClassNameAndTypeBasedSpecificationLocator();
+    private SpecificationLocator specificationLocator = new ClassNameBasedSpecificationLocator();
     private Map<SourceType, Source> sources = new HashMap<SourceType, Source>();
     private Target target = null;
     private CommandRegistry commandRegistry = new CommandRegistry();
@@ -415,15 +415,15 @@ public class ConcordionBuilder implements ConcordionExtender {
         return this;
     }
 
-    public ConcordionBuilder withFixture(Fixture fixture) {
+    public ConcordionBuilder withFixture(Fixture fixture, FixtureType fixtureType) {
         this.fixture = fixture;
 
-        withResources(fixture);
+        withResources(fixtureType);
 
-        if (fixture.declaresFailFast()) {
-            withFailFast(fixture.getDeclaredFailFastExceptions());
+        if (fixtureType.declaresFailFast()) {
+            withFailFast(fixtureType.getDeclaredFailFastExceptions());
         }
-        if (fixture.declaresFullOGNL()) {
+        if (fixtureType.declaresFullOGNL()) {
             withEvaluatorFactory(new OgnlEvaluatorFactory());
         }
 
@@ -440,12 +440,12 @@ public class ConcordionBuilder implements ConcordionExtender {
         return this;
     }
 
-    public ConcordionBuilder withResources(Fixture fixture) {
+    public ConcordionBuilder withResources(FixtureType fixtureType) {
         boolean includeDefaultStyling = true;
 
         Source resourceSource = sources.get(SourceType.RESOURCE);
-        if (fixture.declaresResources()) {
-        	ResourceFinder resources = new ResourceFinder(fixture);
+        if (fixtureType.declaresResources()) {
+        	ResourceFinder resources = new ResourceFinder(fixtureType);
         	List<ResourceToCopy> sourceFiles = resources.getResourcesToCopy();
 
         	for (ResourceToCopy sourceFile : sourceFiles) {
