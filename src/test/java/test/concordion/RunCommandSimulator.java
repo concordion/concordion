@@ -37,6 +37,7 @@ public class RunCommandSimulator {
         boolean isOutputGenerated = fileName.exists();
 
         Map<String, String> result = createMap(recorder, isOutputGenerated);
+        result.put("elementUrl", element.getAttributeValue("href"));
         return result;
     }
 
