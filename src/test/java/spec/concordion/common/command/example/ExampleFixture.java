@@ -36,7 +36,7 @@ public class ExampleFixture extends SpecWithBeforeSpec {
         return object == null;
     }
 
-    public Map<String, String> runTestDummySpec(String href) throws Exception {
+    public Map<String, Object> runTestDummySpec(String href) throws Exception {
         return new RunTotalsFixture().withTestClass(this.getClass()).simulateRun(href);
     }
 
