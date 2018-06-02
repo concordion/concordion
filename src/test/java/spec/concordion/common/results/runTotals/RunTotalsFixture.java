@@ -29,7 +29,7 @@ public class RunTotalsFixture {
 		return this;
 	}
 
-	public Map<String, String> simulateRun(final String href) throws Exception {
-		return new RunCommandSimulator().simulate(href, testClass, fixture);
+	public Map<String, Object> simulateRun(final String href) throws Exception {
+		return new RunCommandSimulator().simulate(href, testClass);
 	}
 }

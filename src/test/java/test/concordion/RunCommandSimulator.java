@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RunCommandSimulator {
-    public Map<String, String> simulate(String href, Class<?> testClass, Fixture fixture) {
+    public Map<String, Object> simulate(String href, Class<?> testClass) {
         final Element element = new Element("a");
         element.addAttribute("href", href);
 
@@ -27,24 +27,25 @@ public class RunCommandSimulator {
         recorder.setSpecificationDescription("");
 
         try {
-            commandCall.execute(null, recorder, fixture);
+            commandCall.execute(null, recorder, new FixtureInstance(Object.class));
         } catch (FailFastException ffe) {
             System.out.println("Caught fail fast exception thrown by the fixture under test. Ignoring...");
         }
 
-        File fileName = new File(parentFile, href);
+        File fileName = new File(parentFile, element.getAttributeValue("href"));
 //		System.out.println(fileName.getAbsolutePath());
         boolean isOutputGenerated = fileName.exists();
 
-        Map<String, String> result = createMap(recorder, isOutputGenerated);
+        Map<String, Object> result = createMap(recorder, isOutputGenerated);
         result.put("elementUrl", element.getAttributeValue("href"));
         return result;
     }
 
-    public Map<String, String> createMap(ResultSummary recorder, boolean isOutputGenerated) {
-        Map<String, String> result = new HashMap<String, String>();
+    public Map<String, Object> createMap(ResultSummary recorder, boolean isOutputGenerated) {
+        Map<String, Object> result = new HashMap<String, Object>();
 
         result.put("isOutputGenerated", isOutputGenerated ? "Yes" : "No");
+        result.put("isOutputGeneratedBoolean", isOutputGenerated);
         result.put("successCount", Long.toString(recorder.getSuccessCount()));
         result.put("failureCount", Long.toString(recorder.getFailureCount()));
         result.put("ignoredCount", Long.toString(recorder.getIgnoredCount()));
