@@ -14,15 +14,17 @@ public class FixtureRunner {
     private Concordion concordion;
 
     public FixtureRunner(Fixture fixture, SpecificationLocator specificationLocator) throws UnableToBuildConcordionException {
-        ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture).withSpecificationLocator(specificationLocator);
+        ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixtureType(fixture.getFixtureType()).withSpecificationLocator(specificationLocator);
         new FixtureExtensionLoader().addExtensions(fixture, concordionBuilder);
-        new FixtureOptionsLoader().addOptions(fixture, concordionBuilder);
+        new FixtureOptionsLoader().addOptions(fixture.getFixtureType(), concordionBuilder);
         concordion = concordionBuilder.build();
     }
 
     public ResultSummary run(String example, Fixture fixture) throws IOException {
 
-        RunOutput runOutput = runResultsCache.startRun(fixture, example);
+        FixtureType fixtureType = fixture.getFixtureType();
+
+        RunOutput runOutput = runResultsCache.startRun(fixtureType, example);
         ResultSummary actualResultSummary = runOutput==null?
                 null:
                 runOutput.getActualResultSummary();
@@ -37,26 +39,24 @@ public class FixtureRunner {
                     try {
                         actualResultSummary = concordion.processExample(fixture, example);
                         statusChecker = ImplementationStatusChecker.getImplementationStatusChecker(
-                                fixture,
-                                actualResultSummary.getImplementationStatus());
+                                fixtureType, actualResultSummary.getImplementationStatus());
                     } finally {
                         fixture.afterProcessExample(example);
                     }
                 } else {
                     actualResultSummary = concordion.process(fixture);
                     statusChecker = ImplementationStatusChecker.getImplementationStatusChecker(
-                            fixture,
-                            null);
+                            fixtureType, null);
                 }
 
-                runResultsCache.finishRun(fixture,
-                        example,
+                runResultsCache.finishRun(
+                        fixtureType, example,
                         actualResultSummary,
                         statusChecker);
 
             } catch (RuntimeException e) {
                 // the run failed miserably. Tell the cache that the run failed
-                runResultsCache.failRun(fixture, example);
+                runResultsCache.failRun(fixtureType, example);
                 throw e;
             }
 
@@ -65,19 +65,19 @@ public class FixtureRunner {
         }
 
         if (actualResultSummary.isForExample()) {
-            printResultSummary(fixture, example, actualResultSummary, additionalInformation);
+            printResultSummary(fixtureType, example, actualResultSummary, additionalInformation);
         }
 
         return actualResultSummary;
     }
 
-    private void printResultSummary(Fixture fixture, String example, ResultSummary resultSummary, String additionalInformation) {
+    private void printResultSummary(FixtureType fixtureType, String example, ResultSummary resultSummary, String additionalInformation) {
         synchronized (System.out) {
             if (additionalInformation != null) {
                 System.out.print(additionalInformation);
             }
-            resultSummary.print(System.out, fixture);
-            resultSummary.assertIsSatisfied(fixture);
+            resultSummary.print(System.out, fixtureType);
+            resultSummary.assertIsSatisfied(fixtureType);
         }
     }
 
@@ -95,7 +95,7 @@ public class FixtureRunner {
      */
     @Deprecated
     public ResultSummary run(Fixture fixture) throws IOException {
-        RunOutput results = RunResultsCache.SINGLETON.getFromCache(fixture, null);
+        RunOutput results = RunResultsCache.SINGLETON.getFromCache(fixture.getFixtureType(), null);
 
         ResultSummary resultSummary = run(null, fixture);
 
@@ -103,7 +103,7 @@ public class FixtureRunner {
         if (results == null) {
             concordion.finish();
         }
-        resultSummary.print(System.out, fixture);
+        resultSummary.print(System.out, fixture.getFixtureType());
         return resultSummary;
     }
 }

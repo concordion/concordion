@@ -1,6 +1,7 @@
 package org.concordion.internal;
 
-import org.concordion.api.SpecificationLocatorWithType;
+import org.concordion.api.Resource;
 
-public class ClassNameAndTypeBasedSpecificationLocator extends ClassNameBasedSpecificationLocator implements SpecificationLocatorWithType {
+public abstract class ClassNameAndTypeBasedSpecificationLocator extends ClassNameBasedSpecificationLocator {
+    public abstract Resource locateSpecification(FixtureType fixtureType, String typeSuffix);
 }

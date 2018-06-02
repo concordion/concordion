@@ -37,6 +37,7 @@ public class RunCommandSimulator {
         boolean isOutputGenerated = fileName.exists();
 
         Map<String, String> result = createMap(recorder, isOutputGenerated);
+        result.put("elementUrl", element.getAttributeValue("href"));
         return result;
     }
 
@@ -49,7 +50,7 @@ public class RunCommandSimulator {
         result.put("ignoredCount", Long.toString(recorder.getIgnoredCount()));
         result.put("exceptionCount", Long.toString(recorder.getExceptionCount()));
 
-        String counts = recorder.printCountsToString(new FixtureInstance(new Object()));
+        String counts = recorder.printCountsToString(new FixtureType(Object.class));
 
         result.put("totalsString", counts);
         return result;

@@ -5,6 +5,7 @@ import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.api.listener.*;
 import org.concordion.internal.FixtureInstance;
+import org.concordion.internal.FixtureType;
 
 public class RunTotalsExtension implements ConcordionExtension, RunListener {
 
@@ -36,7 +37,7 @@ public class RunTotalsExtension implements ConcordionExtension, RunListener {
     }
 
     private void writeText(AbstractRunEvent event) {
-        writeText(event.getElement(), event.getResultSummary().printCountsToString(new FixtureInstance(new Object())));
+        writeText(event.getElement(), event.getResultSummary().printCountsToString(new FixtureType(Object.class)));
     }
 
     private void writeText(Element element, String text) {

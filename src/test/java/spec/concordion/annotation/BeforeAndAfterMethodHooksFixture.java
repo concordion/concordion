@@ -24,10 +24,6 @@ public class BeforeAndAfterMethodHooksFixture {
         return BeforeAndAfterLoggingWithListenerFixture.getLog();
     }
 
-    public void simulateRun(final String href) throws Exception {
-        new RunCommandSimulator().simulate(href, this.getClass(), new FixtureInstance(this));
-    }
-
     @org.concordion.api.ConcordionScoped(Scope.EXAMPLE)
     private ScopedObjectHolder<AtomicInteger> exampleScopedCounter = new ScopedObjectHolder<AtomicInteger>() {
         @Override

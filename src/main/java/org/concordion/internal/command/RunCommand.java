@@ -77,8 +77,8 @@ public class RunCommand extends AbstractCommand {
 
             announceRunStarted(element, href);
 
-            runStrategy.call(runner, commandCall.getResource(), href, resultAnnouncer, resultRecorder);
             updateHrefSuffix(element, href);
+            runStrategy.call(runner, commandCall.getResource(), href, resultAnnouncer, resultRecorder);
 
         } catch (FailFastException e) {
             throw e; // propagate FailFastExceptions

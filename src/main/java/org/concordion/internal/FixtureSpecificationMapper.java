@@ -25,8 +25,8 @@ public class FixtureSpecificationMapper {
         }
     };
 
-    public static Resource toSpecificationResource(Object fixture, String specificationSuffix) {
-        String slashedClassName = fixture.getClass().getName().replaceAll("\\.", "/");
+    public static Resource toSpecificationResource(FixtureType fixtureType, String specificationSuffix) {
+        String slashedClassName = fixtureType.getFixtureClass().getName().replaceAll("\\.", "/");
         String fixturePath = removeSuffixFromFixtureName(slashedClassName);
         String resourcePath = "/" + fixturePath + "." + specificationSuffix;
         
