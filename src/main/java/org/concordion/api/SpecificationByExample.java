@@ -1,7 +1,5 @@
 package org.concordion.api;
 
-import org.concordion.internal.FixtureType;
-
 import java.util.List;
 
 /**
@@ -11,27 +9,12 @@ import java.util.List;
  */
 public interface SpecificationByExample extends Specification {
 
-	/**
-	 * Sets the fixture. Will be called before the other methods are called so that
-	 * the class can process the fixture to determine examples, etc.
-	 *
-     * @param fixtureType
-     */
-    void setFixture(FixtureType fixtureType);
-
     /**
      * Returns whether the specification contains example nodes.
      *
      * @return true if specification has one or more nodes with an example command on
      */
     boolean hasExampleCommandNodes();
-
-    /**
-     * Gets the description of the exported specification.
-     *
-     * @return specification description
-     */
-    String getSpecificationDescription();
 
     /**
      * Gets all the examples in the specification.

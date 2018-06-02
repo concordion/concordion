@@ -62,30 +62,35 @@ public class Concordion {
 
     public ResultSummary process(Fixture fixture) throws IOException {
         SummarizingResultRecorder resultRecorder = new SummarizingResultRecorder();
-        resultRecorder.setSpecificationDescription(fixture.getFixtureType().getSpecificationDescription());
-        getSpecification(fixture.getFixtureType()).process(evaluatorFactory.createEvaluator(fixture.getFixtureObject()), resultRecorder, fixture);
+        Evaluator evaluator = evaluatorFactory.createEvaluator(fixture.getFixtureObject());
+        getSpecification().process(evaluator, resultRecorder, fixture);
         return resultRecorder;
     }
 
-    private SpecificationByExample getSpecification(FixtureType fixtureType) throws IOException {
+    private SpecificationByExample getSpecification() throws IOException {
         if (specification == null) {
-            specification = loadSpecificationFromResource(resource, fixtureType);
-            specificationDescription = specification.getSpecificationDescription();
+            specification = loadSpecificationFromResource(resource);
+            specificationDescription = specification.getDescription();
         }
         return specification;
     }
 
     public List<String> getExampleNames(FixtureType fixtureType) throws IOException {
-        return getSpecification(fixtureType).getExampleNames();
+        List<String> exampleNames = getSpecification().getExampleNames();
+        if (exampleNames.isEmpty()) {
+            exampleNames.add(fixtureType.getDescription());
+        }
+        return exampleNames;
     }
 
-    public boolean hasExampleCommands(FixtureType fixtureType) throws IOException {
-        return getSpecification(fixtureType).hasExampleCommandNodes();
+    public boolean hasExampleCommands() throws IOException {
+        return getSpecification().hasExampleCommandNodes();
     }
 
     public ResultSummary processExample(Fixture fixture, String example) throws IOException {
         SummarizingResultRecorder resultRecorder = new SummarizingResultRecorder(example);
-        getSpecification(fixture.getFixtureType()).processExample(evaluatorFactory.createEvaluator(fixture.getFixtureObject()), example, resultRecorder, fixture);
+        Evaluator evaluator = evaluatorFactory.createEvaluator(fixture.getFixtureObject());
+        getSpecification().processExample(evaluator, example, resultRecorder, fixture);
         return resultRecorder;
     }
 
@@ -93,12 +98,11 @@ public class Concordion {
      * Loads the specification for the specified fixture.
      *
      * @param resource the resource to load
-     * @param fixtureType
      * @return a SpecificationByExample object to use
      * @throws IOException if the resource cannot be loaded
      */
-    private SpecificationByExample loadSpecificationFromResource(Resource resource, FixtureType fixtureType) throws IOException {
-        Specification specification= specificationReader.readSpecification(resource);
+    private SpecificationByExample loadSpecificationFromResource(Resource resource) throws IOException {
+        Specification specification = specificationReader.readSpecification(resource);
 
         SpecificationByExample specificationByExample;
         if (specification instanceof SpecificationByExample) {
@@ -106,7 +110,6 @@ public class Concordion {
         } else {
             specificationByExample = new SpecificationToSpecificationByExampleAdaptor(specification);
         }
-        specificationByExample.setFixture(fixtureType);
         return specificationByExample;
     }
 
@@ -115,7 +118,7 @@ public class Concordion {
     }
 
     public void checkValidStatus(FixtureType fixtureType) throws IOException {
-        if (hasExampleCommands(fixtureType) && fixtureType.getDeclaredImplementationStatus() != ImplementationStatus.EXPECTED_TO_PASS) {
+        if (hasExampleCommands() && fixtureType.getDeclaredImplementationStatus() != ImplementationStatus.EXPECTED_TO_PASS) {
             throw new IllegalStateException("Error: When the specification contains examples, "
                     + "the Implementation Status (ExpectedToFail or Unimplemented) must be set on the example command in the specification, "
                     + "and not as an annotation on the fixture.");

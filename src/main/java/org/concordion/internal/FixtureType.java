@@ -114,7 +114,7 @@ public class FixtureType implements FixtureDeclarations {
     	return rootPaths;
     }
 
-    public String getSpecificationDescription() {
+    public String getDescription() {
         String name = removeSuffix(fixtureClass.getSimpleName());
         return SimpleFormatter.format("[Concordion Specification for '%s']", name); // Based on suggestion by Danny Guerrier
     }

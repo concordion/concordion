@@ -12,7 +12,6 @@ public class XMLSpecification implements SpecificationByExample {
     public static final String OUTER_EXAMPLE_NAME = "[Outer]";
     public static final String OUTER_EXAMPLE_SUFFIX = " " + OUTER_EXAMPLE_NAME;
 
-    private String testDescription;
     private final CommandCall rootCommandNode;
 
     private final SpecificationCommand specificationCommand;
@@ -43,12 +42,12 @@ public class XMLSpecification implements SpecificationByExample {
                 String errorText = null;
                 if (beforeResultRecorder.hasExceptions()) {
                     errorText = SimpleFormatter.format("Exceptions occurred in the 'before' example in '%s'. See the output specification for details.\n",
-                            testDescription
+                            specificationDescription
                     );
                 } else if (beforeResultRecorder.getTotalCount() > 0) {
                     errorText = SimpleFormatter.format("Assertions were made in the 'before' example in '%s'.\n"
                             + "Assertions are not supported in the 'before' example.\n",
-                            testDescription
+                            specificationDescription
                     );
                 }
                 if (errorText != null) {
@@ -65,16 +64,8 @@ public class XMLSpecification implements SpecificationByExample {
         processNode(rootCommandNode, evaluator, resultRecorder, fixture);
     }
 
-    public void setFixture(FixtureType fixtureType) {
-        if (hasExampleCommandNodes()) {
-            testDescription = OUTER_EXAMPLE_NAME;
-        } else {
-            testDescription = fixtureType.getSpecificationDescription();
-        }
-    }
-
     public void processExample(Evaluator evaluator, String example, ResultRecorder resultRecorder, Fixture fixture) {
-        if (testDescription.equals(example)) {
+        if (!hasExampleCommandNodes() || OUTER_EXAMPLE_NAME.equals(example)) {
             processNode(rootCommandNode, evaluator, resultRecorder, fixture);
             return;
         }
@@ -93,29 +84,26 @@ public class XMLSpecification implements SpecificationByExample {
     }
 
     @Override
-    public String getSpecificationDescription() {
+    public String getDescription() {
         return specificationDescription;
     }
 
     public List<String> getExampleNames() {
 
-        List<String> commands = new ArrayList<String>();
+        List<String> examples = new ArrayList<String>();
 
-        if (!rootCommandNode.getChildren().isEmpty()) {
-            // Add the main spec first to increase the chance that it will be run first by jUnit.
-            commands.add(testDescription);
+        if (hasExampleCommandNodes()) {
+            if (!rootCommandNode.getChildren().isEmpty()) {
+                // Add the main spec first to increase the chance that it will be run first by jUnit.
+                examples.add(OUTER_EXAMPLE_NAME);
+            }
+
+            for (ExampleCommandCall exampleCall : this.examples) {
+                examples.add(exampleCall.getExampleName());
+            }
         }
 
-        for (ExampleCommandCall exampleCall: examples) {
-            commands.add(exampleCall.getExampleName());
-        }
-
-        // If there are no examples and no commands, let's add the outer test so you have 1 test in the fixture
-        if (commands.isEmpty()) {
-            commands.add(testDescription);
-        }
-
-        return commands;
+        return examples;
     }
 
     public void finish() {
