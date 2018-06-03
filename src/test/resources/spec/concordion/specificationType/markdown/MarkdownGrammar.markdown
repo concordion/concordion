@@ -311,8 +311,8 @@ HTML entities in the text value are automatically escaped.
       <td>&lt;span concordion:set="#d"&gt;&amp;lt;div&amp;gt;&amp;lt;br/&amp;gt;&amp;lt;/div&amp;gt;&lt;/span&gt;</td>
     </tr>
     <tr>
-      <td>[&lt;?xml version="1.0" encoding="UTF-8"?&gt;](- "#decl")</td>
-      <td>&lt;span concordion:set="#decl"&gt;&amp;lt;?xml version="1.0" encoding="UTF-8"?&amp;gt;&lt;/span&gt;</td>
+      <td>[&lt;?xml version='1.0' encoding='UTF-8'?&gt;](- "#decl")</td>
+      <td>&lt;span concordion:set="#decl"&gt;&amp;lt;?xml version='1.0' encoding='UTF-8'?&amp;gt;&lt;/span&gt;</td>
     </tr>
     <tr>
       <td>[&amp; &lt; 3](- "c:set=#x")</td>

@@ -2,10 +2,13 @@ package org.concordion.internal.parser.flexmark;
 
 import com.vladsch.flexmark.html.CustomNodeRenderer;
 import com.vladsch.flexmark.html.HtmlWriter;
-import com.vladsch.flexmark.html.renderer.*;
+import com.vladsch.flexmark.html.renderer.NodeRenderer;
+import com.vladsch.flexmark.html.renderer.NodeRendererContext;
+import com.vladsch.flexmark.html.renderer.NodeRendererFactory;
+import com.vladsch.flexmark.html.renderer.NodeRenderingHandler;
 import com.vladsch.flexmark.util.html.Attributes;
 import com.vladsch.flexmark.util.options.DataHolder;
-import com.vladsch.flexmark.util.sequence.BasedSequence;
+import org.concordion.internal.parser.support.Attribute;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,9 +31,12 @@ public class ConcordionNodeRenderer implements NodeRenderer {
         return set;
     }
 
-    private void renderCommand(ConcordionCommandNode node, NodeRendererContext context, HtmlWriter html, String command, BasedSequence variable) {
+    private void renderCommand(ConcordionCommandNode node, NodeRendererContext context, HtmlWriter html, String command, String expression) {
         final Attributes nodeAttributes = new Attributes();
-        nodeAttributes.addValue(command, variable);
+        nodeAttributes.addValue(command, expression);
+        for (Attribute attribute : node.getAttributes()) {
+            nodeAttributes.addValue(attribute.name, attribute.value);
+        }
         html.setAttributes(nodeAttributes).withAttr().tag("span");
         html.text(node.getChars());
         context.delegateRender();

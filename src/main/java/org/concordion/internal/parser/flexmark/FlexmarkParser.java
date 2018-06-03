@@ -5,33 +5,34 @@ import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.profiles.pegdown.Extensions;
 import com.vladsch.flexmark.profiles.pegdown.PegdownOptionsAdapter;
-import com.vladsch.flexmark.util.options.DataHolder;
+import com.vladsch.flexmark.util.options.MutableDataHolder;
+import com.vladsch.flexmark.util.options.MutableDataSet;
 
-import java.util.Collections;
 import java.util.Map;
 
 public class FlexmarkParser {
-    private final DataHolder options;
+    private final MutableDataHolder options;
     private final Parser parser;
     private final HtmlRenderer htmlRenderer;
-    private Map<String, String> namespaces;
 
+    public FlexmarkParser(int pegdownExtensions, Map<String, String> namespaces, String targetConcordionNamespace) {
 
-    public FlexmarkParser() {
-        this(0, Collections.<String, String> emptyMap());
-    }
-    
-    public FlexmarkParser(int pegdownExtensions, Map<String, String> namespaces) {
-        this.namespaces = namespaces;
-        options = PegdownOptionsAdapter.flexmarkOptions(true,
+        // Only interrupts an HTML block on a blank line if all tags in the HTML block are closed.
+        // Closer to Pegdown HTML block parsing behaviour.
+        // TODO - allow this to be overridden.
+        boolean strictHtml = false;
+
+        options = new MutableDataSet(PegdownOptionsAdapter.flexmarkOptions(strictHtml,
                 Extensions.TABLES | Extensions.STRIKETHROUGH | pegdownExtensions,
-                FlexmarkLinkExtension.create());
+                FlexmarkLinkExtension.create()));
+        options.set(ConcordionNodePostProcessor.CONCORDION_ADDITIONAL_NAMESPACES, namespaces);
+        options.set(ConcordionNodePostProcessor.CONCORDION_TARGET_NAMESPACE, targetConcordionNamespace);
 
         parser = Parser.builder(options).build();
         htmlRenderer = HtmlRenderer.builder(options).build();
     }
 
-    public String markdownToHtml(String markdown, String concordionNamespacePrefix) {
+    public String markdownToHtml(String markdown) {
         Node document = parser.parse(markdown);
         String html = htmlRenderer.render(document);
         return html;

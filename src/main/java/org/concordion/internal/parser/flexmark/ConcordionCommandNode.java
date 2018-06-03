@@ -1,21 +1,24 @@
 package org.concordion.internal.parser.flexmark;
 
-import com.vladsch.flexmark.ast.*;
+import com.vladsch.flexmark.ast.Node;
 import com.vladsch.flexmark.util.sequence.BasedSequence;
-import com.vladsch.flexmark.util.sequence.CharSubSequence;
 import org.concordion.internal.parser.markdown.ConcordionMarkdownException;
-import org.concordion.internal.parser.support.ConciseExpressionParser;
+import org.concordion.internal.parser.support.Attribute;
 import org.concordion.internal.parser.support.ConcordionStatement;
+
+import java.util.List;
 
 public class ConcordionCommandNode extends Node {
 
-    private final BasedSequence expression;
+    private final String expression;
+    private final List<Attribute> attributes;
     private final String command;
 
-    protected ConcordionCommandNode(String command, BasedSequence expression, BasedSequence text) {
+    protected ConcordionCommandNode(String command, String expression, List<Attribute> attributes, BasedSequence text) {
         super(text);
         this.command = command;
         this.expression = expression;
+        this.attributes = attributes;
     }
 
     public static ConcordionCommandNode createNode(ConcordionStatement statement, BasedSequence expression, BasedSequence text) {
@@ -26,7 +29,7 @@ public class ConcordionCommandNode extends Node {
         }
         System.out.println(statement.command.name);
         System.out.println(statement.command.value);
-        return new ConcordionCommandNode(statement.command.name, CharSubSequence.of(statement.command.value), text);
+        return new ConcordionCommandNode(statement.command.name, statement.command.value, statement.attributes, text);
     }
 
     @Override
@@ -39,11 +42,15 @@ public class ConcordionCommandNode extends Node {
         astExtraChars(out);
     }
 
-    public BasedSequence getExpression() {
+    public String getExpression() {
         return expression;
     }
 
     public String getCommand() {
         return command;
+    }
+
+    public List<Attribute> getAttributes() {
+        return attributes;
     }
 }

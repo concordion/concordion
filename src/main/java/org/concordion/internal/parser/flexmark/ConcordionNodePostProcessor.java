@@ -6,7 +6,9 @@ import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.parser.block.NodePostProcessor;
 import com.vladsch.flexmark.parser.block.NodePostProcessorFactory;
 import com.vladsch.flexmark.util.NodeTracker;
+import com.vladsch.flexmark.util.collection.DataValueFactory;
 import com.vladsch.flexmark.util.options.DataHolder;
+import com.vladsch.flexmark.util.options.DataKey;
 import com.vladsch.flexmark.util.sequence.BasedSequence;
 import org.concordion.internal.parser.support.ConciseExpressionParser;
 import org.concordion.internal.parser.support.ConcordionStatement;
@@ -17,16 +19,24 @@ import java.util.Map;
 public class ConcordionNodePostProcessor extends NodePostProcessor {
     public static final String URL_FOR_CONCORDION = "-";
     private static final String SOURCE_CONCORDION_NAMESPACE_PREFIX = "c";
-    // TODO allow following to be overridden
-    private static final String TARGET_CONCORDION_NAMESPACE_PREFIX = "concordion";
-    private Map<String, String> namespaces = Collections.emptyMap();
+
+    public static final DataKey<Map<String, String>> CONCORDION_ADDITIONAL_NAMESPACES = new DataKey<Map<String, String>>("CONCORDION_ADDITIONAL_NAMESPACES",
+            new DataValueFactory<Map<String, String>>() {
+                @Override
+                public Map<String, String> create(DataHolder value) {
+                    return Collections.EMPTY_MAP;
+                }
+            });
+    public static final DataKey<String> CONCORDION_TARGET_NAMESPACE = new DataKey<String>("CONCORDION_TARGET_NAMESPACE", "concordion");
 
     private final ReferenceRepository referenceRepository;
     private final ConciseExpressionParser statementParser;
 
     public ConcordionNodePostProcessor(DataHolder options) {
         this.referenceRepository = options.get(Parser.REFERENCES);
-        statementParser = new ConciseExpressionParser(SOURCE_CONCORDION_NAMESPACE_PREFIX, TARGET_CONCORDION_NAMESPACE_PREFIX, namespaces);
+        statementParser = new ConciseExpressionParser(SOURCE_CONCORDION_NAMESPACE_PREFIX,
+                CONCORDION_TARGET_NAMESPACE.getFrom(options),
+                CONCORDION_ADDITIONAL_NAMESPACES.getFrom(options));
     }
 
     @Override

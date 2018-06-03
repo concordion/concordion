@@ -14,11 +14,11 @@ public class MarkdownGrammarFixture {
     public MarkdownGrammarFixture() {
         HashMap<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("ext", "urn:concordion-extensions:2010");
-        markdownParser = new FlexmarkParser(0, namespaces);
+        markdownParser = new FlexmarkParser(0, namespaces, "concordion");
     }
 
     public String translate(String markdown) {
-        String html = markdownParser.markdownToHtml(markdown, "concordion").trim();
+        String html = markdownParser.markdownToHtml(markdown).trim();
         if (html.startsWith("<p>") && html.endsWith("</p>")) {
             html = html.substring(3, html.length()-4);
         }
