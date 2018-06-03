@@ -16,6 +16,7 @@ repositories {
 dependencies {
     compile 'junit:junit:4.12',
             'ognl:ognl:3.1',
+            'com.vladsch.flexmark:flexmark-all:0.32.24',
             'org.pegdown:pegdown:1.6.0'
 
     compile ('xom:xom:1.2.5') {
