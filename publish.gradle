@@ -1,6 +1,6 @@
 plugins {
     id 'net.researchgate.release' version '2.3.0'
-    id 'org.ajoberstar.github-pages' version '1.3.1'
+    id 'org.ajoberstar.git-publish' version '1.0.0'
     id "com.jfrog.bintray" version "1.6"
     id 'org.kordamp.gradle.clirr' version '0.2.2'
 }
@@ -50,8 +50,8 @@ distributions {
 // 'gradle release' will also upload release to Bintray
 createReleaseTag.dependsOn bintrayUpload
 
-prepareGhPages.dependsOn test
-prepareGhPages.dependsOn javadoc
+gitPublishCopy.dependsOn test
+gitPublishCopy.dependsOn javadoc
 
 task publishDocs(dependsOn: ['publishGhPages'])
 
@@ -190,10 +190,10 @@ publishing {
     }
 }
 
-githubPages {
+gitPublish {
     repoUri = 'git@github.com:concordion/concordion.git'
-//    deleteExistingFiles = false
-    pages {
+    branch = 'gh-pages'
+    contents {
         from 'ghpages'
         
         into ('latest') {
