@@ -190,6 +190,23 @@ My example
 &lt;h2>head2&lt;/h2>
       </td>
     </tr>
+    
+
+    <tr>
+      <td>Example is not automatically ended by a same-level heading</td>
+      <td>
+        <pre>      
+#### [Example on h4](- "ex4")
+My example
+#### head4
+        </pre>
+      </td>
+      <td>
+<![CDATA[<div concordion:example="ex4"> <h4>Example on h4</h4>]]>
+&lt;p>My example&lt;/p>
+&lt;h4>head4&lt;/h4> &lt;/div>
+      </td>
+    </tr>    
 
     <tr>
       <td>Example ended by a strikethrough heading with the same title as the example</td>
@@ -204,6 +221,23 @@ y
       <td>
 <![CDATA[<div concordion:example="calculator"> <h1>Example 1</h1> <p>x</p>]]> &lt;/div>
 &lt;p>y&lt;/p>     
+      </td>
+    </tr>
+
+    <tr>
+      <td>Example not ended by a strikethrough heading with a different title from the example</td>
+      <td>
+        <pre>      
+# [Example 6](- "calculator")
+x
+# ~~Example 7~~
+y
+        </pre>
+      </td>
+      <td>
+<![CDATA[<div concordion:example="calculator"> <h1>Example 6</h1> <p>x</p>]]>
+&lt;h1>&lt;del>Example 7&lt;/del>&lt;/h1> 
+&lt;p>y&lt;/p> &lt;/div>
       </td>
     </tr>
 

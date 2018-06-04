@@ -158,7 +158,6 @@ public class ConcordionNodePostProcessor extends NodePostProcessor {
         return false;
     }
 
-    // TODO check heading at same level - true or false?
     private boolean isHigherLevelHeadingThan(Node followingNode, Heading headerNode) {
         if (followingNode instanceof Heading) {
             Heading followingHeader = (Heading) followingNode;
