@@ -53,7 +53,7 @@ createReleaseTag.dependsOn bintrayUpload
 gitPublishCopy.dependsOn test
 gitPublishCopy.dependsOn javadoc
 
-task publishDocs(dependsOn: ['publishGhPages'])
+task publishDocs(dependsOn: ['gitPublishPush'])
 
 task publishSnapshot(dependsOn: ['test', 'publishMainPublicationToMavenRepository'])
 
