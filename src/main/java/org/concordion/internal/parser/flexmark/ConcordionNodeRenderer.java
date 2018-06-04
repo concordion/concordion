@@ -27,6 +27,12 @@ public class ConcordionNodeRenderer implements NodeRenderer {
                 renderCommand(node, context, html, node.getCommand(), node.getExpression());
             }
         }));
+        set.add(new NodeRenderingHandler<ConcordionExampleNode>(ConcordionExampleNode.class, new CustomNodeRenderer<ConcordionExampleNode>() {
+            @Override
+            public void render(ConcordionExampleNode node, NodeRendererContext context, HtmlWriter html) {
+                renderCommand(node, context, html, node.getCommand(), node.getExpression());
+            }
+        }));
 
         return set;
     }
@@ -41,6 +47,19 @@ public class ConcordionNodeRenderer implements NodeRenderer {
         html.text(node.getChars());
         context.delegateRender();
         html.closeTag("span");
+    }
+
+    private void renderCommand(ConcordionExampleNode node, NodeRendererContext context, HtmlWriter html, String command, String expression) {
+        // TODO extract method
+        final Attributes nodeAttributes = new Attributes();
+        nodeAttributes.addValue(command, expression);
+        for (Attribute attribute : node.getAttributes()) {
+            nodeAttributes.addValue(attribute.name, attribute.value);
+        }
+        html.setAttributes(nodeAttributes).withAttr().tag("div");
+        html.text(node.getChars());
+        context.renderChildren(node);
+        html.closeTag("div");
     }
 
     public static class Factory implements NodeRendererFactory {

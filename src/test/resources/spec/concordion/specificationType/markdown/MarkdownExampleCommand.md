@@ -36,7 +36,7 @@ x
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="calculator"> <h4>Example 1</h4> <p>x</p>]]>&lt;/div>   
+<![CDATA[<div concordion:example="calculator"> <h4>Example 1</h4> <p>x</p>]]> &lt;/div>   
       </td>
     </tr>
 
@@ -50,7 +50,7 @@ x
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="setext"> <h1>Example 2</h1> <p>x</p>]]>&lt;/div>   
+<![CDATA[<div concordion:example="setext"> <h1>Example 2</h1> <p>x</p>]]> &lt;/div>   
       </td>
     </tr>
     <tr>
@@ -61,7 +61,7 @@ x
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="cancel tx" concordion:status="ExpectedToFail"> <h2>Cancel Transaction</h2>]]>&lt;/div>
+<![CDATA[<div concordion:example="cancel tx" concordion:status="ExpectedToFail"> <h2>Cancel Transaction</h2>]]> &lt;/div>
       </td>
     </tr>
     
@@ -89,7 +89,7 @@ x
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="example-3"> <h2>Example 3</h2> <p>x</p>]]>&lt;/div>   
+<![CDATA[<div concordion:example="example-3"> <h2>Example 3</h2> <p>x</p>]]> &lt;/div>   
       </td>
     </tr>
     
@@ -102,7 +102,7 @@ x
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="3-hmmm"> <h2>3. Hmmm !@#$%^*( </h2> <p>x</p>]]>&lt;/div>   
+<![CDATA[<div concordion:example="3-hmmm"> <h2>3. Hmmm !@#$%^*(</h2> <p>x</p>]]> &lt;/div>   
       </td>
     </tr>
 
@@ -115,7 +115,7 @@ x
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="a-b-c-d"> <h2>- A - B - - C -- -D - </h2> <p>x</p>]]>&lt;/div>   
+<![CDATA[<div concordion:example="a-b-c-d"> <h2>- A - B - - C -- -D -</h2> <p>x</p>]]> &lt;/div>   
       </td>
     </tr>
 
@@ -157,8 +157,7 @@ x
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="calculator"> <h4>Example 1</h4> <p>x</p>]]>&lt;/div>
-<![CDATA[<div concordion:example="another"> <h4>Example 2</h4>]]>&lt;/div>    
+<![CDATA[<div concordion:example="calculator"> <h4>Example 1</h4> <p>x</p>]]> &lt;/div><![CDATA[<div concordion:example="another"> <h4>Example 2</h4>]]> &lt;/div>
       </td>
     </tr>
 
@@ -172,7 +171,7 @@ x
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="calculator"> <h4>Example 1</h4> <p>x</p> <h5>Subheading</h5>]]>&lt;/div> 
+<![CDATA[<div concordion:example="calculator"> <h4>Example 1</h4> <p>x</p> <h5>Subheading</h5>]]> &lt;/div> 
       </td>
     </tr>
 
@@ -187,7 +186,7 @@ My example
       </td>
       <td>
 <![CDATA[<div concordion:example="ex3"> <h3>Example on h3</h3>]]>
-&lt;p>My example&lt;/p>&lt;/div>
+&lt;p>My example&lt;/p> &lt;/div>
 &lt;h2>head2&lt;/h2>
       </td>
     </tr>
@@ -203,7 +202,7 @@ y
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="calculator"> <h1>Example 1</h1> <p>x</p>]]>&lt;/div>
+<![CDATA[<div concordion:example="calculator"> <h1>Example 1</h1> <p>x</p>]]> &lt;/div>
 &lt;p>y&lt;/p>     
       </td>
     </tr>
@@ -219,7 +218,7 @@ y
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="example-one"> <h1>Example &#39;One&#39;</h1> <p>x</p>]]>&lt;/div>
+<![CDATA[<div concordion:example="example-one"> <h1>Example 'One'</h1> <p>x</p>]]> &lt;/div>
 &lt;p>y&lt;/p>
       </td>
     </tr>
@@ -235,7 +234,7 @@ y
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="example-one"> <h1>Example &lt;One&gt;</h1> <p>x</p>]]>&lt;/div>
+<![CDATA[<div concordion:example="example-one"> <h1>Example &lt;One&gt;</h1> <p>x</p>]]> &lt;/div>
 &lt;p>y&lt;/p>
       </td>
     </tr>
