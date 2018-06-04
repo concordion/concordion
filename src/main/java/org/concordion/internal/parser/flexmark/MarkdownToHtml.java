@@ -10,12 +10,13 @@ import com.vladsch.flexmark.util.options.MutableDataSet;
 
 import java.util.Map;
 
-public class FlexmarkParser {
+public class MarkdownToHtml {
     private final MutableDataHolder options;
     private final Parser parser;
     private final HtmlRenderer htmlRenderer;
 
-    public FlexmarkParser(int pegdownExtensions, Map<String, String> namespaces, String targetConcordionNamespace) {
+    // TODO allow other extensions to be added
+    public MarkdownToHtml(int pegdownExtensions, Map<String, String> namespaces, String targetConcordionNamespace) {
 
         // Only interrupts an HTML block on a blank line if all tags in the HTML block are closed.
         // Closer to Pegdown HTML block parsing behaviour.
@@ -24,9 +25,9 @@ public class FlexmarkParser {
 
         options = new MutableDataSet(PegdownOptionsAdapter.flexmarkOptions(strictHtml,
                 Extensions.TABLES | Extensions.STRIKETHROUGH | pegdownExtensions,
-                FlexmarkLinkExtension.create()));
-        options.set(ConcordionNodePostProcessor.CONCORDION_ADDITIONAL_NAMESPACES, namespaces);
-        options.set(ConcordionNodePostProcessor.CONCORDION_TARGET_NAMESPACE, targetConcordionNamespace);
+                FlexmarkConcordionExtension.create()));
+        options.set(ConcordionMarkdownOptions.CONCORDION_ADDITIONAL_NAMESPACES, namespaces);
+        options.set(ConcordionMarkdownOptions.CONCORDION_TARGET_NAMESPACE, targetConcordionNamespace);
 
         parser = Parser.builder(options).build();
         htmlRenderer = HtmlRenderer.builder(options).build();
