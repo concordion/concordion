@@ -30,55 +30,80 @@ public class ConcordionNodePostProcessor extends NodePostProcessor {
             });
     public static final DataKey<String> CONCORDION_TARGET_NAMESPACE = new DataKey<String>("CONCORDION_TARGET_NAMESPACE", "concordion");
 
+    private final String TARGET_CONCORDION_NAMESPACE_PREFIX;
+
     private final ReferenceRepository referenceRepository;
     private final ConciseExpressionParser statementParser;
 
     public ConcordionNodePostProcessor(DataHolder options) {
         this.referenceRepository = options.get(Parser.REFERENCES);
+        TARGET_CONCORDION_NAMESPACE_PREFIX = CONCORDION_TARGET_NAMESPACE.getFrom(options);
         statementParser = new ConciseExpressionParser(SOURCE_CONCORDION_NAMESPACE_PREFIX,
-                CONCORDION_TARGET_NAMESPACE.getFrom(options),
+                TARGET_CONCORDION_NAMESPACE_PREFIX,
                 CONCORDION_ADDITIONAL_NAMESPACES.getFrom(options));
     }
 
     @Override
     public void process(NodeTracker state, Node node) {
         if (node instanceof Link) {
-            Link linkNode = (Link) node;
-            if (linkNode.getUrl().equals(URL_FOR_CONCORDION)) {
-                BasedSequence title = linkNode.getTitle();
-                BasedSequence text = linkNode.getText();
-                if (isExpressionOnlyCommand(linkNode)) {
-                    text = BasedSequence.NULL;
-                }
-                ConcordionCommandNode commandNode = createNode(title, text);
-                swapNode(state, node, commandNode);
-            }
+            visit(state, (Link) node);
         } else if (node instanceof LinkRef) {
-            LinkRef linkRefNode = (LinkRef) node;
-            Reference referenceNode = linkRefNode.getReferenceNode(referenceRepository);
-            if (referenceNode.getUrl().equals(URL_FOR_CONCORDION)) {
-                BasedSequence title = referenceNode.getTitle();
-                BasedSequence text = linkRefNode.getText();
-                if (isExpressionOnlyCommand(linkRefNode)) {
-                    text = BasedSequence.NULL;
-                }
-                if (text.isEmpty()) {
-                    text = referenceNode.getReference();
-                }
-                ConcordionCommandNode commandNode = createNode(title, text);
-                swapNode(state, node, commandNode);
-            }
+            visit(state, (LinkRef) node);
         } else if (isExampleNode(node)) {
-            Heading headerNode = (Heading) node;
-            Link exampleNode = (Link) node.getFirstChild();
-            if (exampleNode.getUrl().equals(URL_FOR_CONCORDION)) {
-                ConcordionExampleNode commandNode = createExampleNode(exampleNode.getTitle(), exampleNode.getText());
-                wrapNode(state, node, commandNode);
-                replaceNode(state, exampleNode, new Text(exampleNode.getText()));
-                moveFollowingNodes(state, commandNode, headerNode);
+            visit(state, (Heading) node);
+        }
+    }
 
-//                    ConcordionStatement command = statementParser.parseCommandValueAndAttributes("example",
-//                            exampleNode.getNodeName(), true);
+    private void visit(NodeTracker state, LinkRef node) {
+        LinkRef linkRefNode = node;
+        Reference referenceNode = linkRefNode.getReferenceNode(referenceRepository);
+        if (referenceNode.getUrl().equals(URL_FOR_CONCORDION)) {
+            BasedSequence title = referenceNode.getTitle();
+            BasedSequence text = linkRefNode.getText();
+            if (isExpressionOnlyCommand(linkRefNode)) {
+                text = BasedSequence.NULL;
+            }
+            if (text.isEmpty()) {
+                text = referenceNode.getReference();
+            }
+            ConcordionCommandNode commandNode = createNode(title, text);
+            swapNode(state, linkRefNode, commandNode);
+        }
+    }
+
+    private void visit(NodeTracker state, Link linkNode) {
+        if (linkNode.getUrl().equals(URL_FOR_CONCORDION)) {
+            BasedSequence title = linkNode.getTitle();
+            BasedSequence text = linkNode.getText();
+            if (isExpressionOnlyCommand(linkNode)) {
+                text = BasedSequence.NULL;
+            }
+            ConcordionCommandNode commandNode = createNode(title, text);
+            swapNode(state, linkNode, commandNode);
+        } else {
+            String runCommandToken = SOURCE_CONCORDION_NAMESPACE_PREFIX + ":run";
+            if (linkNode.getTitle().startsWith(runCommandToken)) {
+                String suffix = linkNode.getTitle().toString().substring(runCommandToken.length()).trim();
+                String runner;
+                if (suffix.startsWith("=")) {
+                    runner = suffix.substring(1).trim();
+                    if (runner.startsWith("'") || runner.startsWith("\"")) {
+                        runner = runner.substring(1, runner.length() - 1);
+                    }
+                } else {
+                    runner = "concordion";
+                }
+
+                ConcordionLinkNode newLinkNode = new ConcordionLinkNode();
+                newLinkNode.setRunner(runner);
+                newLinkNode.setCommand(TARGET_CONCORDION_NAMESPACE_PREFIX + ":run");
+                newLinkNode.setUrl(linkNode.getUrl());
+                newLinkNode.setChars(linkNode.getChars());
+                Node firstChild = linkNode.getFirstChild();
+                if (firstChild != null) {
+                    newLinkNode.appendChild(firstChild);
+                }
+                swapNode(state, linkNode, newLinkNode);
             }
         }
     }
@@ -91,6 +116,20 @@ public class ConcordionNodePostProcessor extends NodePostProcessor {
         ConcordionStatement statement = statementParser.parse(title.toString(), text.toString());
 
         return ConcordionCommandNode.createNode(statement, title, text);
+    }
+
+    private void visit(NodeTracker state, Heading headerNode) {
+        Link exampleNode = (Link) headerNode.getFirstChild();
+        if (exampleNode.getUrl().equals(URL_FOR_CONCORDION)) {
+            BasedSequence title = exampleNode.getTitle();
+            BasedSequence text = exampleNode.getText();
+
+            ConcordionExampleNode commandNode = createExampleNode(title, text);
+
+            wrapNode(state, headerNode, commandNode);
+            replaceNode(state, exampleNode, new Text(text));
+            moveFollowingNodes(state, commandNode, headerNode);
+        }
     }
 
     private ConcordionExampleNode createExampleNode(BasedSequence title, BasedSequence text) {
@@ -106,19 +145,19 @@ public class ConcordionNodePostProcessor extends NodePostProcessor {
         return (node instanceof Heading && node.getFirstChild() instanceof Link);
     }
 
-    private void swapNode(NodeTracker state, Node node, ConcordionCommandNode commandNode) {
-        node.insertAfter(commandNode);
+    private void swapNode(NodeTracker state, Node node, Node newNode) {
+        node.insertAfter(newNode);
         node.unlink();
         state.nodeRemoved(node);
-        state.nodeAddedWithChildren(commandNode);
+        state.nodeAddedWithChildren(newNode);
     }
 
-    private void wrapNode(NodeTracker state, Node node, ConcordionCommandNode commandNode) {
-        node.insertBefore(commandNode);
+    private void wrapNode(NodeTracker state, Node node, Node newNode) {
+        node.insertBefore(newNode);
         node.unlink();
         state.nodeRemoved(node);
-        commandNode.appendChild(node);
-        state.nodeAddedWithDescendants(commandNode);
+        newNode.appendChild(node);
+        state.nodeAddedWithDescendants(newNode);
     }
 
     private void replaceNode(NodeTracker state, Node toBeRemoved, Node toBeReplacedBy) {

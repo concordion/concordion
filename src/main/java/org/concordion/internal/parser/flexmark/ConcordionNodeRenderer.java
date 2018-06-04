@@ -33,8 +33,22 @@ public class ConcordionNodeRenderer implements NodeRenderer {
                 renderCommand(node, context, html, node.getCommand(), node.getExpression());
             }
         }));
+        set.add(new NodeRenderingHandler<ConcordionLinkNode>(ConcordionLinkNode.class, new CustomNodeRenderer<ConcordionLinkNode>() {
+            @Override
+            public void render(ConcordionLinkNode node, NodeRendererContext context, HtmlWriter html) {
+                renderCommand(node, context, html);
+            }
+        }));
 
         return set;
+    }
+
+    private void renderCommand(ConcordionLinkNode node, NodeRendererContext context, HtmlWriter html) {
+        html.attr("href", node.getUrl());
+        html.attr(node.getCommand(), node.getRunner());
+        html.withAttr().tag("a");
+        context.renderChildren(node);
+        html.tag("/a");
     }
 
     private void renderCommand(ConcordionCommandNode node, NodeRendererContext context, HtmlWriter html, String command, String expression) {
