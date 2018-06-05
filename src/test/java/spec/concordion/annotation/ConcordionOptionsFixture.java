@@ -7,6 +7,7 @@ import java.util.TreeMap;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.concordion.internal.ConcordionOptionsParser;
 import org.concordion.internal.ConfigurationException;
+import org.concordion.internal.parser.flexmark.MarkdownToHtml;
 import org.concordion.internal.parser.markdown.MarkdownParser;
 import org.junit.runner.RunWith;
 
@@ -15,8 +16,8 @@ public class ConcordionOptionsFixture {
     private int pegdownExtensions;
     
     public String translate(String markdown) {
-        MarkdownParser markdownParser = new MarkdownParser(pegdownExtensions, Collections.<String, String> emptyMap());
-        String html = markdownParser.markdownToHtml(markdown, "concordion");
+        MarkdownToHtml markdownParser = new MarkdownToHtml(pegdownExtensions, Collections.<String, String> emptyMap(), "concordion");
+        String html = markdownParser.markdownToHtml(markdown);
         if (html.startsWith("<p>") && html.endsWith("</p>")) {
             html = html.substring(3, html.length()-4);
         }

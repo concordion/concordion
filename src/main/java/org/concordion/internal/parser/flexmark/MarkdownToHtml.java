@@ -36,6 +36,6 @@ public class MarkdownToHtml {
     public String markdownToHtml(String markdown) {
         Node document = parser.parse(markdown);
         String html = htmlRenderer.render(document);
-        return html;
+        return html.trim();
     }
 }

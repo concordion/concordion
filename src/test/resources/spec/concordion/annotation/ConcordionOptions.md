@@ -64,7 +64,7 @@ Given the method `withPegdownExtensions(int options)` has been [called](- "withW
     </tr>
     <tr>
       <td>[[wikilink]]</td>
-      <td>&lt;a href="./wikilink.html">wikilink&lt;/a></td>
+      <td>&lt;a href="wikilink">wikilink&lt;/a></td>
     </tr>
     <tr>
       <td>http://concordion.org</td>

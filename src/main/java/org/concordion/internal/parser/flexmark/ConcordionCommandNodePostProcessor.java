@@ -44,7 +44,7 @@ public class ConcordionCommandNodePostProcessor extends NodePostProcessor {
 
     private void visit(NodeTracker state, LinkRef linkRefNode) {
         Reference referenceNode = linkRefNode.getReferenceNode(referenceRepository);
-        if (referenceNode.getUrl().equals(ConcordionMarkdownOptions.URL_FOR_CONCORDION)) {
+        if (referenceNode != null && referenceNode.getUrl().equals(ConcordionMarkdownOptions.URL_FOR_CONCORDION)) {
             BasedSequence text = linkRefNode.getText();
             // Implicit links leave the text empty to derive the text from the reference. See https://daringfireball.net/projects/markdown/syntax#link.
             if (text.isEmpty()) {
