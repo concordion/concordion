@@ -18,7 +18,6 @@ public class ConcordionExampleNode extends Block {
         this.expression = expression;
         this.attributes = attributes;
     }
-//        super(command, expression, attributes, BasedSequence.NULL);
 
     public static ConcordionExampleNode createNode(ConcordionStatement statement) {
         return new ConcordionExampleNode(statement.command.name, statement.command.value, statement.attributes);

@@ -35,6 +35,7 @@ public class FlexmarkConcordionExtension implements Parser.ParserExtension, Html
             rendererBuilder.nodeRendererFactory(new ConcordionCommandNodeRenderer.Factory());
             rendererBuilder.nodeRendererFactory(new ConcordionExampleNodeRenderer.Factory());
             rendererBuilder.nodeRendererFactory(new ConcordionRunNodeRenderer.Factory());
+            rendererBuilder.nodeRendererFactory(new ConcordionTableRenderer.Factory());
         }
     }
 }

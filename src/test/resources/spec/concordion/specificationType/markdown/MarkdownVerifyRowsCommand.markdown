@@ -23,24 +23,12 @@ To run the [verifyRows command](../../command/verifyRows/VerifyRows.html), the v
       <td>
 <![CDATA[<table concordion:verifyRows="#detail:getInvoiceDetails()">
 <thead>
-    <tr>
-      <th concordion:assert-equals="#detail.subTotal">Sub Total</th>
-      <th align="right" concordion:assert-equals="#detail.gst">GST</th>
-    </tr>
+    <tr><th concordion:assert-equals="#detail.subTotal">Sub Total</th><th align="right" concordion:assert-equals="#detail.gst">GST</th></tr>
   </thead>
   <tbody>
-    <tr>
-      <td>100</td>
-      <td align="right">15</td>
-    </tr>
-    <tr>
-      <td>500</td>
-      <td align="right">75</td>
-    </tr>
-    <tr>
-      <td>20</td>
-      <td align="right">2</td>
-    </tr>
+    <tr><td> 100</td><td align="right"> 15</td></tr>
+    <tr><td> 500</td><td align="right"> 75</td></tr>
+    <tr><td> 20</td><td align="right"> 2</td></tr>
   </tbody>
 </table>]]>     
       </td>
@@ -74,24 +62,12 @@ Using reference style links can make the Markdown source for the table more read
       <td>
 <![CDATA[<table concordion:verifyRows="#detail:getInvoiceDetails()">
 <thead>
-    <tr>
-      <th concordion:assert-equals="#detail.subTotal">Sub Total</th>
-      <th align="right" concordion:assert-equals="#detail.gst">GST</th>
-    </tr>
+    <tr><th concordion:assert-equals="#detail.subTotal">Sub Total</th><th align="right" concordion:assert-equals="#detail.gst">GST</th></tr>
   </thead>
   <tbody>
-    <tr>
-      <td>100</td>
-      <td align="right">15</td>
-    </tr>
-    <tr>
-      <td>500</td>
-      <td align="right">75</td>
-    </tr>
-    <tr>
-      <td>20</td>
-      <td align="right">2</td>
-    </tr>
+    <tr><td> 100</td><td align="right"> 15</td></tr>
+    <tr><td> 500</td><td align="right"> 75</td></tr>
+    <tr><td> 20</td><td align="right"> 2</td></tr>
   </tbody>
 </table>]]>     
       </td>
@@ -125,16 +101,10 @@ The verifyRows command also allows a [strategy](http://concordion.github.io/conc
       <td>
 <![CDATA[<table concordion:verifyRows="#detail:getInvoiceDetails()" concordion:matchStrategy="BestMatch">
 <thead>
-    <tr>
-      <th concordion:assert-equals="#detail.subTotal">Sub Total</th>
-      <th align="right" concordion:assert-equals="#detail.gst">GST</th>
-    </tr>
+    <tr><th concordion:assert-equals="#detail.subTotal">Sub Total</th><th align="right" concordion:assert-equals="#detail.gst">GST</th></tr>
   </thead>
   <tbody>
-    <tr>
-      <td>100</td>
-      <td align="right">15</td>
-    </tr>
+    <tr><td> 100</td><td align="right"> 15</td></tr>
   </tbody>
 </table>]]>     
       </td>
