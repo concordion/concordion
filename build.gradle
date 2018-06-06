@@ -13,11 +13,18 @@ repositories {
     jcenter()
 }
 
+ext {
+    flexmarkVersion = '0.32.24'
+}
+
 dependencies {
     compile 'junit:junit:4.12',
             'ognl:ognl:3.1',
-            // TODO refine so it doesn't need all
-            'com.vladsch.flexmark:flexmark-all:0.32.24',
+            // TODO document how to use other flexmark extensions
+            "com.vladsch.flexmark:flexmark:$flexmarkVersion",
+            "com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:$flexmarkVersion",
+            "com.vladsch.flexmark:flexmark-ext-tables:$flexmarkVersion",
+            "com.vladsch.flexmark:flexmark-profile-pegdown:$flexmarkVersion",
             'org.pegdown:pegdown:1.6.0'
 
     compile ('xom:xom:1.2.5') {
