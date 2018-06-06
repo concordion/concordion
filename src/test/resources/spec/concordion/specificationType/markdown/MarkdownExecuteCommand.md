@@ -99,13 +99,13 @@ Using reference style links can make the Markdown source for the table more read
     </tr>
     <tr>
       <td>
-<pre>      
+<![CDATA[      
 |[add][][Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
 | ----------------------: | ---------------: | ---------------: |
 |                        4|                 3|                 7|
 
 [add]: - "#z=add(#x, #y)"
-</pre>
+]]> 
       </td>
       <td>
 <![CDATA[<table concordion:execute="#z=add(#x, #y)">
@@ -132,7 +132,7 @@ or even:
     </tr>
     <tr>
       <td>
-<pre>      
+<![CDATA[    
 |[add][][Number 1][]|[Number 2][]|[Result][]|
 | ----------------: | ---------: | -------: |
 |                  4|           3|         7|
@@ -141,7 +141,7 @@ or even:
 [Number 2]: - "#y"
 [add]:      - "#z=add(#x, #y)"
 [Result]:   - "?=#z"
-</pre>
+]]>
       </td>
       <td>
 <![CDATA[<table concordion:execute="#z=add(#x, #y)">

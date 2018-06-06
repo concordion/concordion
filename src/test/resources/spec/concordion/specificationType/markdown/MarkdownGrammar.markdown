@@ -278,7 +278,6 @@ Multiple commands on the same line are supported.
   </table>
 </div>
 
-
 ### HTML entities
 HTML entities in the text value are automatically escaped.
 
@@ -322,31 +321,34 @@ HTML entities in the text value are automatically escaped.
       <td>[&lt;div&gt;](- "c:set=#d")</td>
       <td>&lt;span concordion:set="#d"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;</td>
     </tr>
-
     <tr>
-<td><pre>
-[&amp; &lt; 3][]
+      <td>
+<![CDATA[
+[& < 3][]
 
-[&amp; &lt; 3]: - "c:set=#x"
-</pre></td>
+[& < 3]: - "c:set=#x"
+]]>
+      </td>
       <td>&lt;span concordion:set="#x"&gt;&amp;amp; &amp;lt; 3&lt;/span&gt;</td>
     </tr>
-
     <tr>
-<td><pre>
-[&lt;div&gt;][xx]
+      <td>
+<![CDATA[
+[<div>][xx]
 
 [xx]: - "#d"
-</pre></td>
+]]>
+       </td>
        <td>&lt;span concordion:set="#d"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;</td>
     </tr>
-
     <tr>
-<td><pre>
-|[foo](- "foo()")|[a &lt; b](- "#d")|[x&gt;](- "?=#d")|
-| -------------- | ------------- | ------------- |
-| bar            |       a &lt; b   |            x&gt;|
-</pre></td>
+      <td>
+<![CDATA[
+|[foo](- "foo()")|[a < b](- "#d")|[x>](- "?=#d")|
+| -------------- | ------------- | ------------ |
+| bar            |       a < b   |            x>|
+]]>
+      </td>
       <td>&lt;table concordion:execute="foo()"&gt; &lt;thead&gt; &lt;tr&gt;&lt;th&gt;&lt;/th&gt;&lt;th concordion:set="#d"&gt;a &amp;lt; b&lt;/th&gt;&lt;th concordion:assert-equals="#d"&gt;x&amp;gt;&lt;/th&gt;&lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt;&lt;td&gt; bar &lt;/td&gt;&lt;td&gt; a &amp;lt; b &lt;/td&gt;&lt;td&gt; x&amp;gt;&lt;/td&gt;&lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt;</td>
     </tr>
   </table>

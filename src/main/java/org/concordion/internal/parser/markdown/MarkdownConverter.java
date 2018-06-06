@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import org.concordion.api.SpecificationConverter;
+import org.concordion.internal.parser.flexmark.FlexmarkMarkdownTranslator;
 
 public class MarkdownConverter implements SpecificationConverter {
 
@@ -17,8 +18,10 @@ public class MarkdownConverter implements SpecificationConverter {
     @Override
     public InputStream convert(InputStream inputStream, String specificationName) throws IOException {
         String markdown = asString(inputStream);
-        MarkdownParser markdownParser = new MarkdownParser(pegdownExtensions, namespaces);
-        String html = markdownParser.markdownToHtml(markdown, CONCORDION_NAMESPACE_PREFIX);
+        FlexmarkMarkdownTranslator markdownParser = new FlexmarkMarkdownTranslator(pegdownExtensions, namespaces, CONCORDION_NAMESPACE_PREFIX);
+        String html = markdownParser.markdownToHtml(markdown);
+//        MarkdownParser markdownParser = new MarkdownParser(pegdownExtensions, namespaces);
+//        String html = markdownParser.markdownToHtml(markdown, CONCORDION_NAMESPACE_PREFIX);
         html = wrapBody(html);
 
         return new ByteArrayInputStream(html.getBytes("UTF-8"));

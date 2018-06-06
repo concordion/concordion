@@ -3,17 +3,17 @@ package spec.concordion.specificationType.markdown;
 import java.util.HashMap;
 
 import org.concordion.integration.junit4.ConcordionRunner;
-import org.concordion.internal.parser.flexmark.MarkdownToHtml;
+import org.concordion.internal.parser.flexmark.FlexmarkMarkdownTranslator;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
 public class MarkdownGrammarFixture {
-    MarkdownToHtml markdownParser;
+    FlexmarkMarkdownTranslator markdownParser;
 
     public MarkdownGrammarFixture() {
         HashMap<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("ext", "urn:concordion-extensions:2010");
-        markdownParser = new MarkdownToHtml(0, namespaces, "concordion");
+        markdownParser = new FlexmarkMarkdownTranslator(0, namespaces, "concordion");
     }
 
     public String translate(String markdown) {

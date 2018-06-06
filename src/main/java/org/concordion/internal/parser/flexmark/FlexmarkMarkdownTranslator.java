@@ -10,13 +10,13 @@ import com.vladsch.flexmark.util.options.MutableDataSet;
 
 import java.util.Map;
 
-public class MarkdownToHtml {
+public class FlexmarkMarkdownTranslator {
     private final MutableDataHolder options;
     private final Parser parser;
     private final HtmlRenderer htmlRenderer;
 
     // TODO allow other extensions to be added
-    public MarkdownToHtml(int pegdownExtensions, Map<String, String> namespaces, String targetConcordionNamespace) {
+    public FlexmarkMarkdownTranslator(int pegdownExtensions, Map<String, String> namespaces, String targetConcordionNamespace) {
 
         // Only interrupts an HTML block on a blank line if all tags in the HTML block are closed.
         // Closer to Pegdown HTML block parsing behaviour.

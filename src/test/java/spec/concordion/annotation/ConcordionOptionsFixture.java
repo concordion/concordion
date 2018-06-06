@@ -7,8 +7,7 @@ import java.util.TreeMap;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.concordion.internal.ConcordionOptionsParser;
 import org.concordion.internal.ConfigurationException;
-import org.concordion.internal.parser.flexmark.MarkdownToHtml;
-import org.concordion.internal.parser.markdown.MarkdownParser;
+import org.concordion.internal.parser.flexmark.FlexmarkMarkdownTranslator;
 import org.junit.runner.RunWith;
 
 @RunWith(ConcordionRunner.class)
@@ -16,7 +15,7 @@ public class ConcordionOptionsFixture {
     private int pegdownExtensions;
     
     public String translate(String markdown) {
-        MarkdownToHtml markdownParser = new MarkdownToHtml(pegdownExtensions, Collections.<String, String> emptyMap(), "concordion");
+        FlexmarkMarkdownTranslator markdownParser = new FlexmarkMarkdownTranslator(pegdownExtensions, Collections.<String, String> emptyMap(), "concordion");
         String html = markdownParser.markdownToHtml(markdown);
         if (html.startsWith("<p>") && html.endsWith("</p>")) {
             html = html.substring(3, html.length()-4);
@@ -29,7 +28,8 @@ public class ConcordionOptionsFixture {
     }
     
     public String parse(String declareNamespaces) {
-        String[] namespacePairs = declareNamespaces.substring(1, declareNamespaces.length()-2).split(",");
+        declareNamespaces = declareNamespaces.trim();
+        String[] namespacePairs = declareNamespaces.substring(1, declareNamespaces.length()-1).split(",");
         Map<String, String> namespaceMap = ConcordionOptionsParser.convertNamespacePairsToMap(namespacePairs);
         return new TreeMap<String, String>(namespaceMap).toString();
     }

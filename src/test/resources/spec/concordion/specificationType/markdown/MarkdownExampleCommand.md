@@ -26,7 +26,6 @@ You can also apply an status of [ExpectedToFail](http://concordion.github.io/con
       <th concordion:set="#md">Markdown</th>
       <th concordion:assert-equals="#html">Resultant HTML</th>
     </tr>
-
     <tr>
       <td>h4 example using atx-style syntax</td>
       <td>
@@ -39,7 +38,6 @@ x
 <![CDATA[<div concordion:example="calculator"> <h4>Example 1</h4> <p>x</p>]]> &lt;/div>   
       </td>
     </tr>
-
     <tr>
       <td>h1 example using setext-style syntax</td>
       <td>
@@ -79,7 +77,6 @@ If the example name is not specified, it will be generated from the header text.
       <th concordion:set="#md">Markdown</th>
       <th concordion:assert-equals="#html">Resultant HTML</th>
     </tr>
-
     <tr>
       <td>Example with empty name</td>
       <td>
@@ -92,7 +89,6 @@ x
 <![CDATA[<div concordion:example="example-3"> <h2>Example 3</h2> <p>x</p>]]> &lt;/div>   
       </td>
     </tr>
-    
     <tr>
       <td>Example with weird characters</td>
       <td>
@@ -105,7 +101,6 @@ x
 <![CDATA[<div concordion:example="3-hmmm"> <h2>3. Hmmm !@#$%^*(</h2> <p>x</p>]]> &lt;/div>   
       </td>
     </tr>
-
     <tr>
       <td>Example with multiple dashes</td>
       <td>
@@ -146,7 +141,6 @@ will close the example with the heading `My Example`.
       <th concordion:set="#md">Markdown</th>
       <th concordion:assert-equals="#html">Resultant HTML</th>
     </tr>
-
     <tr>
       <td>Example automatically ended by start of another example</td>
       <td>
@@ -160,7 +154,6 @@ x
 <![CDATA[<div concordion:example="calculator"> <h4>Example 1</h4> <p>x</p>]]> &lt;/div><![CDATA[<div concordion:example="another"> <h4>Example 2</h4>]]> &lt;/div>
       </td>
     </tr>
-
     <tr>
       <td>Example is not automatically ended by a lower-level heading</td>
       <td>
@@ -174,7 +167,6 @@ x
 <![CDATA[<div concordion:example="calculator"> <h4>Example 1</h4> <p>x</p> <h5>Subheading</h5>]]> &lt;/div> 
       </td>
     </tr>
-
     <tr>
       <td>Example is automatically ended by a higher-level heading</td>
       <td>
@@ -190,8 +182,6 @@ My example
 &lt;h2>head2&lt;/h2>
       </td>
     </tr>
-    
-
     <tr>
       <td>Example is not automatically ended by a same-level heading</td>
       <td>
@@ -207,7 +197,6 @@ My example
 &lt;h4>head4&lt;/h4> &lt;/div>
       </td>
     </tr>    
-
     <tr>
       <td>Example ended by a strikethrough heading with the same title as the example</td>
       <td>
@@ -223,7 +212,6 @@ y
 &lt;p>y&lt;/p>     
       </td>
     </tr>
-
     <tr>
       <td>Example not ended by a strikethrough heading with a different title from the example</td>
       <td>
@@ -240,7 +228,6 @@ y
 &lt;p>y&lt;/p> &lt;/div>
       </td>
     </tr>
-
     <tr>
       <td>Example with single quote in name ended by a strikethrough heading with the same title as the example</td>
       <td>
@@ -256,7 +243,6 @@ y
 &lt;p>y&lt;/p>
       </td>
     </tr>
-
     <tr>
       <td>Example with XML element in name ended by a strikethrough heading with the same title as the example</td>
       <td>

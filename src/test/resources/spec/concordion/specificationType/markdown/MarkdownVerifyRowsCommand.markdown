@@ -47,7 +47,7 @@ Using reference style links can make the Markdown source for the table more read
     </tr>
     <tr>
       <td>
-        <pre>      
+<![CDATA[      
 |[_check GST_][][Sub Total][]|[GST][]|
 | -------------------------- | ----: |
 |                         100|     15|
@@ -57,7 +57,7 @@ Using reference style links can make the Markdown source for the table more read
 [_check GST_]: - "c:verifyRows=#detail:getInvoiceDetails()"
 [Sub Total]:    - "?=#detail.subTotal"
 [GST]:          - "?=#detail.gst"
-        </pre>
+]]>
       </td>
       <td>
 <![CDATA[<table concordion:verifyRows="#detail:getInvoiceDetails()">
@@ -87,7 +87,7 @@ The verifyRows command also allows a [strategy](http://concordion.github.io/conc
     </tr>
     <tr>
       <td>
-        <pre>      
+<![CDATA[     
 |[_check GST_][][Sub Total][]|[GST][]|
 | -------------------------- | ----: |
 |                         100|     15|
@@ -95,8 +95,7 @@ The verifyRows command also allows a [strategy](http://concordion.github.io/conc
 [_check GST_]: - "c:verifyRows=#detail:getInvoiceDetails() c:matchStrategy=BestMatch"
 [Sub Total]:    - "?=#detail.subTotal"
 [GST]:          - "?=#detail.gst"
-
-        </pre>
+]]>
       </td>
       <td>
 <![CDATA[<table concordion:verifyRows="#detail:getInvoiceDetails()" concordion:matchStrategy="BestMatch">
