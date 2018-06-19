@@ -140,7 +140,7 @@ public class ExampleCommand extends AbstractCommand {
         this.implementationStatusModifier = implementationStatusModifier;
     }
 
-    private static ExampleDefinition exampleDefinition(Element element) {
+    private static ExampleDefinition exampleDefinition(final Element element) {
         return new ExampleDefinition() {
             @Override
             public String getName() {
