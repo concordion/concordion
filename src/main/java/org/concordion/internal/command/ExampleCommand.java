@@ -35,12 +35,13 @@ public class ExampleCommand extends AbstractCommand {
         resultRecorder.setSpecificationDescription(
                 specificationDescriber.getDescription(node.getResource(), exampleName));
 
-        if (!isBeforeExample) {
+        ImplementationStatus status = getImplementationStatus(node);
+
+        if (!isBeforeExample && status != ImplementationStatus.IGNORED) {
             announceBeforeExample(exampleName, node.getElement(), resultRecorder);
         }
 
         try {
-            ImplementationStatus status = getImplementationStatus(node);
             resultRecorder.setImplementationStatus(status);
             if (status == ImplementationStatus.IGNORED) {
                 resultRecorder.record(Result.IGNORED);
@@ -52,7 +53,7 @@ public class ExampleCommand extends AbstractCommand {
         }
         setupCommandForExample(node, resultRecorder, exampleName);
 
-        if (!isBeforeExample) {
+        if (!isBeforeExample && status != ImplementationStatus.IGNORED) {
             announceAfterExample(exampleName, node.getElement(), resultRecorder);
         }
     }

@@ -15,8 +15,11 @@
     <h3>Example</h3>
 
     <p>An <span concordion:execute="addExtension()">ImplementationStatusModifier is installed</span> that sets the
-        status of an example to IGNORED if the example name ends in <b>Ignored</b>.
+        status of an example to IGNORED if the example name ends in <b>Ignored</b>, a @BeforeExample annotated
+        fixture method which saves the example names in a list, and a @AfterExample annotated fixture method which
+        saves the example names in a different list.
     </p>
+
     <p>Running a specification containing: </p>
     <pre concordion:set="#result = process(#TEXT)">
 &lt;div concordion:example="aPassingExample"&gt;
@@ -38,6 +41,14 @@
         <li>Exceptions: <span concordion:assert-equals="processingResult.exceptionCount">0</span></li>
         <li>Ignored: <span concordion:assert-equals="processingResult.ignoredCount">1</span></li>
     </ul>
+    </p>
+    <p>Example names which executed @BeforeExample method: <span concordion:assert-equals="beforeExampleCapturedNames">
+        [[Outer], aPassingExample, aFailingExample, expectedToFailExample]</span>
+    </p>
+    <p>Example names which executed @AfterExample method: <span concordion:assert-equals="afterExampleCapturedNames">
+        [aPassingExample, aFailingExample, expectedToFailExample]</span> <i>(Note that although the @AfterExample
+        annotated method was also called for [Outer] example this concordion assertion was evaluated prior to that call
+        that's why it is not included in the list)</i>
     </p>
 </div>
 
