@@ -12,9 +12,9 @@ public interface ImplementationStatusModifier {
     /**
      * Determine an example element's {@code ImplementationStatus}
      *
-     * @param exampleElement the element to evaluate
-     * @return the status based on the exampleElement
+     * @param exampleDefinition the definition of the example to evaluate
+     * @return the status based on the exampleDefinition
      */
-    ImplementationStatus getStatusForExample(Element exampleElement);
+    ImplementationStatus getStatusForExample(ExampleDefinition exampleDefinition);
 
 }

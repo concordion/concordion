@@ -1,9 +1,6 @@
 package spec.concordion.common.extension;
 
-import org.concordion.api.Element;
-import org.concordion.api.ImplementationStatus;
-import org.concordion.api.ImplementationStatusModifier;
-import org.concordion.api.FullOGNL;
+import org.concordion.api.*;
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.integration.junit4.ConcordionRunner;
@@ -24,9 +21,8 @@ public class ImplementationStatusModifierTest extends AbstractExtensionTestCase 
             public void addTo(ConcordionExtender concordionExtender) {
                 concordionExtender.withImplementationStatusModifier(new ImplementationStatusModifier() {
                     @Override
-                    public ImplementationStatus getStatusForExample(Element exampleElement) {
-                        String exampleName = exampleElement.getAttributeValue("example", ConcordionBuilder.NAMESPACE_CONCORDION_2007);
-                        if (exampleName.endsWith("Ignored")) {
+                    public ImplementationStatus getStatusForExample(ExampleDefinition exampleDefinition) {
+                        if (exampleDefinition.getName().endsWith("Ignored")) {
                             return ImplementationStatus.IGNORED;
                         } else {
                             return null;

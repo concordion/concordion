@@ -101,7 +101,7 @@ public class ExampleCommand extends AbstractCommand {
         }
         // if there's a status modifier and there's a status for the example, it overrides status param
         if (implementationStatusModifier != null) {
-            ImplementationStatus runtimeImplementation = implementationStatusModifier.getStatusForExample(node.getElement());
+            ImplementationStatus runtimeImplementation = implementationStatusModifier.getStatusForExample(exampleDefinition(node.getElement()));
             if (runtimeImplementation != null) {
                 implementationStatus = runtimeImplementation;
             }
@@ -139,4 +139,24 @@ public class ExampleCommand extends AbstractCommand {
     public void setImplementationStatusModifier(ImplementationStatusModifier implementationStatusModifier) {
         this.implementationStatusModifier = implementationStatusModifier;
     }
+
+    private static ExampleDefinition exampleDefinition(Element element) {
+        return new ExampleDefinition() {
+            @Override
+            public String getName() {
+                return element.getAttributeValue("example", ConcordionBuilder.NAMESPACE_CONCORDION_2007);
+            }
+
+            @Override
+            public String getAttributeValue(String name) {
+                return element.getAttributeValue(name);
+            }
+
+            @Override
+            public String getAttributeValue(String localName, String namespaceURI) {
+                return element.getAttributeValue(localName, namespaceURI);
+            }
+        };
+    }
+
 }
