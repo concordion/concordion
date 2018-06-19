@@ -12,5 +12,8 @@ bin/
 .idea/
 *.iml
 
+# VS Code
+.vscode/
+
 # Infer
 infer-out/
