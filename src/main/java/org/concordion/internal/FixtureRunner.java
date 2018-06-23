@@ -2,6 +2,7 @@ package org.concordion.internal;
 
 import org.concordion.Concordion;
 import org.concordion.api.Fixture;
+import org.concordion.api.FixtureDeclarations;
 import org.concordion.api.ResultSummary;
 import org.concordion.api.SpecificationLocator;
 import org.concordion.internal.cache.RunResultsCache;
@@ -71,13 +72,13 @@ public class FixtureRunner {
         return actualResultSummary;
     }
 
-    private void printResultSummary(FixtureType fixtureType, String example, ResultSummary resultSummary, String additionalInformation) {
+    private void printResultSummary(FixtureDeclarations fixtureDeclarations, String example, ResultSummary resultSummary, String additionalInformation) {
         synchronized (System.out) {
             if (additionalInformation != null) {
                 System.out.print(additionalInformation);
             }
-            resultSummary.print(System.out, fixtureType);
-            resultSummary.assertIsSatisfied(fixtureType);
+            resultSummary.print(System.out, fixtureDeclarations);
+            resultSummary.assertIsSatisfied(fixtureDeclarations);
         }
     }
 

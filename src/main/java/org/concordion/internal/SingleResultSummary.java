@@ -1,6 +1,6 @@
 package org.concordion.internal;
 
-import org.concordion.api.Fixture;
+import org.concordion.api.FixtureDeclarations;
 import org.concordion.api.Result;
 import org.concordion.api.ResultSummary;
 
@@ -34,8 +34,8 @@ public class SingleResultSummary extends AbstractResultSummary implements Result
     }
 
     @Override
-    public void assertIsSatisfied(FixtureType fixtureType) {
-        getImplementationStatusChecker(fixtureType).assertIsSatisfied(this, null);
+    public void assertIsSatisfied(FixtureDeclarations fixtureDeclarations) {
+        getImplementationStatusChecker(fixtureDeclarations).assertIsSatisfied(this, null);
     }
 
     @Override

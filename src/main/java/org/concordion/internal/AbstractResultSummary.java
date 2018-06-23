@@ -2,7 +2,7 @@ package org.concordion.internal;
 
 import java.io.PrintStream;
 
-import org.concordion.api.Fixture;
+import org.concordion.api.FixtureDeclarations;
 import org.concordion.api.ImplementationStatus;
 import org.concordion.api.ResultSummary;
 
@@ -17,16 +17,16 @@ public abstract class AbstractResultSummary implements ResultSummary {
     }
 
     @Override
-    public void print(PrintStream out, FixtureType fixtureType) {
-        out.print(printToString(fixtureType));
+    public void print(PrintStream out, FixtureDeclarations fixtureDeclarations) {
+        out.print(printToString(fixtureDeclarations));
     }
 
-    String printToString(FixtureType fixtureType) {
+    String printToString(FixtureDeclarations fixtureDeclarations) {
         StringBuilder builder = new StringBuilder();
         builder.append("\n");
         builder.append(specificationDescription);
         builder.append("\n");
-        String counts = printCountsToString(fixtureType);
+        String counts = printCountsToString(fixtureDeclarations);
         if (counts != null) {
             builder.append(counts).append("\n");
         }
@@ -35,7 +35,7 @@ public abstract class AbstractResultSummary implements ResultSummary {
     }
 
     @Override
-    public String printCountsToString(FixtureType fixtureType) {
+    public String printCountsToString(FixtureDeclarations fixtureDeclarations) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("Successes: ");
@@ -51,7 +51,7 @@ public abstract class AbstractResultSummary implements ResultSummary {
             builder.append(getExceptionCount());
         }
 
-        builder.append(getImplementationStatusChecker(fixtureType).printNoteToString());
+        builder.append(getImplementationStatusChecker(fixtureDeclarations).printNoteToString());
 
         return builder.toString();
     }
@@ -74,12 +74,12 @@ public abstract class AbstractResultSummary implements ResultSummary {
         this.implementationStatus = implementationStatus;
     }
     
-    public ImplementationStatusChecker getImplementationStatusChecker(FixtureType fixtureType) {
+    public ImplementationStatusChecker getImplementationStatusChecker(FixtureDeclarations fixtureDeclarations) {
         ImplementationStatus implementationStatus;
-        if (isForExample() || fixtureType == null) {
+        if (isForExample() || fixtureDeclarations == null) {
             implementationStatus = getImplementationStatus();
         } else {
-            implementationStatus = fixtureType.getDeclaredImplementationStatus();
+            implementationStatus = fixtureDeclarations.getDeclaredImplementationStatus();
         }
         return ImplementationStatusChecker.implementationStatusCheckerFor(implementationStatus);
     }

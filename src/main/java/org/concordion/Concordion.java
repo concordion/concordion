@@ -117,8 +117,8 @@ public class Concordion {
         specification.finish();
     }
 
-    public void checkValidStatus(FixtureType fixtureType) throws IOException {
-        if (hasExampleCommands() && fixtureType.getDeclaredImplementationStatus() != ImplementationStatus.EXPECTED_TO_PASS) {
+    public void checkValidStatus(FixtureDeclarations fixtureDeclarations) throws IOException {
+        if (hasExampleCommands() && fixtureDeclarations.getDeclaredImplementationStatus() != ImplementationStatus.EXPECTED_TO_PASS) {
             throw new IllegalStateException("Error: When the specification contains examples, "
                     + "the Implementation Status (ExpectedToFail or Unimplemented) must be set on the example command in the specification, "
                     + "and not as an annotation on the fixture.");

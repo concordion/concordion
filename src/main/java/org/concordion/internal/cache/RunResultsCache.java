@@ -3,6 +3,7 @@ package org.concordion.internal.cache;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.concordion.api.FixtureDeclarations;
 import org.concordion.api.ResultSummary;
 import org.concordion.internal.FixtureType;
 import org.concordion.internal.ImplementationStatusChecker;
@@ -41,7 +42,7 @@ public enum RunResultsCache {
     /**
      * Initialises an entry in the cache for a specification with the given description.
      * Individual examples may then be run, and their results will be added to the fixture
-     * total when {@link #finishRun(FixtureType, String, ResultSummary, ImplementationStatusChecker)}
+     * total when {@link #finishRun(FixtureDeclarations, String, ResultSummary, ImplementationStatusChecker)}
      * is called.
      * @param fixtureType the fixture class that is being started
      * @param specificationDescription a description of the target specification
