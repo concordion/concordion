@@ -62,7 +62,7 @@ public class Concordion {
 
     public ResultSummary process(Fixture fixture) throws IOException {
         SummarizingResultRecorder resultRecorder = new SummarizingResultRecorder();
-        Evaluator evaluator = evaluatorFactory.createEvaluator(fixture.getFixtureObject());
+        Evaluator evaluator = evaluatorFactory.createEvaluator(fixture);
         getSpecification().process(evaluator, resultRecorder, fixture);
         return resultRecorder;
     }
@@ -89,7 +89,7 @@ public class Concordion {
 
     public ResultSummary processExample(Fixture fixture, String example) throws IOException {
         SummarizingResultRecorder resultRecorder = new SummarizingResultRecorder(example);
-        Evaluator evaluator = evaluatorFactory.createEvaluator(fixture.getFixtureObject());
+        Evaluator evaluator = evaluatorFactory.createEvaluator(fixture);
         getSpecification().processExample(evaluator, example, resultRecorder, fixture);
         return resultRecorder;
     }

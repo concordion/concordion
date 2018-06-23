@@ -1,8 +1,10 @@
 package org.concordion.internal;
 
+import org.concordion.api.Fixture;
+
 public class SimpleEvaluator extends OgnlEvaluator {
 
-    public SimpleEvaluator(Object fixture) {
+    public SimpleEvaluator(Fixture fixture) {
         super(fixture);
     }
 
