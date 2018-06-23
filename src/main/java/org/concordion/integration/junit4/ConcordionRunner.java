@@ -33,12 +33,12 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
     };
 
     private final Class<?> fixtureClass;
+    private final Fixture setupFixture;
     private final FixtureRunner fixtureRunner;
     private final Concordion concordion;
     private final List<ConcordionFrameworkMethod> concordionFrameworkMethods;
 
     private FailFastException failFastException = null;
-    private Fixture setupFixture;
 
     private static AtomicInteger suiteDepth = new AtomicInteger();
     private boolean firstTest = true;
