@@ -19,7 +19,7 @@ public class RunTotalsFixture {
 		withFixture(new FixtureInstance(this));
 	}
 
-	private RunTotalsFixture withFixture(FixtureInstance fixture) {
+	private RunTotalsFixture withFixture(Fixture fixture) {
 		this.fixture = fixture;
 		return this;
 	}
