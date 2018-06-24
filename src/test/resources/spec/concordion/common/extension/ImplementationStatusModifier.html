@@ -1,0 +1,56 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../../../concordion.css" rel="stylesheet" type="text/css"/>
+<body>
+<h1>ImplementationStatusModifier</h1>
+
+<p>
+    An ImplementationStatusModifier allows a user to specify an <a href="../command/example/Example.html">example</a>'s
+    ImplementationStatus at runtime. The status modifier can be injected via the concordion <a href="Extension.html">extensions</a>.
+    If provided, it will override a declared implementation status via <code>c:status</code> attribute. The user can
+    create the conditional logic based on the example element (usually a &lt;div&gt;).
+</p>
+
+<div class="example">
+
+    <h3>Example</h3>
+
+    <p>An <span concordion:execute="addExtension()">ImplementationStatusModifier is installed</span> that sets the
+        status of an example to IGNORED if the example name ends in <b>Ignored</b>, a @BeforeExample annotated
+        fixture method which saves the example names in a list, and a @AfterExample annotated fixture method which
+        saves the example names in a different list.
+    </p>
+
+    <p>Running a specification containing: </p>
+    <pre concordion:set="#result = process(#TEXT)">
+&lt;div concordion:example="aPassingExample"&gt;
+    &lt;span concordion:set="#char"&gt;a&lt;/span&gt; == &lt;span concordion:assert-equals="#char"&gt;a&lt;/span&gt;
+&lt;/div&gt;
+&lt;div concordion:example="aFailingExample"&gt;
+    &lt;span concordion:set="#char"&gt;a&lt;/span&gt; == &lt;span concordion:assert-equals="#char"&gt;b&lt;/span&gt;
+&lt;/div&gt;
+&lt;div concordion:example="expectedToFailExample" concordion:status="ExpectedToFail"&gt;
+    &lt;span concordion:set="#char"&gt;c&lt;/span&gt; == &lt;span concordion:assert-equals="#char"&gt;d&lt;/span&gt;
+&lt;/div&gt;
+&lt;div concordion:example="expectedToFailExampleButIgnored" concordion:status="ExpectedToFail"&gt;
+    &lt;span concordion:set="#char"&gt;a&lt;/span&gt; == &lt;span concordion:assert-equals="#char"&gt;b&lt;/span&gt;
+&lt;/div&gt;</pre>
+    <p>Would result in
+    <ul>
+        <li>Success: <span concordion:assert-equals="processingResult.successCount">1</span></li>
+        <li>Failed: <span concordion:assert-equals="processingResult.failureCount">2</span></li>
+        <li>Exceptions: <span concordion:assert-equals="processingResult.exceptionCount">0</span></li>
+        <li>Ignored: <span concordion:assert-equals="processingResult.ignoredCount">1</span></li>
+    </ul>
+    </p>
+    <p>Example names which executed @BeforeExample method: <span concordion:assert-equals="beforeExampleCapturedNames">
+        [[Outer], aPassingExample, aFailingExample, expectedToFailExample]</span>
+    </p>
+    <p>Example names which executed @AfterExample method: <span concordion:assert-equals="afterExampleCapturedNames">
+        [aPassingExample, aFailingExample, expectedToFailExample]</span> <i>(Note that although the @AfterExample
+        annotated method was also called for [Outer] example this concordion assertion was evaluated prior to that call
+        that's why it is not included in the list)</i>
+    </p>
+</div>
+
+</body>
+</html>

@@ -13,6 +13,7 @@ public class ExampleCommand extends AbstractCommand {
 
 	private List<ExampleListener> listeners = new ArrayList<ExampleListener>();
     private SpecificationDescriber specificationDescriber;
+    private ImplementationStatusModifier implementationStatusModifier;
 
     public List<CommandCall> getExamples(CommandCall command) {
         return Arrays.asList(command);
@@ -34,18 +35,25 @@ public class ExampleCommand extends AbstractCommand {
         resultRecorder.setSpecificationDescription(
                 specificationDescriber.getDescription(node.getResource(), exampleName));
 
-        if (!isBeforeExample) {
+        ImplementationStatus status = getImplementationStatus(node);
+
+        if (!isBeforeExample && status != ImplementationStatus.IGNORED) {
             announceBeforeExample(exampleName, node.getElement(), resultRecorder);
         }
 
         try {
-            node.getChildren().processSequentially(evaluator, resultRecorder);
+            resultRecorder.setImplementationStatus(status);
+            if (status == ImplementationStatus.IGNORED) {
+                resultRecorder.record(Result.IGNORED);
+            } else {
+                node.getChildren().processSequentially(evaluator, resultRecorder);
+            }
         } catch (FailFastException f) {
             // Ignore - it'll be re-thrown later by the implementation status checker if necessary.
         }
         setupCommandForExample(node, resultRecorder, exampleName);
 
-        if (!isBeforeExample) {
+        if (!isBeforeExample && status != ImplementationStatus.IGNORED) {
             announceAfterExample(exampleName, node.getElement(), resultRecorder);
         }
     }
@@ -84,26 +92,33 @@ public class ExampleCommand extends AbstractCommand {
         return element.getExpression().equals("before");
     }
 
+    private ImplementationStatus getImplementationStatus(CommandCall node) {
+        // by default the implementation status is expected to pass
+        ImplementationStatus implementationStatus = ImplementationStatus.EXPECTED_TO_PASS;
+        // if there's a status param, it overrides expected to pass
+        String params = node.getParameter("status");
+        if (params != null) {
+            implementationStatus = ImplementationStatus.implementationStatusFor(params);
+        }
+        // if there's a status modifier and there's a status for the example, it overrides status param
+        if (implementationStatusModifier != null) {
+            ImplementationStatus runtimeImplementation = implementationStatusModifier.getStatusForExample(exampleDefinition(node.getElement()));
+            if (runtimeImplementation != null) {
+                implementationStatus = runtimeImplementation;
+            }
+        }
+        return implementationStatus;
+    }
+
     public static void setupCommandForExample(CommandCall node, ResultRecorder resultRecorder, String exampleName) {
         node.getElement().addAttribute("id", exampleName);
 
-        String params = node.getParameter("status");
-        if (params != null) {
-            ImplementationStatus implementationStatus = ImplementationStatus.implementationStatusFor(params);
-            resultRecorder.setImplementationStatus(implementationStatus);
-            // let's be really nice and add the implementation status text into the element itself.
-            ImplementationStatusChecker checker = ImplementationStatusChecker.implementationStatusCheckerFor(implementationStatus);
+        // let's be really nice and add the implementation status text into the element itself.
+        ImplementationStatusChecker checker = ImplementationStatusChecker.implementationStatusCheckerFor(resultRecorder.getImplementationStatus());
 
-            String note;
-            if (checker != null) {
-                note = checker.printNoteToString();
-            } else {
-                note = "Invalid status expression " + params;
-            }
-            Element fixtureNode = new Element("p");
-            fixtureNode.appendText(note);
-            node.getElement().prependChild(fixtureNode);
-        }
+        Element fixtureNode = new Element("p");
+        fixtureNode.appendText(checker.printNoteToString());
+        node.getElement().prependChild(fixtureNode);
     }
 
     public void setSpecificationDescriber(SpecificationDescriber specificationDescriber) {
@@ -121,4 +136,28 @@ public class ExampleCommand extends AbstractCommand {
             listeners.get(i).afterExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder)resultRecorder));
         }
 	}
+
+    public void setImplementationStatusModifier(ImplementationStatusModifier implementationStatusModifier) {
+        this.implementationStatusModifier = implementationStatusModifier;
+    }
+
+    private static ExampleDefinition exampleDefinition(final Element element) {
+        return new ExampleDefinition() {
+            @Override
+            public String getName() {
+                return element.getAttributeValue("example", ConcordionBuilder.NAMESPACE_CONCORDION_2007);
+            }
+
+            @Override
+            public String getAttributeValue(String name) {
+                return element.getAttributeValue(name);
+            }
+
+            @Override
+            public String getAttributeValue(String localName, String namespaceURI) {
+                return element.getAttributeValue(localName, namespaceURI);
+            }
+        };
+    }
+
 }
