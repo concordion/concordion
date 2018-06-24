@@ -121,6 +121,35 @@ public enum ImplementationStatusChecker {
             // if we're expected to pass, then just use the result summary.
             return rs;
         }
+    },
+    IGNORED(ImplementationStatus.IGNORED) {
+        @Override
+        public void assertIsSatisfied(ResultSummary rs, FailFastException ffe) {
+            if (rs.getIgnoredCount() != 1 || rs.getSuccessCount() + rs.getFailureCount() + rs.getExceptionCount() > 0 || ffe != null) {
+                throw new ConcordionAssertionError("Example is expected to be ignored but is currently reporting.", rs);
+            }
+        }
+
+        @Override
+        public String printNoteToString() {
+            return "   <-- Note: This example has been marked as IGNORED";
+        }
+
+        @Override
+        public ResultSummary getMeaningfulResultSummary(ResultSummary rs, FailFastException ffe) {
+            assertIsSatisfied(rs, ffe);
+            return new SingleResultSummary(Result.IGNORED);
+        }
+
+        @Override
+        public ResultSummary convertForCache(ResultSummary rs) {
+            try {
+                assertIsSatisfied(rs, null);
+                return new SingleResultSummary(Result.IGNORED, rs.getSpecificationDescription());
+            } catch (ConcordionAssertionError cce) {
+                return new SingleResultSummary(Result.FAILURE, rs.getSpecificationDescription());
+            }
+        }
     };
 
     private final ImplementationStatus implementationStatus;

@@ -5,7 +5,8 @@ import java.lang.annotation.Annotation;
 public enum ImplementationStatus {
     UNIMPLEMENTED("Unimplemented", Unimplemented.class),
     EXPECTED_TO_FAIL("ExpectedToFail", ExpectedToFail.class),
-    EXPECTED_TO_PASS("ExpectedToPass", ExpectedToPass.class);
+    EXPECTED_TO_PASS("ExpectedToPass", ExpectedToPass.class),
+    IGNORED("Ignored", IgnoredExample.class);
 
     private final String tag;
     private final Class<? extends Annotation> annotation;

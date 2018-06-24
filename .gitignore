@@ -13,5 +13,8 @@ bin/
 out/
 *.iml
 
+# VS Code
+.vscode/
+
 # Infer
 infer-out/

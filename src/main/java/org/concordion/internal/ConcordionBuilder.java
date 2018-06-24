@@ -435,6 +435,12 @@ public class ConcordionBuilder implements ConcordionExtender {
 		return this;
 	}
 
+    @Override
+    public ConcordionExtender withImplementationStatusModifier(ImplementationStatusModifier statusModifier) {
+        exampleCommand.setImplementationStatusModifier(statusModifier);
+        return this;
+    }
+
     public ConcordionExtender withOuterExampleListener(OuterExampleListener listener) {
         specificationCommand.addOuterExampleListener(listener);
         return this;

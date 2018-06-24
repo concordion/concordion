@@ -72,12 +72,12 @@ public class TestRig {
 
         try {
 
-            ResultSummary resultSummary = null;
+            SummarizingResultRecorder resultSummary = new SummarizingResultRecorder();
             concordion.override(resource);
             List<String> examples = concordion.getExampleNames(fixture.getFixtureType());
             if (!examples.isEmpty()) {
                 for (String example : examples) {
-                    resultSummary = concordion.processExample(fixture, example);
+                    resultSummary.record(concordion.processExample(fixture, example));
                 }
             }
             concordion.finish();
