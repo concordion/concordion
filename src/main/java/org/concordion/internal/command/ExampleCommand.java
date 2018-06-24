@@ -1,17 +1,17 @@
 package org.concordion.internal.command;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.concordion.api.*;
 import org.concordion.api.listener.ExampleEvent;
 import org.concordion.api.listener.ExampleListener;
 import org.concordion.internal.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ExampleCommand extends AbstractCommand {
 
-	private List<ExampleListener> listeners = new ArrayList<ExampleListener>();
+    private List<ExampleListener> listeners = new ArrayList<ExampleListener>();
     private SpecificationDescriber specificationDescriber;
     private ImplementationStatusModifier implementationStatusModifier;
 
@@ -126,16 +126,16 @@ public class ExampleCommand extends AbstractCommand {
     }
 
     private void announceBeforeExample(String exampleName, Element element, ResultRecorder resultRecorder, Fixture fixture) {
-		for (ExampleListener listener : listeners) {
-			listener.beforeExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder)resultRecorder, fixture));
-		}
-	}
+        for (ExampleListener listener : listeners) {
+            listener.beforeExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder) resultRecorder, fixture));
+        }
+    }
 
     private void announceAfterExample(String exampleName, Element element, ResultRecorder resultRecorder, Fixture fixture) {
         for (int i = listeners.size() - 1; i >= 0; i--) {
-            listeners.get(i).afterExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder)resultRecorder, fixture));
+            listeners.get(i).afterExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder) resultRecorder, fixture));
         }
-	}
+    }
 
     public void setImplementationStatusModifier(ImplementationStatusModifier implementationStatusModifier) {
         this.implementationStatusModifier = implementationStatusModifier;
