@@ -26,7 +26,7 @@ public class Concordion {
      * @param specificationLocator locates the specification based on the specification type
      * @param specificationReader specification reader
      * @param evaluatorFactory evaluator factory
-     * @param fixtureType
+     * @param fixtureType a wrapper around the fixture class
      * @throws IOException on i/o error
      */
     public Concordion(List<SpecificationType> specificationTypes, SpecificationLocator specificationLocator, SpecificationReader specificationReader, EvaluatorFactory evaluatorFactory, FixtureType fixtureType) throws IOException {

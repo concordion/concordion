@@ -15,6 +15,9 @@ public interface Command {
      *  * Remove the example command from the parent object and put it in the examples list (or before examples)
      *  * Add new commands to examples or before examples
      *  * Modify the tree to put table or list execute commands on the right children elements.
+     *  @param element the command call element to modify
+     *  @param examples a list of examples
+     *  @param beforeExamples a list of "before" examples
      */
     void modifyCommandCallTree(CommandCall element, List<ExampleCommandCall> examples, List<CommandCall> beforeExamples);
 }

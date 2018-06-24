@@ -42,7 +42,7 @@ public enum RunResultsCache {
     /**
      * Initialises an entry in the cache for a specification with the given description.
      * Individual examples may then be run, and their results will be added to the fixture
-     * total when {@link #finishRun(FixtureDeclarations, String, ResultSummary, ImplementationStatusChecker)}
+     * total when {@link #finishRun(FixtureType, String, ResultSummary, ImplementationStatusChecker)}
      * is called.
      * @param fixtureType the fixture class that is being started
      * @param specificationDescription a description of the target specification
@@ -90,7 +90,8 @@ public enum RunResultsCache {
      * @param actualResultSummary the results as reported from the spec
      * @param statusChecker modifier that updates results dependent on ImplementationStatus (ExpectedToFail etc)
      */
-    public synchronized void finishRun(FixtureType fixtureType, String example,
+    public synchronized void finishRun(FixtureType fixtureType,
+                                       String example,
                                        ResultSummary actualResultSummary,
                                        ImplementationStatusChecker statusChecker) {
         assert fixtureType.getFixtureClass() != null;
@@ -103,7 +104,10 @@ public enum RunResultsCache {
         }
     }
 
-    private RunOutput setResultsForExample(FixtureType fixtureType, String example, ResultSummary actualResultSummary, ImplementationStatusChecker statusChecker) {
+    private RunOutput setResultsForExample(FixtureType fixtureType,
+                                           String example,
+                                           ResultSummary actualResultSummary,
+                                           ImplementationStatusChecker statusChecker) {
         ConcordionRunOutput exampleResults = (ConcordionRunOutput) getExampleFromCache(fixtureType, example);
         if (exampleResults == null) {
             throw new IllegalStateException("Internal error: startRun must always be called before finishRun");
