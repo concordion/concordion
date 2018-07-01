@@ -222,7 +222,7 @@ bintray {
         licenses = ['Apache-2.0']
         issueTrackerUrl = issuesUrl
         vcsUrl = vcsUrl
-        websiteUrl = 'http://concordion.org'
+        websiteUrl = 'https://concordion.org'
         version  {
             name = project.version
             released = new Date()
