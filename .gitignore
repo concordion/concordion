@@ -2,6 +2,9 @@
 .gradle
 build/
 
+# Maven
+target/
+
 # Eclipse
 .classpath
 .project
@@ -10,6 +13,7 @@ bin/
 
 # IDEA
 .idea/
+out/
 *.iml
 
 # VS Code
