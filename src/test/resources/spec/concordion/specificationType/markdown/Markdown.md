@@ -5,10 +5,10 @@ _Since_: Concordion 2.0.0
 
 [Markdown](https://daringfireball.net/projects/markdown/) provides an easy-to-read and easy-to-write syntax for converting plain text to structured XHTML.
 
-Concordion's Markdown support allows you to write your [Concordion](http://concordion.org/) specification in the Markdown format, converting the Markdown to XHTML at runtime and running the resultant XHTML as a Concordion specification. 
+Concordion's Markdown support allows you to write your [Concordion](https://concordion.org/) specification in the Markdown format, converting the Markdown to XHTML at runtime and running the resultant XHTML as a Concordion specification. 
 
 
-The following assumes that you already understand Concordion and Markdown. If not, please visit the [Concordion tutorial](http://concordion.org/Tutorial.html) and read the Markdown [basics](https://daringfireball.net/projects/markdown/basics). 
+The following assumes that you already understand Concordion and Markdown. If not, please visit the [Concordion tutorial](https://concordion.org/Tutorial.html) and read the Markdown [basics](https://daringfireball.net/projects/markdown/basics). 
 
 ### Use of inline links 
 

@@ -6,7 +6,7 @@ os:
 - linux
 
 jdk:
-- openjdk10
+- oraclejdk10
 - oraclejdk9
 - oraclejdk8
 - openjdk7
