@@ -3,6 +3,7 @@ plugins {
     id 'org.ajoberstar.git-publish' version '1.0.0'
     id "com.jfrog.bintray" version "1.6"
     id 'org.kordamp.gradle.clirr' version '0.2.2'
+    id 'net.nemerosa.versioning' version '2.7.1'
 }
 
 apply from: 'build.gradle'
@@ -44,6 +45,22 @@ distributions {
                 from 'licenses'
             }
         }
+    }
+}
+
+jar {
+    manifest {
+        attributes  'Specification-Title'   : project.name,
+                'Implementation-Title'  : project.name,
+                'Specification-Version' : version.substring(0, version.lastIndexOf(".")),
+                'Implementation-Version': version,
+                'Implementation-Vendor' : 'concordion.org',
+                'Specification-Vendor'  : 'concordion.org',
+                'Created-By'            : System.getProperty('java.version') + ' (' + System.getProperty('java.vendor') + ')',
+                'Built-With'            : "gradle-${project.getGradle().getGradleVersion()}, groovy-${GroovySystem.getVersion()}",
+                'Build-Time'            : String.format("%tFT%<tRZ", Calendar.getInstance(TimeZone.getTimeZone("Z"))),
+                'Build-Revision'        : versioning.info.commit,
+                'Build-OS'              : "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}"
     }
 }
 
