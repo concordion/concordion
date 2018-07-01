@@ -179,7 +179,7 @@ The [execute on a list](http://concordion.github.io/concordion/latest/spec/comma
 
 #### Handling unusual sentence structures
 
-In order to [handle unusual sentence structures](http://concordion.org/Tutorial.html#executeUnusualSentences), Concordion allows you to use an `execute` command on an outer HTML element. When using Markdown, this can be implemented using the HTML structure wrapped in a `<div>`.
+In order to [handle unusual sentence structures](https://concordion.org/Tutorial.html#executeUnusualSentences), Concordion allows you to use an `execute` command on an outer HTML element. When using Markdown, this can be implemented using the HTML structure wrapped in a `<div>`.
 
     <div>
         <p concordion:execute="#greeting = greetingFor(#firstName)">
