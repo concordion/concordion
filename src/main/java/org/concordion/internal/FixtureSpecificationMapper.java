@@ -1,5 +1,6 @@
 package org.concordion.internal;
 
+import org.concordion.api.FixtureDeclarations;
 import org.concordion.api.Resource;
 import org.concordion.integration.TestFrameworkProvider;
 
@@ -25,8 +26,8 @@ public class FixtureSpecificationMapper {
         }
     };
 
-    public static Resource toSpecificationResource(FixtureType fixtureType, String specificationSuffix) {
-        String slashedClassName = fixtureType.getFixtureClass().getName().replaceAll("\\.", "/");
+    public static Resource toSpecificationResource(FixtureDeclarations fixtureDeclarations, String specificationSuffix) {
+        String slashedClassName = fixtureDeclarations.getFixtureClass().getName().replaceAll("\\.", "/");
         String fixturePath = removeSuffixFromFixtureName(slashedClassName);
         String resourcePath = "/" + fixturePath + "." + specificationSuffix;
         
