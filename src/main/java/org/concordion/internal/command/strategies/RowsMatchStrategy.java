@@ -1,9 +1,6 @@
 package org.concordion.internal.command.strategies;
 
-import org.concordion.api.CommandCall;
-import org.concordion.api.Element;
-import org.concordion.api.Evaluator;
-import org.concordion.api.ResultRecorder;
+import org.concordion.api.*;
 import org.concordion.api.listener.ExpressionEvaluatedEvent;
 import org.concordion.api.listener.MissingRowEvent;
 import org.concordion.api.listener.SurplusRowEvent;
@@ -42,7 +39,7 @@ public abstract class RowsMatchStrategy {
         this.actualRows = copy(actualRows);
     }
 
-    public abstract void verify();
+    public abstract void verify(Fixture fixture);
 
     protected void announceExpressionEvaluated(Element element) {
     	for (VerifyRowsListener listener : listeners) {

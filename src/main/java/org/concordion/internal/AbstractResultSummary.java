@@ -2,7 +2,7 @@ package org.concordion.internal;
 
 import java.io.PrintStream;
 
-import org.concordion.api.Fixture;
+import org.concordion.api.FixtureDeclarations;
 import org.concordion.api.ImplementationStatus;
 import org.concordion.api.ResultSummary;
 
@@ -16,22 +16,17 @@ public abstract class AbstractResultSummary implements ResultSummary {
         return false;
     }
 
-    @Override @Deprecated
-    public void print(PrintStream out, Object fixture) {
-        print(out, new FixtureInstance(fixture));
-    }
-
     @Override
-    public void print(PrintStream out, Fixture fixture) {
-        out.print(printToString(fixture));
+    public void print(PrintStream out, FixtureDeclarations fixtureDeclarations) {
+        out.print(printToString(fixtureDeclarations));
     }
 
-    String printToString(Fixture fixture) {
+    String printToString(FixtureDeclarations fixtureDeclarations) {
         StringBuilder builder = new StringBuilder();
         builder.append("\n");
         builder.append(specificationDescription);
         builder.append("\n");
-        String counts = printCountsToString(fixture);
+        String counts = printCountsToString(fixtureDeclarations);
         if (counts != null) {
             builder.append(counts).append("\n");
         }
@@ -39,13 +34,8 @@ public abstract class AbstractResultSummary implements ResultSummary {
         return builder.toString();
     }
 
-    @Override @Deprecated
-    public String printCountsToString(Object fixture) {
-        return printCountsToString(new FixtureInstance(fixture));
-    }
-
     @Override
-    public String printCountsToString(Fixture fixture) {
+    public String printCountsToString(FixtureDeclarations fixtureDeclarations) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("Successes: ");
@@ -61,7 +51,7 @@ public abstract class AbstractResultSummary implements ResultSummary {
             builder.append(getExceptionCount());
         }
 
-        builder.append(getImplementationStatusChecker(fixture).printNoteToString());
+        builder.append(getImplementationStatusChecker(fixtureDeclarations).printNoteToString());
 
         return builder.toString();
     }
@@ -84,18 +74,13 @@ public abstract class AbstractResultSummary implements ResultSummary {
         this.implementationStatus = implementationStatus;
     }
     
-    public ImplementationStatusChecker getImplementationStatusChecker(Fixture fixture) {
+    public ImplementationStatusChecker getImplementationStatusChecker(FixtureDeclarations fixtureDeclarations) {
         ImplementationStatus implementationStatus;
-        if (isForExample() || fixture == null) {
+        if (isForExample() || fixtureDeclarations == null) {
             implementationStatus = getImplementationStatus();
         } else {
-            implementationStatus = fixture.getDeclaredImplementationStatus();
+            implementationStatus = fixtureDeclarations.getDeclaredImplementationStatus();
         }
         return ImplementationStatusChecker.implementationStatusCheckerFor(implementationStatus);
-    }
-
-    @Override @Deprecated
-    public void assertIsSatisfied(Object fixture) {
-        assertIsSatisfied(new FixtureInstance(fixture));
     }
 }

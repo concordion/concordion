@@ -1,28 +1,23 @@
 package org.concordion.internal;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.AnnotationFormatError;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
 
 import org.concordion.api.*;
 import org.concordion.internal.scopedObjects.ScopedFieldStore;
-import org.concordion.internal.util.SimpleFormatter;
 
-public class FixtureInstance extends FixtureType implements Fixture, FixtureDeclarations {
+public class FixtureInstance implements Fixture {
     private final Object fixtureObject;
     private final ScopedFieldStore scopedFieldStore;
+    private final Class<? extends Object> fixtureClass;
+    private final FixtureType fixtureType;
 
     public FixtureInstance(Object fixtureObject) {
-        super(fixtureObject.getClass());
         this.fixtureObject = fixtureObject;
+        this.fixtureClass = fixtureObject.getClass();
+        this.fixtureType = new FixtureType(fixtureClass);
         scopedFieldStore = new ScopedFieldStore(this);
     }
     
@@ -35,48 +30,12 @@ public class FixtureInstance extends FixtureType implements Fixture, FixtureDecl
     public Object getFixtureObject() {
         return fixtureObject;
     }
+
+    @Override
+    public FixtureType getFixtureType() {
+        return fixtureType;
+    }
     
-    @Override
-    public Class<?> getFixtureClass() {
-        return fixtureClass;
-    }
-    
-    @Override
-    public String getSpecificationDescription() {
-        String name = removeSuffix(fixtureClass.getSimpleName());
-        return SimpleFormatter.format("[Concordion Specification for '%s']", name); // Based on suggestion by Danny Guerrier
-    }
-
-    @Override
-    public String getFixturePathWithoutSuffix() {
-        String slashedClassName = fixtureClass.getName().replaceAll("\\.", "/");
-        return removeSuffix(slashedClassName);
-    }
-
-    private String removeSuffix(String fixtureName) {
-        return FixtureSpecificationMapper.removeSuffixFromFixtureName(fixtureName);
-    }
-
-    @Override
-    public List<File> getClassPathRoots() {
-    	List<File> rootPaths = new ArrayList<File>();
-    	
-    	Enumeration<URL> resources;
-    	try {
-    		resources = fixtureClass.getClassLoader().getResources("");
-    	
-    		while (resources.hasMoreElements()) {
-                rootPaths.add(new File(resources.nextElement().toURI()));
-            }
-    	} catch (IOException e) {
-    		throw new RuntimeException("Unable to get root path", e);
-    	} catch (URISyntaxException e) {
-    		throw new RuntimeException("Unable to get root path", e);
-    	}
-    	
-    	return rootPaths;
-    }
-
     @Override
     public void setupForRun(Object fixtureObject) {
         scopedFieldStore.loadValuesIntoFields(fixtureObject, Scope.SPECIFICATION);
@@ -123,18 +82,13 @@ public class FixtureInstance extends FixtureType implements Fixture, FixtureDecl
     public void afterProcessExample(String exampleName) {
         scopedFieldStore.destroyFields(fixtureObject, Scope.EXAMPLE);
     }
-    
-    @Override
-    public List<Class<?>> getClassHierarchyParentFirst() {
-        return super.getClassHierarchyParentFirst();
-    }
-    
+
     private void invokeMethods(Class<? extends Annotation> methodAnnotation) {
         invokeMethods(methodAnnotation, null);
     }
     
     private void invokeMethods(Class<? extends Annotation> methodAnnotation, ParameterSupplier parameterSupplier) {
-        for (Class<?> clazz : getClassHierarchyParentFirst()) {
+        for (Class<?> clazz : fixtureType.getClassHierarchyParentFirst()) {
             Method[] methods = clazz.getDeclaredMethods();
             
             for (Method method : methods) {

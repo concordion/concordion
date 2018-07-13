@@ -21,23 +21,23 @@ public class SpecificationCommand extends AbstractCommand {
     private SpecificationDescriber specificationDescriber;
 
     @Override
-    public void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+    public void setUp(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
         throw new IllegalStateException("Unexpected call to " + getClass().getSimpleName() + "'s setUp() method. Only the execute() method should be called.");
     }
 
     @Override
-    public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+    public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
         if (specificationDescriber != null) {
             resultRecorder.setSpecificationDescription(getSpecificationDescription(commandCall));
         }
 
         try {
-            announceBeforeOuterExampleEvent(commandCall.getElement(), (SummarizingResultRecorder) resultRecorder);
-            commandCall.getChildren().processSequentially(evaluator, resultRecorder);
+            announceBeforeOuterExampleEvent(commandCall.getElement(), (SummarizingResultRecorder) resultRecorder, fixture);
+            commandCall.getChildren().processSequentially(evaluator, resultRecorder, fixture);
         } catch (FailFastException e) {
             // Ignore - it'll be re-thrown later if necessary.
         } finally {
-            announceAfterOuterExampleEvent(commandCall.getElement(), (SummarizingResultRecorder) resultRecorder);
+            announceAfterOuterExampleEvent(commandCall.getElement(), (SummarizingResultRecorder) resultRecorder, fixture);
         }
     }
 
@@ -54,7 +54,7 @@ public class SpecificationCommand extends AbstractCommand {
     }
 
     @Override
-    public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+    public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
         throw new IllegalStateException("Unexpected call to " + getClass().getSimpleName() + "'s verify() method. Only the execute() method should be called.");
     }
 
@@ -90,15 +90,15 @@ public class SpecificationCommand extends AbstractCommand {
 		}
     }
 
-    private void announceBeforeOuterExampleEvent(Element element, ResultSummary resultSummary) {
+    private void announceBeforeOuterExampleEvent(Element element, ResultSummary resultSummary, Fixture fixture) {
         for (OuterExampleListener listener : outerExampleListeners) {
-            listener.beforeOuterExample(new OuterExampleEvent(OUTER_EXAMPLE_NAME, element, resultSummary));
+            listener.beforeOuterExample(new OuterExampleEvent(OUTER_EXAMPLE_NAME, element, resultSummary, fixture));
         }
     }
 
-    private void announceAfterOuterExampleEvent(Element element, ResultSummary resultSummary) {
+    private void announceAfterOuterExampleEvent(Element element, ResultSummary resultSummary, Fixture fixture) {
         for (int i = outerExampleListeners.size() - 1; i >= 0; i--) {
-            outerExampleListeners.get(i).afterOuterExample(new OuterExampleEvent(OUTER_EXAMPLE_NAME, element, resultSummary));
+            outerExampleListeners.get(i).afterOuterExample(new OuterExampleEvent(OUTER_EXAMPLE_NAME, element, resultSummary, fixture));
         }
     }
 }

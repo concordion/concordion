@@ -37,7 +37,7 @@ public class RunCommand extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+    public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
         Check.isFalse(commandCall.hasChildCommands(), "Nesting commands inside an 'run' is not supported");
 
         Element element = commandCall.getElement();

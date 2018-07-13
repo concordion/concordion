@@ -2,7 +2,7 @@ plugins {
     id 'net.researchgate.release' version '2.3.0'
     id 'org.ajoberstar.git-publish' version '1.0.0'
     id "com.jfrog.bintray" version "1.6"
-    id 'org.kordamp.gradle.clirr' version '0.2.2'
+    id 'org.kordamp.gradle.clirr' version '0.2.3'
     id 'net.nemerosa.versioning' version '2.7.1'
 }
 

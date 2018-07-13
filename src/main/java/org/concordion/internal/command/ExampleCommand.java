@@ -1,17 +1,17 @@
 package org.concordion.internal.command;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.concordion.api.*;
 import org.concordion.api.listener.ExampleEvent;
 import org.concordion.api.listener.ExampleListener;
 import org.concordion.internal.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ExampleCommand extends AbstractCommand {
 
-	private List<ExampleListener> listeners = new ArrayList<ExampleListener>();
+    private List<ExampleListener> listeners = new ArrayList<ExampleListener>();
     private SpecificationDescriber specificationDescriber;
     private ImplementationStatusModifier implementationStatusModifier;
 
@@ -27,7 +27,7 @@ public class ExampleCommand extends AbstractCommand {
         listeners.remove(exampleListener);
     }
 
-    public void execute(CommandCall node, Evaluator evaluator, ResultRecorder resultRecorder) {
+    public void execute(CommandCall node, Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
 
         String exampleName = getExampleName(node);
         boolean isBeforeExample = isBeforeExample(node);
@@ -38,7 +38,7 @@ public class ExampleCommand extends AbstractCommand {
         ImplementationStatus status = getImplementationStatus(node);
 
         if (!isBeforeExample && status != ImplementationStatus.IGNORED) {
-            announceBeforeExample(exampleName, node.getElement(), resultRecorder);
+            announceBeforeExample(exampleName, node.getElement(), resultRecorder, fixture);
         }
 
         try {
@@ -46,7 +46,7 @@ public class ExampleCommand extends AbstractCommand {
             if (status == ImplementationStatus.IGNORED) {
                 resultRecorder.record(Result.IGNORED);
             } else {
-                node.getChildren().processSequentially(evaluator, resultRecorder);
+                node.getChildren().processSequentially(evaluator, resultRecorder, fixture);
             }
         } catch (FailFastException f) {
             // Ignore - it'll be re-thrown later by the implementation status checker if necessary.
@@ -54,7 +54,7 @@ public class ExampleCommand extends AbstractCommand {
         setupCommandForExample(node, resultRecorder, exampleName);
 
         if (!isBeforeExample && status != ImplementationStatus.IGNORED) {
-            announceAfterExample(exampleName, node.getElement(), resultRecorder);
+            announceAfterExample(exampleName, node.getElement(), resultRecorder, fixture);
         }
     }
 
@@ -125,17 +125,17 @@ public class ExampleCommand extends AbstractCommand {
         this.specificationDescriber = specificationDescriber;
     }
 
-    private void announceBeforeExample(String exampleName, Element element,	ResultRecorder resultRecorder) {
-		for (ExampleListener listener : listeners) {
-			listener.beforeExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder)resultRecorder));
-		}
-	}
-
-    private void announceAfterExample(String exampleName, Element element, ResultRecorder resultRecorder) {
-        for (int i = listeners.size() - 1; i >= 0; i--) {
-            listeners.get(i).afterExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder)resultRecorder));
+    private void announceBeforeExample(String exampleName, Element element, ResultRecorder resultRecorder, Fixture fixture) {
+        for (ExampleListener listener : listeners) {
+            listener.beforeExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder) resultRecorder, fixture));
         }
-	}
+    }
+
+    private void announceAfterExample(String exampleName, Element element, ResultRecorder resultRecorder, Fixture fixture) {
+        for (int i = listeners.size() - 1; i >= 0; i--) {
+            listeners.get(i).afterExample(new ExampleEvent(exampleName, element, (SummarizingResultRecorder) resultRecorder, fixture));
+        }
+    }
 
     public void setImplementationStatusModifier(ImplementationStatusModifier implementationStatusModifier) {
         this.implementationStatusModifier = implementationStatusModifier;

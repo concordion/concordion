@@ -2,12 +2,13 @@ package test.concordion;
 
 import org.concordion.api.Evaluator;
 import org.concordion.api.EvaluatorFactory;
+import org.concordion.api.Fixture;
 
 public class StubEvaluator implements Evaluator, EvaluatorFactory {
 
     private Object evaluationResult = null;
 
-    public Evaluator createEvaluator(Object fixture) {
+    public Evaluator createEvaluator(Fixture fixture) {
         return this;
     }
 

@@ -15,7 +15,7 @@ public class KeyMatchStrategy extends AbstractChangingOrderRowsMatchStrategy {
     }
 
     @Override
-    protected Object findMatchingRow(Row expectedRow) {
+    protected Object findMatchingRow(Row expectedRow, Fixture fixture) {
 
         Element[] headerCells = tableSupport.getLastHeaderRow().getCells();
         CommandCallList childrenCalls = commandCall.getChildren();
@@ -32,7 +32,7 @@ public class KeyMatchStrategy extends AbstractChangingOrderRowsMatchStrategy {
             long success = 0;
 
             for (CommandCall columnCommand : childrenCalls.asCollection()) {
-                columnCommand.verify(evaluator, backgroundResultRecorder);
+                columnCommand.verify(evaluator, backgroundResultRecorder, fixture);
 
                 String matchingRole = columnCommand.getParameter("matchingRole", "matching-role");
                 if (matchingRole != null && matchingRole.equalsIgnoreCase("key")) {

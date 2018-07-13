@@ -57,25 +57,25 @@ public class ExecuteCommand extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+    public void execute(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
 
         // bypass normal execution if the modification required it.
         if (commandCall.bypassExecution()) {
-            commandCall.getChildren().execute(evaluator, resultRecorder);
+            commandCall.getChildren().execute(evaluator, resultRecorder, fixture);
             return;
         }
 
-        normalExecution(commandCall, evaluator, resultRecorder);
+        normalExecution(commandCall, evaluator, resultRecorder, fixture);
     }
 
-    private void normalExecution(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+    private void normalExecution(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
         CommandCallList childCommands = commandCall.getChildren();
 
-        childCommands.setUp(evaluator, resultRecorder);
+        childCommands.setUp(evaluator, resultRecorder, fixture);
         evaluator.evaluate(commandCall.getExpression());
-        childCommands.execute(evaluator, resultRecorder);
+        childCommands.execute(evaluator, resultRecorder, fixture);
         announceExecuteCompleted(commandCall.getElement());
-        childCommands.verify(evaluator, resultRecorder);
+        childCommands.verify(evaluator, resultRecorder, fixture);
     }
 
 

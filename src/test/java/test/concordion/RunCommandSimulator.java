@@ -1,9 +1,6 @@
 package test.concordion;
 
-import org.concordion.api.CommandCall;
-import org.concordion.api.Element;
-import org.concordion.api.Resource;
-import org.concordion.api.ResultSummary;
+import org.concordion.api.*;
 import org.concordion.internal.*;
 import org.concordion.internal.command.RunCommand;
 
@@ -30,7 +27,7 @@ public class RunCommandSimulator {
         recorder.setSpecificationDescription("");
 
         try {
-            commandCall.execute(null, recorder);
+            commandCall.execute(null, recorder, new FixtureInstance(Object.class));
         } catch (FailFastException ffe) {
             System.out.println("Caught fail fast exception thrown by the fixture under test. Ignoring...");
         }
@@ -54,7 +51,7 @@ public class RunCommandSimulator {
         result.put("ignoredCount", Long.toString(recorder.getIgnoredCount()));
         result.put("exceptionCount", Long.toString(recorder.getExceptionCount()));
 
-        String counts = recorder.printCountsToString(new FixtureInstance(new Object()));
+        String counts = recorder.printCountsToString(new FixtureType(Object.class));
 
         result.put("totalsString", counts);
         return result;

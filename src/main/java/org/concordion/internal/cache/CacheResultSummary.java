@@ -1,6 +1,6 @@
 package org.concordion.internal.cache;
 
-import org.concordion.api.Fixture;
+import org.concordion.api.FixtureDeclarations;
 import org.concordion.api.Result;
 import org.concordion.internal.SingleResultSummary;
 
@@ -11,7 +11,7 @@ class CacheResultSummary extends SingleResultSummary {
     }
 
     @Override
-    public String printCountsToString(Fixture fixture) {
+    public String printCountsToString(FixtureDeclarations fixtureDeclarations) {
         // no counts for cached result summary
         return null;
     }

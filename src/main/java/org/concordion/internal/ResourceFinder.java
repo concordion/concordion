@@ -19,22 +19,22 @@ import org.concordion.internal.util.SimpleFormatter;
  * @author sumnera
  */
 public class ResourceFinder {
-    private Fixture fixture;
+    private FixtureType fixtureType;
     private boolean includeDefaultStyling = true;
 
     public boolean includeDefaultStyling() {
         return this.includeDefaultStyling;
     }
 
-    public ResourceFinder(Fixture fixture) {
-        this.fixture = fixture;
+    public ResourceFinder(FixtureType fixtureType) {
+        this.fixtureType = fixtureType;
     }
 
     public List<ResourceToCopy> getResourcesToCopy() {
         List<ResourceToCopy> sourceFiles = new ArrayList<ResourceToCopy>();
 
-        List<File> rootPaths = fixture.getClassPathRoots();
-        List<Class<?>> classes = fixture.getClassHierarchyParentFirst();
+        List<File> rootPaths = fixtureType.getClassPathRoots();
+        List<Class<?>> classes = fixtureType.getClassHierarchyParentFirst();
 
         for (Class<?> class1 : classes) {
             if (isAnnotationDeclared(class1, ConcordionResources.class)) {

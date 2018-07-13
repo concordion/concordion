@@ -12,6 +12,7 @@ import org.concordion.api.Fixture;
 import org.concordion.api.Scope;
 import org.concordion.api.ScopedObjectHolder;
 import org.concordion.api.extension.Extension;
+import org.concordion.internal.FixtureType;
 import org.concordion.internal.util.SimpleFormatter;
 
 public class ScopedFieldStore {
@@ -35,15 +36,15 @@ public class ScopedFieldStore {
     }
     
     private void createScopedFields(Fixture fixture) {
-        for (Class<?> clazz : fixture.getClassHierarchyParentFirst()) {
+        for (Class<?> clazz : fixture.getFixtureType().getClassHierarchyParentFirst()) {
             Field[] fields = clazz.getDeclaredFields();
             if (fields != null) {
                 for (Field field : fields) {
                     if (field.getAnnotation(ConcordionScoped.class) != null) {
-                        createScopedObjectField(fixture.getFixtureClass(), field);
+                        createScopedObjectField(fixture.getFixtureType(), field);
                     }
                     if (field.getAnnotation(Extension.class) != null) {
-                        createScopedExtensionField(fixture.getFixtureClass(), field);
+                        createScopedExtensionField(fixture.getFixtureType(), field);
                     }
                 }
             }
@@ -51,6 +52,10 @@ public class ScopedFieldStore {
     }
 
     private void createScopedObjectField(Class<?> fixtureClass, Field field) {
+        createScopedObjectField(fixtureClass, field);
+    }
+
+    private void createScopedObjectField(FixtureType fixtureType, Field field) {
         if (!field.getType().equals(ScopedObjectHolder.class)) {
             throw new AnnotationFormatError(SimpleFormatter.format("The '%s' annotation can only be applied to fields of type '%s'", ConcordionScoped.class.getSimpleName(), ScopedObjectHolder.class.getSimpleName()));
         }
@@ -58,15 +63,19 @@ public class ScopedFieldStore {
         ConcordionScoped annotation = field.getAnnotation(ConcordionScoped.class);
         Scope fieldScope = annotation.value();
         String name = field.getName();
-        ScopedObject scopedObject = createScopedObject(fixtureClass, name, fieldScope);
+        ScopedObject scopedObject = createScopedObject(fixtureType, name, fieldScope);
         scopedFields.get(fieldScope).add(new ScopedFieldImpl(scopedObject, field));
     }
 
     private void createScopedExtensionField(Class<?> fixtureClass, Field field) {
-        ScopedObject scopedObject = createScopedObject(fixtureClass, field.getName(), DEFAULT_EXTENSION_SCOPE);
+        createScopedExtensionField(fixtureClass, field);
+    }
+
+    private void createScopedExtensionField(FixtureType fixtureType, Field field) {
+        ScopedObject scopedObject = createScopedObject(fixtureType, field.getName(), DEFAULT_EXTENSION_SCOPE);
         scopedFields.get(DEFAULT_EXTENSION_SCOPE).add(new ScopedFieldImpl(scopedObject, field));        
     }
-    
+
     /**
      * Creates the scoped object for use in setting and getting the data from the fields. Protected so that a subclass can
      * override if necessary.
@@ -76,7 +85,19 @@ public class ScopedFieldStore {
      * @return scoped object
      */
     protected ScopedObject createScopedObject(Class<?> fixtureClass, String fieldName, Scope fieldScope) {
-        return ScopedObjectFactory.SINGLETON.create(fixtureClass, fieldName, fieldScope);
+        return createScopedObject(fixtureClass, fieldName, fieldScope);
+    }
+
+    /**
+     * Creates the scoped object for use in setting and getting the data from the fields. Protected so that a subclass can
+     * override if necessary.
+     * @param fixtureType fixture class
+     * @param fieldName name of field in fixture class
+     * @param fieldScope scope to be applied to the field
+     * @return scoped object
+     */
+    protected ScopedObject createScopedObject(FixtureType fixtureType, String fieldName, Scope fieldScope) {
+        return ScopedObjectFactory.SINGLETON.create(fixtureType.getFixtureClass(), fieldName, fieldScope);
     }
     
     

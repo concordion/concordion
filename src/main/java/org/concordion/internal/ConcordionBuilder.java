@@ -36,7 +36,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private static final String EMBEDDED_STYLESHEET_RESOURCE = "/org/concordion/internal/resource/embedded.css";
 
     private static File baseOutputDir;
-    private SpecificationLocator specificationLocator = new ClassNameAndTypeBasedSpecificationLocator();
+    private SpecificationLocator specificationLocator = new ClassNameBasedSpecificationLocator();
     private Map<SourceType, Source> sources = new HashMap<SourceType, Source>();
     private Target target = null;
     private CommandRegistry commandRegistry = new CommandRegistry();
@@ -59,7 +59,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private List<ThrowableCaughtListener> throwableCaughtListeners = new ArrayList<ThrowableCaughtListener>();
     private List<Class<? extends Throwable>> failFastExceptions = Collections.<Class<? extends Throwable>>emptyList();
     private boolean builtAlready;
-    private Fixture fixture;
+    private FixtureType fixtureType;
     private MarkdownConverter markdownConverter = new MarkdownConverter();
     private XhtmlConverter xhtmlConverter = new XhtmlConverter();
 
@@ -285,7 +285,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         withThrowableListener(0, new ThrowableRenderer(resourceSource));
         withRunListener(new RunResultRenderer(resourceSource));
 
-        FixtureExampleHook fixtureExampleHook = new FixtureExampleHook(fixture);
+        FixtureExampleHook fixtureExampleHook = new FixtureExampleHook();
         withOuterExampleListener(fixtureExampleHook);
         withExampleListener(fixtureExampleHook);
 
@@ -319,7 +319,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         announceBuildCompleted();
 
         try {
-            return new Concordion(specificationTypes, specificationLocator, specificationReader, evaluatorFactory, fixture);
+            return new Concordion(specificationTypes, specificationLocator, specificationReader, evaluatorFactory, fixtureType);
         } catch (IOException e) {
             throw new UnableToBuildConcordionException(e);
         }
@@ -416,14 +416,14 @@ public class ConcordionBuilder implements ConcordionExtender {
     }
 
     public ConcordionBuilder withFixture(Fixture fixture) {
-        this.fixture = fixture;
+        this.fixtureType = fixture.getFixtureType();
 
-        withResources(fixture);
+        withResources(fixtureType);
 
-        if (fixture.declaresFailFast()) {
-            withFailFast(fixture.getDeclaredFailFastExceptions());
+        if (fixtureType.declaresFailFast()) {
+            withFailFast(fixtureType.getDeclaredFailFastExceptions());
         }
-        if (fixture.declaresFullOGNL()) {
+        if (fixtureType.declaresFullOGNL()) {
             withEvaluatorFactory(new OgnlEvaluatorFactory());
         }
 
@@ -447,11 +447,16 @@ public class ConcordionBuilder implements ConcordionExtender {
     }
 
     public ConcordionBuilder withResources(Fixture fixture) {
+        withResources(fixture.getFixtureType());
+        return this;
+    }
+
+    private void withResources(FixtureType fixtureType) {
         boolean includeDefaultStyling = true;
 
         Source resourceSource = sources.get(SourceType.RESOURCE);
-        if (fixture.declaresResources()) {
-        	ResourceFinder resources = new ResourceFinder(fixture);
+        if (fixtureType.declaresResources()) {
+        	ResourceFinder resources = new ResourceFinder(fixtureType);
         	List<ResourceToCopy> sourceFiles = resources.getResourcesToCopy();
 
         	for (ResourceToCopy sourceFile : sourceFiles) {
@@ -480,11 +485,9 @@ public class ConcordionBuilder implements ConcordionExtender {
         if (includeDefaultStyling) {
         	addDefaultStyling(resourceSource);
         }
-
-        return this;
     }
 
-	private void addDefaultStyling(Source resourceSource) {
+    private void addDefaultStyling(Source resourceSource) {
     	String stylesheetContent = resourceSource.readResourceAsString(EMBEDDED_STYLESHEET_RESOURCE);
     	withEmbeddedCSS(stylesheetContent);
     }
