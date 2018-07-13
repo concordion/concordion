@@ -415,8 +415,8 @@ public class ConcordionBuilder implements ConcordionExtender {
         return this;
     }
 
-    public ConcordionBuilder withFixtureType(FixtureType fixtureType) {
-        this.fixtureType = fixtureType;
+    public ConcordionBuilder withFixture(Fixture fixture) {
+        this.fixtureType = fixture.getFixtureType();
 
         withResources(fixtureType);
 
@@ -446,7 +446,12 @@ public class ConcordionBuilder implements ConcordionExtender {
         return this;
     }
 
-    public ConcordionBuilder withResources(FixtureType fixtureType) {
+    public ConcordionBuilder withResources(Fixture fixture) {
+        withResources(fixture.getFixtureType());
+        return this;
+    }
+
+    private void withResources(FixtureType fixtureType) {
         boolean includeDefaultStyling = true;
 
         Source resourceSource = sources.get(SourceType.RESOURCE);
@@ -480,11 +485,9 @@ public class ConcordionBuilder implements ConcordionExtender {
         if (includeDefaultStyling) {
         	addDefaultStyling(resourceSource);
         }
-
-        return this;
     }
 
-	private void addDefaultStyling(Source resourceSource) {
+    private void addDefaultStyling(Source resourceSource) {
     	String stylesheetContent = resourceSource.readResourceAsString(EMBEDDED_STYLESHEET_RESOURCE);
     	withEmbeddedCSS(stylesheetContent);
     }

@@ -15,7 +15,7 @@ public class FixtureRunner {
     private Concordion concordion;
 
     public FixtureRunner(Fixture fixture, SpecificationLocator specificationLocator) throws UnableToBuildConcordionException {
-        ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixtureType(fixture.getFixtureType()).withSpecificationLocator(specificationLocator);
+        ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture).withSpecificationLocator(specificationLocator);
         new FixtureExtensionLoader().addExtensions(fixture, concordionBuilder);
         new FixtureOptionsLoader().addOptions(fixture.getFixtureType(), concordionBuilder);
         concordion = concordionBuilder.build();
