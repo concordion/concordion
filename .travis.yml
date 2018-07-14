@@ -1,9 +1,4 @@
-sudo: false 
-dist: trusty
 language: java
-
-os:
-- linux
 
 jdk:
 - oraclejdk10
