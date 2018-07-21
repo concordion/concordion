@@ -266,6 +266,26 @@ with an unimplemented example, a successful example and a failing example all ma
     <p>When <a c:run="concordion" href="SpecCallingFailFastExample.md">calling</a> another specification that fails fast on an example that is expected to fail, the result is "ignored".</p>
 </div>
 
+
+<div c:example="ignored">
+    <h3>Ignored</h3>
+
+    <p>Concordion examples can also be marked as ignored:</p>
+
+    <code><pre>
+&lt;div concordion:example="example3" concordion:status="Ignored"&gt;
+        Example goes here
+&lt;/div&gt;</pre></code>
+
+    <p>
+        A spec (<a href="ExamplesMarkedIgnored.html" c:execute="#result=runTestDummySpec(#TEXT)">ExamplesMarkedIgnored.html</a>)
+        with an ignored example, returns <span c:assertEquals="#result.successCount">0</span> successes,
+        <span c:assertEquals="#result.failureCount">0</span> failures,
+        <span c:assertEquals="#result.exceptionCount">0</span> exceptions, and
+        <span c:assertEquals="#result.ignoredCount">1</span> ignores.
+    </p>
+</div>
+
 <div c:example="unimplemented">
     <h3>Unimplemented</h3>
 
