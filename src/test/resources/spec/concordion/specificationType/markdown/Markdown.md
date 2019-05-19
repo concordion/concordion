@@ -118,7 +118,7 @@ The verifyRows command is specified in the first table header column, followed b
 Note that reference-style links have been used to improve the readability of this example. Inline links are equally valid. 
 
 #### Example Command
-Concordion 2.0 introduces a new [example command](http://concordion.github.io/concordion/latest/spec/command/example/Examples.html).
+Concordion 2.0 introduces a new [example command](http://concordion.github.io/concordion/latest/spec/common/command/example/Example.html).
 
 Adding an inline link to a header changes the header into an example command. You can use either the Atx-style or Setext-style headers. For example:
 
