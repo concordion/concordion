@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import org.concordion.internal.FixtureInstance;
+import org.concordion.internal.FixtureType;
 import org.concordion.internal.RunOutput;
 import org.concordion.internal.cache.RunResultsCache;
 import org.junit.Before;
@@ -21,17 +22,17 @@ public class CachedResultsUnitTest {
 
     @Before
     public void before() {
-        runResults.removeAllFromCache(new FixtureInstance(this));
+        runResults.removeAllFromCache(new FixtureType(this.getClass()));
     }
 
     @Test
     public void testCacheInProgress() {
 
         // basically before a run, runResults.startRun should return null - showing that nothing is in progress
-        assertNull(runResults.startRun(new FixtureInstance(this), null));
+        assertNull(runResults.startRun(new FixtureType(this.getClass()), null));
 
         // but if it's called again, we'll get some "in progress" results
-        RunOutput concordionRunOutput = runResults.startRun(new FixtureInstance(this), null);
+        RunOutput concordionRunOutput = runResults.startRun(new FixtureType(this.getClass()), null);
         assertNotNull(concordionRunOutput);
         assertThat(concordionRunOutput.getActualResultSummary().getExceptionCount(), is(equalTo(0L)));
         assertThat(concordionRunOutput.getActualResultSummary().getSuccessCount(), is(equalTo(0L)));
@@ -49,10 +50,10 @@ public class CachedResultsUnitTest {
     public void testCacheInProgressWithExample() {
 
         // basically before a run, runResults.startRun should return null - showing that nothing is in progress
-        assertNull(runResults.startRun(new FixtureInstance(this), EXAMPLE_1_NAME));
+        assertNull(runResults.startRun(new FixtureType(this.getClass()), EXAMPLE_1_NAME));
 
         // but if it's called again, we'll get some "in progress" results
-        RunOutput concordionRunOutput = runResults.startRun(new FixtureInstance(this), EXAMPLE_1_NAME);
+        RunOutput concordionRunOutput = runResults.startRun(new FixtureType(this.getClass()), EXAMPLE_1_NAME);
         assertNotNull(concordionRunOutput);
         assertThat(concordionRunOutput.getActualResultSummary().getExceptionCount(), is(equalTo(0L)));
         assertThat(concordionRunOutput.getActualResultSummary().getSuccessCount(), is(equalTo(0L)));
@@ -72,11 +73,11 @@ public class CachedResultsUnitTest {
         // some tests to check that examples are independent
 
         // two examples from the same class
-        assertNull(runResults.startRun(new FixtureInstance(this), EXAMPLE_1_NAME));
-        assertNull(runResults.startRun(new FixtureInstance(this), EXAMPLE_2_NAME));
+        assertNull(runResults.startRun(new FixtureType(this.getClass()), EXAMPLE_1_NAME));
+        assertNull(runResults.startRun(new FixtureType(this.getClass()), EXAMPLE_2_NAME));
 
         // now a same named example from a different class
-        assertNull(runResults.startRun(new FixtureInstance(new JustAnotherClass()), EXAMPLE_2_NAME));
+        assertNull(runResults.startRun(new FixtureType(JustAnotherClass.class), EXAMPLE_2_NAME));
     }
 
     private static class JustAnotherClass {};

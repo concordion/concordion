@@ -9,10 +9,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.concordion.api.AbstractCommand;
-import org.concordion.api.CommandCall;
-import org.concordion.api.Evaluator;
-import org.concordion.api.ResultRecorder;
+import org.concordion.api.*;
 import org.concordion.api.listener.VerifyRowsListener;
 import org.concordion.internal.command.strategies.DefaultMatchStrategy;
 import org.concordion.internal.command.strategies.RowsMatchStrategy;
@@ -32,7 +29,7 @@ public class VerifyRowsCommand extends AbstractCommand {
     
     @SuppressWarnings("unchecked")
     @Override
-    public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder) {
+    public void verify(CommandCall commandCall, Evaluator evaluator, ResultRecorder resultRecorder, Fixture fixture) {
         Pattern pattern = Pattern.compile("(#.+?) *: *(.+)");
         Matcher matcher = pattern.matcher(commandCall.getExpression());
         if (!matcher.matches()) {
@@ -47,7 +44,7 @@ public class VerifyRowsCommand extends AbstractCommand {
         Check.isTrue(!(obj instanceof HashSet) || (obj instanceof LinkedHashSet), obj.getClass().getCanonicalName() + " does not have a predictable iteration order");
         Iterable<Object> iterable = (Iterable<Object>) obj;
 
-        newStrategyInstance(detectStrategyClass(commandCall), commandCall, evaluator, resultRecorder, loopVariableName, iterable).verify();
+        newStrategyInstance(detectStrategyClass(commandCall), commandCall, evaluator, resultRecorder, loopVariableName, iterable).verify(fixture);
     }
 
     private static final String DEFAULT_STRATEGIES_PACKAGE = DefaultMatchStrategy.class.getPackage().getName() + '.';

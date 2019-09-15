@@ -45,8 +45,8 @@ Without additional extensions, the following are translated as-is.
       <td>[[not a wikilink]]</td>
     </tr>
     <tr>
-      <td>http://concordion.org</td>
-      <td>http://concordion.org</td>
+      <td>https://concordion.org</td>
+      <td>https://concordion.org</td>
     </tr>
   </table>
 </div>
@@ -67,8 +67,8 @@ Given the method `withPegdownExtensions(int options)` has been [called](- "withW
       <td>&lt;a href="wikilink">wikilink&lt;/a></td>
     </tr>
     <tr>
-      <td>http://concordion.org</td>
-      <td>&lt;a href="http://concordion.org"&gt;http://concordion.org&lt;/a&gt;</td>
+      <td>https://concordion.org</td>
+      <td>&lt;a href="https://concordion.org"&gt;https://concordion.org&lt;/a&gt;</td>
     </tr>
   </table>
 </div>

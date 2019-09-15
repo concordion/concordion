@@ -16,7 +16,7 @@ public class DefaultMatchStrategy extends RowsMatchStrategy {
     }
 
     @Override
-    public void verify() {
+    public void verify(Fixture fixture) {
         announceExpressionEvaluated(commandCall.getElement());
 
         int index = 0;
@@ -30,7 +30,7 @@ public class DefaultMatchStrategy extends RowsMatchStrategy {
                 announceSurplusRow(detailRow.getElement());
             }
             tableSupport.copyCommandCallsTo(detailRow);
-            commandCall.getChildren().verify(evaluator, resultRecorder);
+            commandCall.getChildren().verify(evaluator, resultRecorder, fixture);
             index++;
         }
 

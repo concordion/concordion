@@ -6,6 +6,7 @@ import ognl.OgnlContext;
 import ognl.OgnlException;
 
 import org.concordion.api.Evaluator;
+import org.concordion.api.Fixture;
 import org.concordion.internal.util.Check;
 
 public class OgnlEvaluator implements Evaluator {
@@ -13,8 +14,8 @@ public class OgnlEvaluator implements Evaluator {
     private Object rootObject;
     private final OgnlContext ognlContext = new OgnlContext();
 
-    public OgnlEvaluator(Object rootObject) {
-        this.rootObject = rootObject;
+    public OgnlEvaluator(Fixture fixture) {
+        this.rootObject = fixture.getFixtureObject();
     }
 
     public Object evaluate(String expression) {

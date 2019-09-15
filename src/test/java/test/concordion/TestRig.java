@@ -49,7 +49,7 @@ public class TestRig {
             fixture = new FixtureInstance(new DummyFixture());
             withResource(new Resource("/test/concordion/Dummy.html"), "<html/>");
         } else {
-            withResource(new ClassNameBasedSpecificationLocator("html").locateSpecification(fixture.getFixtureObject()), "<html/>");
+            withResource(new ClassNameBasedSpecificationLocator().locateSpecification(fixture.getFixtureType(), "html"), "<html/>");
         }
         ConcordionBuilder concordionBuilder = new ConcordionBuilder()
             .withAssertEqualsListener(eventRecorder)
@@ -72,12 +72,12 @@ public class TestRig {
 
         try {
 
-            ResultSummary resultSummary = null;
+            SummarizingResultRecorder resultSummary = new SummarizingResultRecorder();
             concordion.override(resource);
-            List<String> examples = concordion.getExampleNames(fixture);
+            List<String> examples = concordion.getExampleNames(fixture.getFixtureType());
             if (!examples.isEmpty()) {
                 for (String example : examples) {
-                    resultSummary = concordion.processExample(fixture, example);
+                    resultSummary.record(concordion.processExample(fixture, example));
                 }
             }
             concordion.finish();

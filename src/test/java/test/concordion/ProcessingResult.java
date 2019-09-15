@@ -36,6 +36,10 @@ public class ProcessingResult {
         return resultSummary.getExceptionCount();
     }
 
+    public long getIgnoredCount() {
+        return resultSummary.getIgnoredCount();
+    }
+
     public AssertFailureEvent getLastAssertFailureEvent() {
         return (AssertFailureEvent) eventRecorder.getLast(AssertFailureEvent.class);
     }

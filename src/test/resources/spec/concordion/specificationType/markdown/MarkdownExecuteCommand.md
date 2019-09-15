@@ -54,7 +54,7 @@ If the special variable `#TEXT` is used as a parameter within the _expression_, 
 
 <a id="execute-on-a-table"/>
 ### Execute on a table
-To run the [execute command on a table](http://concordion.org/Tutorial.html#executeTable), the execute command is specified in the first table header column, 
+To run the [execute command on a table](https://concordion.org/Tutorial.html#executeTable), the execute command is specified in the first table header column, 
 followed by the command for that column (if any), with the commands for each column of the table specified in the table header.
 
 <div class="example">

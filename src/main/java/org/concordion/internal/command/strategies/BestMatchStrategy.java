@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.concordion.api.CommandCall;
 import org.concordion.api.Evaluator;
+import org.concordion.api.Fixture;
 import org.concordion.api.ResultRecorder;
 import org.concordion.api.listener.VerifyRowsListener;
 import org.concordion.internal.Row;
@@ -17,7 +18,7 @@ public class BestMatchStrategy extends AbstractChangingOrderRowsMatchStrategy {
     }
 
     @Override
-    protected Object findMatchingRow(Row expectedRow) {
+    protected Object findMatchingRow(Row expectedRow, Fixture fixture) {
         long bestResult = Integer.MIN_VALUE;
         Object bestMatchingRow = null;
 
@@ -27,7 +28,7 @@ public class BestMatchStrategy extends AbstractChangingOrderRowsMatchStrategy {
             tableSupport.copyCommandCallsTo(expectedRow.deepClone());
             evaluator.setVariable(loopVariableName, row);
 
-            commandCall.getChildren().verify(evaluator, backgroundResultRecorder);
+            commandCall.getChildren().verify(evaluator, backgroundResultRecorder, fixture);
 
             long total = backgroundResultRecorder.getTotalCount();
             long success = backgroundResultRecorder.getSuccessCount();

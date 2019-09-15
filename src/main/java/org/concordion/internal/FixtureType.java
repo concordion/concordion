@@ -1,17 +1,23 @@
 package org.concordion.internal;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 
 import org.concordion.api.*;
 import org.concordion.api.option.ConcordionOptions;
+import org.concordion.internal.util.SimpleFormatter;
 
 public class FixtureType implements FixtureDeclarations {
 
-    protected Class<?> fixtureClass;
+    private Class<?> fixtureClass;
     private ArrayList<Class<?>> classHierarchyParentFirst;
-    
+
     public FixtureType(Class<?> fixtureClass) {
         this.fixtureClass = fixtureClass;
     }
@@ -57,7 +63,7 @@ public class FixtureType implements FixtureDeclarations {
      * @return the fixture class and all of its superclasses, excluding java.lang.Object,
      * ordered from the most super class to the fixture class.
      */
-    protected List<Class<?>> getClassHierarchyParentFirst() {
+    public List<Class<?>> getClassHierarchyParentFirst() {
         if (classHierarchyParentFirst != null) {
             return classHierarchyParentFirst;
         }
@@ -83,5 +89,42 @@ public class FixtureType implements FixtureDeclarations {
             }
         }
         return annotations;
+    }
+
+    public Class<?> getFixtureClass() {
+        return fixtureClass;
+    }
+
+    public List<File> getClassPathRoots() {
+    	List<File> rootPaths = new ArrayList<File>();
+
+    	Enumeration<URL> resources;
+    	try {
+    		resources = getFixtureClass().getClassLoader().getResources("");
+
+    		while (resources.hasMoreElements()) {
+                rootPaths.add(new File(resources.nextElement().toURI()));
+            }
+    	} catch (IOException e) {
+    		throw new RuntimeException("Unable to get root path", e);
+    	} catch (URISyntaxException e) {
+    		throw new RuntimeException("Unable to get root path", e);
+    	}
+
+    	return rootPaths;
+    }
+
+    public String getDescription() {
+        String name = removeSuffix(fixtureClass.getSimpleName());
+        return SimpleFormatter.format("[Concordion Specification for '%s']", name); // Based on suggestion by Danny Guerrier
+    }
+
+    public String getFixturePathWithoutSuffix() {
+        String slashedClassName = fixtureClass.getName().replaceAll("\\.", "/");
+        return removeSuffix(slashedClassName);
+    }
+
+    private String removeSuffix(String fixtureName) {
+        return FixtureSpecificationMapper.removeSuffixFromFixtureName(fixtureName);
     }
 }

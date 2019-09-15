@@ -4,6 +4,7 @@ import org.concordion.api.Evaluator;
 import org.concordion.api.FullOGNL;
 import org.concordion.api.MultiValueResult;
 import org.concordion.integration.junit4.ConcordionRunner;
+import org.concordion.internal.FixtureInstance;
 import org.concordion.internal.OgnlEvaluator;
 import org.concordion.internal.SimpleEvaluator;
 import org.junit.runner.RunWith;
@@ -15,8 +16,8 @@ import static java.util.Collections.singletonMap;
 @RunWith(ConcordionRunner.class)
 public class ComplexExpressionsTest {
 
-    private final Evaluator simple = new SimpleEvaluator(new SimpleTestFixture());
-    private final Evaluator ognl = new OgnlEvaluator(new OgnlTestFixture());
+    private final Evaluator simple = new SimpleEvaluator(new FixtureInstance(new SimpleTestFixture()));
+    private final Evaluator ognl = new OgnlEvaluator(new FixtureInstance(new OgnlTestFixture()));
 
     public ComplexExpressionsTest() {
         initTestVariables(simple);

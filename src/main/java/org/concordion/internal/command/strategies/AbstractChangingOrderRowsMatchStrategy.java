@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.concordion.api.CommandCall;
 import org.concordion.api.Evaluator;
+import org.concordion.api.Fixture;
 import org.concordion.api.ResultRecorder;
 import org.concordion.api.listener.VerifyRowsListener;
 import org.concordion.internal.Row;
@@ -16,31 +17,31 @@ public abstract class AbstractChangingOrderRowsMatchStrategy extends RowsMatchSt
     }
 
     @Override
-    public void verify() {
+    public void verify(Fixture fixture) {
         announceExpressionEvaluated(commandCall.getElement());
         for (Row expectedRow : expectedRows) {
-            Object row = findMatchingRow(expectedRow);
+            Object row = findMatchingRow(expectedRow, fixture);
             tableSupport.copyCommandCallsTo(expectedRow);
             if (row != null) {
                 evaluator.setVariable(loopVariableName, row);
-                commandCall.getChildren().verify(evaluator, resultRecorder);
+                commandCall.getChildren().verify(evaluator, resultRecorder, fixture);
                 actualRows.remove(row);
             } else {
                 announceMissingRow(expectedRow.getElement());
             }
         }
-        reportSurplusRows();
+        reportSurplusRows(fixture);
     }
 
-    protected abstract Object findMatchingRow(Row expectedRow);
+    protected abstract Object findMatchingRow(Row expectedRow, Fixture fixture);
 
-    private void reportSurplusRows() {
+    private void reportSurplusRows(Fixture fixture) {
         for (Object surplusRow : actualRows) {
             evaluator.setVariable(loopVariableName, surplusRow);
             Row detailRow = tableSupport.addDetailRow();
             announceSurplusRow(detailRow.getElement());
             tableSupport.copyCommandCallsTo(detailRow);
-            commandCall.getChildren().verify(evaluator, resultRecorder);
+            commandCall.getChildren().verify(evaluator, resultRecorder, fixture);
         }
     }
 }

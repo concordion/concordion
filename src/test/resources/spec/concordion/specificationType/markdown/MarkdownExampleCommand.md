@@ -1,7 +1,7 @@
 # Markdown example command
 _Since_: Concordion 2.0.0
 
-The [example command](../../command/example/Example.html) is expressed using the form:
+The [example command](../../common/command/example/Example.html) is expressed using the form:
 
 `### [Header text](- "example name")`
 
@@ -14,7 +14,7 @@ which creates:
 
 where `###` can be any level of [header](https://daringfireball.net/projects/markdown/syntax#header), using either atx or setext syntax.
 
-You can also apply an status of [ExpectedToFail](http://concordion.github.io/concordion/latest/spec/command/example/Examples.html#expectedToFail) or [Unimplemented](http://concordion.github.io/concordion/latest/spec/command/example/Examples.html#unimplemented) to the example, for example:
+You can also apply an status of [ExpectedToFail](../../common/command/example/Example.html#expectedToFail), [Ignored](../../common/command/example/Example.html#ignored) or [Unimplemented](../../common/command/example/Example.html#unimplemented) to the example, for example:
 
 `### [Header text](- "example name c:status=ExpectedToFail")`
 

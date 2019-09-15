@@ -1,6 +1,7 @@
 package org.concordion.api.listener;
 
 import org.concordion.api.Element;
+import org.concordion.api.Fixture;
 import org.concordion.api.ResultSummary;
 
 /**
@@ -11,11 +12,13 @@ public class ExampleEvent {
     private final Element element;
     private final ResultSummary resultSummary;
     private final String exampleName;
+    private final Fixture fixture;
 
-    public ExampleEvent(String exampleName, Element element, ResultSummary resultSummary) {
+    public ExampleEvent(String exampleName, Element element, ResultSummary resultSummary, Fixture fixture) {
         this.exampleName = exampleName;
         this.resultSummary = resultSummary;
         this.element = element;
+        this.fixture = fixture;
     }
     
     public Element getElement() {
@@ -28,5 +31,9 @@ public class ExampleEvent {
 
     public String getExampleName() {
         return exampleName;
+    }
+
+    public Fixture getFixture() {
+        return fixture;
     }
 }
