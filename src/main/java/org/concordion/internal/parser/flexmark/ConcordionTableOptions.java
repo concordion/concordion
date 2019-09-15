@@ -1,7 +1,7 @@
 package org.concordion.internal.parser.flexmark;
 
 import com.vladsch.flexmark.ext.tables.TablesExtension;
-import com.vladsch.flexmark.util.options.DataHolder;
+import com.vladsch.flexmark.util.data.DataHolder;
 
 public class ConcordionTableOptions {
     public final String className;

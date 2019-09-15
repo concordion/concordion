@@ -1,6 +1,6 @@
 package org.concordion.internal.parser.flexmark;
 
-import com.vladsch.flexmark.ast.Block;
+import com.vladsch.flexmark.util.ast.Block;
 import com.vladsch.flexmark.util.sequence.BasedSequence;
 import org.concordion.internal.parser.support.Attribute;
 import org.concordion.internal.parser.support.ConcordionStatement;

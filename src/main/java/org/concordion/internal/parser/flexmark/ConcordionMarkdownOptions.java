@@ -1,8 +1,8 @@
 package org.concordion.internal.parser.flexmark;
 
-import com.vladsch.flexmark.util.collection.DataValueFactory;
-import com.vladsch.flexmark.util.options.DataHolder;
-import com.vladsch.flexmark.util.options.DataKey;
+import com.vladsch.flexmark.util.data.DataHolder;
+import com.vladsch.flexmark.util.data.DataKey;
+import com.vladsch.flexmark.util.data.DataValueFactory;
 
 import java.util.Collections;
 import java.util.Map;
@@ -13,7 +13,7 @@ public class ConcordionMarkdownOptions {
     public static final DataKey<Map<String, String>> CONCORDION_ADDITIONAL_NAMESPACES = new DataKey<Map<String, String>>("CONCORDION_ADDITIONAL_NAMESPACES",
             new DataValueFactory<Map<String, String>>() {
                 @Override
-                public Map<String, String> create(DataHolder value) {
+                public Map<String, String> apply(DataHolder value) {
                     return Collections.EMPTY_MAP;
                 }
             });

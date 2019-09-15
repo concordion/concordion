@@ -7,8 +7,10 @@ import com.vladsch.flexmark.ext.tables.TableCell;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.parser.block.NodePostProcessor;
 import com.vladsch.flexmark.parser.block.NodePostProcessorFactory;
-import com.vladsch.flexmark.util.NodeTracker;
-import com.vladsch.flexmark.util.options.DataHolder;
+import com.vladsch.flexmark.util.ast.Document;
+import com.vladsch.flexmark.util.ast.Node;
+import com.vladsch.flexmark.util.ast.NodeTracker;
+import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.sequence.BasedSequence;
 import org.concordion.internal.parser.markdown.ConcordionMarkdownException;
 import org.concordion.internal.parser.support.ConciseExpressionParser;
@@ -146,7 +148,7 @@ public class ConcordionCommandNodePostProcessor extends NodePostProcessor {
         }
 
         @Override
-        public NodePostProcessor create(Document document) {
+        public NodePostProcessor apply(Document document) {
             return new ConcordionCommandNodePostProcessor(document);
         }
     }

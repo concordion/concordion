@@ -7,7 +7,7 @@ import com.vladsch.flexmark.html.renderer.NodeRenderer;
 import com.vladsch.flexmark.html.renderer.NodeRendererContext;
 import com.vladsch.flexmark.html.renderer.NodeRendererFactory;
 import com.vladsch.flexmark.html.renderer.NodeRenderingHandler;
-import com.vladsch.flexmark.util.options.DataHolder;
+import com.vladsch.flexmark.util.data.DataHolder;
 import org.concordion.internal.parser.support.Attribute;
 
 import java.util.HashSet;
@@ -93,7 +93,7 @@ public class ConcordionTableRenderer implements NodeRenderer {
 
     public static class Factory implements NodeRendererFactory {
         @Override
-        public NodeRenderer create(final DataHolder options) {
+        public NodeRenderer apply(final DataHolder options) {
             return new ConcordionTableRenderer(options);
         }
     }

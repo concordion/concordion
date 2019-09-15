@@ -14,7 +14,7 @@ repositories {
 }
 
 ext {
-    flexmarkVersion = '0.32.24'
+    flexmarkVersion = '0.50.40'
 }
 
 dependencies {
@@ -57,8 +57,8 @@ sourceSets {
     }
 }
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+sourceCompatibility = 8
+targetCompatibility = 8
 
 test {
     systemProperties['concordion.output.dir'] = "${reporting.baseDir}"
