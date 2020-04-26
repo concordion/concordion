@@ -5,9 +5,13 @@ import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.profiles.pegdown.Extensions;
 import com.vladsch.flexmark.profiles.pegdown.PegdownOptionsAdapter;
 import com.vladsch.flexmark.util.ast.Node;
+import com.vladsch.flexmark.util.builder.Extension;
+import com.vladsch.flexmark.util.data.DataSet;
 import com.vladsch.flexmark.util.data.MutableDataHolder;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class FlexmarkMarkdownTranslator {
@@ -15,17 +19,19 @@ public class FlexmarkMarkdownTranslator {
     private final Parser parser;
     private final HtmlRenderer htmlRenderer;
 
-    // TODO allow other extensions to be added
-    public FlexmarkMarkdownTranslator(int pegdownExtensions, Map<String, String> namespaces, String targetConcordionNamespace) {
-
+    public FlexmarkMarkdownTranslator(int pegdownExtensions, DataSet flexmarkOptions, Map<String, String> namespaces, String targetConcordionNamespace) {
         // Only interrupts an HTML block on a blank line if all tags in the HTML block are closed.
         // Closer to Pegdown HTML block parsing behaviour.
-        // TODO - allow this to be overridden.
         boolean strictHtml = false;
+        List<Extension> flexmarkExtensionsToAdd = new ArrayList<>();
+        flexmarkExtensionsToAdd.add(FlexmarkConcordionExtension.create());
 
         options = new MutableDataSet(PegdownOptionsAdapter.flexmarkOptions(strictHtml,
                 Extensions.TABLES | Extensions.STRIKETHROUGH | pegdownExtensions,
-                FlexmarkConcordionExtension.create()));
+                flexmarkExtensionsToAdd.toArray(new Extension[0])));
+        if (flexmarkOptions != null) {
+            options.setAll(flexmarkOptions);
+        }
         options.set(ConcordionMarkdownOptions.CONCORDION_ADDITIONAL_NAMESPACES, namespaces);
         options.set(ConcordionMarkdownOptions.CONCORDION_TARGET_NAMESPACE, targetConcordionNamespace);
 

@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.vladsch.flexmark.util.data.DataSet;
 import org.concordion.Concordion;
 import org.concordion.api.*;
 import org.concordion.api.ConcordionResources.InsertType;
@@ -70,6 +71,7 @@ public class ConcordionBuilder implements ConcordionExtender {
     private SpecificationProcessingListener pageFooterRenderer;
     private BreadcrumbRenderer breadcrumbRenderer;
     private RunnerFactory runnerFactory;
+    private DataSet flexmarkOptions;
 
     {
         ExtensionChecker.checkForOutdatedExtensions();
@@ -426,6 +428,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         if (fixtureType.declaresFullOGNL()) {
             withEvaluatorFactory(new OgnlEvaluatorFactory());
         }
+        flexmarkOptions = new FlexmarkOptionsLoader().getFlexmarkOptionsForFixture(fixture);
 
         return this;
     }
@@ -511,6 +514,10 @@ public class ConcordionBuilder implements ConcordionExtender {
         if (options.declareNamespaces().length > 0) {
             Map<String, String> namespaces = ConcordionOptionsParser.convertNamespacePairsToMap(options.declareNamespaces());
             markdownConverter.withNamespaceDeclarations(namespaces);
+        }
+
+        if(flexmarkOptions != null) {
+            markdownConverter.withFlexmarkOptions(flexmarkOptions);
         }
 
         String location = options.copySourceHtmlToDir();

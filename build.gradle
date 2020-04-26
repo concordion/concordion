@@ -37,7 +37,8 @@ dependencies {
         exclude group: 'org.concordion', module: 'concordion'
     }
 	
-	testCompile 'com.github.stefanbirkner:system-rules:1.16.0'
+	testCompile 'com.github.stefanbirkner:system-rules:1.16.0',
+                "com.vladsch.flexmark:flexmark-ext-abbreviation:$flexmarkVersion"
 }
 
 sourceSets {

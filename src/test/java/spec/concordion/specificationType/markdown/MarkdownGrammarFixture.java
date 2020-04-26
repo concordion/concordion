@@ -13,7 +13,7 @@ public class MarkdownGrammarFixture {
     public MarkdownGrammarFixture() {
         HashMap<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("ext", "urn:concordion-extensions:2010");
-        markdownParser = new FlexmarkMarkdownTranslator(0, namespaces, "concordion");
+        markdownParser = new FlexmarkMarkdownTranslator(0, null, namespaces, "concordion");
     }
 
     public String translate(String markdown) {

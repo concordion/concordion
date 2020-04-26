@@ -1,7 +1,6 @@
 package org.concordion.api.option;
 
-import org.pegdown.Extensions;
-import org.pegdown.LinkRenderer;
+import com.vladsch.flexmark.profiles.pegdown.Extensions;
 
 /**
  * Extensions to the Markdown language that can be enabled for Concordion Markdown.

@@ -21,15 +21,25 @@ will write to the output directory under the system temp folder.
 ## Markdown Syntax Extensions
 Markdown extensions allow you to change and/or extend the behaviour of the [Markdown](../specificationType/markdown/Markdown.html) parser, for example to change the behaviour of new lines, or to support definition lists.
 
-To add markdown extensions, use the `@ConcordionOptions` annotation on the fixture class with the value of `markdownExtensions` set to an array of `MarkdownExtension` enumerations. For example:
+We support two types of extensions - Flexmark options and Pegdown extensions.
+
+[FlexmarkOptions](FlexmarkOptions.md "c:run") provides a wider range of extensions and a greater level of control and is the preferred way of adding Markdown extensions. 
+
+### Pegdown Extensions
+The original parser in use was [Pegdown](https://github.com/sirthias/pegdown). 
+However, since this has now been deprecated by the author, it has been replaced by the Flexmark parser. _(since Concordion 3.0.0)_
+
+This legacy way of adding extensions continues to be supported by Concordion.
+
+To add Pegdown extensions, use the `@ConcordionOptions` annotation on the fixture class with the value of `markdownExtensions` set to an array of `MarkdownExtension` enumerations. For example:
 
     @RunWith(ConcordionRunner.class)
     @ConcordionOptions(markdownExtensions={MarkdownExtensions.WIKILINKS, MarkdownExtensions.AUTOLINKS})
     public class ...
       
-See the [MarkdownExtension](http://concordion.github.io/concordion/latest/javadoc/org/concordion/api/option/MarkdownExtensions.html) javadoc for a definition of the available extensions. (Note, the underlying Markdown parser is [Pegdown](https://github.com/sirthias/pegdown), which defines the [available extensions](https://github.com/sirthias/pegdown/blob/master/README.markdown#introduction).)
+See the [MarkdownExtension](http://concordion.github.io/concordion/latest/javadoc/org/concordion/api/option/MarkdownExtensions.html) javadoc for a definition of the available extensions, and the [Pegdown documentation](https://github.com/sirthias/pegdown/blob/master/README.markdown#introduction) for more details on each extension.
 
-### [No extra extensions](- "no-extra-extensions")
+#### [No extra extensions](- "no-extra-extensions")
 
 Without additional extensions, the following are translated as-is.
 
@@ -51,7 +61,7 @@ Without additional extensions, the following are translated as-is.
   </table>
 </div>
  
-### [With WIKILINKS and QUOTES extensions](- "extra-extensions")
+#### [With WIKILINKS and QUOTES extensions](- "extra-extensions")
 
 Given the method `withPegdownExtensions(int options)` has been [called](- "withWikilinkAndAutolink()") with `options` set to `org.pegdown.Extensions.WIKILINKS | org.pegdown.Extensions.AUTOLINKS`, the following are now translated as shown:
 
@@ -72,6 +82,9 @@ Given the method `withPegdownExtensions(int options)` has been [called](- "withW
     </tr>
   </table>
 </div>
+
+
+
 
 ## Additional namespace declarations
 In order to include Concordion commands with namespaces other than the default Concordion namespaces, such as those available in extensions, you must declare the namespace.

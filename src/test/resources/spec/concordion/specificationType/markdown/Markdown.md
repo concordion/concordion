@@ -167,15 +167,11 @@ will run the `Address.html` specification.
 See the [Grammar Specification](MarkdownGrammar.md "c:run") for the full Grammar.
 
 ## Configuration
-The extension can also be [configured](../../annotation/ConcordionOptions.md "c:run") to output the source HTML that is generated, and to add extensions to the Markdown language.
+The extension can also be configured to [add extra options to the parser](../../annotation/FlexmarkOptions.md "c:run"), such as extending the Markdown language or to [output the source HTML that is generated or add namespace declarations](../../annotation/ConcordionOptions.md "c:run").
 
 ## Editor Support
 ### IDEA
-The official IntelliJ IDEA Markdown editor is not recommended since it does not support tables. 
-Instead, the [Markdown](https://plugins.jetbrains.com/plugin?id=5970) plugin is recommended. 
-This plugin uses the same underlying Pegdown library as the Concordion Markdown extension. 
-After installing the plugin, you will need to configure the [settings](https://plugins.jetbrains.com/files/5970/screenshot_14568.png) to enable Tables and Strikethrough, 
-plus any additional Markdown language extensions that you [configure](../../annotations/ConcordionOptions.html).
+The official IntelliJ IDEA [Markdown plugin](https://plugins.jetbrains.com/plugin/7793-markdown) is recommended.
 
 ### Eclipse
 Available Eclipse plugins include:
@@ -196,4 +192,3 @@ _Please let us know what editor you are using, and what support you get from it.
 ## Further details
 
 * [What is the full grammar?](MarkdownGrammar.md "c:run")
-* [How do I configure it to output the HTML or extend the Markdown syntax?](../../annotation/ConcordionOptions.md "c:run")

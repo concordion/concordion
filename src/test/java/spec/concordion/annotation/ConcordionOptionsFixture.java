@@ -1,21 +1,21 @@
 package spec.concordion.annotation;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.TreeMap;
-
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.concordion.internal.ConcordionOptionsParser;
 import org.concordion.internal.ConfigurationException;
 import org.concordion.internal.parser.flexmark.FlexmarkMarkdownTranslator;
 import org.junit.runner.RunWith;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
+
 @RunWith(ConcordionRunner.class)
 public class ConcordionOptionsFixture {
     private int pegdownExtensions;
-    
+
     public String translate(String markdown) {
-        FlexmarkMarkdownTranslator markdownParser = new FlexmarkMarkdownTranslator(pegdownExtensions, Collections.<String, String> emptyMap(), "concordion");
+        FlexmarkMarkdownTranslator markdownParser = new FlexmarkMarkdownTranslator(pegdownExtensions, null, Collections.<String, String> emptyMap(), "concordion");
         String html = markdownParser.markdownToHtml(markdown);
         if (html.startsWith("<p>") && html.endsWith("</p>")) {
             html = html.substring(3, html.length()-4);
@@ -26,7 +26,7 @@ public class ConcordionOptionsFixture {
     public void withWikilinkAndAutolink() {
         pegdownExtensions = org.pegdown.Extensions.WIKILINKS | org.pegdown.Extensions.AUTOLINKS;
     }
-    
+
     public String parse(String declareNamespaces) {
         declareNamespaces = declareNamespaces.trim();
         String[] namespacePairs = declareNamespaces.substring(1, declareNamespaces.length()-1).split(",");
