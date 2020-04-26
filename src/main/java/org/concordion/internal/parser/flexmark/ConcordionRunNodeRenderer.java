@@ -1,6 +1,5 @@
 package org.concordion.internal.parser.flexmark;
 
-import com.vladsch.flexmark.html.CustomNodeRenderer;
 import com.vladsch.flexmark.html.HtmlWriter;
 import com.vladsch.flexmark.html.renderer.NodeRenderer;
 import com.vladsch.flexmark.html.renderer.NodeRendererContext;
@@ -19,7 +18,7 @@ public class ConcordionRunNodeRenderer implements NodeRenderer {
     @Override
     public Set<NodeRenderingHandler<?>> getNodeRenderingHandlers() {
         HashSet<NodeRenderingHandler<?>> set = new HashSet<NodeRenderingHandler<?>>();
-        set.add(new NodeRenderingHandler<ConcordionRunNode>(ConcordionRunNode.class, new CustomNodeRenderer<ConcordionRunNode>() {
+        set.add(new NodeRenderingHandler<ConcordionRunNode>(ConcordionRunNode.class, new NodeRenderingHandler.CustomNodeRenderer<ConcordionRunNode>() {
             @Override
             public void render(ConcordionRunNode node, NodeRendererContext context, HtmlWriter html) {
                 renderCommand(node, context, html);

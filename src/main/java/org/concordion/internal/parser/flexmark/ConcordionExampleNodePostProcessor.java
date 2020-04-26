@@ -22,7 +22,7 @@ public class ConcordionExampleNodePostProcessor extends NodePostProcessor {
         TARGET_CONCORDION_NAMESPACE_PREFIX = ConcordionMarkdownOptions.CONCORDION_TARGET_NAMESPACE.getFrom(options);
         statementParser = new ConciseExpressionParser(ConcordionMarkdownOptions.SOURCE_CONCORDION_NAMESPACE_PREFIX,
                 TARGET_CONCORDION_NAMESPACE_PREFIX,
-                ConcordionMarkdownOptions.CONCORDION_ADDITIONAL_NAMESPACES.getFrom(options));
+                ConcordionMarkdownOptions.CONCORDION_ADDITIONAL_NAMESPACES.get(options));
     }
 
     @Override

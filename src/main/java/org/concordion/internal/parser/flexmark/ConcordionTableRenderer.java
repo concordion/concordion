@@ -1,7 +1,6 @@
 package org.concordion.internal.parser.flexmark;
 
 import com.vladsch.flexmark.ext.tables.TableCell;
-import com.vladsch.flexmark.html.CustomNodeRenderer;
 import com.vladsch.flexmark.html.HtmlWriter;
 import com.vladsch.flexmark.html.renderer.NodeRenderer;
 import com.vladsch.flexmark.html.renderer.NodeRendererContext;
@@ -23,13 +22,13 @@ public class ConcordionTableRenderer implements NodeRenderer {
     @Override
     public Set<NodeRenderingHandler<?>> getNodeRenderingHandlers() {
         HashSet<NodeRenderingHandler<?>> set = new HashSet<NodeRenderingHandler<?>>();
-        set.add(new NodeRenderingHandler<ConcordionTableBlock>(ConcordionTableBlock.class, new CustomNodeRenderer<ConcordionTableBlock>() {
+        set.add(new NodeRenderingHandler<ConcordionTableBlock>(ConcordionTableBlock.class, new NodeRenderingHandler.CustomNodeRenderer<ConcordionTableBlock>() {
             @Override
             public void render(ConcordionTableBlock node, NodeRendererContext context, HtmlWriter html) {
                 renderCommand(node, context, html);
             }
         }));
-        set.add(new NodeRenderingHandler<ConcordionTableCell>(ConcordionTableCell.class, new CustomNodeRenderer<ConcordionTableCell>() {
+        set.add(new NodeRenderingHandler<ConcordionTableCell>(ConcordionTableCell.class, new NodeRenderingHandler.CustomNodeRenderer<ConcordionTableCell>() {
             @Override
             public void render(ConcordionTableCell node, NodeRendererContext context, HtmlWriter html) {
                 renderCommand(node, context, html);

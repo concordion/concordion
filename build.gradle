@@ -14,7 +14,7 @@ repositories {
 }
 
 ext {
-    flexmarkVersion = '0.50.40'
+    flexmarkVersion = '0.61.20'
 }
 
 dependencies {

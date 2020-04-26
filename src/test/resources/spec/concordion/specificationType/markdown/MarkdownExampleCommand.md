@@ -10,6 +10,8 @@ which creates:
 ```
 <div concordion:example="example name">
     <h3>Header text</h3>
+...
+</div>
 ```    
 
 where `###` can be any level of [header](https://daringfireball.net/projects/markdown/syntax#header), using either atx or setext syntax.

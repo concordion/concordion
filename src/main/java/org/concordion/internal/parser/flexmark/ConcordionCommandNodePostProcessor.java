@@ -26,7 +26,7 @@ public class ConcordionCommandNodePostProcessor extends NodePostProcessor {
         this.referenceRepository = options.get(Parser.REFERENCES);
         statementParser = new ConciseExpressionParser(ConcordionMarkdownOptions.SOURCE_CONCORDION_NAMESPACE_PREFIX,
                 TARGET_CONCORDION_NAMESPACE_PREFIX,
-                ConcordionMarkdownOptions.CONCORDION_ADDITIONAL_NAMESPACES.getFrom(options));
+                ConcordionMarkdownOptions.CONCORDION_ADDITIONAL_NAMESPACES.get(options));
     }
 
     @Override
