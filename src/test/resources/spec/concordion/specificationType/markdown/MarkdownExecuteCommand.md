@@ -1,6 +1,5 @@
 # Markdown execute command
 _Since_: Concordion 2.0.0
-
 The [execute command](../../command/execute/Execute.html) is expressed using the syntax: `[value](- "expression")` or `[value](- 'expression')`
 
 which executes the `expression` (as long as `expression` doesn't start with `c:` as described below). 
@@ -77,23 +76,11 @@ followed by the command for that column (if any), with the commands for each col
       <td>
 <![CDATA[<table concordion:execute="#z=add(#x, #y)">
   <thead>
-    <tr>
-      <th align="right" concordion:set="#x">Number 1</th>
-      <th align="right" concordion:set="#y">Number 2</th>
-      <th align="right" concordion:assert-equals="#z">Result</th>
-    </tr>
+    <tr><th align="right" concordion:set="#x">Number 1</th><th align="right" concordion:set="#y">Number 2</th><th align="right" concordion:assert-equals="#z">Result</th></tr>
   </thead>
   <tbody>
-    <tr>
-      <td align="right">1</td>
-      <td align="right">0</td>
-      <td align="right">1</td>
-    </tr>
-    <tr>
-      <td align="right">1</td>
-      <td align="right">-3</td>
-      <td align="right">-2</td>
-    </tr>
+    <tr><td align="right"> 1</td><td align="right"> 0</td><td align="right"> 1</td></tr>
+    <tr><td align="right"> 1</td><td align="right"> -3</td><td align="right"> -2</td></tr>
   </tbody>
 </table>]]>     
       </td>
@@ -112,29 +99,21 @@ Using reference style links can make the Markdown source for the table more read
     </tr>
     <tr>
       <td>
-<pre>      
+<![CDATA[      
 |[add][][Number 1](- "#x")|[Number 2](- "#y")|[Result](- "?=#z")|
 | ----------------------: | ---------------: | ---------------: |
 |                        4|                 3|                 7|
 
 [add]: - "#z=add(#x, #y)"
-</pre>
+]]> 
       </td>
       <td>
 <![CDATA[<table concordion:execute="#z=add(#x, #y)">
   <thead>
-    <tr>
-      <th align="right" concordion:set="#x">Number 1</th>
-      <th align="right" concordion:set="#y">Number 2</th>
-      <th align="right" concordion:assert-equals="#z">Result</th>
-    </tr>
+    <tr><th align="right" concordion:set="#x">Number 1</th><th align="right" concordion:set="#y">Number 2</th><th align="right" concordion:assert-equals="#z">Result</th></tr>
   </thead>
   <tbody>
-    <tr>
-      <td align="right">4</td>
-      <td align="right">3</td>
-      <td align="right">7</td>
-    </tr>
+    <tr><td align="right"> 4</td><td align="right"> 3</td><td align="right"> 7</td></tr>
   </tbody>
 </table>]]>     
       </td>
@@ -153,7 +132,7 @@ or even:
     </tr>
     <tr>
       <td>
-<pre>      
+<![CDATA[    
 |[add][][Number 1][]|[Number 2][]|[Result][]|
 | ----------------: | ---------: | -------: |
 |                  4|           3|         7|
@@ -162,23 +141,15 @@ or even:
 [Number 2]: - "#y"
 [add]:      - "#z=add(#x, #y)"
 [Result]:   - "?=#z"
-</pre>
+]]>
       </td>
       <td>
 <![CDATA[<table concordion:execute="#z=add(#x, #y)">
   <thead>
-    <tr>
-      <th align="right" concordion:set="#x">Number 1</th>
-      <th align="right" concordion:set="#y">Number 2</th>
-      <th align="right" concordion:assert-equals="#z">Result</th>
-    </tr>
+    <tr><th align="right" concordion:set="#x">Number 1</th><th align="right" concordion:set="#y">Number 2</th><th align="right" concordion:assert-equals="#z">Result</th></tr>
   </thead>
   <tbody>
-    <tr>
-      <td align="right">4</td>
-      <td align="right">3</td>
-      <td align="right">7</td>
-    </tr>
+    <tr><td align="right"> 4</td><td align="right"> 3</td><td align="right"> 7</td></tr>
   </tbody>
 </table>]]>     
       </td>
@@ -210,26 +181,11 @@ For example:
       <td>
 <![CDATA[<table concordion:execute="#z=add(#x, #y)">
     <thead>
-        <tr>
-            <th concordion:example="">Description </th>
-            <th align="right" concordion:set="#x">Number 1</th>
-            <th align="right" concordion:set="#y">Number 2</th>
-            <th align="right" concordion:assert-equals="#z">Result</th>
-        </tr>
+        <tr><th concordion:example="">Description</th><th align="right" concordion:set="#x">Number 1</th><th align="right" concordion:set="#y">Number 2</th><th align="right" concordion:assert-equals="#z">Result</th></tr>
     </thead>
     <tbody>
-        <tr>
-            <td>Positive numbers </td>
-            <td align="right">1</td>
-            <td align="right">0</td>
-            <td align="right">1</td>
-        </tr>
-        <tr>
-            <td>Negative numbers </td>
-            <td align="right">1</td>
-            <td align="right">-3</td>
-            <td align="right">-2</td>
-        </tr>
+        <tr><td> Positive numbers </td><td align="right"> 1</td><td align="right"> 0</td><td align="right"> 1</td></tr>
+        <tr><td> Negative numbers </td><td align="right"> 1</td><td align="right"> -3</td><td align="right"> -2</td></tr>
     </tbody>
 </table>]]>     
       </td>

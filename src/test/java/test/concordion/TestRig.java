@@ -1,13 +1,18 @@
 package test.concordion;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
+import com.vladsch.flexmark.util.data.DataSet;
 import org.concordion.Concordion;
 import org.concordion.api.*;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.internal.*;
 import org.concordion.internal.extension.FixtureExtensionLoader;
+import org.concordion.internal.parser.flexmark.FlexmarkMarkdownTranslator;
 
 public class TestRig {
 
@@ -19,6 +24,7 @@ public class TestRig {
     private FixtureExtensionLoader fixtureExtensionLoader = new FixtureExtensionLoader();
     private ConcordionExtension extension;
     private String namespaceDeclaration = "xmlns:concordion='" + ConcordionBuilder.NAMESPACE_CONCORDION_2007 + "'";
+    private DataSet flexmarkOptionsForFixture;
 
     public TestRig withFixture(Object fixture) {
         this.fixture = new FixtureInstance(fixture);
@@ -30,8 +36,13 @@ public class TestRig {
         return this;
     }
 
+    public TestRig loadFlexmarkOptionsFrom(FixtureInstance fixture) {
+        flexmarkOptionsForFixture = new FlexmarkOptionsLoader().getFlexmarkOptionsForFixture(fixture);
+        return this;
+    }
+
     public ProcessingResult processFragment(String fragment) {
-    	return process(wrapFragment(fragment));
+        return process(wrapFragment(fragment));
     }
 
     public ProcessingResult processFragment(String fragment, String fixtureName) {
@@ -40,6 +51,12 @@ public class TestRig {
 
     public ProcessingResult processFragment(String resourceLocation, String head, String fragment) {
         return process(resourceLocation, wrapFragment(head, fragment));
+    }
+
+    public ProcessingResult processMarkdownFragment(String markdown) {
+        FlexmarkMarkdownTranslator markdownParser = new FlexmarkMarkdownTranslator(0, flexmarkOptionsForFixture, Collections.emptyMap(), "concordion");
+        String html = markdownParser.markdownToHtml(markdown);
+        return processFragment(html);
     }
 
     public ProcessingResult process(Resource resource) {
@@ -60,6 +77,7 @@ public class TestRig {
             .withFixture(fixture);
 
         fixtureExtensionLoader.addExtensions(fixture, concordionBuilder);
+
         if (extension != null) {
             extension.addTo(concordionBuilder);
         }

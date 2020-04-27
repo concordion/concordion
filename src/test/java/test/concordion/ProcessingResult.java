@@ -122,6 +122,10 @@ public class ProcessingResult {
         return getOutputFragment().toXML().replaceAll("</?fragment>", "").replaceAll("\u00A0", "&#160;");
     }
 
+    public String getOutputFragmentParagraphXML() {
+        return getOutputFragmentXML().replaceAll("</?p>", "");
+    }
+
     private Element getHeadElement() {
         return getRootElement().getFirstChildElement("head");
     }

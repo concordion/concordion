@@ -4,4 +4,3 @@ dist: trusty
 jdk:
 - oraclejdk9
 - oraclejdk8
-- openjdk7

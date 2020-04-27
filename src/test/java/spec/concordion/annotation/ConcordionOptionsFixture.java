@@ -1,22 +1,23 @@
 package spec.concordion.annotation;
 
+import com.vladsch.flexmark.profile.pegdown.Extensions;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.concordion.internal.ConcordionOptionsParser;
+import org.concordion.internal.ConfigurationException;
+import org.concordion.internal.parser.flexmark.FlexmarkMarkdownTranslator;
+import org.junit.runner.RunWith;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.concordion.integration.junit4.ConcordionRunner;
-import org.concordion.internal.ConcordionOptionsParser;
-import org.concordion.internal.ConfigurationException;
-import org.concordion.internal.parser.markdown.MarkdownParser;
-import org.junit.runner.RunWith;
-
 @RunWith(ConcordionRunner.class)
 public class ConcordionOptionsFixture {
     private int pegdownExtensions;
-    
+
     public String translate(String markdown) {
-        MarkdownParser markdownParser = new MarkdownParser(pegdownExtensions, Collections.<String, String> emptyMap());
-        String html = markdownParser.markdownToHtml(markdown, "concordion");
+        FlexmarkMarkdownTranslator markdownParser = new FlexmarkMarkdownTranslator(pegdownExtensions, null, Collections.<String, String> emptyMap(), "concordion");
+        String html = markdownParser.markdownToHtml(markdown);
         if (html.startsWith("<p>") && html.endsWith("</p>")) {
             html = html.substring(3, html.length()-4);
         }
@@ -24,11 +25,12 @@ public class ConcordionOptionsFixture {
     }
     
     public void withWikilinkAndAutolink() {
-        pegdownExtensions = org.pegdown.Extensions.WIKILINKS | org.pegdown.Extensions.AUTOLINKS;
+        pegdownExtensions = Extensions.WIKILINKS | Extensions.AUTOLINKS;
     }
-    
+
     public String parse(String declareNamespaces) {
-        String[] namespacePairs = declareNamespaces.substring(1, declareNamespaces.length()-2).split(",");
+        declareNamespaces = declareNamespaces.trim();
+        String[] namespacePairs = declareNamespaces.substring(1, declareNamespaces.length()-1).split(",");
         Map<String, String> namespaceMap = ConcordionOptionsParser.convertNamespacePairsToMap(namespacePairs);
         return new TreeMap<String, String>(namespaceMap).toString();
     }

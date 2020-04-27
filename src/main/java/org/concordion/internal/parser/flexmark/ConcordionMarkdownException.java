@@ -1,4 +1,4 @@
-package org.concordion.internal.parser.markdown;
+package org.concordion.internal.parser.flexmark;
 
 public class ConcordionMarkdownException extends RuntimeException {
 

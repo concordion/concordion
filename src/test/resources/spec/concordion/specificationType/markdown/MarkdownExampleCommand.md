@@ -10,6 +10,8 @@ which creates:
 ```
 <div concordion:example="example name">
     <h3>Header text</h3>
+...
+</div>
 ```    
 
 where `###` can be any level of [header](https://daringfireball.net/projects/markdown/syntax#header), using either atx or setext syntax.
@@ -26,7 +28,6 @@ You can also apply an status of [ExpectedToFail](../../common/command/example/Ex
       <th concordion:set="#md">Markdown</th>
       <th concordion:assert-equals="#html">Resultant HTML</th>
     </tr>
-
     <tr>
       <td>h4 example using atx-style syntax</td>
       <td>
@@ -36,10 +37,9 @@ x
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="calculator"> <h4>Example 1</h4> <p>x</p>]]>&lt;/div>   
+<![CDATA[<div concordion:example="calculator"> <h4>Example 1</h4> <p>x</p>]]> &lt;/div>   
       </td>
     </tr>
-
     <tr>
       <td>h1 example using setext-style syntax</td>
       <td>
@@ -50,7 +50,7 @@ x
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="setext"> <h1>Example 2</h1> <p>x</p>]]>&lt;/div>   
+<![CDATA[<div concordion:example="setext"> <h1>Example 2</h1> <p>x</p>]]> &lt;/div>   
       </td>
     </tr>
     <tr>
@@ -61,7 +61,7 @@ x
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="cancel tx" concordion:status="ExpectedToFail"> <h2>Cancel Transaction</h2>]]>&lt;/div>
+<![CDATA[<div concordion:example="cancel tx" concordion:status="ExpectedToFail"> <h2>Cancel Transaction</h2>]]> &lt;/div>
       </td>
     </tr>
     
@@ -79,7 +79,6 @@ If the example name is not specified, it will be generated from the header text.
       <th concordion:set="#md">Markdown</th>
       <th concordion:assert-equals="#html">Resultant HTML</th>
     </tr>
-
     <tr>
       <td>Example with empty name</td>
       <td>
@@ -89,10 +88,9 @@ x
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="example-3"> <h2>Example 3</h2> <p>x</p>]]>&lt;/div>   
+<![CDATA[<div concordion:example="example-3"> <h2>Example 3</h2> <p>x</p>]]> &lt;/div>   
       </td>
     </tr>
-    
     <tr>
       <td>Example with weird characters</td>
       <td>
@@ -102,10 +100,9 @@ x
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="3-hmmm"> <h2>3. Hmmm !@#$%^*( </h2> <p>x</p>]]>&lt;/div>   
+<![CDATA[<div concordion:example="3-hmmm"> <h2>3. Hmmm !@#$%^*(</h2> <p>x</p>]]> &lt;/div>   
       </td>
     </tr>
-
     <tr>
       <td>Example with multiple dashes</td>
       <td>
@@ -115,7 +112,7 @@ x
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="a-b-c-d"> <h2>- A - B - - C -- -D - </h2> <p>x</p>]]>&lt;/div>   
+<![CDATA[<div concordion:example="a-b-c-d"> <h2>- A - B - - C -- -D -</h2> <p>x</p>]]> &lt;/div>   
       </td>
     </tr>
 
@@ -146,7 +143,6 @@ will close the example with the heading `My Example`.
       <th concordion:set="#md">Markdown</th>
       <th concordion:assert-equals="#html">Resultant HTML</th>
     </tr>
-
     <tr>
       <td>Example automatically ended by start of another example</td>
       <td>
@@ -157,11 +153,9 @@ x
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="calculator"> <h4>Example 1</h4> <p>x</p>]]>&lt;/div>
-<![CDATA[<div concordion:example="another"> <h4>Example 2</h4>]]>&lt;/div>    
+<![CDATA[<div concordion:example="calculator"> <h4>Example 1</h4> <p>x</p>]]> &lt;/div><![CDATA[<div concordion:example="another"> <h4>Example 2</h4>]]> &lt;/div>
       </td>
     </tr>
-
     <tr>
       <td>Example is not automatically ended by a lower-level heading</td>
       <td>
@@ -172,10 +166,9 @@ x
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="calculator"> <h4>Example 1</h4> <p>x</p> <h5>Subheading</h5>]]>&lt;/div> 
+<![CDATA[<div concordion:example="calculator"> <h4>Example 1</h4> <p>x</p> <h5>Subheading</h5>]]> &lt;/div> 
       </td>
     </tr>
-
     <tr>
       <td>Example is automatically ended by a higher-level heading</td>
       <td>
@@ -187,11 +180,25 @@ My example
       </td>
       <td>
 <![CDATA[<div concordion:example="ex3"> <h3>Example on h3</h3>]]>
-&lt;p>My example&lt;/p>&lt;/div>
+&lt;p>My example&lt;/p> &lt;/div>
 &lt;h2>head2&lt;/h2>
       </td>
     </tr>
-
+    <tr>
+      <td>Example is not automatically ended by a same-level heading</td>
+      <td>
+        <pre>      
+#### [Example on h4](- "ex4")
+My example
+#### head4
+        </pre>
+      </td>
+      <td>
+<![CDATA[<div concordion:example="ex4"> <h4>Example on h4</h4>]]>
+&lt;p>My example&lt;/p>
+&lt;h4>head4&lt;/h4> &lt;/div>
+      </td>
+    </tr>    
     <tr>
       <td>Example ended by a strikethrough heading with the same title as the example</td>
       <td>
@@ -203,11 +210,26 @@ y
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="calculator"> <h1>Example 1</h1> <p>x</p>]]>&lt;/div>
+<![CDATA[<div concordion:example="calculator"> <h1>Example 1</h1> <p>x</p>]]> &lt;/div>
 &lt;p>y&lt;/p>     
       </td>
     </tr>
-
+    <tr>
+      <td>Example not ended by a strikethrough heading with a different title from the example</td>
+      <td>
+        <pre>      
+# [Example 6](- "calculator")
+x
+# ~~Example 7~~
+y
+        </pre>
+      </td>
+      <td>
+<![CDATA[<div concordion:example="calculator"> <h1>Example 6</h1> <p>x</p>]]>
+&lt;h1>&lt;del>Example 7&lt;/del>&lt;/h1> 
+&lt;p>y&lt;/p> &lt;/div>
+      </td>
+    </tr>
     <tr>
       <td>Example with single quote in name ended by a strikethrough heading with the same title as the example</td>
       <td>
@@ -219,11 +241,10 @@ y
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="example-one"> <h1>Example &#39;One&#39;</h1> <p>x</p>]]>&lt;/div>
+<![CDATA[<div concordion:example="example-one"> <h1>Example 'One'</h1> <p>x</p>]]> &lt;/div>
 &lt;p>y&lt;/p>
       </td>
     </tr>
-
     <tr>
       <td>Example with XML element in name ended by a strikethrough heading with the same title as the example</td>
       <td>
@@ -235,7 +256,7 @@ y
         </pre>
       </td>
       <td>
-<![CDATA[<div concordion:example="example-one"> <h1>Example &lt;One&gt;</h1> <p>x</p>]]>&lt;/div>
+<![CDATA[<div concordion:example="example-one"> <h1>Example &lt;One&gt;</h1> <p>x</p>]]> &lt;/div>
 &lt;p>y&lt;/p>
       </td>
     </tr>

@@ -1,4 +1,4 @@
-package org.concordion.internal.parser.markdown;
+package org.concordion.internal.parser.flexmark;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -6,19 +6,22 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.Map.Entry;
 
+import com.vladsch.flexmark.util.data.DataSet;
 import org.concordion.api.SpecificationConverter;
+import org.concordion.internal.parser.flexmark.FlexmarkMarkdownTranslator;
 
 public class MarkdownConverter implements SpecificationConverter {
 
     private static final String CONCORDION_NAMESPACE_PREFIX = "concordion";
     private Map<String, String> namespaces = Collections.emptyMap();
     private int pegdownExtensions;
+    private DataSet flexmarkOptions;
 
     @Override
     public InputStream convert(InputStream inputStream, String specificationName) throws IOException {
         String markdown = asString(inputStream);
-        MarkdownParser markdownParser = new MarkdownParser(pegdownExtensions, namespaces);
-        String html = markdownParser.markdownToHtml(markdown, CONCORDION_NAMESPACE_PREFIX);
+        FlexmarkMarkdownTranslator markdownParser = new FlexmarkMarkdownTranslator(pegdownExtensions, flexmarkOptions, namespaces, CONCORDION_NAMESPACE_PREFIX);
+        String html = markdownParser.markdownToHtml(markdown);
         html = wrapBody(html);
 
         return new ByteArrayInputStream(html.getBytes("UTF-8"));
@@ -55,5 +58,9 @@ public class MarkdownConverter implements SpecificationConverter {
 
     public void withNamespaceDeclarations(Map<String, String> namespaces) {
         this.namespaces = namespaces;
+    }
+
+    public void withFlexmarkOptions(DataSet flexmarkOptions) {
+        this.flexmarkOptions = flexmarkOptions;
     }
 }
