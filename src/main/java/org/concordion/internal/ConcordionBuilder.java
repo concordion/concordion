@@ -17,6 +17,7 @@ import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.api.extension.ConcordionExtensionFactory;
 import org.concordion.api.listener.*;
 import org.concordion.api.option.ConcordionOptions;
+import org.concordion.api.option.FlexmarkOptions;
 import org.concordion.api.option.MarkdownExtensions;
 import org.concordion.internal.command.*;
 import org.concordion.internal.command.executeCommand.ExecuteCommand;
@@ -428,7 +429,10 @@ public class ConcordionBuilder implements ConcordionExtender {
             withEvaluatorFactory(new OgnlEvaluatorFactory());
         }
         flexmarkOptions = new FlexmarkOptionsLoader().getFlexmarkOptionsForFixture(fixture);
-
+        if (flexmarkOptions != null) {
+            configureWith(flexmarkOptions);
+        }
+        
         return this;
     }
 
@@ -515,14 +519,16 @@ public class ConcordionBuilder implements ConcordionExtender {
             markdownConverter.withNamespaceDeclarations(namespaces);
         }
 
-        if(flexmarkOptions != null) {
-            markdownConverter.withFlexmarkOptions(flexmarkOptions);
-        }
-
         String location = options.copySourceHtmlToDir();
         if (!location.isEmpty()) {
             location = expandSystemProperties(location);
             copySourceHtmlTarget = new FileTarget(new File(location));
+        }
+    }
+
+    void configureWith(DataSet flexmarkOptions) {
+        if(flexmarkOptions != null) {
+            markdownConverter.withFlexmarkOptions(flexmarkOptions);
         }
     }
 
