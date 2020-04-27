@@ -1,4 +1,4 @@
-package org.concordion.internal.parser.flexmark;
+package org.concordion.internal.parser;
 
 /**
  * Thrown by Concordion to indicate that an error initialising a Parser (eg Flexmark).

@@ -3,7 +3,7 @@ package org.concordion.internal;
 import com.vladsch.flexmark.util.data.DataSet;
 import org.concordion.api.Fixture;
 import org.concordion.api.option.FlexmarkOptions;
-import org.concordion.internal.parser.flexmark.ParserInitialisationException;
+import org.concordion.internal.parser.ParserInitialisationException;
 
 import java.lang.reflect.Field;
 import java.util.List;
