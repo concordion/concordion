@@ -12,7 +12,6 @@ import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.ast.NodeTracker;
 import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.sequence.BasedSequence;
-import org.concordion.internal.parser.markdown.ConcordionMarkdownException;
 import org.concordion.internal.parser.support.ConciseExpressionParser;
 import org.concordion.internal.parser.support.ConcordionStatement;
 

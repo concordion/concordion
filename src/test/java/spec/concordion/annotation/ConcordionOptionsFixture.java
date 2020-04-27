@@ -1,5 +1,6 @@
 package spec.concordion.annotation;
 
+import com.vladsch.flexmark.profile.pegdown.Extensions;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.concordion.internal.ConcordionOptionsParser;
 import org.concordion.internal.ConfigurationException;
@@ -24,7 +25,7 @@ public class ConcordionOptionsFixture {
     }
     
     public void withWikilinkAndAutolink() {
-        pegdownExtensions = org.pegdown.Extensions.WIKILINKS | org.pegdown.Extensions.AUTOLINKS;
+        pegdownExtensions = Extensions.WIKILINKS | Extensions.AUTOLINKS;
     }
 
     public String parse(String declareNamespaces) {

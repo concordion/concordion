@@ -1,4 +1,4 @@
-package org.concordion.internal.parser.markdown;
+package org.concordion.internal.parser.flexmark;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

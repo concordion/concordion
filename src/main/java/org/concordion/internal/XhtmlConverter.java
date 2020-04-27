@@ -1,4 +1,4 @@
-package org.concordion.internal.parser.markdown;
+package org.concordion.internal;
 
 import java.io.IOException;
 import java.io.InputStream;

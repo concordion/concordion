@@ -22,8 +22,7 @@ import org.concordion.internal.command.*;
 import org.concordion.internal.command.executeCommand.ExecuteCommand;
 import org.concordion.internal.extension.ExtensionChecker;
 import org.concordion.internal.listener.*;
-import org.concordion.internal.parser.markdown.MarkdownConverter;
-import org.concordion.internal.parser.markdown.XhtmlConverter;
+import org.concordion.internal.parser.flexmark.MarkdownConverter;
 import org.concordion.internal.util.Check;
 import org.concordion.internal.util.SimpleFormatter;
 
