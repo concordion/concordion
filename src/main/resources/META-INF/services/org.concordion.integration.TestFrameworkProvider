@@ -1,2 +1,1 @@
-org.concordion.integration.junit3.JUnit3FrameworkProvider
 org.concordion.integration.junit4.JUnit4FrameworkProvider
