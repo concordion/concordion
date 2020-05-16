@@ -10,10 +10,6 @@ public class ClassNameBasedSpecificationLocator implements SpecificationLocator 
     public ClassNameBasedSpecificationLocator() {
     }
 
-    @Deprecated
-    public ClassNameBasedSpecificationLocator(String specificationSuffix) {
-    }
-
     @Override
     public Resource locateSpecification(FixtureDeclarations fixtureDeclarations, String specificationSuffix) {
         Check.notNull(fixtureDeclarations, "Fixture is null");
