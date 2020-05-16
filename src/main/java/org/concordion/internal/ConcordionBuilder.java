@@ -432,7 +432,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         if (flexmarkOptions != null) {
             configureWith(flexmarkOptions);
         }
-        
+
         return this;
     }
 
