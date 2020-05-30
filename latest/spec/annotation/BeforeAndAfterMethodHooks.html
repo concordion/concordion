@@ -166,7 +166,7 @@ ins {
 <p>Concordion provides hooks to invoke fixture methods before or after an <strong>example</strong>, <strong>specification</strong> or <strong>suite</strong>.</p>
 <h2>Example hooks</h2>
 <p>Annotate a fixture method with <code>@BeforeExample</code> to invoke it before each example, or <code>@AfterExample</code> to invoke it after each example.</p>
-<p>Optionally, the method can have a String parameter annotated with <code>@ExampleName</code>, which will be supplied with the name of the example. For example: </p>
+<p>Optionally, the method can have a String parameter annotated with <code>@ExampleName</code>, which will be supplied with the name of the example. For example:</p>
 <pre><code>@BeforeExample
 public void setupExample(@ExampleName exampleName) {
 }   
@@ -175,17 +175,18 @@ public void setupExample(@ExampleName exampleName) {
 <div concordion:example="firstTest" id="firstTest"><p></p>
 <h3>Test that increments counters</h3>
 <ul>
-  <li>Example name is <span concordion:assert-equals="getExampleName()" class="success">firstTest</span></li>
-  <li>Unannotated field value is <span concordion:assert-equals="getFieldCounter()" class="success">1</span></li>
-  <li>Example scope value is <span concordion:assert-equals="getExampleScopedCounter()" class="success">1</span></li>
-</ul></div>
-<div concordion:example="secondTest" id="secondTest"><p></p>
+<li>Example name is <span concordion:assert-equals="getExampleName()" class="success">firstTest</span></li>
+<li>Unannotated field value is <span concordion:assert-equals="getFieldCounter()" class="success">1</span></li>
+<li>Example scope value is <span concordion:assert-equals="getExampleScopedCounter()" class="success">1</span></li>
+</ul>
+</div><div concordion:example="secondTest" id="secondTest"><p></p>
 <h3>The same test again</h3>
 <ul>
-  <li>Example name is <span concordion:assert-equals="getExampleName()" class="success">secondTest</span></li>
-  <li>Unannotated field value is <span concordion:assert-equals="getFieldCounter()" class="success">1</span></li>
-  <li>Example scope value is <span concordion:assert-equals="getExampleScopedCounter()" class="success">1</span></li>
-</ul></div>
+<li>Example name is <span concordion:assert-equals="getExampleName()" class="success">secondTest</span></li>
+<li>Unannotated field value is <span concordion:assert-equals="getFieldCounter()" class="success">1</span></li>
+<li>Example scope value is <span concordion:assert-equals="getExampleScopedCounter()" class="success">1</span></li>
+</ul>
+</div>
 <h2>Specification hooks</h2>
 <p>Annotate a fixture method with <code>@BeforeSpecification</code> to invoke it before any of the examples are executed, or <code>@AfterSpecification</code> to invoke it after all the examples are executed.</p>
 <h2>Suite hooks</h2>
@@ -193,148 +194,63 @@ public void setupExample(@ExampleName exampleName) {
 <p>Note that for the suite hooks to be run, they must exist on the fixture that is being executed directly by the test runner (eg. by JUnit).</p>
 <div concordion:example="example-hooks" id="example-hooks"><p></p>
 <h2>Example</h2>
-<p>Running the specification <a concordion:run="concordion" href="BeforeAndAfterLogging.html" class="ignored">BeforeAndAfterLogging</a> which logs messages in its <code>@BeforeSpecification</code>, <code>@BeforeExample</code>, <code>@AfterExample</code> and <code>@AfterSpecification</code> methods, as well as in the specification and examples, results in the following : </p>
+<p>Running the specification <a concordion:run="concordion" href="BeforeAndAfterLogging.html" class="ignored">BeforeAndAfterLogging</a> which logs messages in its <code>@BeforeSpecification</code>, <code>@BeforeExample</code>, <code>@AfterExample</code> and <code>@AfterSpecification</code> methods, as well as in the specification and examples, results in the following :</p>
 <table concordion:verifyRows="#line : getLog()">
-  <thead>
-    <tr>
-      <th concordion:assert-equals="#line"> text</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td class="success">Before specification </td>
-    </tr>
-    <tr>
-      <td class="success">In before example </td>
-    </tr>
-    <tr>
-      <td class="success">Before [Outer] </td>
-    </tr>
-    <tr>
-      <td class="success">In specification </td>
-    </tr>
-    <tr>
-      <td class="success">After [Outer] </td>
-    </tr>
-    <tr>
-      <td class="success">In before example </td>
-    </tr>
-    <tr>
-      <td class="success">Before example1 </td>
-    </tr>
-    <tr>
-      <td class="success">In example 1 </td>
-    </tr>
-    <tr>
-      <td class="success">After example1 </td>
-    </tr>
-    <tr>
-      <td class="success">In before example </td>
-    </tr>
-    <tr>
-      <td class="success">Before example2 </td>
-    </tr>
-    <tr>
-      <td class="success">In example 2 </td>
-    </tr>
-    <tr>
-      <td class="success">After example2 </td>
-    </tr>
-    <tr>
-      <td class="success">After specification </td>
-    </tr>
-  </tbody>
-</table></div>
-<div concordion:example="example-listener-hooks" id="example-listener-hooks"><p></p>
+<thead>
+<tr><th concordion:assert-equals="#line">text</th></tr>
+</thead>
+<tbody>
+<tr><td class="success">Before specification  </td></tr>
+<tr><td class="success">In before example     </td></tr>
+<tr><td class="success">Before [Outer]        </td></tr>
+<tr><td class="success">In specification      </td></tr>
+<tr><td class="success">After [Outer]         </td></tr>
+<tr><td class="success">In before example     </td></tr>
+<tr><td class="success">Before example1       </td></tr>
+<tr><td class="success">In example 1          </td></tr>
+<tr><td class="success">After example1        </td></tr>
+<tr><td class="success">In before example     </td></tr>
+<tr><td class="success">Before example2       </td></tr>
+<tr><td class="success">In example 2          </td></tr>
+<tr><td class="success">After example2        </td></tr>
+<tr><td class="success">After specification   </td></tr>
+</tbody>
+</table>
+</div><div concordion:example="example-listener-hooks" id="example-listener-hooks"><p></p>
 <h2>Example With Listener</h2>
-<p>Running the specification <a concordion:run="concordion" href="BeforeAndAfterLoggingWithListener.html" class="success">BeforeAndAfterLoggingWithListener</a> which in addition logging the before and after methods, also has two extensions which listen out for the same events and logs those, results in the following : </p>
+<p>Running the specification <a concordion:run="concordion" href="BeforeAndAfterLoggingWithListener.html" class="success">BeforeAndAfterLoggingWithListener</a> which in addition logging the before and after methods, also has two extensions which listen out for the same events and logs those, results in the following :</p>
 <table concordion:verifyRows="#line : getListenerLog()">
-  <thead>
-    <tr>
-      <th concordion:assert-equals="#line"> text</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td class="success">Extension 1: beforeProcessingSpecification </td>
-    </tr>
-    <tr>
-      <td class="success">Extension 2: beforeProcessingSpecification </td>
-    </tr>
-    <tr>
-      <td class="success">Before specification </td>
-    </tr>
-    <tr>
-      <td class="success">Extension 1: Before outer example [Outer] </td>
-    </tr>
-    <tr>
-      <td class="success">Extension 2: Before outer example [Outer] </td>
-    </tr>
-    <tr>
-      <td class="success">Before [Outer] </td>
-    </tr>
-    <tr>
-      <td class="success">In specification </td>
-    </tr>
-    <tr>
-      <td class="success">After [Outer] </td>
-    </tr>
-    <tr>
-      <td class="success">Extension 2: After outer example [Outer] </td>
-    </tr>
-    <tr>
-      <td class="success">Extension 1: After outer example [Outer] </td>
-    </tr>
-    <tr>
-      <td class="success">Extension 1: Before example example1 </td>
-    </tr>
-    <tr>
-      <td class="success">Extension 2: Before example example1 </td>
-    </tr>
-    <tr>
-      <td class="success">Before example1 </td>
-    </tr>
-    <tr>
-      <td class="success">In example 1 </td>
-    </tr>
-    <tr>
-      <td class="success">After example1 </td>
-    </tr>
-    <tr>
-      <td class="success">Extension 2: After example example1 </td>
-    </tr>
-    <tr>
-      <td class="success">Extension 1: After example example1 </td>
-    </tr>
-    <tr>
-      <td class="success">Extension 1: Before example example2 </td>
-    </tr>
-    <tr>
-      <td class="success">Extension 2: Before example example2 </td>
-    </tr>
-    <tr>
-      <td class="success">Before example2 </td>
-    </tr>
-    <tr>
-      <td class="success">In example 2 </td>
-    </tr>
-    <tr>
-      <td class="success">After example2 </td>
-    </tr>
-    <tr>
-      <td class="success">Extension 2: After example example2 </td>
-    </tr>
-    <tr>
-      <td class="success">Extension 1: After example example2 </td>
-    </tr>
-    <tr>
-      <td class="success">After specification </td>
-    </tr>
-    <tr>
-      <td class="success">Extension 1: afterProcessingSpecification </td>
-    </tr>
-    <tr>
-      <td class="success">Extension 2: afterProcessingSpecification </td>
-    </tr>
-  </tbody>
-</table></div><div class="footer">Results generated by <a href="http://www.concordion.org" style="font-weight: bold; text-decoration: none; color: #89C;">Concordion</a><div class="testTime">in 178 ms on 19-May-2019 at 23:13:15 NZST</div></div></body></html>
+<thead>
+<tr><th concordion:assert-equals="#line">text</th></tr>
+</thead>
+<tbody>
+<tr><td class="success">Extension 1: beforeProcessingSpecification </td></tr>
+<tr><td class="success">Extension 2: beforeProcessingSpecification </td></tr>
+<tr><td class="success">Before specification  </td></tr>
+<tr><td class="success">Extension 1: Before outer example [Outer]  </td></tr>
+<tr><td class="success">Extension 2: Before outer example [Outer]  </td></tr>
+<tr><td class="success">Before [Outer]        </td></tr>
+<tr><td class="success">In specification      </td></tr>
+<tr><td class="success">After [Outer]         </td></tr>
+<tr><td class="success">Extension 2: After outer example [Outer]  </td></tr>
+<tr><td class="success">Extension 1: After outer example [Outer]  </td></tr>
+<tr><td class="success">Extension 1: Before example example1 </td></tr>
+<tr><td class="success">Extension 2: Before example example1 </td></tr>
+<tr><td class="success">Before example1       </td></tr>
+<tr><td class="success">In example 1          </td></tr>
+<tr><td class="success">After example1        </td></tr>
+<tr><td class="success">Extension 2: After example example1 </td></tr>
+<tr><td class="success">Extension 1: After example example1 </td></tr>
+<tr><td class="success">Extension 1: Before example example2 </td></tr>
+<tr><td class="success">Extension 2: Before example example2 </td></tr>
+<tr><td class="success">Before example2       </td></tr>
+<tr><td class="success">In example 2          </td></tr>
+<tr><td class="success">After example2        </td></tr>
+<tr><td class="success">Extension 2: After example example2 </td></tr>
+<tr><td class="success">Extension 1: After example example2 </td></tr>
+<tr><td class="success">After specification   </td></tr>
+<tr><td class="success">Extension 1: afterProcessingSpecification </td></tr>
+<tr><td class="success">Extension 2: afterProcessingSpecification </td></tr>
+</tbody>
+</table>
+</div><div class="footer">Results generated by <a href="http://www.concordion.org" style="font-weight: bold; text-decoration: none; color: #89C;">Concordion</a><div class="testTime">in 102 ms on 30-May-2020 at 17:39:27 NZST</div></div></body></html>

@@ -177,14 +177,19 @@ public class ...
 <p>will write to the output directory under the system temp folder.</p>
 <h2>Markdown Syntax Extensions</h2>
 <p>Markdown extensions allow you to change and/or extend the behaviour of the <a href="../specificationType/markdown/Markdown.html">Markdown</a> parser, for example to change the behaviour of new lines, or to support definition lists.</p>
-<p>To add markdown extensions, use the <code>@ConcordionOptions</code> annotation on the fixture class with the value of <code>markdownExtensions</code> set to an array of <code>MarkdownExtension</code> enumerations. For example:</p>
+<p>We support two types of extensions - Flexmark options and Pegdown extensions.</p>
+<p><a concordion:run="concordion" href="FlexmarkOptions.html" class="success">FlexmarkOptions</a> provides a wider range of extensions and a greater level of control and is the preferred way of adding Markdown extensions.</p>
+<h3>Pegdown Extensions</h3>
+<p>The original parser in use was <a href="https://github.com/sirthias/pegdown">Pegdown</a>. However, since this has now been deprecated by the author, it has been replaced by the Flexmark parser. <em>(since Concordion 3.0.0)</em></p>
+<p>This legacy way of adding extensions continues to be supported by Concordion.</p>
+<p>To add Pegdown extensions, use the <code>@ConcordionOptions</code> annotation on the fixture class with the value of <code>markdownExtensions</code> set to an array of <code>MarkdownExtension</code> enumerations. For example:</p>
 <pre><code>@RunWith(ConcordionRunner.class)
 @ConcordionOptions(markdownExtensions={MarkdownExtensions.WIKILINKS, MarkdownExtensions.AUTOLINKS})
 public class ...
 </code></pre>
-<p>See the <a href="http://concordion.github.io/concordion/latest/javadoc/org/concordion/api/option/MarkdownExtensions.html">MarkdownExtension</a> javadoc for a definition of the available extensions. (Note, the underlying Markdown parser is <a href="https://github.com/sirthias/pegdown">Pegdown</a>, which defines the <a href="https://github.com/sirthias/pegdown/blob/master/README.markdown#introduction">available extensions</a>.)</p>
+<p>See the <a href="http://concordion.github.io/concordion/latest/javadoc/org/concordion/api/option/MarkdownExtensions.html">MarkdownExtension</a> javadoc for a definition of the available extensions, and the <a href="https://github.com/sirthias/pegdown/blob/master/README.markdown#introduction">Pegdown documentation</a> for more details on each extension.</p>
 <div concordion:example="no-extra-extensions" id="no-extra-extensions"><p></p>
-<h3>No extra extensions</h3>
+<h4>No extra extensions</h4>
 <p>Without additional extensions, the following are translated as-is.</p>
 <div class="example">
   <h3>Example</h3>
@@ -202,9 +207,9 @@ public class ...
       <td class="success">https://concordion.org</td>
     </tr>
   </table>
-</div></div>
-<div concordion:example="extra-extensions" id="extra-extensions"><p></p>
-<h3>With WIKILINKS and QUOTES extensions</h3>
+</div>
+</div><div concordion:example="extra-extensions" id="extra-extensions"><p></p>
+<h4>With WIKILINKS and QUOTES extensions</h4>
 <p>Given the method <code>withPegdownExtensions(int options)</code> has been <span concordion:execute="withWikilinkAndAutolink()">called</span> with <code>options</code> set to <code>org.pegdown.Extensions.WIKILINKS | org.pegdown.Extensions.AUTOLINKS</code>, the following are now translated as shown:</p>
 <div class="example">
   <h3>Example</h3>
@@ -215,14 +220,15 @@ public class ...
     </tr>
     <tr>
       <td>[[wikilink]]</td>
-      <td class="success">&lt;a href="./wikilink.html"&gt;wikilink&lt;/a&gt;</td>
+      <td class="success">&lt;a href="wikilink"&gt;wikilink&lt;/a&gt;</td>
     </tr>
     <tr>
       <td>https://concordion.org</td>
       <td class="success">&lt;a href="https://concordion.org"&gt;https://concordion.org&lt;/a&gt;</td>
     </tr>
   </table>
-</div></div>
+</div>
+</div>
 <h2>Additional namespace declarations</h2>
 <p>In order to include Concordion commands with namespaces other than the default Concordion namespaces, such as those available in extensions, you must declare the namespace.</p>
 <p>This is only applicable to Markdown specifications. In HTML specifications, the namespaces are declared directly in the HTML.</p>
@@ -234,37 +240,23 @@ public class MyFixture
 <div concordion:example="valid-namespace-declarations" id="valid-namespace-declarations"><p></p>
 <h3>Valid declarations</h3>
 <table concordion:execute="#mappings=parse(#value)">
-  <thead>
-    <tr>
-      <th concordion:set="#value">declareNamespaces value</th>
-      <th concordion:assert-equals="#mappings">Namespace mappings</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>{"ext", "urn:concordion-extensions:2010"} </td>
-      <td class="success">{"ext"= "urn:concordion-extensions:2010"} </td>
-    </tr>
-    <tr>
-      <td>{"foo", "http://bar", "x", "urn:baz"} </td>
-      <td class="success">{ "x"= "urn:baz", "foo"= "http://bar"} </td>
-    </tr>
-  </tbody>
-</table></div>
-<div concordion:example="invalid-namespace-declarations" id="invalid-namespace-declarations"><p></p>
+<thead>
+<tr><th concordion:set="#value">declareNamespaces value</th><th concordion:assert-equals="#mappings">Namespace mappings</th></tr>
+</thead>
+<tbody>
+<tr><td> {"ext", "urn:concordion-extensions:2010"} </td><td class="success"> {"ext"= "urn:concordion-extensions:2010"} </td></tr>
+<tr><td> {"foo", "http://bar", "x", "urn:baz"} </td><td class="success"> { "x"= "urn:baz", "foo"= "http://bar"} </td></tr>
+</tbody>
+</table>
+</div><div concordion:example="invalid-namespace-declarations" id="invalid-namespace-declarations"><p></p>
 <h3>Invalid declarations</h3>
 <p>If passing an odd number of arguments, an error will occur:</p>
 <table concordion:execute="#message=parseAndReturnExceptionMessage(#value)">
-  <thead>
-    <tr>
-      <th concordion:set="#value">declareNamespaces value</th>
-      <th concordion:assert-equals="#message">Exception message</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>{"foo", "http://bar", "x"} </td>
-      <td class="success">The declareNamespaces element of @ConcordionOptions must include an even number of arguments, alternating between a namespace prefix and the namespace it maps to </td>
-    </tr>
-  </tbody>
-</table></div><div class="footer">Results generated by <a href="http://www.concordion.org" style="font-weight: bold; text-decoration: none; color: #89C;">Concordion</a><div class="testTime">in 27 ms on 19-May-2019 at 23:13:15 NZST</div></div></body></html>
+<thead>
+<tr><th concordion:set="#value">declareNamespaces value</th><th concordion:assert-equals="#message">Exception message</th></tr>
+</thead>
+<tbody>
+<tr><td> {"foo", "http://bar", "x"} </td><td class="success"> The declareNamespaces element of @ConcordionOptions must include an even number of arguments, alternating between a namespace prefix and the namespace it maps to </td></tr>
+</tbody>
+</table>
+</div><div class="footer">Results generated by <a href="http://www.concordion.org" style="font-weight: bold; text-decoration: none; color: #89C;">Concordion</a><div class="testTime">in 241 ms on 30-May-2020 at 17:39:27 NZST</div></div></body></html>

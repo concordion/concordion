@@ -167,7 +167,7 @@ ins {
 <p><code>[value](- "command")</code></p>
 <p>This format separates the instrumentation (<code>command</code>) from the specification (<code>value</code>). When viewed with a Markdown editor only the specification is shown, with the instrumentation displayed as a title when you hover over the <code>value</code>. The URL has to be set to <code>-</code>, otherwise it will be treated as a normal Markdown link.</p>
 <p>The Markdown extension converts the Markdown to XHTML, with the instrumentation as attributes, prior to running Concordion with the XHTML format specification as input.</p>
-<p>This specification describes the grammar for the Markdown instrumentation and checks that it generates correctly formatted instrumentation in XHTML. </p>
+<p>This specification describes the grammar for the Markdown instrumentation and checks that it generates correctly formatted instrumentation in XHTML.</p>
 <h2>Link Styles</h2>
 <p>The extension supports both inline links and reference links.</p>
 <p>In both styles, the text <code>value</code> is delimited by square brackets.</p>
@@ -188,7 +188,7 @@ ins {
 </div>
 <h3>Reference Links</h3>
 <p>As an alternative to inline links, reference links can be used. This can help make the Markdown source more readable, especially for table headers or lengthy commands.</p>
-<p>Reference links have a set of square brackets immediately after the link text’s closing square bracket. The link definition can then be placed anywhere in the document. See the <a href="https://daringfireball.net/projects/markdown/syntax#link">Markdown syntax page</a> for more details. </p>
+<p>Reference links have a set of square brackets immediately after the link text’s closing square bracket. The link definition can then be placed anywhere in the document. See the <a href="https://daringfireball.net/projects/markdown/syntax#link">Markdown syntax page</a> for more details.</p>
 <div class="example">
   <h3>Examples</h3>
   <table concordion:execute="#html=translate(#md)">
@@ -224,12 +224,12 @@ ins {
 </div>
 <h2>Commands</h2>
 <ul>
-  <li><a concordion:run="concordion" href="MarkdownAssertEqualsCommand.html" class="success">assert-equals</a></li>
-  <li><a concordion:run="concordion" href="MarkdownExampleCommand.html" class="success">example</a></li>
-  <li><a concordion:run="concordion" href="MarkdownExecuteCommand.html" class="success">execute</a></li>
-  <li><a concordion:run="concordion" href="MarkdownRunCommand.html" class="success">run</a></li>
-  <li><a concordion:run="concordion" href="MarkdownSetCommand.html" class="success">set</a></li>
-  <li><a concordion:run="concordion" href="MarkdownVerifyRowsCommand.html" class="success">verify-rows</a></li>
+<li><a concordion:run="concordion" href="MarkdownAssertEqualsCommand.html" class="success">assert-equals</a></li>
+<li><a concordion:run="concordion" href="MarkdownExampleCommand.html" class="success">example</a></li>
+<li><a concordion:run="concordion" href="MarkdownExecuteCommand.html" class="success">execute</a></li>
+<li><a concordion:run="concordion" href="MarkdownRunCommand.html" class="success">run</a></li>
+<li><a concordion:run="concordion" href="MarkdownSetCommand.html" class="success">set</a></li>
+<li><a concordion:run="concordion" href="MarkdownVerifyRowsCommand.html" class="success">verify-rows</a></li>
 </ul>
 <h3>Expression-only commands</h3>
 <p>Some commands only require an expression and don't need a text value to be passed. However, Markdown links always require link text.</p>
@@ -292,7 +292,7 @@ ins {
 <h3>Embedding HTML</h3>
 <p>For cases where the Markdown syntax is too restrictive, you can <a href="https://daringfireball.net/projects/markdown/syntax#html">inline HTML</a>.</p>
 <p>This can be used to embed Concordion structures that are not currently supported by the Markdown syntax.</p>
-<a id="execute-on-a-list" />
+<p><a id="execute-on-a-list" /></p>
 <h4>Execute on a list</h4>
 <p>The <a href="http://concordion.github.io/concordion/latest/spec/command/execute/ExecutingList.html">execute on a list</a> command can be implemented using the HTML list structure, wrapped in a <code>&lt;div&gt;</code> element. For example:</p>
 <pre><code>&lt;div&gt;
@@ -408,7 +408,6 @@ public class MyFixture
 <p>HTML entities in the text value are automatically escaped.</p>
 <div class="example">
   <h3>Examples</h3>
-  
   <table concordion:execute="#html=translate(#md)">
     <tr>
       <th concordion:set="#md">Markdown</th>
@@ -435,8 +434,8 @@ public class MyFixture
       <td class="success">&lt;span concordion:set="#d"&gt;&amp;lt;div&amp;gt;&amp;lt;br/&amp;gt;&amp;lt;/div&amp;gt;&lt;/span&gt;</td>
     </tr>
     <tr>
-      <td>[&lt;?xml version="1.0" encoding="UTF-8"?&gt;](- "#decl")</td>
-      <td class="success">&lt;span concordion:set="#decl"&gt;&amp;lt;?xml version="1.0" encoding="UTF-8"?&amp;gt;&lt;/span&gt;</td>
+      <td>[&lt;?xml version='1.0' encoding='UTF-8'?&gt;](- "#decl")</td>
+      <td class="success">&lt;span concordion:set="#decl"&gt;&amp;lt;?xml version='1.0' encoding='UTF-8'?&amp;gt;&lt;/span&gt;</td>
     </tr>
     <tr>
       <td>[&amp; &lt; 3](- "c:set=#x")</td>
@@ -446,32 +445,35 @@ public class MyFixture
       <td>[&lt;div&gt;](- "c:set=#d")</td>
       <td class="success">&lt;span concordion:set="#d"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;</td>
     </tr>
-
     <tr>
-<td><pre>
+      <td>
+
 [&amp; &lt; 3][]
 
 [&amp; &lt; 3]: - "c:set=#x"
-</pre></td>
+
+      </td>
       <td class="success">&lt;span concordion:set="#x"&gt;&amp;amp; &amp;lt; 3&lt;/span&gt;</td>
     </tr>
-
     <tr>
-<td><pre>
+      <td>
+
 [&lt;div&gt;][xx]
 
 [xx]: - "#d"
-</pre></td>
+
+       </td>
        <td class="success">&lt;span concordion:set="#d"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;</td>
     </tr>
-
     <tr>
-<td><pre>
-|[foo](- "foo()")|[a &lt; b](- "#d")|[&lt;x&gt;](- "?=#d")|
-| -------------- | ------------- | ------------- |
-| bar            |       a &lt; b   |            &lt;x&gt;|
-</pre></td>
-      <td class="success">&lt;table concordion:execute="foo()"&gt; &lt;thead&gt; &lt;tr&gt; &lt;th&gt;&lt;/th&gt; &lt;th concordion:set="#d"&gt;a &amp;lt; b&lt;/th&gt; &lt;th concordion:assert-equals="#d"&gt;&amp;lt;x&amp;gt;&lt;/th&gt; &lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td&gt;bar &lt;/td&gt; &lt;td&gt;a &amp;lt; b &lt;/td&gt; &lt;td&gt;&amp;lt;x&amp;gt;&lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt;</td>
+      <td>
+
+|[foo](- "foo()")|[a &lt; b](- "#d")|[x&gt;](- "?=#d")|
+| -------------- | ------------- | ------------ |
+| bar            |       a &lt; b   |            x&gt;|
+
+      </td>
+      <td class="success">&lt;table concordion:execute="foo()"&gt; &lt;thead&gt; &lt;tr&gt;&lt;th&gt;&lt;/th&gt;&lt;th concordion:set="#d"&gt;a &amp;lt; b&lt;/th&gt;&lt;th concordion:assert-equals="#d"&gt;x&amp;gt;&lt;/th&gt;&lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt;&lt;td&gt; bar &lt;/td&gt;&lt;td&gt; a &amp;lt; b &lt;/td&gt;&lt;td&gt; x&amp;gt;&lt;/td&gt;&lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt;</td>
     </tr>
   </table>
 </div>
@@ -488,4 +490,4 @@ public class MyFixture
         <td class="success">é</td>
     </tr>
   </table>
-</div><div class="footer">Results generated by <a href="http://www.concordion.org" style="font-weight: bold; text-decoration: none; color: #89C;">Concordion</a><div class="testTime">in 374 ms on 19-May-2019 at 23:13:16 NZST</div></div></body></html>
+</div><div class="footer">Results generated by <a href="http://www.concordion.org" style="font-weight: bold; text-decoration: none; color: #89C;">Concordion</a><div class="testTime">in 298 ms on 30-May-2020 at 17:39:28 NZST</div></div></body></html>
