@@ -56,7 +56,7 @@ public enum MarkdownExtensions {
      */
     FENCED_CODE_BLOCKS(Extensions.FENCED_CODE_BLOCKS),    
     /**
-     * Support [[Wiki-style links]]. URL rendering is performed by the active {@link LinkRenderer}.
+     * Support [[Wiki-style links]]. URL rendering is performed by the active LinkRenderer.
      *
      * @see <a href="http://github.github.com/github-flavored-markdown">Github-flavored-Markdown</a>
      */
