@@ -7,6 +7,7 @@ import com.vladsch.flexmark.html.renderer.NodeRendererFactory;
 import com.vladsch.flexmark.html.renderer.NodeRenderingHandler;
 import com.vladsch.flexmark.util.html.Attributes;
 import com.vladsch.flexmark.util.data.DataHolder;
+import com.vladsch.flexmark.util.html.MutableAttributes;
 import org.concordion.internal.parser.support.Attribute;
 
 import java.util.HashSet;
@@ -30,7 +31,7 @@ public class ConcordionCommandNodeRenderer implements NodeRenderer {
     }
 
     private void renderCommand(ConcordionCommandNode node, NodeRendererContext context, HtmlWriter html, String command, String expression) {
-        final Attributes nodeAttributes = new Attributes();
+        final MutableAttributes nodeAttributes = new MutableAttributes();
         nodeAttributes.addValue(command, expression);
         for (Attribute attribute : node.getAttributes()) {
             nodeAttributes.addValue(attribute.name, attribute.value);
