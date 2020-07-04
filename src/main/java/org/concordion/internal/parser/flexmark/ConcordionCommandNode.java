@@ -1,13 +1,15 @@
 package org.concordion.internal.parser.flexmark;
 
 import com.vladsch.flexmark.util.ast.Block;
+import com.vladsch.flexmark.util.ast.ContentNode;
 import com.vladsch.flexmark.util.sequence.BasedSequence;
 import org.concordion.internal.parser.support.Attribute;
 import org.concordion.internal.parser.support.ConcordionStatement;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class ConcordionCommandNode extends Block {
+public class ConcordionCommandNode extends ContentNode {
 
     private final String expression;
     private final List<Attribute> attributes;

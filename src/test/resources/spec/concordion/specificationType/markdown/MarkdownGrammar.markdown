@@ -257,6 +257,28 @@ The namespaced command can then be included in the title of the Markdown link, u
 
 ## Additional checks
 
+### Command formatted
+Commands can be formatted with bold or italic text 
+
+<div class="example">
+  <h3>Examples</h3>
+  <table concordion:execute="#html=translate(#md)">
+    <tr>
+      <th concordion:set="#md">Markdown</th>
+      <th concordion:assert-equals="#html">Resultant HTML</th>
+    </tr>
+    <tr>
+      <td>__[a](- "#b")__</td>
+      <td>&lt;strong>&lt;span concordion:set="#b"&gt;a&lt;/span&gt;&lt;/strong></td>
+    </tr>
+    <tr>
+      <td>*[c](- "#d")*</td>
+      <td>&lt;em>&lt;span concordion:set="#d"&gt;c&lt;/span&gt;&lt;/em></td>
+    </tr>
+  </table>
+</div>
+
+
 ### Multiple commands on a single line
 Multiple commands on the same line are supported.
 
