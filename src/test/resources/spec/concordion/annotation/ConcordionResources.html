@@ -308,7 +308,38 @@ public class ConcordionResourcesDemoTest {
     			<li>leave the link to the resource <span concordion:assertTrue="getLinkExists(#TEXT)">unknown.css</span> as the ConcordionResources annotation knows nothing about it</li>
     		</ul>
     	</p>
-    </div> 
- 
+    </div>
+
+    <h2>ConcordionResources Path Normalization</h2>
+
+    <p>
+        The specified resources path is normalized to determine if the specified resource exists.
+        This fixes issue <a href="https://github.com/concordion/concordion/issues/286">#286</a>, which occurred when the target resources folder corresponding to the current source folder did not exist.
+    </p>
+
+    <!-- ============================================= -->
+    <div class="example">
+        <h3>Example: Linked Resource - relative to the fixture</h3>
+
+        <p>Executing the following fixture:</p>
+
+        <pre class="java" concordion:set="#javaFragment">
+package resources.test.missingresourcesfolder;
+
+import org.concordion.api.ConcordionResources;
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
+
+@RunWith(ConcordionRunner.class)
+@ConcordionResources( { "../../../resources.css" } )
+public class ResourcesDemoTest {
+
+}
+        </pre>
+
+        <p concordion:execute="#result1 = process(#javaFragment)">will include a link to the resource
+            <span concordion:assertTrue="getLinkExists(#TEXT)">../../resources.css</span> in the generated specification.</p>
+    </div>
+
 </body>
 </html>
