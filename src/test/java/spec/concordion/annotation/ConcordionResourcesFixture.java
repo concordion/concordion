@@ -68,6 +68,7 @@ public class ConcordionResourcesFixture {
             .withResource(new Resource("/resources/test/resources with space.txt"), "")
             .withResource(new Resource("/resources/test/subfolder/resources with space.js"), "")
             .withResource(new Resource("/resources/test/../../resources.css"), "")
+            .withResource(new Resource("/resources/test/missingresourcesfolder/../../../resources.css"), "")
             .processFragment("/resources/test/ResourcesTest.html", htmlHead, htmlFragment);
         
         return result;

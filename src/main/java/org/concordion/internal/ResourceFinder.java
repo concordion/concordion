@@ -125,7 +125,7 @@ public class ResourceFinder {
             search = new File(root, packageName);
             search = new File(search, sourceFile);
         }
-        return search;
+        return search.toPath().normalize().toFile();
     }
 
     private boolean isSearchRoot(String sourceFile) {
