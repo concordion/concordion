@@ -30,7 +30,7 @@
     <li><a concordion:run="concordion" href="KeyMatchStrategy.html">KeyMatch</a> strategy, which finds an exact row match for each item in the collection, based on fields that are specified as keys.</li>  
 </ul>
 <p>To apply a strategy, add the attribute <code>concordion:matchStrategy="<b><i>StrategyName</i></b>"</code> to the verify rows command element, where <b><i>StrategyName</i></b> is one of <i>Default</i>, <i>BestMatch</i> or <i>KeyMatch</i>.</p>
-<p>You can also apply your own strategy by extending the <code>org.concordion.api.RowsMatchStrategy</code> class, and setting <b><i>StrategyName</i></b> to the fully-qualified name of the class.</p>
+<p>You can also apply your own strategy by extending the <code>org.concordion.internal.command.strategies.RowsMatchStrategy</code> class, and setting <b><i>StrategyName</i></b> to the fully-qualified name of the class.</p>
 <div class="example">
     <h3>Examples</h3>
     <p>As a comparison, here is one example with each strategy applied. For more examples, see the specifications for the individual strategies.</p> 
