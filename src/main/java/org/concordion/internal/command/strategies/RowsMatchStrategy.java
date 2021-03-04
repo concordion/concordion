@@ -13,6 +13,8 @@ import java.util.List;
 
 /**
  * Base class for strategies for matching rows with the verify-rows command.
+ *
+ * TODO - modify to public rather than internal as documented at https://concordion.github.io/concordion/latest/spec/common/command/verifyRows/strategies/Strategies.html.
  * 
  * @since 2.0.0
  */
