@@ -14,6 +14,7 @@ import java.util.Map;
  * Created by tim on 30/10/16.
  */
 public class ExecuteCommandTableModification extends ExecuteCommandModification {
+    private static final String ROW_VARIABLE = "#ROW";
 
     private Map<Integer, CommandCall> populateCommandCallByColumnMap(Table table, CommandCall tableCommandCall) {
         Map<Integer, CommandCall> commandCallByColumn = new HashMap<Integer, CommandCall>();
@@ -58,6 +59,7 @@ public class ExecuteCommandTableModification extends ExecuteCommandModification 
             }
 
             CommandCall rowCommand = duplicateCommandForDifferentElement(commandCall, row.getElement());
+            rowCommand.setConstantForExecution(ROW_VARIABLE, getRowMap(row, table));
 
             for (int cellCount = 0; cellCount < cells.length; cellCount++) {
                 CommandCall headerCall = headerCommands.get(cellCount);
@@ -76,5 +78,15 @@ public class ExecuteCommandTableModification extends ExecuteCommandModification 
         for (CommandCall call : headerCommands.values()) {
             call.transferToParent(null);
         }
+    }
+
+    private Map<String, String> getRowMap(Row row, Table table) {
+        Map<String, String> rowMap = new HashMap<>();
+        Element[] cells = row.getCells();
+        Element[] headerCells = table.getLastHeaderRow().getCells();
+        for (int i = 0; i<Math.min(cells.length, headerCells.length); i++) {
+            rowMap.put(headerCells[i].getText().trim(), cells[i].getText().trim());
+        }
+        return rowMap;
     }
 }
