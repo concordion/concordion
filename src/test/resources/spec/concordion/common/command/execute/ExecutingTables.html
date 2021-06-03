@@ -56,12 +56,172 @@
 
     </div>
 
-    <h2>Further Details</h2>
+    <h2>Getting the content from each row</h2>
 
-    <ul>
-        <li><a href="TODO.html">TODO: Are <code>&lt;thead&gt;</code> and <code>&lt;tbody&gt;</code> supported?</a></li>
-    </ul>
+    <p concordion:execute="resetRowMap()">
+        On occasions where the whole table row is required, for example logging the row,
+        the special variable <code>#ROW</code> contains a <code>Map&lt;String, String&gt;</code>
+        with the key being the column header value and the value being the column cell value
+        for each column in the table row.
+    </p>
 
+    <div class="example">
+
+        <h3>Example</h3>
+
+        <pre concordion:set="#result = process(#TEXT)">
+&lt;table concordion:execute="#username = processRow(#ROW)"&gt;
+    &lt;tr&gt;
+        &lt;th>First Name&lt;/th&gt;
+        &lt;th>Last Name&lt;/th&gt;
+        &lt;th concordion:assertEquals="#username"&gt;Username&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Jacinda&lt;/td&gt;
+        &lt;td&gt;Ardern&lt;/td&gt;
+        &lt;td&gt;jacindaardern&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Judith&lt;/td&gt;
+        &lt;td&gt;Collins&lt;/td&gt;
+        &lt;td&gt;judithcollins&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+</pre>
+
+        <p>
+            The <code>processRow(#ROW)</code> method is called once for each row, being passed a <code>Map</code> with the entries:
+        </p>
+<table concordion:verify-rows="#row : getLoggedRows()">
+    <tr>
+        <th concordion:assert-equals='#row.get("First Name")'>First Name</th>
+        <th concordion:assert-equals='#row.get("Last Name")'>Last Name</th>
+        <th concordion:assert-equals='#row.get("Username")'>Username</th>
+    </tr>
+    <tr>
+        <td>Jacinda</td>
+        <td>Ardern</td>
+        <td>jacindaardern</td>
+    </tr>
+    <tr>
+        <td>Judith</td>
+        <td>Collins</td>
+        <td>judithcollins</td>
+    </tr>
+</table>
+
+    </div>
+
+    <h3>Special cases</h3>
+
+    <h4>Duplicate headers</h4>
+
+    <p concordion:execute="resetRowMap()">
+        If there are multiple columns with the same header text,
+        the map will contain one entry for the last column with that header
+        (that is, the last entry with that header will overwrite all previous entries).
+    </p>
+
+    <div class="example">
+
+        <h3>Example</h3>
+
+        <pre concordion:set="#result = process(#TEXT)">
+&lt;table concordion:execute="#username = processRow(#ROW)"&gt;
+    &lt;tr&gt;
+        &lt;th>First Name&lt;/th&gt;
+        &lt;th>First Name&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Noel&lt;/td&gt;
+        &lt;td&gt;Nicky&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+</pre>
+
+        <p>
+            The <code>#ROW</code> map contains a single entry with data from the last <code>First Name</code> column:
+        </p>
+        <table concordion:verify-rows="#row : getLoggedRows()">
+            <tr>
+                <th concordion:assert-equals='#row.get("First Name")'>First Name</th>
+            </tr>
+            <tr>
+                <td>Nicky</td>
+            </tr>
+        </table>
+
+    </div>
+
+    <h4>Empty headers</h4>
+
+    <p concordion:execute="resetRowMap()">
+        The key for a column with an empty header is an empty string <code>""</code>.
+    </p>
+
+    <div class="example">
+
+        <h3>Example</h3>
+
+        <pre concordion:set="#result = process(#TEXT)">
+&lt;table concordion:execute="#username = processRow(#ROW)"&gt;
+    &lt;tr&gt;
+        &lt;th>&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;Tūī&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+</pre>
+
+        <p>
+            The <code>#ROW</code> map contains a single entry with the empty string <code>""</code> as its key:
+        </p>
+        <table concordion:verify-rows="#row : getLoggedRows()">
+            <tr>
+                <th concordion:assert-equals='#row.get("")'></th>
+            </tr>
+            <tr>
+                <td>Tūī</td>
+            </tr>
+        </table>
+
+    </div>
+
+        <h4>HTML entities in column header</h4>
+
+        <p concordion:execute="resetRowMap()">
+            HTML entities in column headers are decoded into their corresponding characters.
+        </p>
+
+        <div class="example">
+
+            <h3>Example</h3>
+
+            <pre concordion:set="#result = process(#TEXT)">
+&lt;table concordion:execute="#username = processRow(#ROW)"&gt;
+    &lt;tr&gt;
+        &lt;th>&amp;gt; β&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;X &amp;amp; Y&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+</pre>
+
+            <p>
+                The <code>#ROW</code> map contains the single entry:
+            </p>
+            <table concordion:verify-rows="#row : getLoggedRows()">
+                <tr>
+                    <th concordion:assert-equals='#row.get("&gt; β")'>&gt; β</th>
+                </tr>
+                <tr>
+                    <td>X &amp; Y</td>
+                </tr>
+            </table>
+
+        </div>
 
 </body>
 </html>
