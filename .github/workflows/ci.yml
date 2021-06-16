@@ -27,15 +27,17 @@ jobs:
       - name: Test with Gradle
         run: ./gradlew clean test
         
-      - name: Upload Unit Test Results
+      - name: Upload Unit Test Results And Specification
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: Unit Test Results (Java ${{ matrix.java }})
-          path: build/test-results/**/*.xml
+          name: reports-java-${{ matrix.java }}
+          path: |
+            build/test-results/**/*.xml
+            build/reports/spec/concordion/
 
   publish-test-results:
-    name: "Publish Unit Tests Results"
+    name: "Publish Test Results and Specifications"
     needs: build-and-test
     runs-on: ubuntu-latest
     # the build-and-test job might be skipped, we don't need to run this job then
@@ -46,7 +48,17 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           path: artifacts
+          
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
         with:
-          files: artifacts/**/*.xml
+          files: artifacts/**/test-results/**/*.xml
+          
+      - name: Publish Specifications
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          external_repository: concordion/concordion-specifications
+          publish_branch: main
+          publish_dir: artifacts/reports-java-8/reports/spec/concordion
+          destination_dir: concordion
