@@ -37,8 +37,9 @@ public class ExampleEventTestExtension implements ConcordionExtension, Specifica
 
     @Override
 	public synchronized void beforeProcessingSpecification(SpecificationProcessingEvent event) {
-		Thread.dumpStack();
-    	 log("beforeProcessingSpecification " + event.getResource().getName() + " " + log.size() + " " + i++);
+		if (log.size() < 10) {
+			log("beforeProcessingSpecification");
+		}
 	}
 
 	@Override
