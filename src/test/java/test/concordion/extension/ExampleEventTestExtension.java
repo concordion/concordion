@@ -15,13 +15,12 @@ import org.concordion.internal.util.SimpleFormatter;
 public class ExampleEventTestExtension implements ConcordionExtension, SpecificationProcessingListener, OuterExampleListener, ExampleListener {
 	private String name;
 	private List<String> log;
-	    
+
 	@Override
 	public void addTo(ConcordionExtender concordionExtender) {
 		concordionExtender.withSpecificationProcessingListener(this);
 		concordionExtender.withOuterExampleListener(this);
 		concordionExtender.withExampleListener(this);
-		
 	}
 	
     public ExampleEventTestExtension withLog(String name, List<String> log) {
@@ -36,7 +35,10 @@ public class ExampleEventTestExtension implements ConcordionExtension, Specifica
 
     @Override
 	public void beforeProcessingSpecification(SpecificationProcessingEvent event) {
-    	 log("beforeProcessingSpecification");
+		// FIXME remove once issue 322 is resolved
+		if (log.size() < 10) {
+			log("beforeProcessingSpecification");
+		}
 	}
 
 	@Override
