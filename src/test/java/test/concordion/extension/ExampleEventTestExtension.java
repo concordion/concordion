@@ -15,6 +15,7 @@ import org.concordion.internal.util.SimpleFormatter;
 public class ExampleEventTestExtension implements ConcordionExtension, SpecificationProcessingListener, OuterExampleListener, ExampleListener {
 	private String name;
 	private List<String> log;
+	private volatile int i;
 	    
 	@Override
 	public void addTo(ConcordionExtender concordionExtender) {
@@ -36,7 +37,7 @@ public class ExampleEventTestExtension implements ConcordionExtension, Specifica
 
     @Override
 	public void beforeProcessingSpecification(SpecificationProcessingEvent event) {
-    	 log("beforeProcessingSpecification");
+    	 log("beforeProcessingSpecification " + i++);
 	}
 
 	@Override
