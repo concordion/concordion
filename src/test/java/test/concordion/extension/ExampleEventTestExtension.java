@@ -15,14 +15,12 @@ import org.concordion.internal.util.SimpleFormatter;
 public class ExampleEventTestExtension implements ConcordionExtension, SpecificationProcessingListener, OuterExampleListener, ExampleListener {
 	private String name;
 	private List<String> log;
-	private volatile int i;
-	    
+
 	@Override
 	public void addTo(ConcordionExtender concordionExtender) {
 		concordionExtender.withSpecificationProcessingListener(this);
 		concordionExtender.withOuterExampleListener(this);
 		concordionExtender.withExampleListener(this);
-		
 	}
 	
     public ExampleEventTestExtension withLog(String name, List<String> log) {
