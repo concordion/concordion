@@ -37,9 +37,10 @@ public class ExampleEventTestExtension implements ConcordionExtension, Specifica
 
     @Override
 	public synchronized void beforeProcessingSpecification(SpecificationProcessingEvent event) {
-//		if (log.size() < 10) {
+		// FIXME remove once issue 322 is resolved
+		if (log.size() < 10) {
 			log("beforeProcessingSpecification");
-//		}
+		}
 	}
 
 	@Override
