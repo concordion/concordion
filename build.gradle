@@ -4,11 +4,6 @@ apply plugin: 'jacoco'
 
 description = 'Concordion is an open source framework for Java that lets you turn a plain English description of a requirement into an automated test'
 
-wrapper {
-    // If changing this, you may need to update the distributionUrl to http rather than https in gradle/wrapper/gradle-wrapper.properties to workaround a TravisCI with openjdk6. The other fixes in http://stackoverflow.com/questions/29584328/gradlew-bat-and-gradlew-sslhandshakeexception#answer-30924895 didn't work for me.
-    gradleVersion = "4.10.3"
-}
-
 repositories {
     mavenCentral()
 }
@@ -18,24 +13,24 @@ ext {
 }
 
 dependencies {
-    compile 'junit:junit:4.12',
+    implementation 'junit:junit:4.12',
             'ognl:ognl:3.1',
             "com.vladsch.flexmark:flexmark:$flexmarkVersion",
             "com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:$flexmarkVersion",
             "com.vladsch.flexmark:flexmark-ext-tables:$flexmarkVersion",
             "com.vladsch.flexmark:flexmark-profile-pegdown:$flexmarkVersion"
 
-    compile ('xom:xom:1.2.5') {
+    implementation ('xom:xom:1.2.5') {
         exclude group: 'xalan', module: 'xalan'
         exclude group: 'xerces', module: 'xercesImpl'
         exclude group: 'xml-apis', module: 'xml-apis'
     }
     
-    testCompile ('org.concordion:concordion-embed-extension:1.2.0') {
+    testImplementation ('org.concordion:concordion-embed-extension:1.2.0') {
         exclude group: 'org.concordion', module: 'concordion'
     }
-	
-	testCompile 'com.github.stefanbirkner:system-rules:1.16.0',
+
+    testImplementation 'com.github.stefanbirkner:system-rules:1.16.0',
                 "com.vladsch.flexmark:flexmark-ext-abbreviation:$flexmarkVersion"
 }
 
@@ -47,7 +42,7 @@ sourceSets {
         resources {
             srcDir 'src/test-dummies/resources'
         }
-        compileClasspath = sourceSets.main.output + configurations.compile
+        compileClasspath = sourceSets.main.output + configurations.compileClasspath
     }
 
     test {
