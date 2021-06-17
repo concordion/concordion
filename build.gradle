@@ -2,6 +2,7 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'net.nemerosa.versioning' version '2.14.0'
+    id 'java-library-distribution'
 }
 
 description = 'Concordion is an open source framework for Java that lets you turn a plain English description of a requirement into an automated test'
@@ -74,7 +75,7 @@ test {
 
 compileTestJava.dependsOn compileTestDummiesJava
 
-task testJar(type: Jar) {
+task testJar(type: Jar, dependsOn: testClasses) {
     from sourceSets.test.output
     include 'test/**'
     archiveClassifier = "tests"
@@ -162,6 +163,17 @@ publishing {
                 usage('java-runtime') {
                     fromResolutionResult()
                 }
+            }
+        }
+    }
+}
+
+distributions {
+    main {
+        contents {
+            from ('.') { include '*.txt','build.gradle','src/**' }
+            into ('lib') {
+                from 'licenses'
             }
         }
     }
