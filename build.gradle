@@ -1,8 +1,9 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'net.nemerosa.versioning' version '2.14.0'
     id 'java-library-distribution'
+    id 'net.nemerosa.versioning' version '2.14.0'
+    id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
 }
 
 description = 'Concordion is an open source framework for Java that lets you turn a plain English description of a requirement into an automated test'
@@ -192,5 +193,14 @@ jar {
                 'Build-Time'            : String.format("%tFT%<tRZ", Calendar.getInstance(TimeZone.getTimeZone("Z"))),
                 'Build-Revision'        : versioning.info.commit,
                 'Build-OS'              : "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}"
+    }
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            username = sonatypeUsername
+            password = sonatypePassword
+        }
     }
 }
