@@ -1,9 +1,13 @@
 plugins {
     id 'java-library'
+
+    // Publishing
     id 'maven-publish'
     id 'java-library-distribution'
     id 'net.nemerosa.versioning' version '2.14.0'
     id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
+    id 'net.researchgate.release' version '2.8.1'
+    id 'org.ajoberstar.git-publish' version '3.0.0'
 }
 
 description = 'Concordion is an open source framework for Java that lets you turn a plain English description of a requirement into an automated test'
@@ -76,6 +80,7 @@ test {
 
 compileTestJava.dependsOn compileTestDummiesJava
 
+// Publishing
 task testJar(type: Jar, dependsOn: testClasses) {
     from sourceSets.test.output
     include 'test/**'
@@ -201,6 +206,24 @@ nexusPublishing {
         sonatype {
             username = sonatypeUsername
             password = sonatypePassword
+        }
+    }
+}
+
+gitPublish {
+    repoUri = 'git@github.com:concordion/concordion.git'
+    branch = 'gh-pages'
+    contents {
+        from 'ghpages'
+
+        into ('latest') {
+            from ('build/reports/spec/concordion') {
+                into 'spec'
+            }
+
+            from ('build/docs/javadoc/') {
+                into 'javadoc'
+            }
         }
     }
 }
