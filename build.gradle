@@ -1,8 +1,11 @@
-apply plugin: 'java'
-apply plugin: 'wrapper'
-apply plugin: 'jacoco'
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'net.nemerosa.versioning' version '2.14.0'
+}
 
 description = 'Concordion is an open source framework for Java that lets you turn a plain English description of a requirement into an automated test'
+group = 'org.concordion'
 
 repositories {
     mavenCentral()
@@ -10,6 +13,17 @@ repositories {
 
 ext {
     flexmarkVersion = '0.62.2'
+    githubUrl = "https://github.com/concordion/${project.name}"
+    issuesUrl = "${githubUrl}/issues"
+    vcsUrl =  "${githubUrl}.git"
+    vcsConnection = "scm:git:git://github.com/concordion/${project.name}.git"
+
+    if (!project.hasProperty("sonatypeUsername")) {
+        sonatypeUsername = ''
+    }
+    if (!project.hasProperty("sonatypePassword")) {
+        sonatypePassword = ''
+    }
 }
 
 dependencies {
@@ -59,3 +73,112 @@ test {
 }
 
 compileTestJava.dependsOn compileTestDummiesJava
+
+task testJar(type: Jar) {
+    from sourceSets.test.output
+    include 'test/**'
+    archiveClassifier = "tests"
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            artifact(testJar)
+
+            pom {
+                name = project.name
+                description = project.description
+                url = 'http://www.concordion.org'
+                packaging = 'jar'
+                inceptionYear = '2008'
+
+                scm {
+                    url = vcsUrl
+                    connection = vcsConnection
+                    developerConnection = vcsConnection
+                }
+
+                licenses {
+                    license {
+                        name = 'The Apache Software License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.html'
+                        distribution = 'repo'
+                    }
+                }
+
+                issueManagement {
+                    system = 'GitHub Issues'
+                    url = issuesUrl
+                }
+
+                developers {
+                    developer {
+                        id = 'peterson3'
+                        name = 'David Peterson'
+                        roles = ['Project Creator']
+                    }
+                    developer {
+                        id = 'nigel.charman.nz'
+                        name = 'Nigel Charman'
+                        roles = ['Project Lead']
+                    }
+                    developer {
+                        id = 'drtimwright'
+                        name = 'Tim Wright'
+                        roles = ['Developer']
+                    }
+                    developer {
+                        id = 'jose.m.beas'
+                        name = 'Jose M Beas'
+                        roles = ['Developer']
+                    }
+                    developer {
+                        id = 'gmandnepr'
+                        name = 'Ievgen Degtiarenko'
+                        roles = ['Developer']
+                    }
+                    developer {
+                        id = 'habuma'
+                        roles = ['Developer']
+                    }
+                    developer {
+                        id = 'pinfieldharm'
+                        roles = ['Developer']
+                    }
+                    developer {
+                        id = 'wangyizhuo'
+                        roles = ['Developer']
+                    }
+                }
+            }
+            versionMapping {
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+        }
+    }
+}
+
+jar {
+    manifest {
+        attributes  'Specification-Title'   : project.name,
+                'Implementation-Title'  : project.name,
+                'Specification-Version' : project.version.substring(0, project.version.lastIndexOf(".")),
+                'Implementation-Version': project.version,
+                'Implementation-Vendor' : 'concordion.org',
+                'Specification-Vendor'  : 'concordion.org',
+                'Created-By'            : System.getProperty('java.version') + ' (' + System.getProperty('java.vendor') + ')',
+                'Built-With'            : "gradle-${project.getGradle().getGradleVersion()}, groovy-${GroovySystem.getVersion()}",
+                'Build-Time'            : String.format("%tFT%<tRZ", Calendar.getInstance(TimeZone.getTimeZone("Z"))),
+                'Build-Revision'        : versioning.info.commit,
+                'Build-OS'              : "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}"
+    }
+}
