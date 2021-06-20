@@ -24,8 +24,8 @@ jobs:
           java-version: ${{ matrix.java }}
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Test with Gradle
-        run: ./gradlew clean test
+      - name: Build and Test with Gradle
+        run: ./gradlew clean build javadoc
         
       - name: Upload Unit Test Results And Specification
         if: always()
