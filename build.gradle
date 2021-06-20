@@ -232,3 +232,6 @@ gitPublish {
         }
     }
 }
+
+gitPublishCopy.dependsOn test
+gitPublishCopy.dependsOn javadoc
