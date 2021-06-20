@@ -4,6 +4,7 @@ plugins {
     // Publishing
     id 'maven-publish'
     id 'java-library-distribution'
+    id 'signing'
     id 'net.nemerosa.versioning' version '2.14.0'
     id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
     id 'net.researchgate.release' version '2.8.1'
@@ -208,6 +209,10 @@ nexusPublishing {
             password = sonatypePassword
         }
     }
+}
+
+signing {
+    sign publishing.publications.mavenJava
 }
 
 gitPublish {
