@@ -2,14 +2,14 @@
 [![Maven Central](https://img.shields.io/maven-central/v/org.concordion/concordion.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.concordion%22%20AND%20a%3A%22concordion%22)
 [![Apache License 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
-[Concordion](http://www.concordion.org) is an open source framework for Java that lets you turn a plain English description of a requirement into an automated test.
+[Concordion](http://www.concordion.org) is an open source runner for executable specifications that creates rich living documentation.
 
 Users should see the [Concordion](http://www.concordion.org) web site for details of how to download and use Concordion.
 
-This README covers information for people wanting to work with the Concordion source code.
+This README covers information for people wanting to work with the Concordion Java source code. Concordion is also available for other languages, but not with the full feature set. See [Concordion.NET](https://github.com/concordion/concordion.net), [pyconcordion](https://pypi.org/project/pyconcordion2/) and [ruby-concordion](https://github.com/arielvalentin/ruby-concordion).
 
 # Target Java version
-Concordion currently targets Java 6.
+Concordion currently targets Java 8 and above.
 
 # Building Concordion
 Concordion uses [Gradle](http://www.gradle.org/) as a build tool. The code base includes the Gradle Wrapper, which will automatically download the correct version of Gradle.
@@ -38,11 +38,9 @@ The jar file is written to the `./build/libs` folder.
 
 Installing a Concordion jar file into your local Maven repository makes it available to other projects that are using Maven or Gradle to manage their dependencies.
 
-The publishing tasks for Concordion have been split out into a separate `publish.gradle` build script, since these rely on Java 7 and the core build is based on Java 6.
-
 Run the following from the command line:
 
-```gradlew -b publish.gradle pTML```
+```gradlew pTML```
 
 (where pTML is short for publishToMavenLocal).
 
