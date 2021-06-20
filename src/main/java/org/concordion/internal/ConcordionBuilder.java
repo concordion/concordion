@@ -17,7 +17,6 @@ import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.api.extension.ConcordionExtensionFactory;
 import org.concordion.api.listener.*;
 import org.concordion.api.option.ConcordionOptions;
-import org.concordion.api.option.FlexmarkOptions;
 import org.concordion.api.option.MarkdownExtensions;
 import org.concordion.internal.command.*;
 import org.concordion.internal.command.executeCommand.ExecuteCommand;
@@ -449,11 +448,6 @@ public class ConcordionBuilder implements ConcordionExtender {
 
     public ConcordionExtender withOuterExampleListener(OuterExampleListener listener) {
         specificationCommand.addOuterExampleListener(listener);
-        return this;
-    }
-
-    public ConcordionBuilder withResources(Fixture fixture) {
-        withResources(fixture.getFixtureType());
         return this;
     }
 
