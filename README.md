@@ -67,10 +67,13 @@ or
 for the latest version.
 
 # Importing the project into your IDE
-----------------------------------------
 Dependent on the version of your IDE, you may need to install a Gradle plugin to your IDE before importing the project. See [Gradle tooling](https://www.gradle.org/tooling) for details.
 
 On importing the project to your IDE, the required dependencies will be downloaded.
+
+
+# Wiki
+See the [wiki](https://github.com/concordion/concordion/wiki) for our version numbering approach and details of making a new release.
 
 Project History
 =========
