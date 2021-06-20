@@ -69,7 +69,7 @@ public enum MarkdownExtensions {
      * Generate anchor links for headers using complete contents of the header.
      * <ul>
      * <li>Spaces and non-alphanumerics replaced by -, multiple dashes trimmed to one.</li>
-     * <li>Anchor link is added as first element inside the header with empty content: <h1><a name="header"></a>header</h1></li>
+     * <li>Anchor link is added as first element inside the header with empty content: <h1><a id="header"></a>header</h1></li>
      * </ul>
      */
     EXTANCHORLINKS(Extensions.EXTANCHORLINKS),
