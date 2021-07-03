@@ -2,6 +2,7 @@ package org.concordion.internal;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -103,7 +104,15 @@ public class FixtureType implements FixtureDeclarations {
     		resources = getFixtureClass().getClassLoader().getResources("");
 
     		while (resources.hasMoreElements()) {
-                rootPaths.add(new File(resources.nextElement().toURI()));
+                URL nextElement = resources.nextElement();
+                URI uri = nextElement.toURI();
+                try {
+                    File f = new File(uri);
+                    rootPaths.add(f);
+                } catch (IllegalArgumentException ignore) {
+                    // TODO seek cleaner solution than ignoring exceptions when implementing resources in jar files #278
+                }
+
             }
     	} catch (IOException e) {
     		throw new RuntimeException("Unable to get root path", e);
