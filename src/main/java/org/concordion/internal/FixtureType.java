@@ -111,7 +111,7 @@ public class FixtureType implements FixtureDeclarations {
                     rootPaths.add(new File(uri));
                 } catch (IllegalArgumentException e) {
                   if (e.getMessage().equals("URI is not hierarchical")) {
-                      LOG.log(Level.INFO, String.format("Skipping resource %s: Java 8 or > detected", uri), e);
+                      LOG.log(Level.FINER, String.format("Skipping resource %s: Java 8 or > detected", uri), e);
                       continue;
                   }
                   throw e;
