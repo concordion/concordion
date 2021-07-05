@@ -18,6 +18,8 @@ import java.util.logging.Logger;
 
 public class FixtureType implements FixtureDeclarations {
     private static final Logger LOG = Logger.getLogger(FixtureType.class.getSimpleName());
+    private static final String IGNORE_EXCEPTION_MESSAGE = "URI is not hierarchical";
+
     private Class<?> fixtureClass;
     private ArrayList<Class<?>> classHierarchyParentFirst;
 
@@ -110,7 +112,8 @@ public class FixtureType implements FixtureDeclarations {
                 try {
                     rootPaths.add(new File(uri));
                 } catch (IllegalArgumentException e) {
-                  if (e.getMessage().equals("URI is not hierarchical")) {
+                    // TODO seek cleaner solution than ignoring exceptions when implementing resources in jar files #278
+                  if (IGNORE_EXCEPTION_MESSAGE.equals(e.getMessage())) {
                       LOG.log(Level.FINER, String.format("Skipping resource %s: Java 8 or > detected", uri), e);
                       continue;
                   }
