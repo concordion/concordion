@@ -1,19 +1,24 @@
 package org.concordion.internal;
 
+import org.concordion.api.*;
+import org.concordion.api.option.ConcordionOptions;
+import org.concordion.internal.util.SimpleFormatter;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
-
-import org.concordion.api.*;
-import org.concordion.api.option.ConcordionOptions;
-import org.concordion.internal.util.SimpleFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FixtureType implements FixtureDeclarations {
+    private static final Logger LOG = Logger.getLogger(FixtureType.class.getSimpleName());
+    private static final String IGNORE_EXCEPTION_MESSAGE = "URI is not hierarchical";
 
     private Class<?> fixtureClass;
     private ArrayList<Class<?>> classHierarchyParentFirst;
@@ -103,7 +108,17 @@ public class FixtureType implements FixtureDeclarations {
     		resources = getFixtureClass().getClassLoader().getResources("");
 
     		while (resources.hasMoreElements()) {
-                rootPaths.add(new File(resources.nextElement().toURI()));
+                URI uri = resources.nextElement().toURI();
+                try {
+                    rootPaths.add(new File(uri));
+                } catch (IllegalArgumentException e) {
+                    // TODO seek cleaner solution than ignoring exceptions when implementing resources in jar files #278
+                  if (IGNORE_EXCEPTION_MESSAGE.equals(e.getMessage())) {
+                      LOG.log(Level.FINER, String.format("Skipping resource %s: Java 8 or > detected", uri), e);
+                      continue;
+                  }
+                  throw e;
+                }
             }
     	} catch (IOException e) {
     		throw new RuntimeException("Unable to get root path", e);
