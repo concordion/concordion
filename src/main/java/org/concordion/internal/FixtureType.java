@@ -114,7 +114,7 @@ public class FixtureType implements FixtureDeclarations {
                 } catch (IllegalArgumentException e) {
                     // TODO seek cleaner solution than ignoring exceptions when implementing resources in jar files #278
                   if (IGNORE_EXCEPTION_MESSAGE.equals(e.getMessage())) {
-                      LOG.log(Level.FINER, String.format("Skipping resource %s: Java 8 or > detected", uri), e);
+                      LOG.log(Level.FINER, String.format("Skipping resource %s: Java 9 or > assumed", uri), e);
                       continue;
                   }
                   throw e;
