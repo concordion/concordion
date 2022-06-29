@@ -13,6 +13,7 @@ import org.concordion.api.ResultSummary;
 import org.concordion.api.SpecificationLocator;
 import org.concordion.internal.*;
 import org.concordion.internal.cache.RunResultsCache;
+import org.concordion.internal.extension.FixtureExtensionLoader;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
@@ -33,42 +34,34 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
     };
 
     private final Class<?> fixtureClass;
-    private final Fixture setupFixture;
-    private final FixtureRunner fixtureRunner;
-    private final Concordion concordion;
     private final List<ConcordionFrameworkMethod> concordionFrameworkMethods;
+
+    private Fixture setupFixture;
+    private FixtureRunner fixtureRunner;
+    private Concordion concordion;
 
     private FailFastException failFastException = null;
 
     private static AtomicInteger suiteDepth = new AtomicInteger();
     private boolean firstTest = true;
+    private boolean setUpDone = false;
 
     public ConcordionRunner(Class<?> fixtureClass) throws InitializationError {
         super(fixtureClass);
         this.fixtureClass = fixtureClass;
 
         try {
-            setupFixture = createFixture(super.createTest());
-            // needs to be called so extensions have access to scoped variables
-        } catch (Exception e) {
-            throw new InitializationError(e);
-        }
+            FixtureType fixtureType = new FixtureType(fixtureClass);
+            // Avoiding the instantiation of the fixture object at this point
+            ConcordionBuilder localBuilder = new ConcordionBuilder()
+                    .withFixtureType(fixtureType)
+                    .withSpecificationLocator(getSpecificationLocator());
+            new FixtureExtensionLoader().addExtensions(fixtureType, localBuilder);
+            new FixtureOptionsLoader().addOptions(fixtureType, localBuilder);
+            Concordion localConcordion = localBuilder.build();
+            localConcordion.checkValidStatus(fixtureType);
 
-        if (suiteDepth.getAndIncrement() == 0) {
-            setupFixture.beforeSuite();
-        }
-
-        try {
-            fixtureRunner = new FixtureRunner(setupFixture, getSpecificationLocator());
-        } catch (UnableToBuildConcordionException e) {
-            throw new InitializationError(e);
-        }
-        concordion = fixtureRunner.getConcordion();
-
-        try {
-            concordion.checkValidStatus(setupFixture.getFixtureType());
-
-            List<String> examples = concordion.getExampleNames(setupFixture.getFixtureType());
+            List<String> examples = localConcordion.getExampleNames(fixtureType);
 
             verifyUniqueExampleMethods(examples);
 
@@ -76,16 +69,18 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
             for (String example: examples) {
                 concordionFrameworkMethods.add(new ConcordionFrameworkMethod(concordionRunnerInterface, example));
             }
+        } catch (UnableToBuildConcordionException e) {
+            throw new InitializationError(e);
         } catch (IOException e) {
             throw new InitializationError(e);
         }
     }
 
     protected SpecificationLocator getSpecificationLocator() {
-		return new ClassNameBasedSpecificationLocator();
-	}
+        return new ClassNameBasedSpecificationLocator();
+    }
 
-	private void verifyUniqueExampleMethods(List<String> exampleNames) throws InitializationError {
+    private void verifyUniqueExampleMethods(List<String> exampleNames) throws InitializationError {
         // use a hash set to store examples - gives us quick lookup and add.
         Set<String> setOfExamples = new HashSet<String>();
 
@@ -136,6 +131,8 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
     @Override
     public void run(RunNotifier notifier) {
 
+        setUp();
+
         try {
             // we figure out if the spec has been run before by checking if there are any
             // prior results in the cache
@@ -170,6 +167,36 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
                 setupFixture.afterSuite();
             }
         }
+    }
+
+    private void setUp() {
+        if (setUpDone) return;
+
+        try {
+            setupFixture = createFixture(super.createTest());
+            // needs to be called so extensions have access to scoped variables
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        if (suiteDepth.getAndIncrement() == 0) {
+            setupFixture.beforeSuite();
+        }
+
+        try {
+            fixtureRunner = new FixtureRunner(setupFixture, getSpecificationLocator());
+        } catch (UnableToBuildConcordionException e) {
+            throw new RuntimeException(e);
+        }
+        concordion = fixtureRunner.getConcordion();
+        try {
+            concordion.getExampleNames(setupFixture.getFixtureType()); // (force) load specification from resource
+            // needs to be called so extensions are initialized
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        setUpDone = true;
     }
 
     @Override

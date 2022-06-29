@@ -19,6 +19,7 @@ repositories {
 }
 
 ext {
+    junitJupiterVersion = '5.8.2'
     flexmarkVersion = '0.62.2'
     githubUrl = "https://github.com/concordion/${project.name}"
     issuesUrl = "${githubUrl}/issues"
@@ -34,8 +35,14 @@ ext {
 }
 
 dependencies {
-    api 'junit:junit:4.13.2',
-            "com.vladsch.flexmark:flexmark:$flexmarkVersion",
+    api (platform("org.junit:junit-bom:$junitJupiterVersion"))
+    api 'org.junit.jupiter:junit-jupiter'
+    api 'junit:junit:4.13.2'
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine") {
+        because 'allows JUnit 3 and JUnit 4 tests to run'
+    }
+
+    api "com.vladsch.flexmark:flexmark:$flexmarkVersion",
             "com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:$flexmarkVersion",
             "com.vladsch.flexmark:flexmark-ext-tables:$flexmarkVersion"
 
@@ -78,6 +85,7 @@ targetCompatibility = 8
 
 test {
     systemProperties['concordion.output.dir'] = "${reporting.baseDir}"
+    useJUnitPlatform()
 }
 
 compileTestJava.dependsOn compileTestDummiesJava
@@ -163,6 +171,11 @@ publishing {
                     }
                     developer {
                         id = 'wangyizhuo'
+                        roles = ['Developer']
+                    }
+                    developer {
+                        id = 'lorenzodee'
+                        name = 'Lorenzo Dee'
                         roles = ['Developer']
                     }
                 }

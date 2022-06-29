@@ -416,8 +416,8 @@ public class ConcordionBuilder implements ConcordionExtender {
         return this;
     }
 
-    public ConcordionBuilder withFixture(Fixture fixture) {
-        this.fixtureType = fixture.getFixtureType();
+    public ConcordionBuilder withFixtureType(FixtureType fixtureType) {
+        this.fixtureType = fixtureType;
 
         withResources(fixtureType);
 
@@ -427,6 +427,13 @@ public class ConcordionBuilder implements ConcordionExtender {
         if (fixtureType.declaresFullOGNL()) {
             withEvaluatorFactory(new OgnlEvaluatorFactory());
         }
+
+        return this;
+    }
+
+    public ConcordionBuilder withFixture(Fixture fixture) {
+        withFixtureType(fixture.getFixtureType());
+
         flexmarkOptions = new FlexmarkOptionsLoader().getFlexmarkOptionsForFixture(fixture);
         if (flexmarkOptions != null) {
             configureWith(flexmarkOptions);
