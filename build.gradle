@@ -38,8 +38,17 @@ dependencies {
     api (platform("org.junit:junit-bom:$junitJupiterVersion"))
     api 'org.junit.jupiter:junit-jupiter'
     api 'junit:junit:4.13.2'
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine") {
-        because 'allows JUnit 3 and JUnit 4 tests to run'
+    testRuntimeOnly('org.junit.vintage:junit-vintage-engine') {
+        because 'allows JUnit 4 tests to run'
+    }
+    api('org.junit.platform:junit-platform-engine') {
+        because 'allows creation of custom Concordion TestEngine'        
+    }
+    api('org.junit.platform:junit-platform-launcher') {
+        because 'allows run-command to use JUnit Platform'
+    }
+    testImplementation('org.junit.platform:junit-platform-testkit') {
+        because 'allows testing of Concordion TestEngine'
     }
 
     api "com.vladsch.flexmark:flexmark:$flexmarkVersion",

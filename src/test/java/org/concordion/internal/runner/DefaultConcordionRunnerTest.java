@@ -1,98 +1,108 @@
 package org.concordion.internal.runner;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
-
 import java.io.IOException;
 
 import org.concordion.api.ExpectedToFail;
 import org.concordion.api.ResultSummary;
 import org.concordion.api.Unimplemented;
-import org.concordion.internal.FixtureType;
-import org.concordion.internal.runner.DefaultConcordionRunner;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.SystemErrRule;
-import org.junit.runner.Result;
+
+import static org.junit.Assert.*;
 
 public class DefaultConcordionRunnerTest {
 
     @Rule
     public final SystemErrRule systemErrRule = 
-    	new SystemErrRule().enableLog().muteForSuccessfulTests(); // Ensure error log messages don't appear on console
+        new SystemErrRule().enableLog().muteForSuccessfulTests(); // Ensure error log messages don't appear on console
 
-    private final TestDefaultConcordionRunner runner = new TestDefaultConcordionRunner();
+    private final DefaultConcordionRunner runner = new DefaultConcordionRunner();
 
     @Test
     public void returnsFailureOnJUnitFailure() throws Exception {
-        ResultSummary myresult = runner.decodeJUnitResult(UnannotatedClass.class, StubResult.FAILURE);
-        assertThat(myresult.getFailureCount(), is(1L));
-        assertThat(myresult.getIgnoredCount(), is(0L));
-        assertThat(myresult.getExceptionCount(), is(0L));
-        assertThat(myresult.getSuccessCount(), is(0L));
+        ResultSummary myresult = runner.decodeJUnitPlatformEngineResult(
+                StubTestExecutionSummary.FAILURE, UnannotatedClass.class);
+        assertEquals(1, myresult.getFailureCount());
+        assertEquals(0, myresult.getIgnoredCount());
+        assertEquals(0, myresult.getExceptionCount());
+        assertEquals(0, myresult.getSuccessCount());
     }
 
     @Test
     public void returnsSuccessOnJUnitSuccess() throws Exception {
-        ResultSummary myresult = runner.decodeJUnitResult(UnannotatedClass.class, StubResult.SUCCESS);
-        assertThat(myresult.getFailureCount(), is(0L));
-        assertThat(myresult.getIgnoredCount(), is(0L));
-        assertThat(myresult.getExceptionCount(), is(0L));
-        assertThat(myresult.getSuccessCount(), is(1L));
-  }
+        ResultSummary myresult = runner.decodeJUnitPlatformEngineResult(
+                StubTestExecutionSummary.SUCCESS, UnannotatedClass.class);
+        assertEquals(0, myresult.getFailureCount());
+        assertEquals(0, myresult.getIgnoredCount());
+        assertEquals(0, myresult.getExceptionCount());
+        assertEquals(1, myresult.getSuccessCount());
+    }
 
     // JUnit success is reported when an ExpectedToFail test does fail
     @Test
     public void returnsIgnoredOnJUnitSuccessWhenExpectedToFail() throws Exception {
-        ResultSummary myresult = runner.decodeJUnitResult(ExpectedToFailClass.class, StubResult.SUCCESS);
-        assertThat(myresult.getFailureCount(), is(0L));
-        assertThat(myresult.getIgnoredCount(), is(1L));
-        assertThat(myresult.getExceptionCount(), is(0L));
-        assertThat(myresult.getSuccessCount(), is(0L));
+        ResultSummary myresult = runner.decodeJUnitPlatformEngineResult(
+                StubTestExecutionSummary.SUCCESS, ExpectedToFailClass.class);
+        assertEquals(0, myresult.getFailureCount());
+        assertEquals(1, myresult.getIgnoredCount());
+        assertEquals(0, myresult.getExceptionCount());
+        assertEquals(0, myresult.getSuccessCount());
    }
 
     // JUnit success is reported when an Unimplemented test is unimplemented
     @Test
     public void returnsIgnoredOnJUnitSuccessWhenUnimplemented() throws Exception {
-        ResultSummary myresult = runner.decodeJUnitResult(UnimplementedClass.class, StubResult.SUCCESS);
-        assertThat(myresult.getFailureCount(), is(0L));
-        assertThat(myresult.getIgnoredCount(), is(1L));
-        assertThat(myresult.getExceptionCount(), is(0L));
-        assertThat(myresult.getSuccessCount(), is(0L));
+        ResultSummary myresult = runner.decodeJUnitPlatformEngineResult(
+                StubTestExecutionSummary.SUCCESS, UnimplementedClass.class);
+        assertEquals(0, myresult.getFailureCount());
+        assertEquals(1, myresult.getIgnoredCount());
+        assertEquals(0, myresult.getExceptionCount());
+        assertEquals(0, myresult.getSuccessCount());
     }
 
     // JUnit failure is reported when an ExpectedToFail test does not fail.
     @Test(expected = AssertionError.class)
     public void throwsAssertionErrorOnJUnitFailureWhenExpectedToFail() throws Exception {
-        runner.decodeJUnitResult(ExpectedToFailClass.class, StubResult.FAILURE);
+        runner.decodeJUnitPlatformEngineResult(StubTestExecutionSummary.FAILURE, ExpectedToFailClass.class);
     }
 
     // JUnit failure is reported when an Unimplemented test is implemented
     @Test(expected = AssertionError.class)
     public void throwsAssertionErrorOnJUnitFailureWhenUnimplemented() throws Exception {
-        runner.decodeJUnitResult(UnimplementedClass.class, StubResult.FAILURE);
+        runner.decodeJUnitPlatformEngineResult(StubTestExecutionSummary.FAILURE, UnimplementedClass.class);
     }
 
     @Test
     public void doesNotThrowExceptionOnAssertionErrorWhenExpectedToPass() throws Exception {
         Throwable error = new AssertionError();
-        ResultSummary myresult = runner.decodeJUnitResult(UnannotatedClass.class, new StubResult().withFailure(error));
-        assertThat(myresult.getFailureCount(), is(1L));
-        assertThat(myresult.getIgnoredCount(), is(0L));
-        assertThat(myresult.getExceptionCount(), is(0L));
-        assertThat(myresult.getSuccessCount(), is(0L));
+        ResultSummary myresult = runner.decodeJUnitPlatformEngineResult(
+                new StubTestExecutionSummary()
+                        .withTestsFoundCount(1)
+                        .withTestsStartedCount(1)
+                        .withTestsFailedCount(1)
+                        .withFailure(error),
+                UnannotatedClass.class);
+        assertEquals(1, myresult.getFailureCount());
+        assertEquals(0, myresult.getIgnoredCount());
+        assertEquals(0, myresult.getExceptionCount());
+        assertEquals(0, myresult.getSuccessCount());
     }
 
     @Test
     public void throwsExceptionOnCheckedException() throws Exception {
         Throwable error = new IOException("dummy exception");
         try {
-            runner.decodeJUnitResult(UnannotatedClass.class, new StubResult().withFailure(error));
+            runner.decodeJUnitPlatformEngineResult(
+                    new StubTestExecutionSummary()
+                            .withTestsFoundCount(1)
+                            .withTestsStartedCount(1)
+                            .withTestsFailedCount(1)
+                            .withFailure(error),
+                    UnannotatedClass.class);
             fail("expected IOException");
         } catch (IOException e) {
-            assertThat(e.getMessage(), is("dummy exception"));
+            assertEquals("dummy exception", e.getMessage());
         }
     }
 
@@ -100,10 +110,16 @@ public class DefaultConcordionRunnerTest {
     public void throwsWrappedExceptionOnThrowable() throws Exception {
         Throwable error = new InternalError("dummy throwable");
         try {
-            runner.decodeJUnitResult(UnannotatedClass.class, new StubResult().withFailure(error));
+            runner.decodeJUnitPlatformEngineResult(
+                    new StubTestExecutionSummary()
+                            .withTestsFoundCount(1)
+                            .withTestsStartedCount(1)
+                            .withTestsFailedCount(1)
+                            .withFailure(error),
+                    UnannotatedClass.class);
             fail("expected InternalError");
         } catch (RuntimeException e) {
-            assertThat(e.getCause().getMessage(), is("dummy throwable"));
+            assertEquals("dummy throwable", e.getCause().getMessage());
         }
     }
 
@@ -111,57 +127,91 @@ public class DefaultConcordionRunnerTest {
     public void throwsRuntimeExceptionOnRuntimeException() throws Exception {
         Throwable error = new IllegalArgumentException("dummy runtime exception");
         try {
-            runner.decodeJUnitResult(UnannotatedClass.class, new StubResult().withFailure(error));
+            runner.decodeJUnitPlatformEngineResult(
+                    new StubTestExecutionSummary()
+                            .withTestsFoundCount(1)
+                            .withTestsStartedCount(1)
+                            .withTestsFailedCount(1)
+                            .withFailure(error),
+                    UnannotatedClass.class);
             fail("expected IllegalArgumentException");
         } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage(), is("dummy runtime exception"));
+            assertEquals("dummy runtime exception", e.getMessage());
         }
     }
 
     @Test
     public void returnsIgnoredOnJUnitSuccessWhenIgnoredCountGreaterThanZero() throws Exception {
-        ResultSummary myresult = runner.decodeJUnitResult(UnannotatedClass.class, new StubResult().withIgnoreCount(1));
-        assertThat(myresult.getFailureCount(), is(0L));
-        assertThat(myresult.getIgnoredCount(), is(1L));
-        assertThat(myresult.getExceptionCount(), is(0L));
-        assertThat(myresult.getSuccessCount(), is(0L));
+        ResultSummary myresult = runner.decodeJUnitPlatformEngineResult(
+                new StubTestExecutionSummary()
+                        .withTestsFoundCount(1)
+                        .withTestsSkippedCount(1),
+                UnannotatedClass.class);
+        assertEquals(0, myresult.getFailureCount());
+        assertEquals(1, myresult.getIgnoredCount());
+        assertEquals(0, myresult.getExceptionCount());
+        assertEquals(0, myresult.getSuccessCount());
     }
 
     @Test
     public void logsExceptions() throws Exception {
         Throwable error = new IOException("dummy IO exception");
         try {
-            runner.decodeJUnitResult(UnannotatedClass.class, new StubResult().withFailure(error));
+            runner.decodeJUnitPlatformEngineResult(
+                    new StubTestExecutionSummary()
+                            .withTestsFoundCount(1)
+                            .withTestsStartedCount(1)
+                            .withTestsFailedCount(1)
+                            .withFailure(error),
+                    UnannotatedClass.class);
         } catch (IOException e) {
         }
-        assertThat(systemErrRule.getLog(), containsString("java.io.IOException: dummy IO exception"));
+        assertTrue(systemErrRule.getLog().contains("java.io.IOException: dummy IO exception"));
     }
 
     @Test
     public void doesNotLogAssertionErrors() throws Exception {
         Throwable error = new AssertionError("dummy assertion error");
-        runner.decodeJUnitResult(UnannotatedClass.class, new StubResult().withFailure(error));
-        assertThat(systemErrRule.getLog(), is(""));
+        runner.decodeJUnitPlatformEngineResult(
+                new StubTestExecutionSummary()
+                        .withTestsFoundCount(1)
+                        .withTestsStartedCount(1)
+                        .withTestsFailedCount(1)
+                        .withFailure(error),
+                UnannotatedClass.class);
+        assertEquals("", systemErrRule.getLog());
     }
 
     @Test
     public void doesNotLogAssertionErrorsWhenExpectedToFailEither() throws Exception {
         Throwable error = new AssertionError("dummy assertion error");
         try {
-            runner.decodeJUnitResult(ExpectedToFailClass.class, new StubResult().withFailure(error));
+            runner.decodeJUnitPlatformEngineResult(
+                    new StubTestExecutionSummary()
+                            .withTestsFoundCount(1)
+                            .withTestsStartedCount(1)
+                            .withTestsFailedCount(1)
+                            .withFailure(error),
+                    ExpectedToFailClass.class);
         } catch (AssertionError e) {
         }
-        assertThat(systemErrRule.getLog(), is(""));
+        assertEquals("", systemErrRule.getLog());
     }
 
     @Test
     public void doesNotLogAssertionErrorsWhenUnimplementedEither() throws Exception {
         Throwable error = new AssertionError("dummy assertion error");
         try {
-            runner.decodeJUnitResult(ExpectedToFailClass.class, new StubResult().withFailure(error));
+            runner.decodeJUnitPlatformEngineResult(
+                    new StubTestExecutionSummary()
+                            .withTestsFoundCount(1)
+                            .withTestsStartedCount(1)
+                            .withTestsFailedCount(1)
+                            .withFailure(error),
+                    UnimplementedClass.class);
         } catch (AssertionError e) {
         }
-        assertThat(systemErrRule.getLog(), is(""));
+        assertEquals("", systemErrRule.getLog());
     }
 
     private static final class UnannotatedClass {
@@ -175,9 +225,4 @@ public class DefaultConcordionRunnerTest {
     private static final class UnimplementedClass {
     }
 
-    private static final class TestDefaultConcordionRunner extends DefaultConcordionRunner {
-        protected ResultSummary decodeJUnitResult(Class<?> fixtureClass, Result jUnitResult) throws Exception {
-            return super.decodeJUnitResult(new FixtureType(fixtureClass), jUnitResult);
-        }
-    }
 }

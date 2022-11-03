@@ -5,10 +5,10 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.concordion.integration.junit4.ConcordionRunner;
-import org.junit.runner.RunWith;
+import org.concordion.api.ConcordionFixture;
 
-@RunWith(ConcordionRunner.class)
+// @RunWith(ConcordionRunner.class)
+@ConcordionFixture
 public class PartialMatchesTest {
 
     private Set<String> usernamesInSystem = new HashSet<String>();
