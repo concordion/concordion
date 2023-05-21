@@ -21,3 +21,6 @@ out/
 
 # Infer
 infer-out/
+
+# asdf
+.tool-versions

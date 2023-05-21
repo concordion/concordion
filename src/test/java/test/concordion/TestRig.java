@@ -1,10 +1,8 @@
 package test.concordion;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import com.vladsch.flexmark.util.data.DataSet;
 import org.concordion.Concordion;
@@ -83,7 +81,7 @@ public class TestRig {
         }
         Concordion concordion = null;
         try {
-            concordion = concordionBuilder.build();
+            concordion = concordionBuilder.build(true);
         } catch (UnableToBuildConcordionException e) {
             throw new RuntimeException("Test rig failed to build concordion", e);
         }
