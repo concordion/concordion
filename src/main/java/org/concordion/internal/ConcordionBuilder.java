@@ -257,7 +257,7 @@ public class ConcordionBuilder implements ConcordionExtender {
         return this;
     }
 
-    public Concordion build() throws UnableToBuildConcordionException {
+    public Concordion build(boolean fullBuild) throws UnableToBuildConcordionException {
         Check.isFalse(builtAlready, "ConcordionBuilder currently does not support calling build() twice");
         builtAlready = true;
 
@@ -317,7 +317,9 @@ public class ConcordionBuilder implements ConcordionExtender {
         exampleCommand.setSpecificationDescriber(exporter);
         runCommand.setRunnerFactory(runnerFactory);
 
-        announceBuildCompleted();
+        if (fullBuild) {
+            announceBuildCompleted();
+        }
 
         try {
             return new Concordion(specificationTypes, specificationLocator, specificationReader, evaluatorFactory, fixtureType);
