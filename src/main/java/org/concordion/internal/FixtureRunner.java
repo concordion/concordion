@@ -18,7 +18,7 @@ public class FixtureRunner {
         ConcordionBuilder concordionBuilder = new ConcordionBuilder().withFixture(fixture).withSpecificationLocator(specificationLocator);
         new FixtureExtensionLoader().addExtensions(fixture, concordionBuilder);
         new FixtureOptionsLoader().addOptions(fixture.getFixtureType(), concordionBuilder);
-        concordion = concordionBuilder.build();
+        concordion = concordionBuilder.build(true);
     }
 
     public ResultSummary run(String example, Fixture fixture) throws IOException {
