@@ -12,25 +12,42 @@ import org.concordion.api.extension.ConcordionExtensionFactory;
 import org.concordion.api.extension.Extension;
 import org.concordion.api.extension.Extensions;
 import org.concordion.internal.ConcordionBuilder;
+import org.concordion.internal.FixtureType;
 import org.concordion.internal.util.SimpleFormatter;
 
 public class FixtureExtensionLoader {
-    
+
     public void addExtensions(Fixture fixture, ConcordionBuilder concordionBuilder) {
         for (ConcordionExtension concordionExtension : getExtensionsForFixture(fixture)) {
             concordionExtension.addTo(concordionBuilder);
         }
     }
 
+    public void addExtensions(FixtureType fixtureType, ConcordionBuilder concordionBuilder) {
+        for (ConcordionExtension concordionExtension : getExtensionsForFixtureType(fixtureType)) {
+            concordionExtension.addTo(concordionBuilder);
+        }
+    }
+
     public List<ConcordionExtension> getExtensionsForFixture(Fixture fixture) {
-        final List<ConcordionExtension> extensions = new ArrayList<ConcordionExtension>();
+        final List<ConcordionExtension> extensions = getExtensionsForFixtureType(fixture.getFixtureType());
 
         List<Class<?>> classes = fixture.getFixtureType().getClassHierarchyParentFirst();
         for (Class<?> class1 : classes) {
-            extensions.addAll(getExtensionsFromClassAnnotation(class1));
             extensions.addAll(getExtensionsFromAnnotatedFields(fixture, class1));
         }
-        
+
+        return extensions;
+    }
+
+    public List<ConcordionExtension> getExtensionsForFixtureType(FixtureType fixtureType) {
+        final List<ConcordionExtension> extensions = new ArrayList<ConcordionExtension>();
+
+        List<Class<?>> classes = fixtureType.getClassHierarchyParentFirst();
+        for (Class<?> class1 : classes) {
+            extensions.addAll(getExtensionsFromClassAnnotation(class1));
+        }
+
         return extensions;
     }
 

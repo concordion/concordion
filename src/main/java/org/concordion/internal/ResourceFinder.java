@@ -3,6 +3,7 @@ package org.concordion.internal;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.lang.annotation.Annotation;
+import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -125,7 +126,11 @@ public class ResourceFinder {
             search = new File(root, packageName);
             search = new File(search, sourceFile);
         }
-        return search.toPath().normalize().toFile();
+        try {
+            return search.toPath().normalize().toFile();
+        } catch (InvalidPathException e) {
+            return search; // as fallback
+        }
     }
 
     private boolean isSearchRoot(String sourceFile) {
