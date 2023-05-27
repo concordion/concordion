@@ -257,6 +257,10 @@ public class ConcordionBuilder implements ConcordionExtender {
         return this;
     }
 
+    public Concordion build() throws UnableToBuildConcordionException {
+        return build(true);
+    }
+
     public Concordion build(boolean fullBuild) throws UnableToBuildConcordionException {
         Check.isFalse(builtAlready, "ConcordionBuilder currently does not support calling build() twice");
         builtAlready = true;
