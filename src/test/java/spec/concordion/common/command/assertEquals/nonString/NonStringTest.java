@@ -14,9 +14,9 @@ public class NonStringTest {
         if (resultType.equals("String")) {
             simulatedResult = result;
         } else if (resultType.equals("Integer")) {
-            simulatedResult = new Integer(result);
+            simulatedResult = Integer.valueOf(result);
         } else if (resultType.equals("Double")) {
-            simulatedResult = new Double(result);
+            simulatedResult = Double.valueOf(result);
         } else {
             throw new RuntimeException("Unsupported result-type '" + resultType + "'.");
         }
