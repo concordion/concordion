@@ -258,6 +258,10 @@ public class ConcordionBuilder implements ConcordionExtender {
     }
 
     public Concordion build() throws UnableToBuildConcordionException {
+        return build(true);
+    }
+
+    public Concordion build(boolean fullBuild) throws UnableToBuildConcordionException {
         Check.isFalse(builtAlready, "ConcordionBuilder currently does not support calling build() twice");
         builtAlready = true;
 
@@ -283,8 +287,10 @@ public class ConcordionBuilder implements ConcordionExtender {
         Source resourceSource = sources.get(SourceType.RESOURCE);
         Source specificationSource = sources.get(SourceType.SPECIFICATION);
 
-        withThrowableListener(0, new ThrowableRenderer(resourceSource));
-        withRunListener(new RunResultRenderer(resourceSource));
+        if (fullBuild) {
+            withThrowableListener(0, new ThrowableRenderer(resourceSource));
+            withRunListener(new RunResultRenderer(resourceSource));
+        }
 
         FixtureExampleHook fixtureExampleHook = new FixtureExampleHook();
         withOuterExampleListener(fixtureExampleHook);
@@ -302,22 +308,30 @@ public class ConcordionBuilder implements ConcordionExtender {
         specificationCommand.addSpecificationListener(pageFooterRenderer);
 
         specificationReader = new XMLSpecificationReader(specificationSource, xmlParser, documentParser);
-        specificationReader.setCopySourceHtmlTarget(copySourceHtmlTarget);
+        if (fullBuild) {
+            specificationReader.setCopySourceHtmlTarget(copySourceHtmlTarget);
+        }
 
         addExtensions();
         copyResources(resourceSource);
 
-        addSpecificationListeners();
-        addThrowableListeners();
+        if (fullBuild) {
+            addSpecificationListeners();
+            addThrowableListeners();
+        }
 
         SpecificationExporter exporter = new SpecificationExporter(target);
-        specificationCommand.addSpecificationListener(exporter);
+        if (fullBuild) {
+            specificationCommand.addSpecificationListener(exporter);
+        }
         specificationCommand.setSpecificationDescriber(exporter);
 
         exampleCommand.setSpecificationDescriber(exporter);
         runCommand.setRunnerFactory(runnerFactory);
 
-        announceBuildCompleted();
+        if (fullBuild) {
+            announceBuildCompleted();
+        }
 
         try {
             return new Concordion(specificationTypes, specificationLocator, specificationReader, evaluatorFactory, fixtureType);

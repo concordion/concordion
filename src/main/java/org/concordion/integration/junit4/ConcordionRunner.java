@@ -58,7 +58,7 @@ public class ConcordionRunner extends BlockJUnit4ClassRunner {
                     .withSpecificationLocator(getSpecificationLocator());
             new FixtureExtensionLoader().addExtensions(fixtureType, localBuilder);
             new FixtureOptionsLoader().addOptions(fixtureType, localBuilder);
-            Concordion localConcordion = localBuilder.build();
+            Concordion localConcordion = localBuilder.build(false);
             localConcordion.checkValidStatus(fixtureType);
 
             List<String> examples = localConcordion.getExampleNames(fixtureType);
