@@ -1,5 +1,9 @@
+// Provides tasks to build, test, package, sign, publish and release Concordion.
+// To test, use either the 'test' or 'testVintage' tasks.
+// 'testVintage' defines a `JUNIT_VINTAGE`symbol which can be used in directives, parsed by the Manifold preprocessor
 plugins {
     id 'java-library'
+    id 'systems.manifold.manifold-gradle-plugin' version '0.0.2-alpha'
 
     // Publishing
     id 'maven-publish'
@@ -21,6 +25,7 @@ repositories {
 ext {
     junitJupiterVersion = '5.8.2'
     flexmarkVersion = '0.62.2'
+    manifoldVersion = '2023.1.10'
     githubUrl = "https://github.com/concordion/${project.name}"
     issuesUrl = "${githubUrl}/issues"
     vcsUrl =  "${githubUrl}.git"
@@ -70,6 +75,13 @@ dependencies {
 
     testImplementation 'com.github.stefanbirkner:system-rules:1.16.0',
                 "com.vladsch.flexmark:flexmark-ext-abbreviation:$flexmarkVersion"
+
+    implementation ("systems.manifold:manifold-preprocessor:$manifoldVersion") {
+        because 'preprocesses annotation to determine whether to run JUNIT_JUPITER or JUNIT_VINTAGE'
+    }
+    annotationProcessor ("systems.manifold:manifold-preprocessor:$manifoldVersion") {
+        because 'preprocesses annotation to determine whether to run JUNIT_JUPITER or JUNIT_VINTAGE'
+    }
 }
 
 sourceSets {
@@ -98,12 +110,28 @@ test {
 }
 
 compileTestJava.dependsOn compileTestDummiesJava
+compileTestJava.options.compilerArgs += ['-Xplugin:Manifold']
 
 // Publishing
 task testJar(type: Jar, dependsOn: testClasses) {
     from sourceSets.test.output
     include 'test/**'
     archiveClassifier = "tests"
+}
+
+// Add a 'testVintage' task to test JUnit Vintage
+// This relies on JUnit Vintage code being within an `#if JUNIT_VINTAGE ... #endif` block
+// which the Manifold preprocessor will parse
+task testVintage(type: Test) {
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (taskGraph.hasTask(testVintage)) {
+        compileTestJava.options.compilerArgs += ['-AJUNIT_VINTAGE']
+        if (taskGraph.hasTask(test)) {
+            throw new GradleException("Only one of the tasks 'test' or 'testVintage' can be specified since they apply different preprocessor options")
+        }
+    }
 }
 
 java {
