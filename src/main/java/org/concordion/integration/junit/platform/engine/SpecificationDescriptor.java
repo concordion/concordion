@@ -31,6 +31,7 @@ public class SpecificationDescriptor extends FixtureBasedTestDescriptor
     private Object fixtureObject;
     private FixtureInstance fixtureInstance;
     private FixtureRunner fixtureRunner;
+    private boolean firstTest = true;
 
     SpecificationDescriptor(UniqueId parentUniqueId,
             Class<?> fixtureClass, SpecificationLocator specificationLocator) {
@@ -65,8 +66,13 @@ public class SpecificationDescriptor extends FixtureBasedTestDescriptor
     }
 
     protected FixtureInstance recreateFixtureInstance() {
-        fixtureObject = null;
-        return createFixtureInstance();
+        if (firstTest) {
+            firstTest = false;
+            return getFixtureInstance();
+        } else {
+            fixtureObject = null;
+            return createFixtureInstance();
+        }
     }
 
     protected Object createFixtureObject() {
