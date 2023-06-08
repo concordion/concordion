@@ -64,6 +64,11 @@ public class SpecificationDescriptor extends FixtureBasedTestDescriptor
         return new FixtureInstance(createFixtureObject());
     }
 
+    protected FixtureInstance recreateFixtureInstance() {
+        fixtureObject = null;
+        return createFixtureInstance();
+    }
+
     protected Object createFixtureObject() {
         if (fixtureObject == null) {
             fixtureObject = ReflectionSupport.newInstance(getFixtureClass());
@@ -128,5 +133,4 @@ public class SpecificationDescriptor extends FixtureBasedTestDescriptor
             }
         }
     }
-
 }

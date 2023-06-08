@@ -79,10 +79,20 @@ public class ExampleDescriptor extends FixtureBasedTestDescriptor
             DynamicTestExecutor dynamicTestExecutor) throws Exception {
         FixtureRunner runner = getFixtureRunner();
 
-        ResultSummary result = runner.run(getExampleName(), getFixtureInstance());
+        ResultSummary result = runner.run(getExampleName(), reinstantiateFixtureInstance());
         result.assertIsSatisfied(getFixtureType());
 
         return context;
+    }
+
+    /**
+     * Similar to JUnit, Concordion performs test isolation so that each example has a new instance of the fixture class.
+     * After creating a new instance of the fixture, the specification scoped fields are loaded into the class.
+     */
+    private FixtureInstance reinstantiateFixtureInstance() {
+        FixtureInstance fixtureInstance = getParentSpecificationTestDescriptor().recreateFixtureInstance();
+        fixtureInstance.setupForRun(fixtureInstance.getFixtureObject());
+        return fixtureInstance;
     }
 
     /*
