@@ -16,11 +16,7 @@ import org.concordion.ext.EmbedExtension;
 
 import test.concordion.TestRig;
 
-#if JUNIT_VINTAGE
-@RunWith(ConcordionRunner.class)
-#else
-@ConcordionFixture
-#endif
+@Extensions(EmbedExtension.class)
 @ConcordionResources("toggle_html.*")
 public class BaseMatchStrategyTest {
 
