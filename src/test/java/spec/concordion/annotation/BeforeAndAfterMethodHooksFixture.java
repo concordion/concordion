@@ -3,16 +3,17 @@ package spec.concordion.annotation;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.concordion.api.BeforeExample;
-import org.concordion.api.ExampleName;
-import org.concordion.api.Scope;
-import org.concordion.api.ScopedObjectHolder;
+import org.concordion.api.*;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.concordion.internal.FixtureInstance;
 import org.junit.runner.RunWith;
 import test.concordion.RunCommandSimulator;
 
+#if JUNIT_VINTAGE
 @RunWith(ConcordionRunner.class)
+#else
+@ConcordionFixture
+#endif
 public class BeforeAndAfterMethodHooksFixture {
     private String exampleName;
 

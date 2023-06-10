@@ -14,7 +14,11 @@ import java.util.List;
 /**
  * Created by bondocaadmin on 10/05/2018.
  */
+#if JUNIT_VINTAGE
 @RunWith(ConcordionRunner.class)
+#else
+@ConcordionFixture
+#endif
 @FullOGNL
 public class ImplementationStatusModifierTest extends AbstractExtensionTestCase {
 

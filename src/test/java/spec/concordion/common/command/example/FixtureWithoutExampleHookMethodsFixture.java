@@ -4,10 +4,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.concordion.api.AfterExample;
 import org.concordion.api.BeforeExample;
+import org.concordion.api.ConcordionFixture;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
+#if JUNIT_VINTAGE
 @RunWith(ConcordionRunner.class)
+#else
+@ConcordionFixture
+#endif
 public class FixtureWithoutExampleHookMethodsFixture {
 
     private static AtomicInteger staticBeforeExampleCounter = new AtomicInteger();

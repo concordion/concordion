@@ -1,6 +1,7 @@
 package spec.concordion.annotation;
 
 import com.vladsch.flexmark.profile.pegdown.Extensions;
+import org.concordion.api.ConcordionFixture;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.concordion.internal.ConcordionOptionsParser;
 import org.concordion.internal.ConfigurationException;
@@ -11,7 +12,11 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
+#if JUNIT_VINTAGE
 @RunWith(ConcordionRunner.class)
+#else
+@ConcordionFixture
+#endif
 public class ConcordionOptionsFixture {
     private int pegdownExtensions;
 

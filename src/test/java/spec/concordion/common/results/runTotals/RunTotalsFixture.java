@@ -2,13 +2,18 @@ package spec.concordion.common.results.runTotals;
 
 import java.util.Map;
 
+import org.concordion.api.ConcordionFixture;
 import org.concordion.api.Fixture;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.concordion.internal.FixtureInstance;
 import org.junit.runner.RunWith;
 import test.concordion.RunCommandSimulator;
 
+#if JUNIT_VINTAGE
 @RunWith(ConcordionRunner.class)
+#else
+@ConcordionFixture
+#endif
 public class RunTotalsFixture {
 
 	private Class<?> testClass;

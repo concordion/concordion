@@ -3,6 +3,7 @@ package spec.concordion.annotation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.concordion.api.ConcordionFixture;
 import org.concordion.api.Element;
 import org.concordion.api.Resource;
 import org.concordion.integration.junit4.ConcordionRunner;
@@ -12,7 +13,11 @@ import test.concordion.JavaSourceCompiler;
 import test.concordion.ProcessingResult;
 import test.concordion.TestRig;
 
+#if JUNIT_VINTAGE
 @RunWith(ConcordionRunner.class)
+#else
+@ConcordionFixture
+#endif
 public class ConcordionResourcesFixture {
     private TestRig testRig = null;
 	private JavaSourceCompiler compiler;

@@ -7,7 +7,11 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.List;
 
+#if JUNIT_VINTAGE
 @RunWith(ConcordionRunner.class)
+#else
+@ConcordionFixture
+#endif
 public class BeforeAndAfterLoggingFixture {
     private static List<String> log = new ArrayList<String>();
 

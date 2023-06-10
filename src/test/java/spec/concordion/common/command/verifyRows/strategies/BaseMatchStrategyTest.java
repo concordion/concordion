@@ -7,6 +7,7 @@ import java.util.List;
 
 import nu.xom.Document;
 
+import org.concordion.api.ConcordionFixture;
 import org.concordion.api.MultiValueResult;
 import org.concordion.api.Resource;
 import org.concordion.api.ConcordionResources;
@@ -15,7 +16,11 @@ import org.concordion.ext.EmbedExtension;
 
 import test.concordion.TestRig;
 
-@Extensions(EmbedExtension.class)
+#if JUNIT_VINTAGE
+@RunWith(ConcordionRunner.class)
+#else
+@ConcordionFixture
+#endif
 @ConcordionResources("toggle_html.*")
 public class BaseMatchStrategyTest {
 

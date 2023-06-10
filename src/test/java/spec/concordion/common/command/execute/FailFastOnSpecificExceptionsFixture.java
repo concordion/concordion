@@ -4,13 +4,18 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+import org.concordion.api.ConcordionFixture;
 import org.concordion.api.FailFast;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 import test.concordion.TestRig;
 
+#if JUNIT_VINTAGE
 @RunWith(ConcordionRunner.class)
+#else
+@ConcordionFixture
+#endif
 @FailFast(onExceptionType={RuntimeException.class, IOException.class})
 public class FailFastOnSpecificExceptionsFixture {
 

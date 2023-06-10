@@ -7,13 +7,18 @@ import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Nodes;
 
+import org.concordion.api.ConcordionFixture;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.concordion.internal.util.Check;
 import org.junit.runner.RunWith;
 
 import test.concordion.TestRig;
 
+#if JUNIT_VINTAGE
 @RunWith(ConcordionRunner.class)
+#else
+@ConcordionFixture
+#endif
 public class VerifyRowsTest {
     public Collection<String> usernames;
 

@@ -3,6 +3,8 @@ package spec.concordion.common.extension;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.concordion.api.AfterSpecification;
+import org.concordion.api.ConcordionFixture;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.After;
 import org.junit.runner.RunWith;
@@ -12,13 +14,17 @@ import test.concordion.ProcessingResult;
 import test.concordion.TestRig;
 import test.concordion.extension.fake.FakeExtensionBase;
 
+#if JUNIT_VINTAGE
 @RunWith(ConcordionRunner.class)
+#else
+@ConcordionFixture
+#endif
 public class ExtensionConfigurationTest {
 
     private JavaSourceCompiler compiler;
     private static final Pattern CLASS_NAME_PATTERN = Pattern.compile("class\\s*(.*?)\\s*(\\{|extends)");
 
-    @After
+    @AfterSpecification
     public void clearConcordionExtensionsSystemProperty() {
         System.clearProperty("concordion.extensions");
     }
