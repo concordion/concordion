@@ -2,6 +2,8 @@ package org.concordion.integration.junit.platform.engine;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 import org.concordion.api.ConcordionFixture;
@@ -43,6 +45,13 @@ public class ConcordionTestEngine extends HierarchicalTestEngine<ConcordionEngin
                     clazz, ConcordionFixture.class).isPresent()
                     && clazz.getName().matches(ENDS_WITH_FIXTURE_OR_TEST_REGEX);
         };
+
+    /**
+     * Cache specificationDescriptors to avoid specifications being loaded multiple times
+     * and fixture classes being loaded multiple times when a suite of tests is run
+     * (and the run command is used to run specifications from other specifications).
+     */
+    private static Map<Class<?>, SpecificationDescriptor> specificationDescriptorCache = new ConcurrentHashMap<Class<?>, SpecificationDescriptor>();
 
     @Override
     public String getId() {
@@ -103,14 +112,18 @@ public class ConcordionTestEngine extends HierarchicalTestEngine<ConcordionEngin
         }
     }
 
-    protected SpecificationDescriptor appendSpecificationTestDescriptor(
+    protected synchronized SpecificationDescriptor appendSpecificationTestDescriptor(
             Class<?> fixtureClass, SpecificationLocator specificationLocator, TestDescriptor parentTestDescriptor) {
-        SpecificationDescriptor newTestDescriptor = new SpecificationDescriptor(
-                parentTestDescriptor.getUniqueId(),
-                fixtureClass, specificationLocator);
+        SpecificationDescriptor specificationDescriptor = specificationDescriptorCache.get(fixtureClass);
+        if (specificationDescriptor == null) {
+            specificationDescriptor = new SpecificationDescriptor(
+                    parentTestDescriptor.getUniqueId(),
+                    fixtureClass, specificationLocator);
+            specificationDescriptorCache.put(fixtureClass, specificationDescriptor);
+        }
         // System.out.println("Added " + newTestDescriptor.getClass().getSimpleName() + " for " + newTestDescriptor.getFixtureClass().getSimpleName());
-        parentTestDescriptor.addChild(newTestDescriptor);
-        return newTestDescriptor;
+        parentTestDescriptor.addChild(specificationDescriptor);
+        return specificationDescriptor;
     }
 
     protected ExampleDescriptor appendExampleTestDescriptor(
