@@ -42,6 +42,7 @@ class ConcordionTestEngineTests {
         runResultsCache.removeAllFromCache(partialMatchesFixtureType);
         FixtureType spikeFixtureType = new FixtureType(SpikeTest.class);
         runResultsCache.removeAllFromCache(spikeFixtureType);
+        ConcordionTestEngine._clearCacheForTestingOnly();
         
         try {
             EngineExecutionResults executionResults =

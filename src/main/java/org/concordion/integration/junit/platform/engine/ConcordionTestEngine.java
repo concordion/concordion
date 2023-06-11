@@ -53,6 +53,10 @@ public class ConcordionTestEngine extends HierarchicalTestEngine<ConcordionEngin
      */
     private static Map<Class<?>, SpecificationDescriptor> specificationDescriptorCache = new ConcurrentHashMap<Class<?>, SpecificationDescriptor>();
 
+    public static void _clearCacheForTestingOnly() {
+        specificationDescriptorCache.clear();
+    }
+
     @Override
     public String getId() {
         return ENGINE_ID;
