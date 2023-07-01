@@ -1,4 +1,5 @@
 # JUnit 5 Jupiter
+_Since_: Concordion 4.0.0
 
 An active specification with JUnit 5 Jupiter consists of two parts: a specification (eg. in HTML, Markdown or Excel)
 and a Java fixture annotated with `@ConcordionFixture`.
