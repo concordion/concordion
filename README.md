@@ -6,7 +6,9 @@
 
 Users should see the [Concordion](http://www.concordion.org) web site for details of how to download and use Concordion.
 
-This README covers information for people wanting to work with the Concordion Java source code. Concordion is also available for other languages, but not with the full feature set. See [Concordion.NET](https://github.com/concordion/concordion.net), [pyconcordion](https://pypi.org/project/pyconcordion2/) and [ruby-concordion](https://github.com/arielvalentin/ruby-concordion).
+This README covers information for people wanting to work with the Concordion Java source code. 
+Unmaintained versions of Concordion are also available for other languages, but not with the full feature set. 
+See [Concordion.NET](https://github.com/concordion/concordion.net), [pyconcordion](https://pypi.org/project/pyconcordion2/) and [ruby-concordion](https://github.com/arielvalentin/ruby-concordion).
 
 # Target Java version
 Concordion currently targets Java 8 and above.
@@ -20,11 +22,34 @@ Note: If the current directory is not on your path, you will need to use `./grad
 
 ## Compiling and Running the Tests
 
-Run the following from the command line:
+The `test` task runs both the Concordion specification tests and unit tests. 
+Since Concordion supports both JUnit Vintage and JUnit Jupiter, the tests can run with either version of JUnit.  
+
+To run the tests with JUnit Jupiter, run the following from the command line:
 
 ```gradlew clean test```
-    
-This will download the required dependencies, clean the existing project, recompile all source code and run all the tests. Concordion output is written to the `./build/reports/spec` folder.
+
+To run the tests with JUnit Vintage, run the following from the command line:
+
+```gradlew clean testVintage```
+
+This will download the required dependencies, clean the existing project, recompile all source code and run all the tests. 
+The Concordion specification output is written to the `./build/reports/spec` folder.
+
+### Pre-processor
+To switch between the JUnit Jupiter and Vintage tests, Concordion uses the [Manifold](http://manifold.systems/) preprocessor. 
+
+For example:
+
+```
+#if JUNIT_VINTAGE
+@RunWith(ConcordionRunner.class)
+#else
+@ConcordionFixture
+#endif
+```
+
+The `JUNIT_VINTAGE` compiler argument is set by the `testVintage` Gradle task.
 
 ## Creating a jar file
 
@@ -71,6 +96,8 @@ Dependent on the version of your IDE, you may need to install a Gradle plugin to
 
 On importing the project to your IDE, the required dependencies will be downloaded.
 
+For IntelliJ IDEA, installing the [Manifold plugin](https://plugins.jetbrains.com/plugin/10057-manifold) will enable
+IntelliJ to recognise the Manifold preprocessor syntax.
 
 # Wiki
 See the [wiki](https://github.com/concordion/concordion/wiki) for our version numbering approach and details of making a new release.
