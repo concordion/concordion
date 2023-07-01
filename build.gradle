@@ -123,6 +123,7 @@ task testJar(type: Jar, dependsOn: testClasses) {
 // This relies on JUnit Vintage code being within an `#if JUNIT_VINTAGE ... #endif` block
 // which the Manifold preprocessor will parse
 task testVintage(type: Test) {
+    systemProperties['concordion.output.dir'] = "${reporting.baseDir}"
 }
 
 gradle.taskGraph.whenReady { taskGraph ->
