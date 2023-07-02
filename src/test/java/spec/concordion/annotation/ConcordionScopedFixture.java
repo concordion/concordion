@@ -2,13 +2,18 @@ package spec.concordion.annotation;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.concordion.api.ConcordionFixture;
 import org.concordion.api.ConcordionScoped;
 import org.concordion.api.ScopedObjectHolder;
 import org.concordion.api.Scope;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
+#if JUNIT_VINTAGE
 @RunWith(ConcordionRunner.class)
+#else
+@ConcordionFixture
+#endif
 public class ConcordionScopedFixture {
 
     @org.concordion.api.ConcordionScoped(Scope.EXAMPLE)

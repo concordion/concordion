@@ -1,6 +1,6 @@
-# JUnit 4
+# JUnit 4 (or JUnit 5 Vintage)
 
-An active specification with JUnit 4 consists of two parts: a specification (eg. in HTML, Markdown or Excel)
+An active specification with JUnit 4 or JUnit 5 Vintage consists of two parts: a specification (eg. in HTML, Markdown or Excel)
 and a Java fixture annotated with `@RunWith(ConcordionRunner.class)`.
 
 ### Fixture naming
@@ -42,8 +42,11 @@ and a Concordion fixture named `FooFixture.java` in the same package will ignore
 
 ### JUnit Annotations
 
-The following JUnit annotations can be used. However, the [Concordion annotations](../../annotation/Annotation.md "c:run") are 
- preferred, and support additional features.
+When using JUnit 4, or JUnit 5 Vintage, the following  annotations can be used. These annotations will not work 
+with JUnit 5 Jupiter.
+
+The [Concordion annotations](../../annotation/Annotation.md "c:run") are preferred over these JUnit annotations, since 
+they support additional features and will work with all supported versions of JUnit.
 
 #### [Supported JUnit annotations](- "annotations")
 The JUnit 4 integration supports the [Before](- "c:assertTrue=wasBeforeCalled()"),

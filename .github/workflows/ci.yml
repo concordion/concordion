@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '8', '11', '17' ]
+        java: [ '11', '17' ]
     name: Java ${{ matrix.Java }}
 
     steps:
@@ -25,7 +25,9 @@ jobs:
           java-version: ${{ matrix.java }}
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Build and Test with Gradle
+      - name: Build and Test with Vintage mode
+        run: ./gradlew clean testVintage
+      - name: Build and Test
         run: ./gradlew clean build javadoc
         
       - name: Upload Unit Test Results And Specification

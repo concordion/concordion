@@ -3,13 +3,18 @@ package spec.concordion.common.command.execute;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.concordion.api.ConcordionFixture;
 import org.concordion.api.MultiValueResult;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 import test.concordion.TestRig;
 
+#if JUNIT_VINTAGE
 @RunWith(ConcordionRunner.class)
+#else
+@ConcordionFixture
+#endif
 public class ExecutingListTest {
 	
 	private List<MultiValueResult> treeEntries = new ArrayList<MultiValueResult>();

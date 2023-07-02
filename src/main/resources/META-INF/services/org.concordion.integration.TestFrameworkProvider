@@ -1,1 +1,2 @@
 org.concordion.integration.junit4.JUnit4FrameworkProvider
+org.concordion.integration.junit.platform.engine.JUnit5FrameworkProvider

@@ -1,5 +1,9 @@
+// Provides tasks to build, test, package, sign, publish and release Concordion.
+// To test, use either the 'test' or 'testVintage' tasks.
+// 'testVintage' defines a `JUNIT_VINTAGE`symbol which can be used in directives, parsed by the Manifold preprocessor
 plugins {
     id 'java-library'
+    id 'systems.manifold.manifold-gradle-plugin' version '0.0.2-alpha'
 
     // Publishing
     id 'maven-publish'
@@ -19,8 +23,9 @@ repositories {
 }
 
 ext {
-    junitJupiterVersion = '5.8.2'
+    junitJupiterVersion = '5.9.3'
     flexmarkVersion = '0.62.2'
+    manifoldVersion = '2023.1.10'
     githubUrl = "https://github.com/concordion/${project.name}"
     issuesUrl = "${githubUrl}/issues"
     vcsUrl =  "${githubUrl}.git"
@@ -38,8 +43,17 @@ dependencies {
     api (platform("org.junit:junit-bom:$junitJupiterVersion"))
     api 'org.junit.jupiter:junit-jupiter'
     api 'junit:junit:4.13.2'
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine") {
-        because 'allows JUnit 3 and JUnit 4 tests to run'
+    testRuntimeOnly('org.junit.vintage:junit-vintage-engine') {
+        because 'allows JUnit 4 tests to run'
+    }
+    api('org.junit.platform:junit-platform-engine') {
+        because 'allows creation of custom Concordion TestEngine'        
+    }
+    api('org.junit.platform:junit-platform-launcher') {
+        because 'allows run-command to use JUnit Platform'
+    }
+    testImplementation('org.junit.platform:junit-platform-testkit') {
+        because 'allows testing of Concordion TestEngine'
     }
 
     api "com.vladsch.flexmark:flexmark:$flexmarkVersion",
@@ -49,7 +63,7 @@ dependencies {
     implementation 'ognl:ognl:3.1.29',
             "com.vladsch.flexmark:flexmark-profile-pegdown:$flexmarkVersion"
 
-    api ('xom:xom:1.3.7') {
+    api ('xom:xom:1.3.9') {
         exclude group: 'xalan', module: 'xalan'
         exclude group: 'xerces', module: 'xercesImpl'
         exclude group: 'xml-apis', module: 'xml-apis'
@@ -59,8 +73,15 @@ dependencies {
         exclude group: 'org.concordion', module: 'concordion'
     }
 
-    testImplementation 'com.github.stefanbirkner:system-rules:1.16.0',
+    testImplementation 'com.github.stefanbirkner:system-rules:1.19.0',
                 "com.vladsch.flexmark:flexmark-ext-abbreviation:$flexmarkVersion"
+
+    implementation ("systems.manifold:manifold-preprocessor:$manifoldVersion") {
+        because 'preprocesses annotation to determine whether to run JUNIT_JUPITER or JUNIT_VINTAGE'
+    }
+    annotationProcessor ("systems.manifold:manifold-preprocessor:$manifoldVersion") {
+        because 'preprocesses annotation to determine whether to run JUNIT_JUPITER or JUNIT_VINTAGE'
+    }
 }
 
 sourceSets {
@@ -89,12 +110,29 @@ test {
 }
 
 compileTestJava.dependsOn compileTestDummiesJava
+compileTestJava.options.compilerArgs += ['-Xplugin:Manifold']
 
 // Publishing
 task testJar(type: Jar, dependsOn: testClasses) {
     from sourceSets.test.output
     include 'test/**'
     archiveClassifier = "tests"
+}
+
+// Add a 'testVintage' task to test JUnit Vintage
+// This relies on JUnit Vintage code being within an `#if JUNIT_VINTAGE ... #endif` block
+// which the Manifold preprocessor will parse
+task testVintage(type: Test) {
+    systemProperties['concordion.output.dir'] = "${reporting.baseDir}"
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (taskGraph.hasTask(testVintage)) {
+        compileTestJava.options.compilerArgs += ['-AJUNIT_VINTAGE']
+        if (taskGraph.hasTask(test)) {
+            throw new GradleException("Only one of the tasks 'test' or 'testVintage' can be specified since they apply different preprocessor options")
+        }
+    }
 }
 
 java {

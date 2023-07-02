@@ -1,5 +1,6 @@
 package spec.concordion.common.extension;
 
+import org.concordion.api.ConcordionFixture;
 import org.concordion.api.Resource;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
@@ -8,7 +9,11 @@ import test.concordion.TestRig;
 import test.concordion.extension.CSSEmbeddedExtension;
 import test.concordion.extension.CSSLinkedExtension;
 
+#if JUNIT_VINTAGE
 @RunWith(ConcordionRunner.class)
+#else
+@ConcordionFixture
+#endif
 public class CSSExtensionTest extends AbstractExtensionTestCase {
 
     public static final String SOURCE_PATH = "/test/concordion/my.css";

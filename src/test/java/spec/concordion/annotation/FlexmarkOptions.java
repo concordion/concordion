@@ -1,5 +1,6 @@
 package spec.concordion.annotation;
 
+import org.concordion.api.ConcordionFixture;
 import org.concordion.api.Resource;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.concordion.internal.FixtureInstance;
@@ -11,7 +12,11 @@ import test.concordion.TestRig;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+#if JUNIT_VINTAGE
 @RunWith(ConcordionRunner.class)
+#else
+@ConcordionFixture
+#endif
 public class FlexmarkOptions {
     private JavaSourceCompiler compiler;
     private static final Pattern CLASS_NAME_PATTERN = Pattern.compile("public class\\s*(.*?)\\s*(\\{|extends)");
