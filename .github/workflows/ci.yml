@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '11', '17' ]
+        java: [ '11', '17', '20' ]
     name: Java ${{ matrix.Java }}
 
     steps:
@@ -59,10 +59,10 @@ jobs:
           
       - name: Publish Specifications
         uses: peaceiris/actions-gh-pages@v3
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == 'refs/heads/master' }}
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           external_repository: concordion/concordion-specifications
-          publish_branch: main
+          publish_branch: master
           publish_dir: artifacts/reports-java-8/reports/spec/concordion
           destination_dir: concordion
