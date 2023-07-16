@@ -1,16 +1,21 @@
 package spec.concordion.common.command.run;
 
+import org.concordion.api.BeforeSpecification;
+import org.concordion.api.ConcordionFixture;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 import test.concordion.TestRig;
 
+#if JUNIT_VINTAGE
 @RunWith(ConcordionRunner.class)
+#else
+@ConcordionFixture
+#endif
 public class CustomRunnerTest {
     
-    @BeforeClass
+    @BeforeSpecification
     public static void setUp() {
         System.setProperty("concordion.runner.exampleRunner", ExampleRunner.class.getName());
     }

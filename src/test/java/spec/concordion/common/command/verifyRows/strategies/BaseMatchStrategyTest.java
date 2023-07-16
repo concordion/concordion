@@ -7,6 +7,7 @@ import java.util.List;
 
 import nu.xom.Document;
 
+import org.concordion.api.ConcordionFixture;
 import org.concordion.api.MultiValueResult;
 import org.concordion.api.Resource;
 import org.concordion.api.ConcordionResources;

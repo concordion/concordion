@@ -1,5 +1,6 @@
 package spec.concordion.common.command.expressions;
 
+import org.concordion.api.ConcordionFixture;
 import org.concordion.api.Evaluator;
 import org.concordion.api.FullOGNL;
 import org.concordion.api.MultiValueResult;
@@ -13,7 +14,11 @@ import java.util.Map;
 
 import static java.util.Collections.singletonMap;
 
+#if JUNIT_VINTAGE
 @RunWith(ConcordionRunner.class)
+#else
+@ConcordionFixture
+#endif
 public class ComplexExpressionsTest {
 
     private final Evaluator simple = new SimpleEvaluator(new FixtureInstance(new SimpleTestFixture()));

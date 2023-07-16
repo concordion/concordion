@@ -2,12 +2,17 @@ package spec.concordion.common.command.results.stylesheet;
 
 import nu.xom.Element;
 
+import org.concordion.api.ConcordionFixture;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
 import test.concordion.TestRig;
 
+#if JUNIT_VINTAGE
 @RunWith(ConcordionRunner.class)
+#else
+@ConcordionFixture
+#endif
 public class MissingHeadElementTest {
 
     public String process(String html) {

@@ -1,6 +1,7 @@
 package spec.concordion.integration.junit4;
 
 import junit.framework.AssertionFailedError;
+import org.concordion.api.ConcordionFixture;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -9,7 +10,9 @@ import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 import org.junit.runners.model.Statement;
 
+#if JUNIT_VINTAGE
 @RunWith(ConcordionRunner.class)
+#endif
 public class Junit4Test extends Statement {
 
     private static boolean beforeClassCalled=false;

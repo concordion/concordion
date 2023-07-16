@@ -10,7 +10,11 @@ import org.junit.runner.RunWith;
 
 import test.concordion.extension.ExampleEventTestExtension;
 
+#if JUNIT_VINTAGE
 @RunWith(ConcordionRunner.class)
+#else
+@ConcordionFixture
+#endif
 public class BeforeAndAfterLoggingWithListenerFixture {
     private static List<String> log = new ArrayList<String>(); 
     

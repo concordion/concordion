@@ -1,5 +1,6 @@
 package spec.concordion.common.command.execute;
 
+import org.concordion.api.ConcordionFixture;
 import org.concordion.api.FullOGNL;
 import org.concordion.api.listener.AssertFailureEvent;
 import org.concordion.integration.junit4.ConcordionRunner;
@@ -13,7 +14,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+#if JUNIT_VINTAGE
 @RunWith(ConcordionRunner.class)
+#else
+@ConcordionFixture
+#endif
 @FullOGNL
 public class ExecutingTablesTest {
     private List<Map<String, String>> rows = new ArrayList<>();
