@@ -192,3 +192,37 @@ For example:
     </tr>
   </table>
 </div>
+
+### Execute individual rows of the table
+If you don't want each row to be treated identically, you can annotate specific cells within the table.
+
+<div class="example">
+  <h3>Example</h3>
+  <table concordion:execute="#html=translate(#md)">
+    <tr>
+      <th concordion:set="#md">Markdown</th>
+      <th concordion:assert-equals="#html">Resultant HTML</th>
+    </tr>
+    <tr>
+      <td>
+<pre>      
+| Number      |
+| ----------- |
+| [1](- "#x") | 
+| [3](- "#y") |
+</pre>
+      </td>
+      <td>
+<![CDATA[<table>
+  <thead>
+    <tr><th> Number </th></tr>
+  </thead>
+  <tbody>
+    <tr><td> <span concordion:set="#x">1</span> </td></tr>
+    <tr><td> <span concordion:set="#y">3</span> </td></tr>
+  </tbody>
+</table>]]>     
+      </td>
+    </tr>
+  </table>
+</div>
