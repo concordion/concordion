@@ -4,6 +4,7 @@ import com.vladsch.flexmark.ast.*;
 import com.vladsch.flexmark.ast.util.ReferenceRepository;
 import com.vladsch.flexmark.ext.tables.TableBlock;
 import com.vladsch.flexmark.ext.tables.TableCell;
+import com.vladsch.flexmark.ext.tables.TableHead;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.parser.block.NodePostProcessor;
 import com.vladsch.flexmark.parser.block.NodePostProcessorFactory;
@@ -63,8 +64,10 @@ public class ConcordionCommandNodePostProcessor extends NodePostProcessor {
         if (node.getParent() instanceof TableCell) {
             if (insideConcordionTableBlock(node)) {
                 changeToConcordionTableCell(state, node, commandNode);
-            } else {
+            } else if (insideTableHeader(node)) {
                 changeToConcordionTableBlock(state, node, commandNode);
+            } else {
+                replaceNode(state, node, commandNode);
             }
         } else {
             replaceNode(state, node, commandNode);
@@ -97,6 +100,13 @@ public class ConcordionCommandNodePostProcessor extends NodePostProcessor {
             node = node.getParent();
         }
         return node instanceof ConcordionTableBlock;
+    }
+
+    private boolean insideTableHeader(Node node) {
+        while (node != null && !(node instanceof TableHead)) {
+            node = node.getParent();
+        }
+        return node instanceof TableHead;
     }
 
     private void changeToConcordionTableBlock(NodeTracker state, Node linkNode, ConcordionCommandNode commandNode) {
