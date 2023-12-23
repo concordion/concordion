@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '11', '17', '20' ]
+        java: [ '11', '17', '21' ]
     name: Java ${{ matrix.Java }}
 
     steps:
@@ -63,6 +63,6 @@ jobs:
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           external_repository: concordion/concordion-specifications
-          publish_branch: master
-          publish_dir: artifacts/reports-java-8/reports/spec/concordion
+          publish_branch: main
+          publish_dir: artifacts/reports-java-21/reports/spec/concordion
           destination_dir: concordion
