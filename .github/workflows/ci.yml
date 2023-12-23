@@ -63,6 +63,6 @@ jobs:
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           external_repository: concordion/concordion-specifications
-          publish_branch: master
+          publish_branch: main
           publish_dir: artifacts/reports-java-21/reports/spec/concordion
           destination_dir: concordion
